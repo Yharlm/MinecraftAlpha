@@ -36,23 +36,24 @@ namespace MinecraftAlpha
 
         public void apply_velocity(Entity entity)
         {
+            var Acceleration = 0.1f;
             var Vel = Vector2.Zero;
 
             if (!entity.collisionBox.Left && velocity.X < 0)
             {
-                Vel.X = velocity.X;
+                Vel.X = velocity.X- Acceleration;
             }
             if (!entity.collisionBox.Right && velocity.X > 0)
             {
-                Vel.X = velocity.X;
+                Vel.X = velocity.X+ Acceleration;
             }
             if (!entity.collisionBox.Top && velocity.Y < 0)
             {
-                Vel.Y = velocity.Y;
+                Vel.Y = velocity.Y- Acceleration;
             }
             if (!entity.collisionBox.Bottom && velocity.Y > 0)
             {
-                Vel.Y = velocity.Y;
+                Vel.Y = velocity.Y + Acceleration;
             }
 
 

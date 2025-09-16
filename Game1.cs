@@ -16,6 +16,8 @@ public class Cammera
 
 public class Game1 : Game
 {
+    public Sprite steve;
+
     public List<Entity> Entities = new List<Entity>();
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
@@ -44,7 +46,7 @@ public class Game1 : Game
 
     public Game1()
     {
-
+        
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
         
@@ -58,7 +60,7 @@ public class Game1 : Game
 
         Random random = new Random();
         // TODO: Add your initialization logic here
-
+       
         // World generation
         int t = 100;
         int x = 0;
@@ -129,10 +131,12 @@ public class Game1 : Game
             }
 
         }
-
+        steve = new Sprite();
 
         base.Initialize();
     }
+    
+
     Entity player = new Entity
     {
         name = "Player",
@@ -145,10 +149,13 @@ public class Game1 : Game
         
         Entities.Add(player);
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        
         foreach (var block in BlockTypes)
         {
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
+        steve.texture = (Content.Load<Texture2D>("Steve"));
+
         // TODO: use this.Content to load your game content here
     }
 
@@ -159,27 +166,37 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         Input();
+        Camera.position = -player.position * BlockSize + new Vector2(400,202);
         base.Update(gameTime);
         MousePosition = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
         WorldMousePos = (MousePosition - Camera.position) / BlockSize;
 
         foreach (var entity in Entities)
         {
+            entity.velocity.apply_velocity(entity); // Apply gravity or any other force
+
+            
+
+            if (entity.position.X < 0 || entity.position.X >= World.GetLength(1) || entity.position.Y < 0 || entity.position.Y >= World.GetLength(0))
+            {
+                continue; // Skip if the entity is out of bounds
+            }
             entity.collisionBox = new CollisionBox(); // Reset collision box for each update
             //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
-            if (World[(int)(entity.position.Y + 1), (int)(entity.position.X + 0.5f)] != 0)
+            if (World[(int)(entity.position.Y + 1.1f), (int)(entity.position.X+ 0.5f) ] != 0)
             {
                 entity.collisionBox.Bottom = true;
             }
-            if (World[(int)(entity.position.Y - 1), (int)(entity.position.X + 0.5f)] != 0)
+            if (World[(int)(entity.position.Y -0.1f), (int)(entity.position.X + 0.5f)] != 0)
             {
                 entity.collisionBox.Top = true;
+                 
             }
-            if (World[(int)(entity.position.Y + 0.5f), (int)(entity.position.X + 1)] != 0)
+            if (World[(int)(entity.position.Y+0.5f), (int)(entity.position.X + 1.1f)] != 0)
             {
                 entity.collisionBox.Right = true;
             }
-            if (World[(int)(entity.position.Y + 0.5f), (int)(entity.position.X - 1f)] != 0)
+            if (World[(int)(entity.position.Y + 0.5f), (int)(entity.position.X - 0.1f)] != 0)
             {
                 entity.collisionBox.Left = true;
             }
@@ -190,35 +207,45 @@ public class Game1 : Game
 
 
             // Example gravity, can be replaced with actual logic
-            entity.velocity.apply_velocity(entity); // Apply gravity or any other force
-            entity.velocity.velocity = new Vector2(0, 0.1f);
+            
             // Example movement, can be replaced with actual logic
         }
     }
 
     public void Input()
     {
+        
+        Vector2 plrVel = Vector2.Zero;
+        player.velocity.velocity = new Vector2(0, 0);
         float zoomScale = 0.3f;
         var keyboardState = Keyboard.GetState();
-        if (keyboardState.IsKeyDown(Keys.W))
-        {
-            Camera.position.Y += 1;
-        }
-        if (keyboardState.IsKeyDown(Keys.S))
-        {
-            Camera.position.Y -= 1;
-        }
-        if (keyboardState.IsKeyDown(Keys.A))
-        {
-            Camera.position.X += 1;
-        }
-        if (keyboardState.IsKeyDown(Keys.D))
-        {
-            Camera.position.X -= 1;
-        }
-        // Get the center of the screen in screen coordinates
-        Vector2 screenCenter = Camera.size / 2f;
 
+        var keyboard = Keyboard.GetState().GetPressedKeys();
+
+        foreach (var key in keyboard)
+        {
+            if (key == Keys.W)
+            {
+                plrVel += new Vector2(0, -1);
+            }
+            if (key == Keys.S)
+            {
+                plrVel = new Vector2(0, +1);
+            }
+            if (key == Keys.A)
+            {
+                plrVel += new Vector2(-1, 0);
+            }
+            if (key == Keys.D)
+            {
+                plrVel += new Vector2(+1, 0);
+            }
+        }
+        
+        // Get the center of the screen in screen coordinates
+        
+        Vector2 screenCenter = Camera.size / 2f;
+        player.velocity.velocity = plrVel * 0.1f; // Adjust speed as needed
         if (keyboardState.IsKeyDown(Keys.OemPlus))
         {
 
@@ -261,6 +288,9 @@ public class Game1 : Game
         }
 
     }
+
+    
+
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -300,7 +330,10 @@ public class Game1 : Game
         {
             _spriteBatch.Begin();
             _spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Camera.position, null, Color.White, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
+
             _spriteBatch.End();
+
+            steve.DrawSprite(1, _spriteBatch, BlockSize * Mob.position + Camera.position + new Vector2(), BlockSize / BlockTypes[1].Texture.Width);
         }
         for (int i = 0; i < Foreground.GetLength(0); i++)
         {
@@ -328,6 +361,9 @@ public class Game1 : Game
         _spriteBatch.Begin();
         _spriteBatch.DrawString(Content.Load<SpriteFont>("File"), $"World Mouse Position: {WorldMousePos}", new Vector2(10, 10), Color.White);
         _spriteBatch.End();
+        
+        
+
     }
 
 
