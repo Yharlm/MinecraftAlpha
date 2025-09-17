@@ -18,9 +18,8 @@ namespace MinecraftAlpha
 
         public List<Vector4> Ractangles = new List<Vector4>();
         public Texture2D texture;
-        public Vector2 Attachment = new Vector2(0,8);
-        public Vector2 Joint = new Vector2(0,0);
-        public float Orientation = MathF.PI/180*0f;
+        public Vector2 Attachment = new Vector2(0,1);
+        public float Orientation = 0f;
         public Sprite()
         {
             
@@ -40,23 +39,20 @@ namespace MinecraftAlpha
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
         public void DrawSprite(int index,SpriteBatch spriteBatch,Vector2 Pos,float size)
         {
-            var R = Ractangles[index];
-            var ract = new Microsoft.Xna.Framework.Rectangle((int)R.X,(int)R.Y, (int)R.Z, (int)R.W);
-
-            var Matrix = Matrix4x4.CreateRotationZ(Orientation);
-            var Offset = Vector2.Transform(Attachment, Matrix);
-
+            var ract = new Microsoft.Xna.Framework.Rectangle(8 * index, 0, 8, 8);
+            Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(MathF.PI/180 * Orientation);
+            var AttachemtPos = Vector2.Transform(Attachment * size, AnglePos);
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 texture,
-                 Pos - Offset * size,
+                new Vector2(ract.Width, ract.Height) * size/2 + AttachemtPos,
                 ract,
                 Microsoft.Xna.Framework.Color.White,
-                Orientation,
-                new Vector2(ract.Width, ract.Height) / 2,
+                Orientation, // Orientation
+                new Vector2.Zero(), //
                 size,
                 SpriteEffects.None,
-                0f
+                1f
                 );
             spriteBatch.End();
         }
