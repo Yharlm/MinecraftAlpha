@@ -17,7 +17,7 @@ public class Cammera
 public class Game1 : Game
 {
     public Sprite steve;
-
+    public List<Button> ButtonList = new List<Button>();
     public List<Entity> Entities = new List<Entity>();
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
@@ -46,7 +46,7 @@ public class Game1 : Game
 
     public Game1()
     {
-        
+        ButtonList = Button.LoadButtons()
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
         
@@ -270,9 +270,20 @@ public class Game1 : Game
         {
             InventoryOpen = !InventoryOpen;
         }
+        
 
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
+            foreach(var b in ButtonsList)
+            {
+                if (b.CheckPos(GetMousePos))
+                {
+                    TriggerEvent(b.Event);
+                    break;
+                    
+                }
+            
+            }
             int BlockX = (int)(WorldMousePos.X);
             int BlockY = (int)(WorldMousePos.Y);
 
