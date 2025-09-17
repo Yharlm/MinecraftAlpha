@@ -17,7 +17,7 @@ public class Cammera
 public class Game1 : Game
 {
     public Sprite steve;
-    public List<Button> ButtonList = new List<Button>();
+    public List<Button> ButtonsList = new List<Button>();
     public List<Entity> Entities = new List<Entity>();
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
@@ -46,7 +46,7 @@ public class Game1 : Game
 
     public Game1()
     {
-        ButtonList = Button.LoadButtons()
+        ButtonsList = Button.LoadButtons();
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
         
@@ -276,9 +276,9 @@ public class Game1 : Game
         {
             foreach(var b in ButtonsList)
             {
-                if (b.CheckPos(GetMousePos))
+                if (b.IsInBounds(MousePosition))
                 {
-                    TriggerEvent(b.Event);
+                    Button.TriggerAction(b.Action);
                     break;
                     
                 }
@@ -344,7 +344,12 @@ public class Game1 : Game
 
             _spriteBatch.End();
 
-            steve.DrawSprite(1, _spriteBatch, BlockSize * Mob.position + Camera.position + new Vector2(), BlockSize / BlockTypes[1].Texture.Width);
+            
+            steve.DrawSprite(1, _spriteBatch, BlockSize * Mob.position + Camera.position + Vector2.One * BlockSize/2, BlockSize / BlockTypes[1].Texture.Width);
+            //_spriteBatch.Begin();
+            //_spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Camera.position - s, null, Color.Red, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
+            //_spriteBatch.End();
+
         }
         for (int i = 0; i < Foreground.GetLength(0); i++)
         {

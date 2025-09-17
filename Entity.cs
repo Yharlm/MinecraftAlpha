@@ -1,13 +1,25 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MinecraftAlpha
 {
+    public class Joint
+    {
+        public Vector2 A = Vector2.Zero;
+        public Vector2 B = Vector2.Zero;
+
+        public Vector2 Connect()
+        {
+            return Vector2.Max(A, B) - Vector2.Min(A,B);
+        }
+    }
     public class CollisionBox
     {
 
@@ -26,6 +38,12 @@ namespace MinecraftAlpha
         public string name { get; set; } = "Entity";
         public Vector2 position { get; set; } = Vector2.Zero;
         public float Mass = 1f;
+
+        public void DrawEntity(SpriteBatch SB, float BlockSize)
+        {
+
+        }
+
 
     }
 

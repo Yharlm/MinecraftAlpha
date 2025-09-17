@@ -12,9 +12,14 @@ namespace MinecraftAlpha
     // animation thing but also can be used for Sprite Selection
     public class Sprite
     {
+        public static Sprite LoadSprites
+
+
+        public List<Vector4> Ractangles = new List<Vector4>();
         public Texture2D texture;
-        public Vector2 Attachment = new Vector2(0,0);
-        public float Orientation = 0f;
+        public Vector2 Attachment = new Vector2(0,8);
+        public Vector2 Joint = new Vector2(0,0);
+        public float Orientation = MathF.PI/180*0f;
         public Sprite()
         {
             
@@ -35,14 +40,18 @@ namespace MinecraftAlpha
         public void DrawSprite(int index,SpriteBatch spriteBatch,Vector2 Pos,float size)
         {
             var ract = new Microsoft.Xna.Framework.Rectangle(8 * index, 0, 8, 8);
+
+            var Matrix = Matrix4x4.CreateRotationZ(Orientation);
+            var Offset = Vector2.Transform(Attachment, Matrix);
+
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 texture,
-                Pos + new Vector2(ract.Width, ract.Height) * size/2,
+                 Pos - Offset * size,
                 ract,
                 Microsoft.Xna.Framework.Color.White,
                 Orientation,
-                new Vector2(),
+                new Vector2(ract.Width, ract.Height) / 2,
                 size,
                 SpriteEffects.None,
                 0f
