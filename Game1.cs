@@ -154,7 +154,7 @@ public class Game1 : Game
         {
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
-        steve.texture = (Content.Load<Texture2D>("Steve"));
+        
 
         // TODO: use this.Content to load your game content here
     }
@@ -207,13 +207,13 @@ public class Game1 : Game
 
 
             // Example gravity, can be replaced with actual logic
-            if (!entity.CollisionBox.Bottom)
+            if (!entity.collisionBox.Bottom)
             {
-                entity.Velocity.Velocity += Vector2(0,0.1f)
+                entity.velocity.velocity += new Vector2(0, 0.1f);
             }
             else
             {
-                entity.Velocity.velocity *= Vector2(1,0)
+                entity.velocity.velocity *= new Vector2(1, 0);
             }
         }
     }
@@ -351,7 +351,7 @@ public class Game1 : Game
             _spriteBatch.End();
 
 
-            Mob.DrawSprite()
+            //Mob.DrawSprite()
             // All the Sprites in its list will be rendered with SpriteRender
             
             

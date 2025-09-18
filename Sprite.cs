@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -39,8 +40,8 @@ namespace MinecraftAlpha
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
         public void DrawSprite(int index,SpriteBatch spriteBatch,Vector2 Pos,float size)
         {
-            var R = Rectangles[index];
-            var ract = new Microsoft.Xna.Framework.Rectangle(R.X,R.Y,R.Z,R.W);
+            var R = Ractangles[index];
+            var ract = new Microsoft.Xna.Framework.Rectangle((int)R.X,(int)R.Y, (int)R.Z, (int)R.W);
 
             var Matrix = Matrix4x4.CreateRotationZ(Orientation);
             var Offset = Vector2.Transform(Attachment, Matrix);
@@ -58,6 +59,11 @@ namespace MinecraftAlpha
                 0f
                 );
             spriteBatch.End();
+        }
+
+        public  void LoadSprites(ContentManager Content)
+        {
+
         }
     }
 }
