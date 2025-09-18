@@ -12,7 +12,7 @@ namespace MinecraftAlpha
     // animation thing but also can be used for Sprite Selection
     public class Sprite
     {
-        public static Sprite LoadSprites
+        
 
 
         public List<Vector4> Ractangles = new List<Vector4>();
@@ -36,10 +36,11 @@ namespace MinecraftAlpha
         {
             Index = index;
         }
-
+        // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
         public void DrawSprite(int index,SpriteBatch spriteBatch,Vector2 Pos,float size)
         {
-            var ract = new Microsoft.Xna.Framework.Rectangle(8 * index, 0, 8, 8);
+            var R = Rectangles[index];
+            var ract = new Microsoft.Xna.Framework.Rectangle(R.X,R.Y,R.Z,R.W);
 
             var Matrix = Matrix4x4.CreateRotationZ(Orientation);
             var Offset = Vector2.Transform(Attachment, Matrix);
