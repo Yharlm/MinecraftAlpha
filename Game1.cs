@@ -207,8 +207,14 @@ public class Game1 : Game
 
 
             // Example gravity, can be replaced with actual logic
-            
-            // Example movement, can be replaced with actual logic
+            if (!entity.CollisionBox.Bottom)
+            {
+                entity.Velocity.Velocity += Vector2(0,0.1f)
+            }
+            else
+            {
+                entity.Velocity.velocity *= Vector2(1,0)
+            }
         }
     }
 
@@ -230,7 +236,7 @@ public class Game1 : Game
             }
             if (key == Keys.S)
             {
-                plrVel = new Vector2(0, +1);
+                plrVel += new Vector2(0, +1);
             }
             if (key == Keys.A)
             {
@@ -344,8 +350,12 @@ public class Game1 : Game
 
             _spriteBatch.End();
 
+
+            Mob.DrawSprite()
+            // All the Sprites in its list will be rendered with SpriteRender
             
-            steve.DrawSprite(1, _spriteBatch, BlockSize * Mob.position + Camera.position + Vector2.One * BlockSize/2, BlockSize / BlockTypes[1].Texture.Width);
+            
+            //steve.DrawSprite(1, _spriteBatch, BlockSize * Mob.position + Camera.position + Vector2.One * BlockSize/2, BlockSize / BlockTypes[1].Texture.Width);
             //_spriteBatch.Begin();
             //_spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Camera.position - s, null, Color.Red, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
             //_spriteBatch.End();
@@ -391,4 +401,9 @@ public class Game1 : Game
     // Q drop item
     // Q hold drop simulatinously
     // drag out of UI to drop stack or Shift Q
+
+
+
+    // Fix The inventory UI or remove from main
+    // Make steve Skin with rest of parts
 }
