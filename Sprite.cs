@@ -37,7 +37,7 @@ namespace MinecraftAlpha
             Index = index;
         }
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
-        public void DrawSprite(int index,SpriteBatch spriteBatch,Vector2 Pos,float size)
+        public void DrawSprite(SpriteBatch spriteBatch,Vector2 Pos,float size)
         {
             var ract = Ractangle;
             Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(MathF.PI/180 * Orientation);
