@@ -16,7 +16,7 @@ namespace MinecraftAlpha
         
 
 
-        public List<Vector4> Ractangles = new List<Vector4>();
+        public Rectangle Margin;
         public Texture2D texture;
         public Vector2 Attachment = new Vector2(0,1);
         public float Orientation = 0f;
@@ -39,7 +39,7 @@ namespace MinecraftAlpha
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
         public void DrawSprite(int index,SpriteBatch spriteBatch,Vector2 Pos,float size)
         {
-            var ract = new Microsoft.Xna.Framework.Rectangle(8 * index, 0, 8, 8);
+            var ract = Ractangle;
             Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(MathF.PI/180 * Orientation);
             var AttachemtPos = Vector2.Transform(Attachment * size, AnglePos);
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
@@ -57,9 +57,23 @@ namespace MinecraftAlpha
             spriteBatch.End();
         }
 
-        public  void LoadSprites(ContentManager Content)
+        public static void LoadSprites(ContentManager Content, Entity mob)
         {
-
+            if (mob.TextureName != "null")
+            {
+                var texture = Content.Load(mob.TextureName);
+                // adds a new Sprite for each limb,
+                foreach(var R in mob.Ractangles)
+                {
+                    Sprite sprite = new Sprite()
+                    {
+                        Margin = R;
+                    }
+                    mob.Sprites.Add(sprite);
+                }
+                
+            }
+                
         }
     }
 }
