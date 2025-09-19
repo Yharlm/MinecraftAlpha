@@ -1,4 +1,4 @@
-namespace TerrainGenerator
+﻿namespace TerrainGenerator
 {
     internal class Program
     {
@@ -76,6 +76,72 @@ namespace TerrainGenerator
             //MakesCaves
 
 
+
+
+
+            //Render the grid
+            for (int i = 0; i < grid.GetLength(0); i++)
+            {
+                Console.WriteLine();
+                for (int j = 0; j < grid.GetLength(1); j++)
+                {
+                    if (grid[i, j] == null)
+                    {
+                        Console.Write("  ");
+                    }
+
+                    else if (grid[i, j].ID == 1)
+                    {
+                        Console.Write(grid[i, j].Contains);
+                    }
+
+                }
+            }
+        }
+    }
+}
+
+
+using System.Numerics;
+
+namespace TerrainGenerator
+{
+    internal class Program
+    {
+        class Gridblock
+        {
+            public int ID;
+            public int State;
+            public string Contains;
+
+
+        }
+        static void Square(Vector4 size, Gridblock[,] grid)
+        {
+            for(int x = (int)size.X;x<(int)size.Z;x++)
+            {
+                for (int y = (int)size.Y; y < (int)size.W; y++)
+                {
+                    grid[y, x] = new Gridblock() { ID = 1, State = 0, Contains = "██" };
+                }
+            }
+        }
+        static void Square(Vector2 size,Vector2 Pos, Gridblock[,] grid)
+        {
+            Square(new Vector4(Pos.X, Pos.Y, Pos.X + size.X, Pos.Y + size.Y), grid);
+        }
+        static void Sphere(float radius, int x,int y, Gridblock[,] grid)
+        {
+            int wh  
+        }
+
+        static void Main(string[] args)
+        {
+            Random random = new Random();
+            var grid = new Gridblock[70, 390];
+            
+
+            
 
 
 
