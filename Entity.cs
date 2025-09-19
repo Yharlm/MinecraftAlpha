@@ -33,6 +33,8 @@ namespace MinecraftAlpha
 
     public class Entity
     {
+        public List<Vector4> Ractangles = new List<Vector4>();
+        public List<Sprite> Sprites = new List<Sprite>();
         public CollisionBox collisionBox;
         public Velocity velocity; 
         public string name { get; set; } = "Entity";
@@ -41,7 +43,10 @@ namespace MinecraftAlpha
 
         public void DrawEntity(SpriteBatch SB, float BlockSize)
         {
-
+            foreach(Sprite s in Sprites)
+            {
+                s.DrawSprite(SB,BlockSize);
+            }
         }
 
         
@@ -59,7 +64,8 @@ namespace MinecraftAlpha
 
             if (!entity.collisionBox.Left && velocity.X < 0)
             {
-                Vel.X = velocity.X- Acceleration;
+                Vel.X = velocity.X- Accel
+                    eration;
             }
             if (!entity.collisionBox.Right && velocity.X > 0)
             {
