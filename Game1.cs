@@ -46,6 +46,7 @@ public class Game1 : Game
 
     public Game1()
     {
+        Entity.LoadEntites();
         ButtonsList = Button.LoadButtons();
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;

@@ -1,21 +1,25 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using Vector2 = System.Numerics.Vector2;
 
 namespace MinecraftAlpha
 {
     // animation thing but also can be used for Sprite Selection
     public class Sprite
     {
-        
 
 
+        public List<Vector2> Joints = new List<Vector2>(); 
         public Rectangle Margin;
         public Texture2D texture;
         public Vector2 Attachment = new Vector2(0,1);
@@ -30,16 +34,19 @@ namespace MinecraftAlpha
             this.texture = texture;
         }
 
-        public int Index = 1;
+        
 
-        public Sprite(Texture2D texture, int index) : this(texture)
-        {
-            Index = index;
-        }
+        
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
-        public void DrawSprite(SpriteBatch spriteBatch,Vector2 Pos,float size)
+        public void DrawSprite(SpriteBatch spriteBatch,Vector2 Pos,float size) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
+
         {
-            var ract = Ractangle;
+
+            //Draws the sprite where the attachment of its parent is
+
+
+
+            var ract = Margin;
             Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(MathF.PI/180 * Orientation);
             var AttachemtPos = Vector2.Transform(Attachment * size, AnglePos);
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
@@ -49,7 +56,7 @@ namespace MinecraftAlpha
                 ract,
                 Microsoft.Xna.Framework.Color.White,
                 Orientation, // Orientation
-                new Vector2.Zero(), //
+                Vector2.Zero, //
                 size,
                 SpriteEffects.None,
                 1f
@@ -61,14 +68,15 @@ namespace MinecraftAlpha
         {
             if (mob.TextureName != "null")
             {
-                var texture = Content.Load(mob.TextureName);
+                var texture = Content.Load<Texture2D>(mob.TextureName);
                 // adds a new Sprite for each limb,
                 foreach(var R in mob.Ractangles)
                 {
+                    var Ractangle = new Rectangle((int)R.X, (int)R.Y, (int)R.Z, (int)R.W);
                     Sprite sprite = new Sprite()
                     {
-                        Margin = R;
-                    }
+                        Margin = Ractangle
+                    };
                     mob.Sprites.Add(sprite);
                 }
                 

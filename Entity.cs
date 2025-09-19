@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,11 +13,26 @@ namespace MinecraftAlpha
 {
     public class Joint
     {
+        public Sprite A_Sprite;
+        public Sprite B_Sprite;
         public Vector2 A = Vector2.Zero;
         public Vector2 B = Vector2.Zero;
-
-        public Vector2 Connect()
+        public Joint(Sprite a, Sprite b)
         {
+            A_Sprite = a;
+            B_Sprite = b;
+        }
+        public Joint(Sprite a, Vector2 a_attach, Sprite b, Vector2 b_attach)
+        {
+            A_Sprite = a;
+            B_Sprite = b;
+            A = a_attach;
+            B = b_attach;
+        }
+
+        public Vector2 Connect() // returns the distance between A and B
+        {
+            
             return Vector2.Max(A, B) - Vector2.Min(A,B);
         }
     }
@@ -33,23 +49,60 @@ namespace MinecraftAlpha
 
     public class Entity
     {
+        public Texture2D Texture; // Main texture where all the limbs will originate from!
+        public string TextureName = "null"; // Name of the texture to be loaded
         public List<Vector4> Ractangles = new List<Vector4>();
         public List<Sprite> Sprites = new List<Sprite>();
         public CollisionBox collisionBox;
-        public Velocity velocity; 
+        public Velocity velocity;
+
+
+        public List<Joint> Joints = new List<Joint>(); // used to connect limbs together
         public string name { get; set; } = "Entity";
         public Vector2 position { get; set; } = Vector2.Zero;
         public float Mass = 1f;
 
         public void DrawEntity(SpriteBatch SB, float BlockSize)
         {
-            foreach(Sprite s in Sprites)
+            foreach (Joint Joint in Joints)
             {
-                s.DrawSprite(SB,BlockSize);
+
+                Joint.A_Sprite.Joints.Add(Joint.A);
+                Joint.B_Sprite.Attachment = Joint.B;
+            }
+            foreach (Sprite s in Sprites)
+            {
+                s.DrawSprite(SB, s.Attachment + position, BlockSize);
+                
             }
         }
 
-        
+
+        public static void LoadEntites()
+        {
+            List<Entity> Entities = new List<Entity>()
+            { 
+                new Entity()
+                {
+                    name = "Player",
+                    TextureName = "Steve",
+                    Ractangles = new List<Vector4>()
+                    {
+                        new Vector4(0,0,16,32), // Body
+                        new Vector4(16,0,32,16), // Head
+                        new Vector4(32,0,48,16), // Right Arm
+                        new Vector4(48,0,64,16), // Left Arm
+                        new Vector4(32,16,48,32), // Right Leg
+                        new Vector4(48,16,64,32) // Left Leg
+                    },
+                }
+            };
+
+
+
+        }
+
+
     }
 
     public class Velocity 
@@ -64,8 +117,7 @@ namespace MinecraftAlpha
 
             if (!entity.collisionBox.Left && velocity.X < 0)
             {
-                Vel.X = velocity.X- Accel
-                    eration;
+                Vel.X = velocity.X- Acceleration;
             }
             if (!entity.collisionBox.Right && velocity.X > 0)
             {
