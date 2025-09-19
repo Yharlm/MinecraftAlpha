@@ -1,8 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input.Touch;
 using Vector2 = System.Numerics.Vector2;
 
 namespace MinecraftAlpha;
@@ -24,12 +25,12 @@ public class Game1 : Game
     public bool InventoryOpen = false;
     public float BlockSize = 16f;
 
-    
+
     static public int WorldSizeX = 300;
     static public int WorldSizeY = 300;
     public int[,] BackGround { get; set; } = new int[WorldSizeX, WorldSizeY];
     public int[,] Foreground { get; set; } = new int[WorldSizeX, WorldSizeY];
-    public int[,] World      { get; set; } = new int[WorldSizeX, WorldSizeY];
+    public int[,] World { get; set; } = new int[WorldSizeX, WorldSizeY];
     public List<Block> Blocks { get; set; } = new List<Block>();
     public Cammera Camera = new Cammera();
 
@@ -50,18 +51,18 @@ public class Game1 : Game
         ButtonsList = Button.LoadButtons();
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
-        
+
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
-    
-    
+
+
     protected override void Initialize()
     {
 
         Random random = new Random();
         // TODO: Add your initialization logic here
-       
+
         // World generation
         int t = 100;
         int x = 0;
@@ -99,8 +100,8 @@ public class Game1 : Game
 
 
         // BackGround generation
-         t = 95;
-         x = 0;
+        t = 95;
+        x = 0;
         while (x < BackGround.GetLength(1))
         {
 
@@ -136,7 +137,7 @@ public class Game1 : Game
 
         base.Initialize();
     }
-    
+
 
     Entity player = new Entity
     {
@@ -147,15 +148,15 @@ public class Game1 : Game
     };
     protected override void LoadContent()
     {
-        
+
         Entities.Add(player);
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        
+
         foreach (var block in BlockTypes)
         {
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
-        
+
 
         // TODO: use this.Content to load your game content here
     }
@@ -167,7 +168,7 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         Input();
-        Camera.position = -player.position * BlockSize + new Vector2(400,202);
+        Camera.position = -player.position * BlockSize + new Vector2(400, 202);
         base.Update(gameTime);
         MousePosition = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
         WorldMousePos = (MousePosition - Camera.position) / BlockSize;
@@ -176,35 +177,32 @@ public class Game1 : Game
         {
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
 
-            
+
 
             if (entity.position.X < 0 || entity.position.X >= World.GetLength(1) || entity.position.Y < 0 || entity.position.Y >= World.GetLength(0))
             {
                 continue; // Skip if the entity is out of bounds
             }
             entity.collisionBox = new CollisionBox(); // Reset collision box for each update
+            float Collision_quality = 0.51f;
             //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
-            if (World[(int)(entity.position.Y + 1.1f), (int)(entity.position.X+ 0.5f) ] != 0)
+            if (World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X - Collision_quality)] != 0 && World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
             {
                 entity.collisionBox.Bottom = true;
             }
-            if (World[(int)(entity.position.Y -0.1f), (int)(entity.position.X + 0.5f)] != 0)
+            if (World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X - Collision_quality)] != 0 && World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
             {
                 entity.collisionBox.Top = true;
-                 
             }
-            if (World[(int)(entity.position.Y+0.5f), (int)(entity.position.X + 1.1f)] != 0)
-            {
-                entity.collisionBox.Right = true;
-            }
-            if (World[(int)(entity.position.Y + 0.5f), (int)(entity.position.X - 0.1f)] != 0)
+            if (World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X - Collision_quality)] != 0 && World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X - Collision_quality)] != 0)
             {
                 entity.collisionBox.Left = true;
             }
-            //World[(int)(entity.position.Y), (int)(entity.position.X) - 1] = 1;
-            //World[(int)(entity.position.Y), (int)(entity.position.X) + 1] = 1; // Clear previous position
+            if (World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X + Collision_quality)] != 0 && World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
+            {
+                entity.collisionBox.Right = true;
+            }
 
-            //World[(int)(entity.position.Y) - 1, (int)(entity.position.X)] = 1; // Clear previous position
 
 
             // Example gravity, can be replaced with actual logic
@@ -221,7 +219,16 @@ public class Game1 : Game
 
     public void Input()
     {
-        
+
+        if (TouchPanel.GetState().Count > 0)
+        {
+            var touch = TouchPanel.GetState()[0];
+            if (touch.State == TouchLocationState.Pressed || touch.State == TouchLocationState.Moved)
+            {
+                MousePosition = touch.Position.ToNumerics();
+            }
+        }
+
         Vector2 plrVel = Vector2.Zero;
         player.velocity.velocity = new Vector2(0, 0);
         float zoomScale = 0.3f;
@@ -248,11 +255,11 @@ public class Game1 : Game
                 plrVel += new Vector2(+1, 0);
             }
         }
-        
+
         // Get the center of the screen in screen coordinates
-        
+
         Vector2 screenCenter = Camera.size / 2f;
-        player.velocity.velocity = plrVel * 0.1f; // Adjust speed as needed
+        player.velocity.velocity += plrVel * 0.1f; // Adjust speed as needed
         if (keyboardState.IsKeyDown(Keys.OemPlus))
         {
 
@@ -277,19 +284,19 @@ public class Game1 : Game
         {
             InventoryOpen = !InventoryOpen;
         }
-        
+
 
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
-            foreach(var b in ButtonsList)
+            foreach (var b in ButtonsList)
             {
                 if (b.IsInBounds(MousePosition))
                 {
                     Button.TriggerAction(b.Action);
                     break;
-                    
+
                 }
-            
+
             }
             int BlockX = (int)(WorldMousePos.X);
             int BlockY = (int)(WorldMousePos.Y);
@@ -307,7 +314,7 @@ public class Game1 : Game
 
     }
 
-    
+
 
     protected override void Draw(GameTime gameTime)
     {
@@ -315,7 +322,7 @@ public class Game1 : Game
 
         // 2 cycles to render both directions of the world
 
-        
+
 
         for (int i = 0; i < BackGround.GetLength(0); i++)
         {
@@ -354,8 +361,8 @@ public class Game1 : Game
 
             //Mob.DrawSprite()
             // All the Sprites in its list will be rendered with SpriteRender
-            
-            
+
+
             //steve.DrawSprite(1, _spriteBatch, BlockSize * Mob.position + Camera.position + Vector2.One * BlockSize/2, BlockSize / BlockTypes[1].Texture.Width);
             //_spriteBatch.Begin();
             //_spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Camera.position - s, null, Color.Red, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
@@ -385,11 +392,11 @@ public class Game1 : Game
         }
         base.Draw(gameTime);
 
-        _spriteBatch.Begin();
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("File"), $"World Mouse Position: {WorldMousePos}", new Vector2(10, 10), Color.White);
-        _spriteBatch.End();
-        
-        
+        //_spriteBatch.Begin();
+        //_spriteBatch.DrawString(Content.Load<SpriteFont>("File"), $"World Mouse Position: {WorldMousePos}", new Vector2(10, 10), Color.White);
+        //_spriteBatch.End();
+
+
 
     }
 

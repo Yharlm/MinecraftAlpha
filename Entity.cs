@@ -89,7 +89,7 @@ namespace MinecraftAlpha
                     Ractangles = new List<Vector4>()
                     {
                         new Vector4(0,0,16,32), // Body
-                        new Vector4(16,0,32,16), // Head
+                        new Vector4(0,0,8,8), // Head
                         new Vector4(32,0,48,16), // Right Arm
                         new Vector4(48,0,64,16), // Left Arm
                         new Vector4(32,16,48,32), // Right Leg
