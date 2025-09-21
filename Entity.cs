@@ -17,6 +17,7 @@ namespace MinecraftAlpha
         public Sprite B_Sprite;
         public Vector2 A = Vector2.Zero;
         public Vector2 B = Vector2.Zero;
+        public Joint() { }
         public Joint(Sprite a, Sprite b)
         {
             A_Sprite = a;
@@ -53,8 +54,8 @@ namespace MinecraftAlpha
         public string TextureName = "null"; // Name of the texture to be loaded
         public List<Vector4> Ractangles = new List<Vector4>();
         public List<Sprite> Sprites = new List<Sprite>();
-        public CollisionBox collisionBox;
-        public Velocity velocity;
+        public CollisionBox collisionBox = new CollisionBox();
+        public Velocity velocity = new Velocity();
 
 
         public List<Joint> Joints = new List<Joint>(); // used to connect limbs together
@@ -62,7 +63,7 @@ namespace MinecraftAlpha
         public Vector2 position { get; set; } = Vector2.Zero;
         public float Mass = 1f;
 
-        public void DrawEntity(SpriteBatch SB, float BlockSize)
+        public void DrawEntity(SpriteBatch SB, float BlockSize,Vector2 Cam)
         {
             foreach (Joint Joint in Joints)
             {
@@ -72,35 +73,43 @@ namespace MinecraftAlpha
             }
             foreach (Sprite s in Sprites)
             {
-                s.DrawSprite(SB, s.Attachment + position, BlockSize);
+                s.DrawSprite(SB, /*s.Attachment + */Cam , BlockSize);
                 
             }
         }
 
 
-        public static void LoadEntites()
+        public static List<Entity> LoadEntites()
         {
             List<Entity> Entities = new List<Entity>()
             { 
                 new Entity()
                 {
+
                     name = "Player",
                     TextureName = "Steve",
                     Ractangles = new List<Vector4>()
                     {
-                        new Vector4(0,0,16,32), // Body
-                        new Vector4(0,0,8,8), // Head
-                        new Vector4(32,0,48,16), // Right Arm
-                        new Vector4(48,0,64,16), // Left Arm
-                        new Vector4(32,16,48,32), // Right Leg
-                        new Vector4(48,16,64,32) // Left Leg
+                        new Vector4(24,8,4,12), // Body
+                        new Vector4(8,0,8,8), // Head
+                        //new Vector4(24,8,28,20) // Right Arm
+                        //new Vector4(48,0,64,16), // Left Arm
+                        //new Vector4(32,16,48,32), // Right Leg
+                        //new Vector4(48,16,64,32) // Left Leg
                     },
+
+
+                    
                 }
             };
+
+            return Entities;
 
 
 
         }
+
+        
 
 
     }

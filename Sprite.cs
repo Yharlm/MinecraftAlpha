@@ -22,7 +22,7 @@ namespace MinecraftAlpha
         public List<Vector2> Joints = new List<Vector2>(); 
         public Rectangle Margin;
         public Texture2D texture;
-        public Vector2 Attachment = new Vector2(0,1);
+        public Vector2 Attachment = new Vector2(1,0);
         public float Orientation = 0f;
         public Sprite()
         {
@@ -52,7 +52,7 @@ namespace MinecraftAlpha
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 texture,
-                new Vector2(ract.Width, ract.Height) * size/2 + AttachemtPos,
+                new Vector2(ract.Width, ract.Height) * size / 2 + AttachemtPos + Pos,
                 ract,
                 Microsoft.Xna.Framework.Color.White,
                 Orientation, // Orientation
@@ -69,18 +69,21 @@ namespace MinecraftAlpha
             if (mob.TextureName != "null")
             {
                 var texture = Content.Load<Texture2D>(mob.TextureName);
+                mob.Texture = texture;
                 // adds a new Sprite for each limb,
-                foreach(var R in mob.Ractangles)
+                foreach (var R in mob.Ractangles)
                 {
                     var Ractangle = new Rectangle((int)R.X, (int)R.Y, (int)R.Z, (int)R.W);
                     Sprite sprite = new Sprite()
                     {
-                        Margin = Ractangle
+                        Margin = Ractangle,
+                        texture = texture
                     };
                     mob.Sprites.Add(sprite);
                 }
                 
             }
+            
                 
         }
     }

@@ -47,7 +47,9 @@ public class Game1 : Game
 
     public Game1()
     {
-        Entity.LoadEntites();
+
+        Entities =Entity.LoadEntites();
+        player = Entities[0];
         ButtonsList = Button.LoadButtons();
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
@@ -139,17 +141,24 @@ public class Game1 : Game
     }
 
 
-    Entity player = new Entity
-    {
-        name = "Player",
-        position = new Vector2(10, 10),
-        velocity = new Velocity(),
-        collisionBox = new CollisionBox()
-    };
+    Entity player;
     protected override void LoadContent()
     {
+        foreach(var entity in Entities)
+        {
+            
+            Sprite.LoadSprites(Content, entity);
+            
+        }
 
-        Entities.Add(player);
+        Entities[0].Joints.Add(new Joint()
+            {
+                A = new Vector2(0, 0f),
+                B = new Vector2(0f, 0),
+                A_Sprite = Entities[0].Sprites[0],
+                B_Sprite = Entities[0].Sprites[1]
+            });
+
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         foreach (var block in BlockTypes)
@@ -184,7 +193,7 @@ public class Game1 : Game
                 continue; // Skip if the entity is out of bounds
             }
             entity.collisionBox = new CollisionBox(); // Reset collision box for each update
-            float Collision_quality = 0.51f;
+            float Collision_quality = 0.2f;
             //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
             if (World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X - Collision_quality)] != 0 && World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
             {
@@ -345,7 +354,7 @@ public class Game1 : Game
                 if (World[i, j] != 0)
                 {
                     var block = BlockTypes[World[i, j]];
-                    _spriteBatch.Begin();
+                    _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
                     _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
                     _spriteBatch.End();
                 }
@@ -359,7 +368,7 @@ public class Game1 : Game
             _spriteBatch.End();
 
 
-            //Mob.DrawSprite()
+            Mob.DrawEntity(_spriteBatch, BlockSize / BlockTypes[1].Texture.Width, BlockSize * Mob.position + Camera.position);
             // All the Sprites in its list will be rendered with SpriteRender
 
 
@@ -392,9 +401,9 @@ public class Game1 : Game
         }
         base.Draw(gameTime);
 
-        //_spriteBatch.Begin();
-        //_spriteBatch.DrawString(Content.Load<SpriteFont>("File"), $"World Mouse Position: {WorldMousePos}", new Vector2(10, 10), Color.White);
-        //_spriteBatch.End();
+        _spriteBatch.Begin();
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("File"), $"World Mouse Position: {WorldMousePos}", new Vector2(10, 10), Color.White);
+        _spriteBatch.End();
 
 
 
