@@ -13,6 +13,8 @@ namespace MinecraftAlpha
 {
     public class Joint
     {
+        public float orientation = 0f;
+        
         public Sprite A_Sprite;
         public Sprite B_Sprite;
         public Vector2 A = Vector2.Zero;
@@ -64,16 +66,17 @@ namespace MinecraftAlpha
         public float Mass = 1f;
 
         public void DrawEntity(SpriteBatch SB, float BlockSize,Vector2 Cam)
-        {
+        {   
             foreach (Joint Joint in Joints)
             {
-
+                Joint.B_Sprite.Orientation = Joint.orientation;
                 Joint.A_Sprite.Joints.Add(Joint.A);
                 Joint.B_Sprite.Attachment = Joint.B;
             }
             foreach (Sprite s in Sprites)
             {
-                s.DrawSprite(SB, /*s.Attachment + */Cam , BlockSize);
+                
+                s.DrawSprite(SB, /*s.Attachment + */Cam , BlockSize,90f);
                 
             }
         }

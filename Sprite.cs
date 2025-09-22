@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Net.Mail;
@@ -22,8 +23,9 @@ namespace MinecraftAlpha
         public List<Vector2> Joints = new List<Vector2>(); 
         public Rectangle Margin;
         public Texture2D texture;
-        public Vector2 Attachment = new Vector2(1,0);
+        public Vector2 Attachment = new Vector2(0,0);
         public float Orientation = 0f;
+        public Sprite Parent = null; // Parent Sprite, if null then it is the root
         public Sprite()
         {
             
@@ -38,7 +40,7 @@ namespace MinecraftAlpha
 
         
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
-        public void DrawSprite(SpriteBatch spriteBatch,Vector2 Pos,float size) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
+        public void DrawSprite(SpriteBatch spriteBatch,Vector2 Pos,float size,float Rotation) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
 
         {
 
@@ -47,16 +49,16 @@ namespace MinecraftAlpha
 
 
             var ract = Margin;
-            Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(MathF.PI/180 * Orientation);
+            Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(MathF.PI/180 * (Orientation/* + Rotation*/));
             var AttachemtPos = Vector2.Transform(Attachment * size, AnglePos);
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 texture,
-                new Vector2(ract.Width, ract.Height) * size / 2 + AttachemtPos + Pos,
+                size*AttachemtPos + Pos,
                 ract,
                 Microsoft.Xna.Framework.Color.White,
-                Orientation, // Orientation
-                Vector2.Zero, //
+               MathF.PI / 180 * Orientation, // Orientation
+                new Vector2(ract.Width,ract.Height)/2, //
                 size,
                 SpriteEffects.None,
                 1f
