@@ -155,18 +155,42 @@ public class Game1 : Game
             new Joint()
             {
                 
-                A = new Vector2(0, 6f),
-                B = new Vector2(0f, 4f),
+                A = new Vector2(0, 8f),
+                B = new Vector2(0f,4f),
+                A_Sprite = Entities[0].Sprites[1],
+                B_Sprite = Entities[0].Sprites[2]
+            });
+        Entities[0].Joints.Add(
+            new Joint()
+            {
+                A = new Vector2(0, 0f),
+                B = new Vector2(0f,0f),
                 A_Sprite = Entities[0].Sprites[0],
                 B_Sprite = Entities[0].Sprites[1]
             });
         Entities[0].Joints.Add(
             new Joint()
             {
-                A = new Vector2(0, 4f),
-                B = new Vector2(0f,-1f),
-                A_Sprite = Entities[0].Sprites[1],
-                B_Sprite = Entities[0].Sprites[2]
+                A = new Vector2(0, 0f),
+                B = new Vector2(0f, 0f),
+                A_Sprite = Entities[0].Sprites[0],
+                B_Sprite = Entities[0].Sprites[3]
+            });
+        Entities[0].Joints.Add(
+            new Joint()
+            {
+                A = new Vector2(0, 0f),
+                B = new Vector2(0f, 0f),
+                A_Sprite = Entities[0].Sprites[0],
+                B_Sprite = Entities[0].Sprites[4]
+            });
+        Entities[0].Joints.Add(
+            new Joint()
+            {
+                A = new Vector2(0, 0f),
+                B = new Vector2(0f, 0f),
+                A_Sprite = Entities[0].Sprites[0],
+                B_Sprite = Entities[0].Sprites[5]
             });
 
         _spriteBatch = new SpriteBatch(GraphicsDevice);

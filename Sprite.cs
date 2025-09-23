@@ -18,7 +18,7 @@ namespace MinecraftAlpha
     // animation thing but also can be used for Sprite Selection
     public class Sprite
     {
-        public Layer = 0f;
+        public float Layer = 0f;
 
         public List<Vector2> Joints = new List<Vector2>(); 
         public Rectangle Margin;
@@ -87,7 +87,7 @@ namespace MinecraftAlpha
                     var Ractangle = new Rectangle((int)R.X, (int)R.Y, (int)R.Z, (int)R.W);
                     Sprite sprite = new Sprite()
                     {
-                        Layer = IndexOf(),
+                        Layer = mob.Ractangles.IndexOf(R),
                         Margin = Ractangle,
                         texture = texture
                     };
