@@ -95,12 +95,14 @@ namespace MinecraftAlpha
                     TextureName = "Steve",
                     Ractangles = new List<Vector4>()
                     {
-                        new Vector4(24,8,4,12), // Body
+                        // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
+                       
+                        new Vector4(21,8,4,12), // Right Arm
+                        new Vector4(16,8,8,12),// Body
                         new Vector4(8,0,8,8), // Head
-                        new Vector4(0,8,4,12) // Right Arm
-                        //new Vector4(48,0,64,16), // Left Arm
-                        //new Vector4(32,16,48,32), // Right Leg
-                        //new Vector4(48,16,64,32) // Left Leg
+                        new Vector4(21,12,4,12), // Left Arm
+                        new Vector4(21,8,4,12), // Right Leg
+                        new Vector4(21,8,4,12) // Left Leg
                     },
 
 
