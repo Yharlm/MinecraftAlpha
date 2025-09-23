@@ -69,14 +69,16 @@ namespace MinecraftAlpha
         {   
             foreach (Joint Joint in Joints)
             {
-                Joint.B_Sprite.Orientation = Joint.orientation;
-                Joint.A_Sprite.Joints.Add(Joint.A);
+                Joint.B_Sprite.ParentOrianetation = Joint.A_Sprite.Orientation;
+                //Joint.A_Sprite.Joints.Add(Joint.A);
                 Joint.B_Sprite.Attachment = Joint.B;
+                Joint.B_Sprite.Parent = Joint.A;
+
             }
             foreach (Sprite s in Sprites)
             {
                 
-                s.DrawSprite(SB, /*s.Attachment + */Cam , BlockSize,90f);
+                s.DrawSprite(SB, Cam , BlockSize,0);
                 
             }
         }
@@ -95,7 +97,7 @@ namespace MinecraftAlpha
                     {
                         new Vector4(24,8,4,12), // Body
                         new Vector4(8,0,8,8), // Head
-                        //new Vector4(24,8,28,20) // Right Arm
+                        new Vector4(0,8,4,12) // Right Arm
                         //new Vector4(48,0,64,16), // Left Arm
                         //new Vector4(32,16,48,32), // Right Leg
                         //new Vector4(48,16,64,32) // Left Leg

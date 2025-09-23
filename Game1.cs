@@ -151,14 +151,23 @@ public class Game1 : Game
             
         }
 
-        Entities[0].Joints.Add(new Joint()
+        Entities[0].Joints.Add(
+            new Joint()
             {
-                A = new Vector2(0, 0f),
-                B = new Vector2(0f, -1f),
+                A = new Vector2(0, 6f),
+                B = new Vector2(0f, 4f),
                 A_Sprite = Entities[0].Sprites[0],
                 B_Sprite = Entities[0].Sprites[1]
             });
-        
+        Entities[0].Joints.Add(
+            new Joint()
+            {
+                A = new Vector2(0, 4f),
+                B = new Vector2(0f,-1f),
+                A_Sprite = Entities[0].Sprites[1],
+                B_Sprite = Entities[0].Sprites[2]
+            });
+
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         foreach (var block in BlockTypes)
@@ -295,8 +304,9 @@ public class Game1 : Game
 
 
             //ent.Sprites[1].Orientation += 0.1f;
-            Entities[0].Joints[0].orientation += 1f;
-            
+            Entities[0].Sprites[0].Orientation += 1f;
+            Entities[0].Sprites[1].Orientation -= 2f;
+
         }
 
 
@@ -373,7 +383,7 @@ public class Game1 : Game
             _spriteBatch.End();
 
 
-            Mob.DrawEntity(_spriteBatch, BlockSize, BlockSize * Mob.position + Camera.position);
+            Mob.DrawEntity(_spriteBatch, BlockSize / BlockTypes[1].Texture.Width, BlockSize * Mob.position + Camera.position);
             // All the Sprites in its list will be rendered with SpriteRender
 
 
@@ -407,7 +417,7 @@ public class Game1 : Game
         base.Draw(gameTime);
 
         _spriteBatch.Begin();
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("File"), $"World Mouse Position: {WorldMousePos}", new Vector2(10, 10), Color.White);
+        //_spriteBatch.DrawString(Content.Load<SpriteFont>("File"), $"World Mouse Position: {WorldMousePos}", new Vector2(10, 10), Color.White);
         _spriteBatch.End();
 
 

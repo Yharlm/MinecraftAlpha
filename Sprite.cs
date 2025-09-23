@@ -23,9 +23,14 @@ namespace MinecraftAlpha
         public List<Vector2> Joints = new List<Vector2>(); 
         public Rectangle Margin;
         public Texture2D texture;
+
+        public float ParentOrianetation = 0f;
         public Vector2 Attachment = new Vector2(0,0);
+        public Vector2 Parent = new Vector2(0, 0); // Position of the Parent Attachment
+
         public float Orientation = 0f;
-        public Sprite Parent = null; // Parent Sprite, if null then it is the root
+        //public Sprite Parent = null; // Parent Sprite, if null then it is the root
+        
         public Sprite()
         {
             
@@ -45,20 +50,24 @@ namespace MinecraftAlpha
         {
 
             //Draws the sprite where the attachment of its parent is
+            //Vector2 Attachment = this.Attachment / new Vector2(Margin.Width,Margin.Height);
 
 
-
+            float Angle = (MathF.PI / 180 * ( Orientation + ParentOrianetation + Rotation));
+            float ParentAngle = (MathF.PI / 180 * (ParentOrianetation + Rotation));
             var ract = Margin;
-            Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(MathF.PI/180 * (Orientation/* + Rotation*/));
-            var AttachemtPos = Vector2.Transform(Attachment * size, AnglePos);
+            Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle);
+            
+            var ParentPos = Vector2.Transform(Parent, AnglePos);
+            
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 texture,
-                size*AttachemtPos + Pos,
+                Pos - ParentPos * size,
                 ract,
                 Microsoft.Xna.Framework.Color.White,
-               MathF.PI / 180 * Orientation, // Orientation
-                new Vector2(ract.Width,ract.Height)/2, //
+                Angle, // Orientation
+                new Vector2(ract.Width,ract.Height)/2 + Attachment, //
                 size,
                 SpriteEffects.None,
                 1f
