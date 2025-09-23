@@ -154,6 +154,7 @@ public class Game1 : Game
         Entities[0].Joints.Add(
             new Joint()
             {
+                
                 A = new Vector2(0, 6f),
                 B = new Vector2(0f, 4f),
                 A_Sprite = Entities[0].Sprites[0],
