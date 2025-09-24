@@ -1,108 +1,4 @@
-﻿namespace TerrainGenerator
-{
-    internal class Program
-    {
-        class Gridblock
-        {
-            public int ID;
-            public int State;
-            public string Contains;
-
-
-        }
-
-
-
-        static void Main(string[] args)
-        {
-            Random random = new Random();
-            var grid = new Gridblock[70, 390];
-            //Backround Mountains
-            //int height = 30;
-            //for (int x = 0; x < grid.GetLength(1); x++)
-            //{
-            //    height += random.Next(-1, 2);
-            //    int Debth = random.Next(6, 10);
-
-
-
-            //    while (Debth > 0 )
-            //    {
-            //        grid[height + Debth, x] = new Gridblock { ID = 1, State = 0, Contains = "Stone" };
-            //        Debth--;
-            //    }
-
-
-
-            //}
-
-            //Makes Terrain and hills
-            for (int x = 0;x < grid.GetLength(1);)
-            {
-                if (random.Next(0, 2) == 0)
-                {
-                    grid[10 - random.Next(1,3)*3, x] = new Gridblock { ID = 1, State = 0, Contains = "Hill" };
-                    
-                }
-                else
-                {
-                    grid[15 + random.Next(1, 3)*3, x] = new Gridblock { ID = 1, State = 0, Contains = "Down" };
-                }
-
-                
-                
-                x += random.Next(3, 30);
-            }
-            //Add Biomes
-            for (int x = random.Next(30, 520); x < grid.GetLength(1);)
-            {
-                int biome = random.Next(0, 7);
-                if (biome == 0)
-                    grid[30,x] = new Gridblock { ID = 1, State = 0, Contains = "Forest" };
-                else if (biome == 1)
-                    grid[40,x] = new Gridblock { ID = 1, State = 0, Contains = "Plains" };
-                else if (biome == 2)
-                    grid[50,x] = new Gridblock { ID = 1, State = 0, Contains = "Swamp" };
-                else if (biome == 3)
-                    grid[60,x] = new Gridblock { ID = 1, State = 0, Contains = "Jungle" };
-                else if (biome == 4)
-                    grid[70,x] = new Gridblock { ID = 1, State = 0, Contains = "Tundra" };
-                else if (biome == 5)
-                    grid[80,x] = new Gridblock { ID = 1, State = 0, Contains = "Snow" };
-                
-              
-                x += random.Next(10,70);
-            }
-            //MakesCaves
-
-
-
-
-
-            //Render the grid
-            for (int i = 0; i < grid.GetLength(0); i++)
-            {
-                Console.WriteLine();
-                for (int j = 0; j < grid.GetLength(1); j++)
-                {
-                    if (grid[i, j] == null)
-                    {
-                        Console.Write("  ");
-                    }
-
-                    else if (grid[i, j].ID == 1)
-                    {
-                        Console.Write(grid[i, j].Contains);
-                    }
-
-                }
-            }
-        }
-    }
-}
-
-
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace TerrainGenerator
 {
@@ -132,37 +28,158 @@ namespace TerrainGenerator
         }
         static void Sphere(float radius, int x,int y, Gridblock[,] grid)
         {
-            int wh  
+            for(int i = - (int)radius; i < radius; i++)
+            {
+                for(int j = - (int)radius; j < radius; j++)
+                {
+                    if(i*i + j*j <= radius*radius)
+                    {
+                        grid[y + j, x + i] = new Gridblock() { ID = 1, State = 0, Contains = "██" };
+                    }
+                }
+            }
         }
 
         static void Main(string[] args)
         {
-            Random random = new Random();
+            Random random = new Random(Seed:1);
             var grid = new Gridblock[70, 390];
-            
-
-            
 
 
+            float[] Layers = { 
+                0.1f,
+                0.2f,
+                0.4f,
+                0.6f,
+                0.8f };
 
-            //Render the grid
-            for (int i = 0; i < grid.GetLength(0); i++)
+
+            var Grid = new float[140, 80];
+
+            Grid = GenerateWhiteNoise(Grid.GetLength(0), Grid.GetLength(1),1);
+            Grid = GenerateSmoothNoise(Grid, 8);
+            //Grid = GenerateSmoothNoise(Grid, 10);
+
+            for (int i = 0; i < Grid.GetLength(0); i++)
             {
                 Console.WriteLine();
-                for (int j = 0; j < grid.GetLength(1); j++)
+                for (int j = 0; j < Grid.GetLength(1); j++)
                 {
-                    if (grid[i, j] == null)
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                    if (Grid[i, j] > Layers[4])
                     {
+                        
+                        
+                        Console.Write("██");
+                        continue;
+                    }
+                    if (Grid[i, j] > Layers[3])
+                    {
+                        
+                        Console.Write("▓▓");
+                        continue;
+                    }
+                    if (Grid[i, j] > Layers[2])
+                    {
+                        
+                        Console.Write("▒▒");
+                        continue;
+                    }
+                  
+                    if (Grid[i, j] > Layers[1])
+                    {
+                       
+                        Console.Write("░░");
+                        continue;
+                    }
+                    if (Grid[i, j] > Layers[0])
+                    {
+                        
                         Console.Write("  ");
-                    }
+                        continue;
 
-                    else if (grid[i, j].ID == 1)
-                    {
-                        Console.Write(grid[i, j].Contains);
                     }
-
+                    
+                    
+                    
+                    
+                    
+                    
                 }
             }
+
+            //  ░▒▓█	
+
+            //Render the grid
+            //for (int i = 0; i < grid.GetLength(0); i++)
+            //{
+            //    Console.WriteLine();
+            //    for (int j = 0; j < grid.GetLength(1); j++)
+            //    {
+            //        if (grid[i, j] == null)
+            //        {
+            //            Console.Write("  ");
+            //        }
+
+            //        else if (grid[i, j].ID == 1)
+            //        {
+            //            Console.Write(grid[i, j].Contains);
+            //        }
+
+            //    }
+            //}
+        }
+
+
+
+        static float[,] GenerateWhiteNoise(int Width, int Height, int seed)
+        {
+            float[,] Noise = new float[Width,Height];
+            Random random = new Random(seed);
+            for(int i = 0; i < Width; i++)
+            {
+                for(int j = 0; j < Height; j++)
+                {
+                    Noise[i, j] = (float)random.NextDouble() % 1 ;
+                }
+            }
+
+
+            return Noise;
+        }
+
+        static float[,] GenerateSmoothNoise(float[,] Grid, int octave)
+        {
+            var smoothed = new float[Grid.GetLength(0), Grid.GetLength(1)];
+
+            int width = Grid.GetLength(0);
+            int height = Grid.GetLength(1);
+            int samplePeriod = 1 << octave;
+            float sampleFrequency = 1.0f / samplePeriod; 
+            for (int i = 0; i < width;i++)
+            {
+                int sample_i0 = (i / octave) * octave;
+                int sample_i1 = (sample_i0 + octave) % width;
+                float horizontal_blend = (i - sample_i0) / (float)octave;
+                for (int j = 0; j < height;j++)
+                {
+                    int sample_j0 = (j / octave) * octave;
+                    int sample_j1 = (sample_j0 + octave) % height;
+                    float vertical_blend = (j - sample_j0) / (float)octave;
+
+                    float top = (1 - horizontal_blend) * Grid[sample_i0, sample_j0] + horizontal_blend * Grid[sample_i1, sample_j0];
+                    float bottom = (1 - horizontal_blend) * Grid[sample_i0, sample_j1] + horizontal_blend * Grid[sample_i1, sample_j1];
+
+                    smoothed[i, j] = (1 - vertical_blend) * top + vertical_blend * bottom;
+                }
+            }
+
+
+
+
+            return smoothed;
         }
     }
 }
