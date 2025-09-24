@@ -42,23 +42,34 @@ namespace TerrainGenerator
 
         static void Main(string[] args)
         {
-            Random random = new Random(Seed:1);
-            var grid = new Gridblock[70, 390];
+            Random random = new Random(Seed:0);
+            var grid = new Gridblock[270, 270];
 
 
             float[] Layers = { 
-                0.1f,
+                0.0f,
                 0.2f,
                 0.4f,
                 0.6f,
                 0.8f };
 
 
-            var Grid = new float[140, 80];
+            var Grid = new float[240, 280];
 
-            Grid = GenerateWhiteNoise(Grid.GetLength(0), Grid.GetLength(1),1);
-            Grid = GenerateSmoothNoise(Grid, 8);
-            //Grid = GenerateSmoothNoise(Grid, 10);
+            Grid = GenerateWhiteNoise(Grid.GetLength(1), Grid.GetLength(0),1,1);
+            Grid = GenerateSmoothNoise(Grid, 12);
+            //Grid = GenerateSmoothNoise(Grid, 5);
+
+            var Errosion = GenerateWhiteNoise(Grid.GetLength(1), Grid.GetLength(0), 1, 1); ;
+
+            Errosion = GenerateSmoothNoise(Errosion, 3);
+            ////Errosion = GenerateSmoothNoise(Errosion, 5);
+            ////EnhanceMaps(Errosion, 1.2f);
+            //SubMaps(Grid, Errosion, 0.2f);
+            SubMaps(Grid, Errosion, 1.01f);
+
+
+
 
             for (int i = 0; i < Grid.GetLength(0); i++)
             {
@@ -94,7 +105,7 @@ namespace TerrainGenerator
                         Console.Write("░░");
                         continue;
                     }
-                    if (Grid[i, j] > Layers[0])
+                    if (Grid[i, j] >= Layers[0])
                     {
                         
                         Console.Write("  ");
@@ -134,14 +145,18 @@ namespace TerrainGenerator
 
 
 
-        static float[,] GenerateWhiteNoise(int Width, int Height, int seed)
+        static float[,] GenerateWhiteNoise(int Width, int Height, int seed, int Area)
         {
-            float[,] Noise = new float[Width,Height];
+            float[,] Noise = new float[Height,Width];
             Random random = new Random(seed);
-            for(int i = 0; i < Width; i++)
+            for(int i = 0; i < Height; i++)
             {
-                for(int j = 0; j < Height; j++)
+                for(int j = 0; j < Width; j++)
                 {
+                    if (random.Next(0, Area+1) != Area/2)
+                    {
+                        continue;
+                    }
                     Noise[i, j] = (float)random.NextDouble() % 1 ;
                 }
             }
@@ -154,19 +169,19 @@ namespace TerrainGenerator
         {
             var smoothed = new float[Grid.GetLength(0), Grid.GetLength(1)];
 
-            int width = Grid.GetLength(0);
-            int height = Grid.GetLength(1);
+            int width = Grid.GetLength(1);
+            int height = Grid.GetLength(0);
             int samplePeriod = 1 << octave;
             float sampleFrequency = 1.0f / samplePeriod; 
-            for (int i = 0; i < width;i++)
+            for (int i = 0; i < height;i++)
             {
                 int sample_i0 = (i / octave) * octave;
-                int sample_i1 = (sample_i0 + octave) % width;
+                int sample_i1 = (sample_i0 + octave) % height;
                 float horizontal_blend = (i - sample_i0) / (float)octave;
-                for (int j = 0; j < height;j++)
+                for (int j = 0; j < width;j++)
                 {
                     int sample_j0 = (j / octave) * octave;
-                    int sample_j1 = (sample_j0 + octave) % height;
+                    int sample_j1 = (sample_j0 + octave) % width;
                     float vertical_blend = (j - sample_j0) / (float)octave;
 
                     float top = (1 - horizontal_blend) * Grid[sample_i0, sample_j0] + horizontal_blend * Grid[sample_i1, sample_j0];
@@ -181,5 +196,39 @@ namespace TerrainGenerator
 
             return smoothed;
         }
+
+
+        static void SumMaps(float[,] baseMap, float[,] addedMap, float weight)
+        {
+            for(int i = 0; i < baseMap.GetLength(0); i++)
+            {
+                for(int j = 0; j < baseMap.GetLength(1); j++)
+                {
+                    baseMap[i, j] += addedMap[i, j] * weight;
+                }
+            }
+        }
+        static void SubMaps(float[,] baseMap, float[,] addedMap, float weight)
+        {
+            for (int i = 0; i < baseMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < baseMap.GetLength(1); j++)
+                {
+                    baseMap[i, j] -= addedMap[i, j] * weight;
+                }
+            }
+        }
+
+        static void EnhanceMaps(float[,] baseMap, float weight)
+        {
+            for (int i = 0; i < baseMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < baseMap.GetLength(1); j++)
+                {
+                    baseMap[i, j] *= weight;
+                }
+            }
+        }
+
     }
 }
