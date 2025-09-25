@@ -53,21 +53,22 @@ namespace MinecraftAlpha
             //Vector2 Attachment = this.Attachment / new Vector2(Margin.Width,Margin.Height);
 
 
-            float Angle = (MathF.PI / 180 * ( Orientation + ParentOrianetation + Rotation));
-            float ParentAngle = (MathF.PI / 180 * (ParentOrianetation + Rotation));
+            float Angle = (MathF.PI / 180 * ( Orientation + ParentOrianetation));
+            float ParentAngle = (MathF.PI / 180 * (ParentOrianetation));
             var ract = Margin;
             Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle);
             
             var ParentPos = Vector2.Transform(Parent, AnglePos);
+            var attachmentPos = Vector2.Transform(Attachment, AnglePos)
             
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 texture,
-                Pos - ParentPos * size,
+                Pos * size ,
                 ract,
                 Microsoft.Xna.Framework.Color.White,
                 Angle, // Orientation
-                new Vector2(ract.Width,ract.Height)/2 + Attachment, //
+                new Vector2(ract.Width,ract.Height)/2 , //
                 size,
                 SpriteEffects.None,
                 1f
