@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net.Mail;
-using System.Numerics;
+
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,7 +48,36 @@ namespace MinecraftAlpha
         public bool Top { get; set; } = false;
         public bool Bottom { get; set; } = false;
 
+        /// <summary>
+        /// Checks for the collision of an entity with the world
+        /// </summary>
 
+        public void UpdateCollision(Entity entity, int[,] World)
+        {
+            if (entity.position.X < 0 || entity.position.X >= World.GetLength(1) || entity.position.Y < 0 || entity.position.Y >= World.GetLength(0))
+            {
+                return; // Skip if the entity is out of bounds
+            }
+            entity.collisionBox = new CollisionBox(); // Reset collision box for each update
+            float Collision_quality = 0.2f;
+            //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
+            if (World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X - Collision_quality)] != 0 && World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
+            {
+                entity.collisionBox.Bottom = true;
+            }
+            if (World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X - Collision_quality)] != 0 && World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
+            {
+                entity.collisionBox.Top = true;
+            }
+            if (World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X - Collision_quality)] != 0 && World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X - Collision_quality)] != 0)
+            {
+                entity.collisionBox.Left = true;
+            }
+            if (World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X + Collision_quality)] != 0 && World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
+            {
+                entity.collisionBox.Right = true;
+            }
+        }
     }
 
     public class Entity
@@ -66,7 +96,12 @@ namespace MinecraftAlpha
         public float Mass = 1f;
 
         public void DrawEntity(SpriteBatch SB, float BlockSize,Vector2 Cam)
-        {   
+        {
+
+            //SB.Begin();
+            //SB.Draw(Texture, BlockSize * position + Cam, null, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize SpriteEffects.None, 0f);
+
+            //SB.End();
             foreach (Joint Joint in Joints)
             {
                 Joint.B_Sprite.ParentOrianetation = Joint.A_Sprite.Orientation;
@@ -78,7 +113,7 @@ namespace MinecraftAlpha
             foreach (Sprite s in Sprites)
             {
                 
-                s.DrawSprite(SB, Cam , BlockSize,0);
+                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0);
                 
             }
         }

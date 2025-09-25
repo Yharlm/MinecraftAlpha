@@ -1,9 +1,41 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Numerics;
+
 
 namespace MinecraftAlpha
 {
+    public class UserInterfaceManager
+
+    {
+        
+
+        public List<Button> Buttons = new List<Button>();
+        public UserInterfaceManager()
+        {
+            Buttons = LoadButtons();
+        }
+
+        public static List<Button> LoadButtons()
+        {
+            var list = new List<Button>();
+            {
+                new Button()
+                {
+                    Name = "Test"
+                };
+            }
+            return list;
+        }
+
+        public static void TriggerAction(string Action)
+        {
+
+        }
+    }
+
+
+
     public class Button
     {
         public Vector2 Position = new Vector2(0, 0);
@@ -26,21 +58,8 @@ namespace MinecraftAlpha
             return false;
         }
 
-        public static List<Button> LoadButtons()
-        {
-            var list = new List<Button>();
-            {
-                new Button()
-                {
-                    Name = "Test"
-                };
-            }
-            return list;
-        }
 
-        public static void TriggerAction(string Action)
-        {
 
-        }
+
     }
 }

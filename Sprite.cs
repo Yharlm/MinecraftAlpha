@@ -11,10 +11,30 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using Vector2 = System.Numerics.Vector2;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+
 
 namespace MinecraftAlpha
 {
+    public class SpriteManager
+    {
+        public List<Sprite> Sprites = new List<Sprite>();
+        public SpriteManager()
+        {
+            Sprites = LoadSprites();
+        }
+        public static List<Sprite> LoadSprites()
+        {
+            var list = new List<Sprite>();
+            {
+                new Sprite()
+                {
+                    Layer = 0f
+                };
+            }
+            return list;
+        }
+    }
     // animation thing but also can be used for Sprite Selection
     public class Sprite
     {
@@ -56,19 +76,19 @@ namespace MinecraftAlpha
             float Angle = (MathF.PI / 180 * ( Orientation + ParentOrianetation));
             float ParentAngle = (MathF.PI / 180 * (ParentOrianetation));
             var ract = Margin;
-            Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle);
+            Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle/2);
             
             var ParentPos = Vector2.Transform(Parent, AnglePos);
-            var attachmentPos = Vector2.Transform(Attachment, AnglePos)
+            var attachmentPos = Vector2.Transform(Attachment, AnglePos);
             
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 texture,
-                Pos * size ,
+                Pos - ParentPos * size,
                 ract,
                 Microsoft.Xna.Framework.Color.White,
                 Angle, // Orientation
-                new Vector2(ract.Width,ract.Height)/2 , //
+                new Vector2(ract.Width,ract.Height)/2 + attachmentPos, //
                 size,
                 SpriteEffects.None,
                 1f
