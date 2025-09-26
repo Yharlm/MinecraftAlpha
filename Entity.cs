@@ -28,6 +28,7 @@ namespace MinecraftAlpha
         }
         public Joint(Sprite a, Vector2 a_attach, Sprite b, Vector2 b_attach)
         {
+            
             A_Sprite = a;
             B_Sprite = b;
             A = a_attach;
@@ -59,21 +60,21 @@ namespace MinecraftAlpha
                 return; // Skip if the entity is out of bounds
             }
             entity.collisionBox = new CollisionBox(); // Reset collision box for each update
-            float Collision_quality = 0.2f;
+            float Collision_quality = 1.2f;
             //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
-            if (World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X - Collision_quality)] != 0 && World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
+            if (World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X)] != 0 || World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
             {
                 entity.collisionBox.Bottom = true;
             }
-            if (World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X - Collision_quality)] != 0 && World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
+            if (World[(int)(entity.position.Y), (int)(entity.position.X)] != 0 || World[(int)(entity.position.Y), (int)(entity.position.X + Collision_quality)] != 0)
             {
                 entity.collisionBox.Top = true;
             }
-            if (World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X - Collision_quality)] != 0 && World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X - Collision_quality)] != 0)
+            if (World[(int)(entity.position.Y), (int)(entity.position.X)] != 0 || World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X)] != 0)
             {
                 entity.collisionBox.Left = true;
             }
-            if (World[(int)(entity.position.Y - Collision_quality), (int)(entity.position.X + Collision_quality)] != 0 && World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
+            if (World[(int)(entity.position.Y), (int)(entity.position.X + Collision_quality)] != 0 || World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
             {
                 entity.collisionBox.Right = true;
             }
@@ -108,7 +109,7 @@ namespace MinecraftAlpha
                 //Joint.A_Sprite.Joints.Add(Joint.A);
                 Joint.B_Sprite.Attachment = Joint.B;
                 Joint.B_Sprite.Parent = Joint.A;
-
+                Joint.B_Sprite.JointOrientation = MathF.PI/180 * Joint.orientation;
             }
             foreach (Sprite s in Sprites)
             {
@@ -136,8 +137,8 @@ namespace MinecraftAlpha
                         new Vector4(24,8,4,12),// Body
                         new Vector4(8,0,8,8), // Head
                         new Vector4(12,12,4,12), // Left Arm
-                        new Vector4(12,8,4,12), // Right Leg
-                        new Vector4(12,8,4,12) // Left Leg
+                        new Vector4(12,44,4,12), // Right Leg
+                        new Vector4(12,32,4,12) // Left Leg
                     },
 
 

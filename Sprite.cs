@@ -47,7 +47,7 @@ namespace MinecraftAlpha
         public float ParentOrianetation = 0f;
         public Vector2 Attachment = new Vector2(0,0);
         public Vector2 Parent = new Vector2(0, 0); // Position of the Parent Attachment
-
+        public float JointOrientation = 0f; // Orientation of the Joint
         public float Orientation = 0f;
         //public Sprite Parent = null; // Parent Sprite, if null then it is the root
         
@@ -71,12 +71,12 @@ namespace MinecraftAlpha
 
             //Draws the sprite where the attachment of its parent is
             //Vector2 Attachment = this.Attachment / new Vector2(Margin.Width,Margin.Height);
-
+            
 
             float Angle = (MathF.PI / 180 * ( Orientation + ParentOrianetation));
             float ParentAngle = (MathF.PI / 180 * (ParentOrianetation));
             var ract = Margin;
-            Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle/2);
+            Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle);
             
             var ParentPos = Vector2.Transform(Parent, AnglePos);
             var attachmentPos = Vector2.Transform(Attachment, AnglePos);
@@ -87,8 +87,8 @@ namespace MinecraftAlpha
                 Pos - ParentPos * size,
                 ract,
                 Microsoft.Xna.Framework.Color.White,
-                Angle, // Orientation
-                new Vector2(ract.Width,ract.Height)/2 + attachmentPos, //
+                Angle + JointOrientation, // Orientation
+                new Vector2(ract.Width,ract.Height)/2 + Attachment, //
                 size,
                 SpriteEffects.None,
                 1f
@@ -108,6 +108,7 @@ namespace MinecraftAlpha
                     var Ractangle = new Rectangle((int)R.X, (int)R.Y, (int)R.Z, (int)R.W);
                     Sprite sprite = new Sprite()
                     {
+                        
                         Layer = mob.Ractangles.IndexOf(R),
                         Margin = Ractangle,
                         texture = texture

@@ -53,45 +53,47 @@ namespace MinecraftAlpha
             var Entities = entities;
 
             Entities[0].Joints.Add(
-                new Joint()
+                new Joint() //Head
                 {
 
                     A = new Vector2(0, 8f),
-                    B = new Vector2(0f, 4f),
+                    B = new Vector2(0f, 2f),
                     A_Sprite = Entities[0].Sprites[1],
                     B_Sprite = Entities[0].Sprites[2]
                 });
-            Entities[0].Joints.Add(
+            Entities[0].Joints.Add(//LeftArm
                 new Joint()
                 {
-                    A = new Vector2(0, 0f),
-                    B = new Vector2(0f, 0f),
-                    A_Sprite = Entities[0].Sprites[0],
-                    B_Sprite = Entities[0].Sprites[1]
-                });
-            Entities[0].Joints.Add(
-                new Joint()
-                {
-                    A = new Vector2(0, 0f),
-                    B = new Vector2(0f, 0f),
-                    A_Sprite = Entities[0].Sprites[0],
+                    orientation = 180f,
+                    A = new Vector2(0, 4f),
+                    B = new Vector2(0f, 4f),
+                    A_Sprite = Entities[0].Sprites[1],
                     B_Sprite = Entities[0].Sprites[3]
                 });
-            Entities[0].Joints.Add(
+            Entities[0].Joints.Add(//Lleg
                 new Joint()
                 {
-                    A = new Vector2(0, 0f),
-                    B = new Vector2(0f, 0f),
-                    A_Sprite = Entities[0].Sprites[0],
-                    B_Sprite = Entities[0].Sprites[4]
-                });
-            Entities[0].Joints.Add(
-                new Joint()
-                {
-                    A = new Vector2(0, 0f),
-                    B = new Vector2(0f, 0f),
-                    A_Sprite = Entities[0].Sprites[0],
+                    A = new Vector2(0, -4f),
+                    B = new Vector2(0f, -4f),
+                    A_Sprite = Entities[0].Sprites[1],
                     B_Sprite = Entities[0].Sprites[5]
+                });
+            Entities[0].Joints.Add(//rightArm
+                new Joint()
+                {
+                    orientation = 0,
+                    A = new Vector2(0, 4f),
+                    B = new Vector2(0f, -4f),
+                    A_Sprite = Entities[0].Sprites[1],
+                    B_Sprite = Entities[0].Sprites[0]
+                });
+            Entities[0].Joints.Add(//Rleg
+                new Joint()
+                {
+                    A = new Vector2(0, -4f),
+                    B = new Vector2(0f, -4f),
+                    A_Sprite = Entities[0].Sprites[1],
+                    B_Sprite = Entities[0].Sprites[4]
                 });
         }
 

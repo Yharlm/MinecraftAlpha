@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System;
-using System.Collections.Generic;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MinecraftAlpha;
@@ -15,6 +15,8 @@ public class Game1 : Game
     UserInterfaceManager _userInterfaceManager = new UserInterfaceManager();
     EntityManager _entityManager = new EntityManager();
     BlockManager _blockManager = new BlockManager();
+    ActionManager _actionManager = new ActionManager();
+
     Player Player = new Player();
 
 
@@ -50,7 +52,7 @@ public class Game1 : Game
 
         _entityManager.LoadEntities();
 
-
+        _actionManager.Game = this;
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
 
@@ -67,7 +69,7 @@ public class Game1 : Game
         Entities = _entityManager.entities;
         BlockTypes = _blockManager.Blocks;
         player = Entities[0];
-
+        
         _entityManager.Workspace.Add(player);
         // World generation
         int t = 100;
@@ -157,7 +159,8 @@ public class Game1 : Game
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
         _entityManager.LoadSprites(Content);
-
+        _entityManager.LoadJoints();
+        _userInterfaceManager.LoadTextures(Content);
         // TODO: use this.Content to load your game content here
     }
 
@@ -203,6 +206,14 @@ public class Game1 : Game
 
     public void Input()
     {
+        _userInterfaceManager.HoverAction(MousePosition, _actionManager);
+        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+        {
+            _userInterfaceManager.ClickAction(MousePosition, _actionManager);
+        }
+
+
+
 
         if (TouchPanel.GetState().Count > 0)
         {
@@ -271,7 +282,10 @@ public class Game1 : Game
 
             //ent.Sprites[1].Orientation += 0.1f;
             Entities[0].Sprites[0].Orientation += 1f;
+            Entities[0].Sprites[3].Orientation += 1.2f;
             Entities[0].Sprites[1].Orientation -= 2f;
+            Entities[0].Sprites[5].Orientation += 1.2f;
+            Entities[0].Sprites[4].Orientation -= 2f;
 
         }
 
@@ -282,16 +296,7 @@ public class Game1 : Game
             {
 
 
-                foreach (var b in _userInterfaceManager.Buttons)
-                {
-                    if (b.IsInBounds(MousePosition))
-                    {
-                        //Button.TriggerAction(b.Action);
-                        break;
-
-                    }
-
-                }
+                
                 int BlockX = (int)(WorldMousePos.X);
                 int BlockY = (int)(WorldMousePos.Y);
 
@@ -321,8 +326,8 @@ public class Game1 : Game
 
             _spriteBatch.End();
         }
-            // 2 cycles to render both directions of the world
-            Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f);
+        // 2 cycles to render both directions of the world
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f);
         Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 1f);
         //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
         if (InventoryOpen)
@@ -334,9 +339,7 @@ public class Game1 : Game
         }
         base.Draw(gameTime);
         _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
-        _spriteBatch.Begin();
-        //_spriteBatch.DrawString(Content.Load<SpriteFont>("File"), $"World Mouse Position: {WorldMousePos}", new Vector2(10, 10), Color.White);
-        _spriteBatch.End();
+        _userInterfaceManager.DrawUI(_spriteBatch);
 
 
 
