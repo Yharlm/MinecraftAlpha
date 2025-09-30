@@ -171,24 +171,23 @@ public class Game1 : Game
         EntitiesAnimator.frames.AddRange(
             new Frame()
             {
-                Joint = player.Joints[0],
+                Joint = player.Joints[1],
                 Angle = 120f,
-                Durration = 12,
+                Durration = 4,
                 start = 0
 
 
-            },
-            
+            });
+        EntitiesAnimator.frames.AddRange(
             new Frame()
             {
-                Joint = player.Joints[0],
-                Angle = 70f,
-                Durration = 6,
-                start = 1
+                Joint = player.Joints[1],
+                Angle = 0f,
+                Durration = 12,
+                start = 4
 
 
-            }
-            );
+            });
 
         // TODO: use this.Content to load your game content here
     }
