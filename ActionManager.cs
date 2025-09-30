@@ -29,8 +29,12 @@ namespace MinecraftAlpha
         {
             var list = new List<Event>()
             {
-                new Event("KIll","", () => { Game.Entities.Clear(); }),
                 
+
+                new Event("KIll","", () => { Game.Entities.Clear(); }),
+
+                new Event("Rot","", () => { Game.EntitiesAnimator.Time = 0f; }),
+
             };
             return list;
         }

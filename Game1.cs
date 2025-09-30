@@ -17,6 +17,9 @@ public class Game1 : Game
     BlockManager _blockManager = new BlockManager();
     ActionManager _actionManager = new ActionManager();
 
+    public EntityAnimation EntitiesAnimator = new EntityAnimation();
+
+
     Player Player = new Player();
 
 
@@ -69,8 +72,9 @@ public class Game1 : Game
         Entities = _entityManager.entities;
         BlockTypes = _blockManager.Blocks;
         player = Entities[0];
+
         
-        _entityManager.Workspace.Add(player);
+
         // World generation
         int t = 100;
         int x = 0;
@@ -161,11 +165,37 @@ public class Game1 : Game
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
         _userInterfaceManager.LoadTextures(Content);
+
+        _entityManager.Workspace.Add(player);
+
+        EntitiesAnimator.frames.AddRange(
+            new Frame()
+            {
+                Joint = player.Joints[0],
+                Angle = 120f,
+                Durration = 12,
+                start = 0
+
+
+            },
+            
+            new Frame()
+            {
+                Joint = player.Joints[0],
+                Angle = 70f,
+                Durration = 6,
+                start = 1
+
+
+            }
+            );
+
         // TODO: use this.Content to load your game content here
     }
 
     protected override void Update(GameTime gameTime)
     {
+        EntitiesAnimator.Update();
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
@@ -209,6 +239,7 @@ public class Game1 : Game
         _userInterfaceManager.HoverAction(MousePosition, _actionManager);
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
+
             _userInterfaceManager.ClickAction(MousePosition, _actionManager);
         }
 
@@ -296,7 +327,7 @@ public class Game1 : Game
             {
 
 
-                
+
                 int BlockX = (int)(WorldMousePos.X);
                 int BlockY = (int)(WorldMousePos.Y);
 
@@ -322,7 +353,7 @@ public class Game1 : Game
         foreach (var Mob in Entities)
         {
             _spriteBatch.Begin();
-            _spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Player.cam.position, null, Color.White, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Player.cam.position + (BlockSize) * Vector2.One / 2, null, Color.White, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
 
             _spriteBatch.End();
         }

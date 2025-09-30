@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 
@@ -21,10 +22,11 @@ namespace MinecraftAlpha
         {
             foreach (var button in Buttons)
             {
+                var color = button.Hovered ? Color.Gray : Color.White;
                 if (button.Background != null)
                 {
                     spriteBatch.Begin();
-                    spriteBatch.Draw(button.Background, new Rectangle((int)button.Position.X, (int)button.Position.Y, (int)button.Scale.X, (int)button.Scale.Y), Color.White);
+                    spriteBatch.Draw(button.Background, new Rectangle((int)button.Position.X, (int)button.Position.Y, (int)button.Scale.X, (int)button.Scale.Y), color);
                     spriteBatch.End();
                 }
             }
@@ -33,12 +35,19 @@ namespace MinecraftAlpha
         {
             var list = new List<Button>()
             {
+                //new Button()
+                //{
+                //    Name = "Test",
+                //    Position = new Vector2(100, 100),
+                //    Scale = new Vector2(200, 50),
+                //    Action = "KIll",
+                //},
                 new Button()
                 {
                     Name = "Test",
                     Position = new Vector2(100, 100),
-                    Scale = new Vector2(200, 50),
-                    Action = "KIll",
+                    Scale = new Vector2(30, 50),
+                    Action = "Rot",
                 }
             };
             return list;
@@ -53,11 +62,17 @@ namespace MinecraftAlpha
         }
         public void HoverAction(Vector2 Mouse,ActionManager AM)
         {
-            foreach(var button in Buttons)
+            foreach (var button in Buttons)
             {
                 if (button.IsInBounds(Mouse))
                 {
-                    AM.GetAction(button.Action);
+                    button.Hovered = true;
+                    //AM.GetAction(button.Action);
+
+                }
+                else
+                {
+                    button.Hovered = false;
                 }
             }
         }
@@ -81,6 +96,9 @@ namespace MinecraftAlpha
         public Vector2 Position = new Vector2(0, 0);
         public Vector2 Scale = new Vector2(0, 0);
         public bool Hovered = false;
+        public Action HoverAction;
+
+
         public bool Visible = true;
         public bool Clicked = false;
 

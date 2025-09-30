@@ -43,6 +43,7 @@ namespace MinecraftAlpha
     }
     public class CollisionBox
     {
+        public Vector2 Size = new Vector2(0.4f, 1);
 
         public bool Left { get; set; } = false;
         public bool Right { get; set; } = false;
@@ -60,24 +61,27 @@ namespace MinecraftAlpha
                 return; // Skip if the entity is out of bounds
             }
             entity.collisionBox = new CollisionBox(); // Reset collision box for each update
-            float Collision_quality = 1.2f;
+            float Collision_quality = 0.5f;
             //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
-            if (World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X)] != 0 || World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
-            {
-                entity.collisionBox.Bottom = true;
-            }
-            if (World[(int)(entity.position.Y), (int)(entity.position.X)] != 0 || World[(int)(entity.position.Y), (int)(entity.position.X + Collision_quality)] != 0)
+            
+            if(World[(int)(entity.position.Y - Size.Y), (int)(entity.position.X)] != 0)
             {
                 entity.collisionBox.Top = true;
             }
-            if (World[(int)(entity.position.Y), (int)(entity.position.X)] != 0 || World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X)] != 0)
+            if (World[(int)(entity.position.Y + Size.Y), (int)(entity.position.X)] != 0)
+            {
+                entity.collisionBox.Bottom = true;
+            }
+            if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X - Size.X)] != 0 || World[(int)(entity.position.Y + Size.Y*0.8), (int)(entity.position.X - Size.X)] != 0)
             {
                 entity.collisionBox.Left = true;
             }
-            if (World[(int)(entity.position.Y), (int)(entity.position.X + Collision_quality)] != 0 || World[(int)(entity.position.Y + Collision_quality), (int)(entity.position.X + Collision_quality)] != 0)
+            if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X + Size.X)] != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X + Size.X)] != 0)
             {
                 entity.collisionBox.Right = true;
             }
+
+
         }
     }
 
@@ -126,7 +130,7 @@ namespace MinecraftAlpha
             { 
                 new Entity()
                 {
-
+                    position = new Vector2(50,50),
                     name = "Player",
                     TextureName = "Steve",
                     Ractangles = new List<Vector4>()

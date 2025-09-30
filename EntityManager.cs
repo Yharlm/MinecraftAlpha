@@ -73,7 +73,7 @@ namespace MinecraftAlpha
             Entities[0].Joints.Add(//Lleg
                 new Joint()
                 {
-                    A = new Vector2(0, -4f),
+                    A = new Vector2(0, -8f),
                     B = new Vector2(0f, -4f),
                     A_Sprite = Entities[0].Sprites[1],
                     B_Sprite = Entities[0].Sprites[5]
@@ -90,7 +90,7 @@ namespace MinecraftAlpha
             Entities[0].Joints.Add(//Rleg
                 new Joint()
                 {
-                    A = new Vector2(0, -4f),
+                    A = new Vector2(0, -8f),
                     B = new Vector2(0f, -4f),
                     A_Sprite = Entities[0].Sprites[1],
                     B_Sprite = Entities[0].Sprites[4]
