@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System;
+using System.Collections.Generic;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MinecraftAlpha;
@@ -16,8 +16,9 @@ public class Game1 : Game
     EntityManager _entityManager = new EntityManager();
     BlockManager _blockManager = new BlockManager();
     ActionManager _actionManager = new ActionManager();
+    EntityAnimationService _entityAnimationService = new EntityAnimationService();
 
-    public EntityAnimation EntitiesAnimator = new EntityAnimation();
+    
 
 
     Player Player = new Player();
@@ -73,7 +74,7 @@ public class Game1 : Game
         BlockTypes = _blockManager.Blocks;
         player = Entities[0];
 
-        
+
 
         // World generation
         int t = 100;
@@ -165,36 +166,17 @@ public class Game1 : Game
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
         _userInterfaceManager.LoadTextures(Content);
-
+        _entityAnimationService.LoadAnimations(_entityManager.entities);
         _entityManager.Workspace.Add(player);
 
-        EntitiesAnimator.frames.AddRange(
-            new Frame()
-            {
-                Joint = player.Joints[1],
-                Angle = 120f,
-                Durration = 4,
-                start = 0
-
-
-            });
-        EntitiesAnimator.frames.AddRange(
-            new Frame()
-            {
-                Joint = player.Joints[1],
-                Angle = 0f,
-                Durration = 12,
-                start = 4
-
-
-            });
+        
 
         // TODO: use this.Content to load your game content here
     }
 
     protected override void Update(GameTime gameTime)
     {
-        EntitiesAnimator.Update();
+        
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
@@ -212,7 +194,7 @@ public class Game1 : Game
         foreach (var entity in _entityManager.Workspace)
         {
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
-
+            entity.UpdateAnimation();
 
 
             entity.collisionBox.UpdateCollision(entity, World);
