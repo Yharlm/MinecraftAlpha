@@ -80,6 +80,8 @@ namespace MinecraftAlpha
 
     public class Entity
     {
+        public bool paused = false;
+        public bool Fliped = true;
         //public List<PotionEffects> = new List<PotionEffects>()
         public int Health;
         public int MaxHealth;
@@ -106,7 +108,7 @@ namespace MinecraftAlpha
 
         public List<Joint> Joints = new List<Joint>(); // used to connect limbs together
         public string name { get; set; } = "nullEntity";
-        public Vector2 position { get; set; } = Vector2.Zero;
+        public Vector2 position { get; set; } = Vector2.One * 50;
         public float Mass = 1f;
 
         public void DrawEntity(SpriteBatch SB, float BlockSize, Vector2 Cam)
@@ -127,7 +129,7 @@ namespace MinecraftAlpha
             foreach (Sprite s in Sprites)
             {
 
-                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0);
+                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0,Fliped);
 
             }
         }
@@ -169,8 +171,15 @@ namespace MinecraftAlpha
 
         public void UpdateAnimation()
         {
+            if (paused)
+            {
+                Animations[0].ResetAnim();
+                return;
+            }
             foreach (EntityAnimation anim in Animations)
             {
+                
+                
                 anim.Update();
             }
         }
@@ -182,36 +191,44 @@ namespace MinecraftAlpha
 
     public class Velocity
     {
-
+        public Vector2 Gravity = new Vector2(0,0.1f);
         public Vector2 velocity { get; set; } = Vector2.Zero;
 
         public void apply_velocity(Entity entity)
         {
             var Acceleration = 0.1f;
-            var Vel = Vector2.Zero;
+            var Vel = velocity;
 
             if (!entity.collisionBox.Left && velocity.X < 0)
             {
-                Vel.X = velocity.X - Acceleration;
+                Vel.X -= Acceleration;
+                velocity -= Acceleration * Vector2.UnitX;
             }
             if (!entity.collisionBox.Right && velocity.X > 0)
             {
-                Vel.X = velocity.X + Acceleration;
+                Vel.X += Acceleration;
+                velocity += Acceleration * Vector2.UnitX;
             }
             if (!entity.collisionBox.Top && velocity.Y < 0)
             {
-                Vel.Y = velocity.Y - Acceleration;
+                Vel.Y -= Acceleration;
+                velocity -= Acceleration * Vector2.UnitY;
             }
             if (!entity.collisionBox.Bottom && velocity.Y > 0)
             {
-                Vel.Y = velocity.Y + Acceleration;
+                Vel.Y += Acceleration;
+                velocity += Acceleration * Vector2.UnitY;
             }
 
+            var grav = Vector2.Zero;
+            //if (!entity.collisionBox.Bottom)
+            //{
+            //    grav = Gravity;
+            //}
 
 
 
-
-            entity.position += Vel;
+            entity.position += Vel + grav;
         }
 
 

@@ -33,7 +33,7 @@ namespace MinecraftAlpha
 
                 new Event("KIll","", () => { Game.Entities.Clear(); }),
 
-                new Event("Rot","", () => { Game.EntitiesAnimator.Time = 0f; }),
+                new Event("Rot","", () => { Game._entityManager.Workspace[0].Animations[1].Time = 0f; }),
 
             };
             return list;

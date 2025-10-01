@@ -30,4 +30,9 @@ namespace MinecraftAlpha
     {
 
     }
+
+    public void DrawParticles(SpriteBatch spriteBatch)
+        {
+
+        }
 }

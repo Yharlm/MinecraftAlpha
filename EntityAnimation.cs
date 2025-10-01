@@ -1,4 +1,5 @@
 ﻿using MinecraftAlpha;
+using System;
 using System.Collections.Generic;
 
 namespace MinecraftAlpha
@@ -11,7 +12,7 @@ namespace MinecraftAlpha
         {
             foreach (Entity entity in entityList)
             {
-                entity.Animations = ReturnWhereID(entityList.IndexOf(entity));
+                entity.Animations = ReturnWhereID(entityList.IndexOf(entity), entity);
             }
 
         }
@@ -22,18 +23,53 @@ namespace MinecraftAlpha
             entityAnimations = new List<EntityAnimation>
             {
 
-                new EntityAnimation(-1,"Walk",new List<Frame>()
+                new EntityAnimation(0,"Swing",new List<Frame>()
                 {
-                    new Frame(0,0,1,30),
-                    new Frame(0,1,1,-30),
 
-                }),
-                new EntityAnimation(-1,"Walk",new List<Frame>()
+                    new Frame(1,0,0.5f,140),
+                    new Frame(1,0.5f,0.7f,50),
+                    new Frame(1,1,1,180),
+
+                })
+                {   duration =3f,
+                    Looped = false,
+                },
+                new EntityAnimation(0,"Running",new List<Frame>()
                 {
-                    new Frame(0,0,1,30),
-                    new Frame(0,1,1,-30),
 
-                }),
+                    new Frame(1,0f,2,180+60),
+                    new Frame(1,2,2,180-60),
+                    new Frame(3,0f,2,-60),
+                    new Frame(3,2,2,60),
+
+                    new Frame(4,0f,2,60),
+                    new Frame(4,2,2,-60),
+                    new Frame(2,0f,2,-60),
+                    new Frame(2,2,2,60),
+
+
+                })
+                {
+                    duration =4f,
+                    Looped = true,
+                },
+
+                new EntityAnimation(0,"idle",new List<Frame>()
+                {
+
+                    new Frame(1,0,0f,180),
+                    new Frame(2,0,0f,0),
+                    new Frame(3,0,0f,0),
+                    new Frame(4,0,0f,0),
+                    new Frame(0,0,0f,0),
+
+
+                })
+                {   duration =0.2f,
+                    Looped = false,
+                },
+
+
             };
 
 
@@ -41,13 +77,14 @@ namespace MinecraftAlpha
 
 
         }
-        public List<EntityAnimation> ReturnWhereID(int ID)
+        public List<EntityAnimation> ReturnWhereID(int ID,Entity parent)
         {
             List<EntityAnimation> list = new List<EntityAnimation>();
             foreach (var entity in entityAnimations)
             {
                 if (entity.ID == ID || ID == -1) // -1 is universal for every mob to be able to play it
-                    list.Add(entity);
+                    entity.parent = parent; list.Add(entity);
+
             }
             return list;
         }
@@ -90,34 +127,40 @@ public class EntityAnimation
     public float Time = 0f;
     public void Update()
     {
+        
         Time += 0.1f;
         foreach (var frame in frames)
         {
-
+            
             var Parent = parent.Joints[frame.Joint];
             float Distance = GetDistanceBetweenAngles(Parent.orientation, frame.Angle);
-            if (Looped)
+            if (Looped && Time > duration )
             {
                 Time = 0f;
             }
 
 
-            if (frame.Durration >= Time && frame.start <= Time)
+            if (frame.Durration + frame.start >= Time && frame.start <= Time)
             {
 
-                Parent.orientation += Distance / 12;
+                Parent.orientation += Distance / frame.Durration/5;
             }
 
-
+            
         }
     }
 
-    public void Reset()
+    public void ResetAnim()
     {
-
-        Time = 0;
+        var Idle = parent.Animations.Find(x => x.name == "idle");
+        foreach (var frame in Idle.frames)
+        {
+            var joint = parent.Joints[frame.Joint];
+            joint.orientation = frame.Angle;
+        }
     }
 
+    
 
     public float GetDistanceBetweenAngles(float start, float end)
     {

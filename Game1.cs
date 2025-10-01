@@ -12,11 +12,11 @@ namespace MinecraftAlpha;
 
 public class Game1 : Game
 {
-    UserInterfaceManager _userInterfaceManager = new UserInterfaceManager();
-    EntityManager _entityManager = new EntityManager();
-    BlockManager _blockManager = new BlockManager();
-    ActionManager _actionManager = new ActionManager();
-    EntityAnimationService _entityAnimationService = new EntityAnimationService();
+    public UserInterfaceManager _userInterfaceManager = new UserInterfaceManager();
+    public EntityManager _entityManager = new EntityManager();
+    public BlockManager _blockManager = new BlockManager();
+    public ActionManager _actionManager = new ActionManager();
+    public EntityAnimationService _entityAnimationService = new EntityAnimationService();
 
     
 
@@ -54,8 +54,8 @@ public class Game1 : Game
     public Game1()
     {
 
-        _entityManager.LoadEntities();
-
+        
+        
         _actionManager.Game = this;
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
@@ -72,7 +72,7 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
         Entities = _entityManager.entities;
         BlockTypes = _blockManager.Blocks;
-        player = Entities[0];
+        
 
 
 
@@ -163,10 +163,13 @@ public class Game1 : Game
         {
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
+        _entityManager.LoadEntities();
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
         _userInterfaceManager.LoadTextures(Content);
+        _entityAnimationService.CreateAnimations(Entities);
         _entityAnimationService.LoadAnimations(_entityManager.entities);
+        player = _entityManager.entities[0];
         _entityManager.Workspace.Add(player);
 
         
@@ -182,7 +185,7 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         Input();
-        var player = _entityManager.Workspace[0];
+        
 
 
         Player.cam.position = -player.position * BlockSize + new Vector2(400, 202);
@@ -215,9 +218,10 @@ public class Game1 : Game
 
     }
 
-    
+    public bool Jumped = false;
     public void Input()
     {
+        var PLR = _entityManager.Workspace[0];
         _userInterfaceManager.HoverAction(MousePosition, _actionManager);
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
@@ -244,26 +248,39 @@ public class Game1 : Game
 
         var keyboard = Keyboard.GetState().GetPressedKeys();
 
+
+
+        bool PausedWalk = true;
         foreach (var key in keyboard)
         {
             if (key == Keys.W)
             {
-                plrVel += new Vector2(0, -1);
+                if (PLR.collisionBox.Bottom)
+                {
+                    
+                }
+                plrVel += new Vector2(0, -2);
             }
             if (key == Keys.S)
             {
+               
                 plrVel += new Vector2(0, +1);
             }
             if (key == Keys.A)
             {
+                PausedWalk = false;
+                PLR.Fliped = true;
                 plrVel += new Vector2(-1, 0);
             }
             if (key == Keys.D)
             {
+                PausedWalk = false ;
+                PLR.Fliped = false;
                 plrVel += new Vector2(+1, 0);
             }
         }
-
+        PLR.Animations[1].Paused = PausedWalk;
+        PLR.paused = PausedWalk;
         // Get the center of the screen in screen coordinates
 
         Vector2 screenCenter = Player.cam.size / 2f;
@@ -294,11 +311,11 @@ public class Game1 : Game
 
 
             //ent.Sprites[1].Orientation += 0.1f;
-            Entities[0].Sprites[0].Orientation += 1f;
-            Entities[0].Sprites[3].Orientation += 1.2f;
-            Entities[0].Sprites[1].Orientation -= 2f;
-            Entities[0].Sprites[5].Orientation += 1.2f;
-            Entities[0].Sprites[4].Orientation -= 2f;
+            _entityManager.Workspace[0].Sprites[0].Orientation += 1f;
+            _entityManager.Workspace[0].Sprites[3].Orientation += 1.2f;
+            _entityManager.Workspace[0].Sprites[1].Orientation -= 2f;
+            _entityManager.Workspace[0].Sprites[5].Orientation += 1.2f;
+            _entityManager.Workspace[0].Sprites[4].Orientation -= 2f;
 
         }
 

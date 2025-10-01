@@ -11,12 +11,24 @@ using System.Threading.Tasks;
 
 namespace MinecraftAlpha
 {
-    class EntityManager
+    public class EntityManager
     {
         public EntityManager() { }
         public List<Entity> entities = new List<Entity>();
         public List<Entity> Workspace = new List<Entity>();
         
+        public void Spawn(Entity entity)
+        {
+            Entity mobClone = new Entity(entity.ID,entity.name, entity.TextureName, entity.MaxHealth)
+            { 
+                Ractangles = entity.Ractangles,
+                position = Vector2.One * 50,
+                Joints = entity.Joints,
+                collisionBox = new CollisionBox() { Size = entity.collisionBox.Size },
+            };
+            Workspace.Add(mobClone);
+
+        }
         public void UpdateAll()
         {
             foreach (var entity in Workspace)

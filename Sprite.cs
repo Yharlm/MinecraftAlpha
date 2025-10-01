@@ -65,10 +65,14 @@ namespace MinecraftAlpha
 
         
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
-        public void DrawSprite(SpriteBatch spriteBatch,Vector2 Pos,float size,float Rotation) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
+        public void DrawSprite(SpriteBatch spriteBatch,Vector2 Pos,float size,float Rotation,bool Flip) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
 
         {
-
+            SpriteEffects spriteEffect = SpriteEffects.None;
+            if (Flip)
+            {
+                spriteEffect = SpriteEffects.FlipHorizontally;
+            }    
             //Draws the sprite where the attachment of its parent is
             //Vector2 Attachment = this.Attachment / new Vector2(Margin.Width,Margin.Height);
             
@@ -90,7 +94,7 @@ namespace MinecraftAlpha
                 Angle + JointOrientation, // Orientation
                 new Vector2(ract.Width,ract.Height)/2 + Attachment, //
                 size,
-                SpriteEffects.None,
+                spriteEffect,
                 1f
                 );
             spriteBatch.End();
