@@ -247,3 +247,383 @@ namespace TerrainGenerator
 
     }
 }
+
+
+
+namespace TerrainGenerator
+{
+    internal class Program
+    {
+        class Gridblock
+        {
+            public int ID;
+            public int State;
+            public string Contains;
+
+
+        }
+
+        static public void WriteAt(string s, int x, int y)
+        {
+            try
+            {
+                Console.SetCursorPosition(x, y);
+                Console.Write(s);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+
+            }
+        }
+
+        public class Tile
+        {
+
+
+            public Tile(int Z, string Text)
+            {
+
+                this.Z = Z;
+                this.texture = Text;
+                this.FG = ConsoleColor.Black;
+                this.BG = ConsoleColor.White;
+
+            }
+
+            public int Z;
+            public string texture = "";
+            public ConsoleColor FG;
+            public ConsoleColor BG;
+
+        }
+        static void Main(string[] args)
+        {
+            Random random = new Random();
+
+
+
+            List<Tile> list = new List<Tile>()
+            {
+                new Tile(0,"░░"),
+                new Tile(1,"░░"),
+                new Tile(2,"▒▒"),
+                new Tile(3,"▒▒"),
+                new Tile(4,"▒▒"),
+                new Tile(5,"▒▒"),
+                new Tile(6,"▓▓"),
+                new Tile(7,"▓▓"),
+                new Tile(8,"██"),
+                new Tile(9,"██"),
+
+
+            };
+
+            int width = 120;
+            int height = 155;
+
+            var Grid = new float[height, width];
+
+            Grid = new float[height, width];
+
+
+            var seed = random.Next(0,1000);
+
+            
+
+            Grid = GeneratEmpty(Grid,1f);
+
+            //Grid = GenerateWhiteNoise(Grid, seed, 0);
+            //Grid = GenerateSmoothNoise(Grid, 2);
+            //Grid = GaneratePerlinNoise(Grid, 4,0.1f);
+
+            float[,] Mountains = new float[height, width];
+            Mountains = GenerateWhiteNoise(Mountains, seed, 1);
+            Mountains = GaneratePerlinNoise(Mountains, 5, 0.4f);
+            Mountains = GenerateSmoothNoise(Mountains, 3);
+            SubMaps(Grid, Mountains, 0.8f);
+            int Zaxis = 0;
+            int Offset = 0;
+
+            int TerrainHeight = 26;
+
+            float SeaLevel = 0.6f;
+            while (true)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                for (int z = 0; z < 10; z++)
+                {
+                    Offset++;
+                    for (int x = 0; x < width; x++)
+                    {
+
+                       
+                        for (int y = 0; y < 40; y++)
+                        {
+                            float val = Grid[Zaxis + z, x];
+                            
+
+                            foreach (var tile in list)
+                            {
+                                if (z == tile.Z)
+                                {
+                                    if(val > SeaLevel)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkBlue;
+                                        WriteAt("██", x * 2 + 1 * 2, (int)(SeaLevel * TerrainHeight) + 6 + Offset);
+                                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                        continue;
+                                    }
+
+                                    WriteAt(tile.texture, x * 2 + 1*2, (int)(val * TerrainHeight) + 6 + Offset) ;
+                                    //WriteAt(tile.texture, x * 2 + Offset * 2, (int)(val * 20) + 6 + Offset + 1);
+                                }
+                            }
+                        }
+
+                    }
+
+
+                }
+                Console.ReadKey();
+                //Console.Clear();
+                Zaxis += 10;
+            }
+
+
+
+
+
+            //Console.ForegroundColor = ConsoleColor.DarkGray;
+
+
+
+            //for (int i = y; i < Grid.GetLength(0) + y; i++)
+            //{
+            //    Console.WriteLine();
+            //    for (int j = x; j < Grid.GetLength(1) + x; j++)
+            //    {
+
+            //        Console.ForegroundColor = ConsoleColor.White;
+            //        Console.BackgroundColor = ConsoleColor.Black;
+            //        if (Grid[i, j] > Layers[4])
+            //        {
+
+
+            //            Console.Write("██");
+            //            continue;
+            //        }
+            //        if (Grid[i, j] > Layers[3])
+            //        {
+
+            //            Console.Write("▓▓");
+            //            continue;
+            //        }
+            //        if (Grid[i, j] > Layers[2])
+            //        {
+
+            //            Console.Write("▒▒");
+            //            continue;
+            //        }
+
+            //        if (Grid[i, j] > Layers[1])
+            //        {
+
+            //            Console.Write("░░");
+            //            continue;
+            //        }
+
+            //        if (Grid[i, j] >= Layers[0])
+            //        {
+
+            //            Console.Write("  ");
+            //            continue;
+            //        }
+
+            //        Console.Write("  ");
+
+
+
+            //    }
+
+            //}
+
+
+
+
+        }
+
+        static float[,] GeneratEmpty(float[,] map,float MapHeight)
+        {
+            var Height = map.GetLength(0);
+            var Width = map.GetLength(1);
+            float[,] Noise = new float[Height, Width];
+            
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    
+                    Noise[i, j] = MapHeight;
+                }
+            }
+
+
+            return Noise;
+        }
+
+        static float[,] GenerateWhiteNoise(float[,] map, int seed, int Area)
+        {
+            var Height = map.GetLength(0);
+            var Width = map.GetLength(1);
+            float[,] Noise = new float[Height, Width];
+            Random random = new Random(seed);
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    if (random.Next(0, Area + 1) != Area / 2)
+                    {
+                        continue;
+                    }
+                    Noise[i, j] = (float)random.NextDouble();
+                }
+            }
+
+
+            return Noise;
+        }
+
+        private static float Lerp(float x0, float x1, float alpha)
+        {
+            return x0 * (1 - alpha) + alpha * x1;
+        }
+        static float[,] GenerateSmoothNoise(float[,] Grid, int octave)
+        {
+
+
+            int width = Grid.GetLength(1);
+            int height = Grid.GetLength(0);
+            float[,] smoothed = new float[height, width];
+
+            int samplePeriod = 1 << octave; // calculates 2 ^ k
+            float sampleFrequency = 1.0f / samplePeriod;
+
+            for (int y = 0; y < height; y++)
+            {
+                int sample_y0 = (y / samplePeriod) * samplePeriod;
+                int sample_y1 = (sample_y0 + samplePeriod) % height; //wrap around
+                float vertical_blend = (y - sample_y0) * sampleFrequency;
+                for (int x = 0; x < width; x++)
+                {
+                    int sample_x0 = (x / samplePeriod) * samplePeriod;
+                    int sample_x1 = (sample_x0 + samplePeriod) % width; //wrap around
+                    float horizontal_blend = (x - sample_x0) * sampleFrequency;
+
+                    float top = Lerp(Grid[sample_y0, sample_x0], Grid[sample_y0, sample_x1], horizontal_blend);
+                    float bottom = Lerp(Grid[sample_y1, sample_x0], Grid[sample_y1, sample_x1], horizontal_blend);
+
+                    smoothed[y, x] = Lerp(top, bottom, vertical_blend);
+                }
+            }
+
+
+
+
+
+            return smoothed;
+        }
+        static float[,] GaneratePerlinNoise(float[,] Base, int octaves, float persistance)
+        {
+            int width = Base.GetLength(1);
+            int height = Base.GetLength(0);
+
+            var perlin = new float[height, width];
+
+            float[][,] smoothNoise = new float[octaves][,];
+
+
+
+            for (int i = 0; i < octaves; i++)
+            {
+                smoothNoise[i] = GenerateSmoothNoise(Base, i);
+            }
+            float amplitude = 1.0f;
+            float totalAmplitude = 0.0f;
+
+            for (int i = octaves - 1; i >= 0; i--)
+            {
+                amplitude *= persistance;
+                totalAmplitude += amplitude;
+
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        perlin[y, x] += smoothNoise[i][y, x] * amplitude;
+                    }
+                }
+
+            }
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    perlin[y, x] /= totalAmplitude;
+                }
+            }
+
+            return perlin;
+
+        }
+        static void Render(float[,] map, string Tile, float val)
+        {
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    if (map[i, j] > val)
+                    {
+                        WriteAt(Tile, j * 2, i);
+
+                    }
+                }
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        static void SumMaps(float[,] baseMap, float[,] addedMap, float weight)
+        {
+            for (int i = 0; i < baseMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < baseMap.GetLength(1); j++)
+                {
+                    baseMap[i, j] += addedMap[i, j] * weight;
+                }
+            }
+        }
+        static void SubMaps(float[,] baseMap, float[,] addedMap, float weight)
+        {
+            for (int i = 0; i < baseMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < baseMap.GetLength(1); j++)
+                {
+                    baseMap[i, j] -= addedMap[i, j] * weight;
+                }
+            }
+        }
+
+        static float[,] Mask(float[,] baseMap, float[,] Mask, float weight)
+        {
+            var newMap = new float[baseMap.GetLength(0), baseMap.GetLength(1)];
+            for (int i = 0; i < newMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < newMap.GetLength(1); j++)
+                {
+                    newMap[i, j] *= (1 - Mask[i, j] * weight);
+                }
+            }
+            return newMap;
+        }
+
+    }
+}
