@@ -17,7 +17,7 @@ public class Game1 : Game
     public BlockManager _blockManager = new BlockManager();
     public ActionManager _actionManager = new ActionManager();
     public EntityAnimationService _entityAnimationService = new EntityAnimationService();
-
+    public ParticleSystem _particleSystem = new ParticleSystem();
     
 
 
@@ -185,8 +185,8 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         Input();
-        
 
+        
 
         Player.cam.position = -player.position * BlockSize + new Vector2(400, 202);
         base.Update(gameTime);
@@ -199,20 +199,13 @@ public class Game1 : Game
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             entity.UpdateAnimation();
 
-
+            entity.velocity.velocity += new Vector2(0,0.5f)
             entity.collisionBox.UpdateCollision(entity, World);
 
 
 
             // Example gravity, can be replaced with actual logic
-            if (!entity.collisionBox.Bottom)
-            {
-                entity.velocity.velocity += new Vector2(0, 0.1f);
-            }
-            else
-            {
-                entity.velocity.velocity *= new Vector2(1, 0);
-            }
+            
         }
 
 
@@ -222,6 +215,13 @@ public class Game1 : Game
     public void Input()
     {
         var PLR = _entityManager.Workspace[0];
+
+
+        
+
+        
+
+        _particleSystem.Particles[0].Position = PLR.position;
         _userInterfaceManager.HoverAction(MousePosition, _actionManager);
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
@@ -322,6 +322,11 @@ public class Game1 : Game
 
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
+            PLR.Animations[0].Time = 0f;
+
+
+
+            
             if (WorldMousePos.X > 0 && WorldMousePos.Y > 0)
             {
 
@@ -355,6 +360,10 @@ public class Game1 : Game
             _spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Player.cam.position + (BlockSize) * Vector2.One / 2, null, Color.White, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
 
             _spriteBatch.End();
+        }
+        foreach (var P in _particleSystem.Particles)
+        {
+            P.DrawParticles(_spriteBatch, Player.cam.position, 3f, _blockManager.Blocks[2].Texture);
         }
         // 2 cycles to render both directions of the world
         Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f);
