@@ -34,6 +34,7 @@ namespace MinecraftAlpha
                 {
                     if (Map[i, j] != 0)
                     {
+                        
                         var block = blockManager.Blocks[Map[i, j]];
                         
                         _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, Color.LightGray, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);

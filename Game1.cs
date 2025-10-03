@@ -18,7 +18,7 @@ public class Game1 : Game
     public ActionManager _actionManager = new ActionManager();
     public EntityAnimationService _entityAnimationService = new EntityAnimationService();
     public ParticleSystem _particleSystem = new ParticleSystem();
-    
+
 
 
     Player Player = new Player();
@@ -54,8 +54,8 @@ public class Game1 : Game
     public Game1()
     {
 
-        
-        
+
+
         _actionManager.Game = this;
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
@@ -72,7 +72,7 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
         Entities = _entityManager.entities;
         BlockTypes = _blockManager.Blocks;
-        
+
 
 
         // World generation
@@ -163,31 +163,34 @@ public class Game1 : Game
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
 
-        _userInterfaceManager.ItemSlots = UserInterfaceManager.LoadItemSlots(_blockManager.Blocks);
+        //_userInterfaceManager.ItemSlots = UserInterfaceManager.LoadItemSlots(_blockManager.Blocks);
         _entityManager.LoadEntities();
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
+        _userInterfaceManager.windows = WindowFrame.LoadGUI();
         _userInterfaceManager.LoadTextures(Content);
         _entityAnimationService.CreateAnimations(Entities);
         _entityAnimationService.LoadAnimations(_entityManager.entities);
         player = _entityManager.entities[0];
         _entityManager.Workspace.Add(player);
 
-        
+        _userInterfaceManager.windows[0].ItemsSlots[0].Item = _blockManager.Blocks[4];
+        _userInterfaceManager.windows[0].ItemsSlots[0].Count = 64;
+
 
         // TODO: use this.Content to load your game content here
     }
-
+    
     protected override void Update(GameTime gameTime)
     {
-        
+
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
         // TODO: Add your update logic here
         Input();
 
-        
+
 
         Player.cam.position = -player.position * BlockSize + new Vector2(400, 202);
         base.Update(gameTime);
@@ -206,17 +209,20 @@ public class Game1 : Game
 
 
             // Example gravity, can be replaced with actual logic
-            
+
         }
 
 
     }
 
     public bool Jumped = false;
+
+    public bool RightClicked = false;
+    public bool LeftClicked = false;
     public void Input()
     {
         var PLR = _entityManager.Workspace[0];
-       
+
         PLR.Animations[2].Paused = true;
 
 
@@ -225,10 +231,25 @@ public class Game1 : Game
 
         _particleSystem.Particles[0].Position = PLR.position;
         _userInterfaceManager.HoverAction(MousePosition, _actionManager);
-        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+        if (Mouse.GetState().LeftButton == ButtonState.Pressed && !LeftClicked)
         {
+            LeftClicked = true;
+            _userInterfaceManager.ClickAction(MousePosition, _actionManager,true);
+            
+        }
+        else if(Mouse.GetState().LeftButton == ButtonState.Released)
+        {
+            LeftClicked = false;
+        }
+        if (Mouse.GetState().RightButton == ButtonState.Pressed && !RightClicked)
+        {
+            RightClicked = true;
+            _userInterfaceManager.ClickAction(MousePosition, _actionManager, false);
 
-            _userInterfaceManager.ClickAction(MousePosition, _actionManager);
+        }
+        else if (Mouse.GetState().RightButton == ButtonState.Released)
+        {
+            RightClicked = false;
         }
 
 
@@ -338,7 +359,7 @@ public class Game1 : Game
                 int BlockX = (int)(WorldMousePos.X);
                 int BlockY = (int)(WorldMousePos.Y);
 
-                World[BlockY, BlockX] = 0; // Set to air
+                _actionManager.BreakBlock(BlockX, BlockY);
             }
         }
 
@@ -347,18 +368,18 @@ public class Game1 : Game
             int BlockX = (int)(WorldMousePos.X);
             int BlockY = (int)(WorldMousePos.Y);
 
-            World[BlockY, BlockX] = 2; // Set to air
+            _actionManager.PlaceBlock(BlockX, BlockY);
         }
 
         //Animations
 
-       
 
 
 
 
 
-        
+
+
     }
 
 
@@ -369,10 +390,10 @@ public class Game1 : Game
         _spriteBatch.Begin(samplerState: SamplerState.LinearClamp);
         foreach (var Mob in Entities)
         {
-            
+
             _spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Player.cam.position + (BlockSize) * Vector2.One / 2, null, Color.White, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
 
-            
+
         }
         _spriteBatch.End();
         foreach (var P in _particleSystem.Particles)
@@ -388,13 +409,14 @@ public class Game1 : Game
             var InventoryUI = Content.Load<Texture2D>("Sprite-0001");
             _spriteBatch.Begin();
             _spriteBatch.Draw(InventoryUI, new Vector2(250, 200), null, Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0f);
+
             _spriteBatch.End();
         }
         base.Draw(gameTime);
         _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
-        _userInterfaceManager.DrawUI(_spriteBatch);
+        _userInterfaceManager.DrawUI(_spriteBatch, Content);
 
-
+        
 
     }
 

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -14,7 +14,7 @@ namespace MinecraftAlpha
 
     {
 
-
+        public List<WindowFrame> windows = new List<WindowFrame>();
         public List<Button> Buttons = new List<Button>();
         public List<ItemSlot> ItemSlots = new List<ItemSlot>();
 
@@ -28,9 +28,10 @@ namespace MinecraftAlpha
             
         }
 
-        public void DrawUI(SpriteBatch spriteBatch)
+        public void DrawUI(SpriteBatch spriteBatch, ContentManager Contnet)
         {
-            spriteBatch.Begin(samplerState:SamplerState.PointClamp);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
             foreach (var button in Buttons)
             {
                 var color = button.Hovered ? Color.Gray : Color.White;
@@ -41,28 +42,37 @@ namespace MinecraftAlpha
 
                 }
             }
-            foreach (var item in ItemSlots)
+            foreach (var Window in windows)
             {
-                var texture = Buttons[0].Background;
-                if (item.Item == null)
+                foreach (var item in Window.ItemsSlots)
                 {
-                    continue;
+                    string AmmountInSlot = "";
+                    spriteBatch.Draw(item.Texture, new Rectangle((int)item.Position.X, (int)item.Position.Y, 32, 32), Color.White);
+                    if (item.Item != null)
+                    {
+                        spriteBatch.Draw(item.Item.Texture, item.Position + Vector2.One * 4, null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+
+                    }
+                    if (item.Count > 1)
+                    {
+                        AmmountInSlot = item.Count.ToString();
+                    }
+                    spriteBatch.DrawString(Contnet.Load<SpriteFont>("Font"), AmmountInSlot, item.Position + new Vector2(10, 14), Color.White);
                 }
-               
-                if (item.Item.Texture != null)
-                {
-                    texture = item.Item.Texture;
-                }
-                spriteBatch.Draw(texture, new Rectangle((int)item.Position.X, (int)item.Position.Y, 32, 32), Color.White);
             }
             spriteBatch.End();
+            DrawItemToMouse(spriteBatch, Contnet.Load<SpriteFont>("Font"));
         }
-        public void DrawItemToMouse(SpriteBatch spriteBatch)
+        public void DrawItemToMouse(SpriteBatch spriteBatch, SpriteFont Text)
         {
+            if (selectedItem == null)
+            {
+                return;
+            }
             Vector2 mouse = Mouse.GetState().Position.ToVector2();
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             spriteBatch.Draw(selectedItem.Texture, mouse - Vector2.One * selectedItem.Texture.Width, null, Color.White);
-            // drawstring thing here ok?
+            spriteBatch.DrawString(Text, amount.ToString(), mouse, Color.White);
             spriteBatch.End();
         }
         public static List<Button> LoadButtons()
@@ -86,31 +96,19 @@ namespace MinecraftAlpha
             };
             return list;
         }
-        public static List<ItemSlot> LoadItemSlots(List<Block> Blocks)
-        {
-            var list = new List<ItemSlot>()
-            {
-                //new Button()
-                //{
-                //    Name = "Test",
-                //    Position = new Vector2(100, 100),
-                //    Scale = new Vector2(200, 50),
-                //    Action = "KIll",
-                //},
-                new ItemSlot
-                {
-                    Position = new Vector2(0,0),
-                    Item = Blocks[4],
-                    Count = 64
-                }
-            };
-            return list;
-        }
+        
         public void LoadTextures(ContentManager Content)
         {
             foreach (var button in Buttons)
             {
                 button.Background = Content.Load<Texture2D>("dirt");
+            }
+            foreach(var window in windows)
+            {
+                foreach (var ItemSlot in window.ItemsSlots)
+                {
+                    ItemSlot.Texture = Content.Load<Texture2D>("UIelements/ItemSlot");
+                }
             }
         }
         public void HoverAction(Vector2 Mouse, ActionManager AM)
@@ -133,35 +131,101 @@ namespace MinecraftAlpha
 
             }
         }
-        public void ClickAction(Vector2 Mouse, ActionManager AM)
+        public void ClickAction(Vector2 Mouse, ActionManager AM, bool Mouse1)
         {
-            foreach (var button in Buttons)
+            if (Mouse1)
             {
-                if (button.IsInBounds(Mouse))
+                foreach (var button in Buttons)
                 {
-                    AM.GetAction(button.Action);
-                }
-            }
-            foreach (var ItemSlot in ItemSlots)
-            {
-                if (ItemSlot.IsInBounds(Mouse))
-                {
-                    if (selectedItem == null)
+                    if (button.IsInBounds(Mouse))
                     {
-                        ItemSlot.TakeItem(-1, this);
+                        AM.GetAction(button.Action);
+                    }
+                }
+                foreach (var win in this.windows)
+                {
+                    foreach (var ItemSlot in win.ItemsSlots)
+                    {
+                        if (ItemSlot.IsInBounds(Mouse))
+                        {
+                            if (selectedItem == null)
+                            {
+                                ItemSlot.TakeItem(-1, this);
 
-                    }
-                    else if (selectedItem != null)
-                    {
-                        ItemSlot.AddItem(-1, this);
+                            }
+                            else if (selectedItem != null && ItemSlot.Count < 64)
+                            {
+                                ItemSlot.AddItem(-1, this);
+                            }
+                        }
+                        //Thread.Sleep(100);
                     }
                 }
             }
+            else
+            {
+                foreach (var win in this.windows)
+                {
+                    foreach (var ItemSlot in win.ItemsSlots)
+                    {
+                        if (ItemSlot.IsInBounds(Mouse))
+                        {
+                            if (selectedItem == null)
+                            {
+                                ItemSlot.TakeItem(1, this);
+
+                            }
+                            else if (selectedItem != null && ItemSlot.Count < 64)
+                            {
+                                ItemSlot.AddItem(1, this);
+                            }
+                        }
+                        //Thread.Sleep(100);
+                    }
+                }
+            }
+
         }
 
     }
 
+    public class WindowFrame
+    {
+        public string Name { get; set; }
+        public Vector2 Position;
+        public List<ItemSlot> ItemsSlots;
 
+        public static List<WindowFrame> LoadGUI()
+        {
+
+            List<WindowFrame> windows;
+            windows = new List<WindowFrame>();
+
+            var list = new List<ItemSlot>();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    list.Add(new ItemSlot()
+                    {
+                        Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One),
+                    }
+                    );
+                }
+            }
+            var window = new WindowFrame()
+            {
+                Name = "Inventory",
+                Position = new Vector2(300, 0),
+                ItemsSlots = list
+            };
+            
+            windows.Add(window);
+            
+
+            return windows;
+        }
+    }
     public class ItemSlot
     {
         public Vector2 Position;
@@ -200,6 +264,10 @@ namespace MinecraftAlpha
 
         public void AddItem(int Amount, UserInterfaceManager UI)
         {
+            if (UI.selectedItem == null)
+            {
+                return;
+            }
             if (Amount == -1)
             {
                 Amount = UI.amount;
@@ -208,7 +276,12 @@ namespace MinecraftAlpha
             {
                 this.Item = UI.selectedItem;
                 UI.amount -= Amount;
+
                 this.Count += Amount;
+            }
+            if (UI.amount <= 0)
+            {
+                UI.selectedItem = null;
             }
 
         }

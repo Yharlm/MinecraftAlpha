@@ -14,12 +14,14 @@
     <None Remove="Content\bin\DesktopGL\Content\Entities\Steve.xnb" />
     <None Remove="Content\bin\DesktopGL\Content\Steve.xnb" />
     <None Remove="Content\bin\DesktopGL\Steve.xnb" />
+    <None Remove="Content\File.spritefont" />
     <None Remove="Content\obj\DesktopGL\net8.0\Content\Entities\Steve.mgcontent" />
     <None Remove="Content\obj\DesktopGL\net8.0\Content\Steve.mgcontent" />
     <None Remove="Content\obj\DesktopGL\Sprite-0004-Sheet.mgcontent" />
     <None Remove="Content\obj\DesktopGL\Steve.mgcontent" />
     <None Remove="Content\Sprite-0001.png" />
     <None Remove="Content\Sprite-0004-Sheet.png" />
+    <None Remove="Content\Text.spritefont" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
   </ItemGroup>
