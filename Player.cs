@@ -27,6 +27,7 @@ namespace MinecraftAlpha
             var Camera = this;
 
             // Render the world based on the position and size
+            _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             for (int i = 0; i < Map.GetLength(0); i++)
             {
                 for (int j = 0; j < Map.GetLength(1); j++)
@@ -34,12 +35,13 @@ namespace MinecraftAlpha
                     if (Map[i, j] != 0)
                     {
                         var block = blockManager.Blocks[Map[i, j]];
-                        _spriteBatch.Begin();
+                        
                         _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, Color.LightGray, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
-                        _spriteBatch.End();
+                        
                     }
                 }
             }
+            _spriteBatch.End();
 
         }
     }

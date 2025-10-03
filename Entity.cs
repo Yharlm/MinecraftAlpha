@@ -171,11 +171,22 @@ namespace MinecraftAlpha
 
         public void UpdateAnimation()
         {
-            if (paused)
+            bool idle = true;
+            foreach(var anim in Animations)
+            {
+                if (!anim.Paused && anim.name != "Idle")
+                {
+                    idle = false;
+                }
+                
+            }
+            if (idle)
             {
                 Animations[0].ResetAnim();
                 return;
             }
+            
+            
             foreach (EntityAnimation anim in Animations)
             {
                 

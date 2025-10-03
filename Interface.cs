@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using static System.Formats.Asn1.AsnWriter;
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 
 namespace MinecraftAlpha
@@ -12,10 +13,11 @@ namespace MinecraftAlpha
     public class UserInterfaceManager
 
     {
-        
+
 
         public List<Button> Buttons = new List<Button>();
         public List<ItemSlot> ItemSlots = new List<ItemSlot>();
+
 
         public Block selectedItem = null;
         public int amount = 0;
@@ -23,20 +25,37 @@ namespace MinecraftAlpha
         public UserInterfaceManager()
         {
             Buttons = LoadButtons();
+            
         }
 
         public void DrawUI(SpriteBatch spriteBatch)
         {
+            spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             foreach (var button in Buttons)
             {
                 var color = button.Hovered ? Color.Gray : Color.White;
                 if (button.Background != null)
                 {
-                    spriteBatch.Begin();
+
                     spriteBatch.Draw(button.Background, new Rectangle((int)button.Position.X, (int)button.Position.Y, (int)button.Scale.X, (int)button.Scale.Y), color);
-                    spriteBatch.End();
+
                 }
             }
+            foreach (var item in ItemSlots)
+            {
+                var texture = Buttons[0].Background;
+                if (item.Item == null)
+                {
+                    continue;
+                }
+               
+                if (item.Item.Texture != null)
+                {
+                    texture = item.Item.Texture;
+                }
+                spriteBatch.Draw(texture, new Rectangle((int)item.Position.X, (int)item.Position.Y, 32, 32), Color.White);
+            }
+            spriteBatch.End();
         }
         public void DrawItemToMouse(SpriteBatch spriteBatch)
         {
@@ -67,7 +86,26 @@ namespace MinecraftAlpha
             };
             return list;
         }
-
+        public static List<ItemSlot> LoadItemSlots(List<Block> Blocks)
+        {
+            var list = new List<ItemSlot>()
+            {
+                //new Button()
+                //{
+                //    Name = "Test",
+                //    Position = new Vector2(100, 100),
+                //    Scale = new Vector2(200, 50),
+                //    Action = "KIll",
+                //},
+                new ItemSlot
+                {
+                    Position = new Vector2(0,0),
+                    Item = Blocks[4],
+                    Count = 64
+                }
+            };
+            return list;
+        }
         public void LoadTextures(ContentManager Content)
         {
             foreach (var button in Buttons)
@@ -75,7 +113,7 @@ namespace MinecraftAlpha
                 button.Background = Content.Load<Texture2D>("dirt");
             }
         }
-        public void HoverAction(Vector2 Mouse,ActionManager AM)
+        public void HoverAction(Vector2 Mouse, ActionManager AM)
         {
             foreach (var button in Buttons)
             {
@@ -104,7 +142,7 @@ namespace MinecraftAlpha
                     AM.GetAction(button.Action);
                 }
             }
-            foreach(var ItemSlot in ItemSlots)
+            foreach (var ItemSlot in ItemSlots)
             {
                 if (ItemSlot.IsInBounds(Mouse))
                 {
@@ -113,7 +151,7 @@ namespace MinecraftAlpha
                         ItemSlot.TakeItem(-1, this);
 
                     }
-                    else if(selectedItem != null)
+                    else if (selectedItem != null)
                     {
                         ItemSlot.AddItem(-1, this);
                     }
@@ -130,7 +168,7 @@ namespace MinecraftAlpha
         Vector2 Scale = Vector2.One * 32;
         public Block Item;
         public int Count = 0;
-        
+
         public Texture2D Texture;
         public bool IsInBounds(Vector2 Pos)
         {
@@ -144,15 +182,19 @@ namespace MinecraftAlpha
             return false;
         }
 
-        public void TakeItem(int Amount,UserInterfaceManager UI)
+        public void TakeItem(int Amount, UserInterfaceManager UI)
         {
-            if(Amount == -1)
+            if (Amount == -1)
             {
                 Amount = Count;
             }
             UI.selectedItem = Item;
             UI.amount = Amount;
             this.Count -= Amount;
+            if (this.Count == 0)
+            {
+                Item = null;
+            }
 
         }
 
@@ -160,15 +202,15 @@ namespace MinecraftAlpha
         {
             if (Amount == -1)
             {
-                Amount = Count;
+                Amount = UI.amount;
             }
-            if (this.Item.Name == UI.selectedItem.Name)
+            if (this.Item == UI.selectedItem || this.Item == null)
             {
                 this.Item = UI.selectedItem;
                 UI.amount -= Amount;
-                this.Count+=Amount;
+                this.Count += Amount;
             }
-            
+
         }
 
     }

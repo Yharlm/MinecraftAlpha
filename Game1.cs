@@ -75,7 +75,6 @@ public class Game1 : Game
         
 
 
-
         // World generation
         int t = 100;
         int x = 0;
@@ -163,6 +162,8 @@ public class Game1 : Game
         {
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
+
+        _userInterfaceManager.ItemSlots = UserInterfaceManager.LoadItemSlots(_blockManager.Blocks);
         _entityManager.LoadEntities();
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
@@ -199,7 +200,7 @@ public class Game1 : Game
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             entity.UpdateAnimation();
 
-            entity.velocity.velocity += new Vector2(0,0.5f)
+            entity.velocity.velocity += new Vector2(0, 0.5f);
             entity.collisionBox.UpdateCollision(entity, World);
 
 
@@ -215,11 +216,12 @@ public class Game1 : Game
     public void Input()
     {
         var PLR = _entityManager.Workspace[0];
+       
+        PLR.Animations[2].Paused = true;
 
 
-        
 
-        
+
 
         _particleSystem.Particles[0].Position = PLR.position;
         _userInterfaceManager.HoverAction(MousePosition, _actionManager);
@@ -249,38 +251,38 @@ public class Game1 : Game
         var keyboard = Keyboard.GetState().GetPressedKeys();
 
 
+        PLR.Animations[1].Paused = true;
 
-        bool PausedWalk = true;
         foreach (var key in keyboard)
         {
             if (key == Keys.W)
             {
                 if (PLR.collisionBox.Bottom)
                 {
-                    
+
                 }
                 plrVel += new Vector2(0, -2);
             }
             if (key == Keys.S)
             {
-               
+
                 plrVel += new Vector2(0, +1);
             }
             if (key == Keys.A)
             {
-                PausedWalk = false;
+                PLR.Animations[1].Paused = false;
                 PLR.Fliped = true;
                 plrVel += new Vector2(-1, 0);
             }
             if (key == Keys.D)
             {
-                PausedWalk = false ;
+                PLR.Animations[1].Paused = false;
                 PLR.Fliped = false;
                 plrVel += new Vector2(+1, 0);
             }
         }
-        PLR.Animations[1].Paused = PausedWalk;
-        PLR.paused = PausedWalk;
+
+
         // Get the center of the screen in screen coordinates
 
         Vector2 screenCenter = Player.cam.size / 2f;
@@ -322,11 +324,12 @@ public class Game1 : Game
 
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
-            PLR.Animations[0].Time = 0f;
+            //PLR.Animations[2].Paused = false;
+            //PLR.Animations[2].Time = 0f;
 
 
 
-            
+
             if (WorldMousePos.X > 0 && WorldMousePos.Y > 0)
             {
 
@@ -347,6 +350,15 @@ public class Game1 : Game
             World[BlockY, BlockX] = 2; // Set to air
         }
 
+        //Animations
+
+       
+
+
+
+
+
+        
     }
 
 
@@ -354,13 +366,15 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
+        _spriteBatch.Begin(samplerState: SamplerState.LinearClamp);
         foreach (var Mob in Entities)
         {
-            _spriteBatch.Begin();
+            
             _spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Player.cam.position + (BlockSize) * Vector2.One / 2, null, Color.White, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
 
-            _spriteBatch.End();
+            
         }
+        _spriteBatch.End();
         foreach (var P in _particleSystem.Particles)
         {
             P.DrawParticles(_spriteBatch, Player.cam.position, 3f, _blockManager.Blocks[2].Texture);

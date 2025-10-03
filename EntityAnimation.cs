@@ -22,18 +22,21 @@ namespace MinecraftAlpha
             var mob = entityList;
             entityAnimations = new List<EntityAnimation>
             {
-
-                new EntityAnimation(0,"Swing",new List<Frame>()
+                new EntityAnimation(0,"idle",new List<Frame>()
                 {
 
-                    new Frame(1,0,0.5f,140),
-                    new Frame(1,0.5f,0.7f,50),
-                    new Frame(1,1,1,180),
+                    new Frame(1,0,0f,180),
+                    new Frame(2,0,0f,0),
+                    new Frame(3,0,0f,0),
+                    new Frame(4,0,0f,0),
+                    new Frame(0,0,0f,0),
+
 
                 })
-                {   duration =3f,
+                {   duration =0.2f,
                     Looped = false,
                 },
+                
                 new EntityAnimation(0,"Running",new List<Frame>()
                 {
 
@@ -53,21 +56,18 @@ namespace MinecraftAlpha
                     duration =4f,
                     Looped = true,
                 },
-
-                new EntityAnimation(0,"idle",new List<Frame>()
+                new EntityAnimation(0,"Swing",new List<Frame>()
                 {
 
-                    new Frame(1,0,0f,180),
-                    new Frame(2,0,0f,0),
-                    new Frame(3,0,0f,0),
-                    new Frame(4,0,0f,0),
-                    new Frame(0,0,0f,0),
-
+                    new Frame(1,0,0.5f,140),
+                    new Frame(1,0.5f,0.7f,50),
+                    new Frame(1,1,1,180),
 
                 })
-                {   duration =0.2f,
+                {   duration =3f,
                     Looped = false,
                 },
+
 
 
             };
