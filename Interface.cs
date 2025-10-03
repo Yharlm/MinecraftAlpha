@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using static System.Formats.Asn1.AsnWriter;
 
 
 namespace MinecraftAlpha
@@ -13,6 +15,11 @@ namespace MinecraftAlpha
         
 
         public List<Button> Buttons = new List<Button>();
+        public List<ItemSlot> ItemSlots = new List<ItemSlot>();
+
+        public Block selectedItem = null;
+        public int amount = 0;
+
         public UserInterfaceManager()
         {
             Buttons = LoadButtons();
@@ -30,6 +37,14 @@ namespace MinecraftAlpha
                     spriteBatch.End();
                 }
             }
+        }
+        public void DrawItemToMouse(SpriteBatch spriteBatch)
+        {
+            Vector2 mouse = Mouse.GetState().Position.ToVector2();
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            spriteBatch.Draw(selectedItem.Texture, mouse - Vector2.One * selectedItem.Texture.Width, null, Color.White);
+            // drawstring thing here ok?
+            spriteBatch.End();
         }
         public static List<Button> LoadButtons()
         {
@@ -75,6 +90,10 @@ namespace MinecraftAlpha
                     button.Hovered = false;
                 }
             }
+            foreach (var ItemSlot in ItemSlots)
+            {
+
+            }
         }
         public void ClickAction(Vector2 Mouse, ActionManager AM)
         {
@@ -85,12 +104,74 @@ namespace MinecraftAlpha
                     AM.GetAction(button.Action);
                 }
             }
+            foreach(var ItemSlot in ItemSlots)
+            {
+                if (ItemSlot.IsInBounds(Mouse))
+                {
+                    if (selectedItem == null)
+                    {
+                        ItemSlot.TakeItem(-1, this);
+
+                    }
+                    else if(selectedItem != null)
+                    {
+                        ItemSlot.AddItem(-1, this);
+                    }
+                }
+            }
         }
 
     }
 
 
+    public class ItemSlot
+    {
+        public Vector2 Position;
+        Vector2 Scale = Vector2.One * 32;
+        public Block Item;
+        public int Count = 0;
+        
+        public Texture2D Texture;
+        public bool IsInBounds(Vector2 Pos)
+        {
 
+            if (Pos.X >= Position.X && Pos.X <= Position.X + Scale.X)
+                if (Pos.Y > Position.Y && Pos.Y <= Position.Y + Scale.Y)
+                {
+                    return true;
+                    //Place Design shit here
+                }
+            return false;
+        }
+
+        public void TakeItem(int Amount,UserInterfaceManager UI)
+        {
+            if(Amount == -1)
+            {
+                Amount = Count;
+            }
+            UI.selectedItem = Item;
+            UI.amount = Amount;
+            this.Count -= Amount;
+
+        }
+
+        public void AddItem(int Amount, UserInterfaceManager UI)
+        {
+            if (Amount == -1)
+            {
+                Amount = Count;
+            }
+            if (this.Item.Name == UI.selectedItem.Name)
+            {
+                this.Item = UI.selectedItem;
+                UI.amount -= Amount;
+                this.Count+=Amount;
+            }
+            
+        }
+
+    }
     public class Button
     {
         public Vector2 Position = new Vector2(0, 0);

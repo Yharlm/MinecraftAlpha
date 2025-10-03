@@ -7,6 +7,11 @@ namespace MinecraftAlpha
     {
 
         public string Name { get; set; }
+        public string Description { get; set; }
+
+        public bool Placable = true;
+
+        
 
         public Texture2D Texture { get; set; }
         public string TexturePath { get; set; }
