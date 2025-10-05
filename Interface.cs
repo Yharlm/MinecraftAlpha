@@ -18,6 +18,7 @@ namespace MinecraftAlpha
         public List<Button> Buttons = new List<Button>();
         public List<ItemSlot> ItemSlots = new List<ItemSlot>();
 
+        public bool Clicked = false;
 
         public Block selectedItem = null;
         public int amount = 0;
@@ -65,6 +66,11 @@ namespace MinecraftAlpha
         }
         public void DrawItemToMouse(SpriteBatch spriteBatch, SpriteFont Text)
         {
+            string Amounts = amount.ToString();
+            if (amount <= 1)
+            {
+                Amounts = "";
+            }
             if (selectedItem == null)
             {
                 return;
@@ -72,7 +78,7 @@ namespace MinecraftAlpha
             Vector2 mouse = Mouse.GetState().Position.ToVector2();
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             spriteBatch.Draw(selectedItem.Texture, mouse - Vector2.One * selectedItem.Texture.Width, null, Color.White);
-            spriteBatch.DrawString(Text, amount.ToString(), mouse, Color.White);
+            spriteBatch.DrawString(Text, Amounts, mouse, Color.White);
             spriteBatch.End();
         }
         public static List<Button> LoadButtons()
@@ -133,20 +139,23 @@ namespace MinecraftAlpha
         }
         public void ClickAction(Vector2 Mouse, ActionManager AM, bool Mouse1)
         {
-            if (Mouse1)
+            foreach (var button in Buttons)
             {
-                foreach (var button in Buttons)
+                if (button.IsInBounds(Mouse))
                 {
-                    if (button.IsInBounds(Mouse))
-                    {
-                        AM.GetAction(button.Action);
-                    }
+                    
+                    AM.GetAction(button.Action);
+
                 }
-                foreach (var win in this.windows)
+            }
+            foreach (var win in this.windows)
+            {
+                foreach (var ItemSlot in win.ItemsSlots)
                 {
-                    foreach (var ItemSlot in win.ItemsSlots)
+                    if (ItemSlot.IsInBounds(Mouse))
                     {
-                        if (ItemSlot.IsInBounds(Mouse))
+                        Clicked = true;
+                        if (Mouse1)
                         {
                             if (selectedItem == null)
                             {
@@ -158,17 +167,7 @@ namespace MinecraftAlpha
                                 ItemSlot.AddItem(-1, this);
                             }
                         }
-                        //Thread.Sleep(100);
-                    }
-                }
-            }
-            else
-            {
-                foreach (var win in this.windows)
-                {
-                    foreach (var ItemSlot in win.ItemsSlots)
-                    {
-                        if (ItemSlot.IsInBounds(Mouse))
+                        else
                         {
                             if (selectedItem == null)
                             {
@@ -180,11 +179,11 @@ namespace MinecraftAlpha
                                 ItemSlot.AddItem(1, this);
                             }
                         }
-                        //Thread.Sleep(100);
+                        
                     }
+
                 }
             }
-
         }
 
     }
@@ -248,6 +247,7 @@ namespace MinecraftAlpha
 
         public void TakeItem(int Amount, UserInterfaceManager UI)
         {
+            
             if (Amount == -1)
             {
                 Amount = Count;
@@ -259,11 +259,12 @@ namespace MinecraftAlpha
             {
                 Item = null;
             }
-
+            
         }
 
         public void AddItem(int Amount, UserInterfaceManager UI)
         {
+            
             if (UI.selectedItem == null)
             {
                 return;
@@ -283,7 +284,7 @@ namespace MinecraftAlpha
             {
                 UI.selectedItem = null;
             }
-
+            
         }
 
     }

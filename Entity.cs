@@ -174,7 +174,7 @@ namespace MinecraftAlpha
             bool idle = true;
             foreach(var anim in Animations)
             {
-                if (!anim.Paused && anim.name != "Idle")
+                if (!anim.Paused && anim.name != "idle")
                 {
                     idle = false;
                 }
@@ -227,19 +227,24 @@ namespace MinecraftAlpha
             }
             if (!entity.collisionBox.Bottom && velocity.Y > 0)
             {
+                
                 Vel.Y += Acceleration;
                 velocity += Acceleration * Vector2.UnitY;
             }
 
-            var grav = Vector2.Zero;
-            //if (!entity.collisionBox.Bottom)
-            //{
-            //    grav = Gravity;
-            //}
+
+            if (entity.collisionBox.Bottom)
+            {
+                Gravity.Y = 0;
+            }
+            else
+            {
+                Gravity.Y += Acceleration / 20;
+            }
 
 
 
-            entity.position += Vel + grav;
+            entity.position += Vel + Gravity;
         }
 
 

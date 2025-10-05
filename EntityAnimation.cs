@@ -60,7 +60,7 @@ namespace MinecraftAlpha
                 {
 
                     new Frame(1,0,0.5f,140),
-                    new Frame(1,0.5f,0.7f,50),
+                    new Frame(1,0.5f,0.7f,10),
                     new Frame(1,1,1,180),
 
                 })
@@ -127,7 +127,10 @@ public class EntityAnimation
     public float Time = 0f;
     public void Update()
     {
-        
+        if (Paused)
+        {
+            return;
+        }
         Time += 0.1f;
         foreach (var frame in frames)
         {

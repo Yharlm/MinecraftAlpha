@@ -49,7 +49,7 @@ namespace MinecraftAlpha
                 Game.World[Y, X] = BlockId;
                 Game._userInterfaceManager.amount -= 1;
             }
-            if (Game._userInterfaceManager.amount < 0)
+            if (Game._userInterfaceManager.amount <= 0)
             {
                 Game._userInterfaceManager.selectedItem = null;
 

@@ -180,7 +180,7 @@ public class Game1 : Game
 
         // TODO: use this.Content to load your game content here
     }
-    
+
     protected override void Update(GameTime gameTime)
     {
 
@@ -200,10 +200,11 @@ public class Game1 : Game
         _blockManager.BlockSize = BlockSize;
         foreach (var entity in _entityManager.Workspace)
         {
+            
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             entity.UpdateAnimation();
 
-            entity.velocity.velocity += new Vector2(0, 0.5f);
+            
             entity.collisionBox.UpdateCollision(entity, World);
 
 
@@ -215,7 +216,7 @@ public class Game1 : Game
 
     }
 
-    public bool Jumped = false;
+    
 
     public bool RightClicked = false;
     public bool LeftClicked = false;
@@ -228,27 +229,63 @@ public class Game1 : Game
 
 
 
-
+        
         _particleSystem.Particles[0].Position = PLR.position;
         _userInterfaceManager.HoverAction(MousePosition, _actionManager);
         if (Mouse.GetState().LeftButton == ButtonState.Pressed && !LeftClicked)
         {
             LeftClicked = true;
-            _userInterfaceManager.ClickAction(MousePosition, _actionManager,true);
+            _userInterfaceManager.ClickAction(MousePosition, _actionManager, true);
             
+            
+
         }
-        else if(Mouse.GetState().LeftButton == ButtonState.Released)
+        if(Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
+            if (!_userInterfaceManager.Clicked)
+            {
+                PLR.Animations[2].Time = 0f;
+                PLR.Animations[2].Paused = false;
+                if (WorldMousePos.X > 0 && WorldMousePos.Y > 0)
+                {
+                    int BlockX = (int)(WorldMousePos.X);
+                    int BlockY = (int)(WorldMousePos.Y);
+
+                    _actionManager.BreakBlock(BlockX, BlockY);
+                }
+            }
+        }
+        else if (Mouse.GetState().LeftButton == ButtonState.Released)
+        {
+            
             LeftClicked = false;
         }
+        
+
         if (Mouse.GetState().RightButton == ButtonState.Pressed && !RightClicked)
         {
             RightClicked = true;
             _userInterfaceManager.ClickAction(MousePosition, _actionManager, false);
+            
+            
 
+
+        }
+        if (Mouse.GetState().RightButton == ButtonState.Pressed)
+        {
+            if (!_userInterfaceManager.Clicked)
+            {
+                PLR.Animations[2].Time = 0f;
+                PLR.Animations[2].Paused = false;
+                int BlockX = (int)(WorldMousePos.X);
+                int BlockY = (int)(WorldMousePos.Y);
+
+                _actionManager.PlaceBlock(BlockX, BlockY);
+            }
         }
         else if (Mouse.GetState().RightButton == ButtonState.Released)
         {
+            _userInterfaceManager.Clicked = false;
             RightClicked = false;
         }
 
@@ -278,11 +315,8 @@ public class Game1 : Game
         {
             if (key == Keys.W)
             {
-                if (PLR.collisionBox.Bottom)
-                {
-
-                }
-                plrVel += new Vector2(0, -2);
+                plrVel += new Vector2(0, -12);
+                Player.Jumping = true;
             }
             if (key == Keys.S)
             {
@@ -302,7 +336,17 @@ public class Game1 : Game
                 plrVel += new Vector2(+1, 0);
             }
         }
-
+        if (Player.Jumping)
+        {
+            if (!PLR.collisionBox.Bottom)
+            {
+                plrVel += new Vector2(0, -12);
+            }
+            else
+            {
+                Player.Jumping = false;
+            }
+        }
 
         // Get the center of the screen in screen coordinates
 
@@ -342,34 +386,24 @@ public class Game1 : Game
 
         }
 
-
-        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-        {
-            //PLR.Animations[2].Paused = false;
-            //PLR.Animations[2].Time = 0f;
-
-
-
-
-            if (WorldMousePos.X > 0 && WorldMousePos.Y > 0)
-            {
-
-
-
-                int BlockX = (int)(WorldMousePos.X);
-                int BlockY = (int)(WorldMousePos.Y);
-
-                _actionManager.BreakBlock(BlockX, BlockY);
-            }
-        }
-
         if (Mouse.GetState().RightButton == ButtonState.Pressed)
         {
-            int BlockX = (int)(WorldMousePos.X);
-            int BlockY = (int)(WorldMousePos.Y);
 
-            _actionManager.PlaceBlock(BlockX, BlockY);
+           
+
+
         }
+        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+        {
+
+            
+
+
+
+
+        }
+
+
 
         //Animations
 
@@ -401,8 +435,8 @@ public class Game1 : Game
             P.DrawParticles(_spriteBatch, Player.cam.position, 3f, _blockManager.Blocks[2].Texture);
         }
         // 2 cycles to render both directions of the world
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f);
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 1f);
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,Color.FromNonPremultiplied(new Vector4(0.5f, 0.5f, 0.5f, 1)));
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 1f, Color.FromNonPremultiplied(new Vector4(0.6f, 0.6f, 0.6f, 1)));
         //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
         if (InventoryOpen)
         {
@@ -416,7 +450,10 @@ public class Game1 : Game
         _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
         _userInterfaceManager.DrawUI(_spriteBatch, Content);
 
-        
+        _spriteBatch.Begin();
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), _entityManager.Workspace[0].velocity.velocity.Y.ToString(),Vector2.One, Color.Wheat);
+        _spriteBatch.End();
+
 
     }
 

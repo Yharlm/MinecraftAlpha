@@ -14,6 +14,7 @@ namespace MinecraftAlpha
     {
         public Entity Plr;
         public Cammera cam = new Cammera();
+        public bool Jumping = false;
     }
 
     public class Cammera
@@ -21,7 +22,7 @@ namespace MinecraftAlpha
         public Vector2 position = new Vector2(530, -500);
         public Vector2 size { get; set; } = new Vector2(800, 600);
 
-        public void RenderLayer(BlockManager blockManager,SpriteBatch _spriteBatch, int[,] Map,float layer)
+        public void RenderLayer(BlockManager blockManager,SpriteBatch _spriteBatch, int[,] Map,float layer,Color color)
         {
             var BlockSize = blockManager.BlockSize;
             var Camera = this;
@@ -37,7 +38,7 @@ namespace MinecraftAlpha
                         
                         var block = blockManager.Blocks[Map[i, j]];
                         
-                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, Color.LightGray, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, color, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
                         
                     }
                 }
