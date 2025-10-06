@@ -45,6 +45,10 @@ namespace MinecraftAlpha
             }
             foreach (var Window in windows)
             {
+                if (Window.Visible == false)
+                {
+                    continue;
+                }
                 foreach (var item in Window.ItemsSlots)
                 {
                     string AmmountInSlot = "";
@@ -190,6 +194,7 @@ namespace MinecraftAlpha
 
     public class WindowFrame
     {
+        public bool Visible = false;
         public string Name { get; set; }
         public Vector2 Position;
         public List<ItemSlot> ItemsSlots;
@@ -201,7 +206,7 @@ namespace MinecraftAlpha
             windows = new List<WindowFrame>();
 
             var list = new List<ItemSlot>();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
@@ -214,7 +219,8 @@ namespace MinecraftAlpha
             }
             var window = new WindowFrame()
             {
-                Name = "Inventory",
+
+                Name = "Chest",
                 Position = new Vector2(300, 0),
                 ItemsSlots = list
             };
@@ -318,6 +324,15 @@ namespace MinecraftAlpha
 
 
 
+
+    }
+
+    public class textLabel
+    { 
+        public Vector2 Position = new Vector2 (0, 0);
+        public string Text = "TextLabel";
+
+        public string ID = "Key";
 
     }
 }

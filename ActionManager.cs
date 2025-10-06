@@ -30,10 +30,11 @@ namespace MinecraftAlpha
             var list = new List<Event>()
             {
 
-
+                //Kills all entities
                 new Event("KIll","", () => { Game.Entities.Clear(); }),
-
-                //new Event("Rot","", () => { Game._entityManager.Workspace[0].Animations[1].Time = 0f; }),
+                // 
+                new Event("LeftInteract","",() => {  })
+                
 
             };
             return list;
@@ -42,11 +43,11 @@ namespace MinecraftAlpha
         public void PlaceBlock(int X, int Y)
         {
             var ItemSelected = Game._userInterfaceManager.selectedItem;
-            if (ItemSelected != null && Game._userInterfaceManager.amount > 0 && Game.World[Y, X] == 0)
+            if (ItemSelected != null && Game._userInterfaceManager.amount > 0 && Game.World[Y, X].ID == 0)
             {
                 var BlockId = Game._blockManager.Blocks.IndexOf(ItemSelected); // Set to air
 
-                Game.World[Y, X] = BlockId;
+                Game.World[Y, X].ID = BlockId;
                 Game._userInterfaceManager.amount -= 1;
             }
             if (Game._userInterfaceManager.amount <= 0)
@@ -59,16 +60,16 @@ namespace MinecraftAlpha
         public void BreakBlock(int X, int Y)
         {
 
-            if (Game.World[Y, X] != 0)
+            if (Game.World[Y, X].ID != 0)
             {
 
                 foreach (var islot in Game._userInterfaceManager.windows[0].ItemsSlots)
                 {
-                    if (islot.Item != null && islot.Item != Game._blockManager.Blocks[Game.World[Y, X]])
+                    if (islot.Item != null && islot.Item != Game._blockManager.Blocks[Game.World[Y, X].ID])
                     { continue; }
                     else
                     {
-                        islot.Item = Game._blockManager.Blocks[Game.World[Y, X]];
+                        islot.Item = Game._blockManager.Blocks[Game.World[Y, X].ID];
 
 
                         islot.Count += 1; break;
@@ -76,7 +77,7 @@ namespace MinecraftAlpha
 
                     }
                 }
-                Game.World[Y, X] = 0;
+                Game.World[Y, X].ID = 0;
 
             }
 

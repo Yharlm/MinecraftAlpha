@@ -22,7 +22,7 @@ namespace MinecraftAlpha
         public Vector2 position = new Vector2(530, -500);
         public Vector2 size { get; set; } = new Vector2(800, 600);
 
-        public void RenderLayer(BlockManager blockManager,SpriteBatch _spriteBatch, int[,] Map,float layer,Color color)
+        public void RenderLayer(BlockManager blockManager,SpriteBatch _spriteBatch, TileGrid[,] Map,float layer)
         {
             var BlockSize = blockManager.BlockSize;
             var Camera = this;
@@ -33,12 +33,12 @@ namespace MinecraftAlpha
             {
                 for (int j = 0; j < Map.GetLength(1); j++)
                 {
-                    if (Map[i, j] != 0)
+                    if (Map[i, j].ID != 0)
                     {
+                        float Light = Map[i, j].brightness;
+                        var block = blockManager.Blocks[Map[i, j].ID];
                         
-                        var block = blockManager.Blocks[Map[i, j]];
-                        
-                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, color, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, Color.White * Light, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
                         
                     }
                 }

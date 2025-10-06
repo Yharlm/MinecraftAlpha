@@ -47,7 +47,7 @@ namespace MinecraftAlpha
         /// Checks for the collision of an entity with the world
         /// </summary>
 
-        public void UpdateCollision(Entity entity, int[,] World)
+        public void UpdateCollision(Entity entity, TileGrid[,] World)
         {
             if (entity.position.X < 0 || entity.position.X >= World.GetLength(1) || entity.position.Y < 0 || entity.position.Y >= World.GetLength(0))
             {
@@ -57,19 +57,19 @@ namespace MinecraftAlpha
             float Collision_quality = 0.5f;
             //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
 
-            if (World[(int)(entity.position.Y - Size.Y), (int)(entity.position.X)] != 0)
+            if (World[(int)(entity.position.Y - Size.Y), (int)(entity.position.X)].ID != 0)
             {
                 entity.collisionBox.Top = true;
             }
-            if (World[(int)(entity.position.Y + Size.Y), (int)(entity.position.X)] != 0)
+            if (World[(int)(entity.position.Y + Size.Y), (int)(entity.position.X)].ID != 0)
             {
                 entity.collisionBox.Bottom = true;
             }
-            if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X - Size.X)] != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X - Size.X)] != 0)
+            if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X - Size.X)].ID != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X - Size.X)].ID != 0)
             {
                 entity.collisionBox.Left = true;
             }
-            if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X + Size.X)] != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X + Size.X)] != 0)
+            if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X + Size.X)].ID != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X + Size.X)].ID != 0)
             {
                 entity.collisionBox.Right = true;
             }

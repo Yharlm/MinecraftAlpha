@@ -39,9 +39,9 @@ public class Game1 : Game
 
     static public int WorldSizeX = 300;
     static public int WorldSizeY = 300;
-    public int[,] BackGround { get; set; } = new int[WorldSizeX, WorldSizeY];
-    public int[,] Foreground { get; set; } = new int[WorldSizeX, WorldSizeY];
-    public int[,] World { get; set; } = new int[WorldSizeX, WorldSizeY];
+    public TileGrid[,] BackGround { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
+    public TileGrid[,] Foreground { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
+    public TileGrid[,] World { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
 
 
     public List<Block> Blocks;
@@ -94,14 +94,14 @@ public class Game1 : Game
 
                 while (StoneLayer > 0)
                 {
-                    World[t + StoneLayer, x] = 3; // Dirt
+                    World[t + StoneLayer, x].ID = 3; // Dirt
                     StoneLayer--;
                 }
 
-                World[t, x] = 2; // Dirt
+                World[t, x].ID = 2; // Dirt
                 while (DirtLayer > 0)
                 {
-                    World[t + DirtLayer, x] = 1; // Dirt
+                    World[t + DirtLayer, x].ID = 1; // Dirt
                     DirtLayer--;
                 }
                 x++;
@@ -130,14 +130,14 @@ public class Game1 : Game
 
                 while (StoneLayer > 0)
                 {
-                    BackGround[t + StoneLayer, x] = 3; // Dirt
+                    BackGround[t + StoneLayer, x].ID = 3; // Dirt
                     StoneLayer--;
                 }
 
-                BackGround[t, x] = 2; // Dirt
+                BackGround[t, x].ID = 2; // Dirt
                 while (DirtLayer > 0)
                 {
-                    BackGround[t + DirtLayer, x] = 1; // Dirt
+                    BackGround[t + DirtLayer, x].ID = 1; // Dirt
                     DirtLayer--;
                 }
                 x++;
@@ -386,26 +386,7 @@ public class Game1 : Game
 
         }
 
-        if (Mouse.GetState().RightButton == ButtonState.Pressed)
-        {
-
-           
-
-
-        }
-        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-        {
-
-            
-
-
-
-
-        }
-
-
-
-        //Animations
+   
 
 
 
@@ -435,17 +416,10 @@ public class Game1 : Game
             P.DrawParticles(_spriteBatch, Player.cam.position, 3f, _blockManager.Blocks[2].Texture);
         }
         // 2 cycles to render both directions of the world
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,Color.FromNonPremultiplied(new Vector4(0.5f, 0.5f, 0.5f, 1)));
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 1f, Color.FromNonPremultiplied(new Vector4(0.6f, 0.6f, 0.6f, 1)));
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f);
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 1f);
         //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
-        if (InventoryOpen)
-        {
-            var InventoryUI = Content.Load<Texture2D>("Sprite-0001");
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(InventoryUI, new Vector2(250, 200), null, Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0f);
-
-            _spriteBatch.End();
-        }
+        
         base.Draw(gameTime);
         _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
         _userInterfaceManager.DrawUI(_spriteBatch, Content);
