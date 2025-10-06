@@ -42,7 +42,7 @@ namespace MinecraftAlpha
                new Block { Name = "Grass", TexturePath = "grass_block_side" },
                new Block { Name = "Stone", TexturePath = "stone" },
                new Block { Name = "Wood", TexturePath = "oak_planks" },
-               new Block { Name = "Chest", TexturePath = "chest" },
+               //new Block { Name = "Chest", TexturePath = "chest" },
             };
             return list;
         }
@@ -54,7 +54,7 @@ namespace MinecraftAlpha
         {
             getBlock("Chest").Interaction = () =>
             {
-                Game._userInterfaceManager.windows.Find(x => x[0]);
+                Game._userInterfaceManager.windows[0].Visible = true;
 
             };
 
@@ -65,6 +65,7 @@ namespace MinecraftAlpha
 
     public class TileGrid
     {
+        public TileGrid() { }
         public int ID = 0;
         public int state = 0;
         public float brightness = 0;

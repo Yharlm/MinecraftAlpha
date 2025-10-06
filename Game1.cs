@@ -14,7 +14,7 @@ public class Game1 : Game
 {
     public UserInterfaceManager _userInterfaceManager = new UserInterfaceManager();
     public EntityManager _entityManager = new EntityManager();
-    public BlockManager _blockManager = new BlockManager();
+    public BlockManager _blockManager;
     public ActionManager _actionManager = new ActionManager();
     public EntityAnimationService _entityAnimationService = new EntityAnimationService();
     public ParticleSystem _particleSystem = new ParticleSystem();
@@ -54,7 +54,7 @@ public class Game1 : Game
     public Game1()
     {
 
-
+        _blockManager = new BlockManager(this);
 
         _actionManager.Game = this;
         _graphics = new GraphicsDeviceManager(this);
@@ -67,12 +67,19 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-
+        _particleSystem.Content = Content;
         Random random = new Random();
         // TODO: Add your initialization logic here
         Entities = _entityManager.entities;
         BlockTypes = _blockManager.Blocks;
-
+        for (int i = 0; i < WorldSizeY; i++)
+        {
+            for (int j = 0; j < WorldSizeX; j++)
+            {
+                World[j,i] = new TileGrid();
+                BackGround[j, i] = new TileGrid();
+            }
+        }
 
 
         // World generation
@@ -176,7 +183,7 @@ public class Game1 : Game
 
         _userInterfaceManager.windows[0].ItemsSlots[0].Item = _blockManager.Blocks[4];
         _userInterfaceManager.windows[0].ItemsSlots[0].Count = 64;
-
+        
 
         // TODO: use this.Content to load your game content here
     }
@@ -375,14 +382,9 @@ public class Game1 : Game
         if (keyboardState.IsKeyDown(Keys.E))
         {
             //InventoryOpen = !InventoryOpen;
+            _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
 
 
-            //ent.Sprites[1].Orientation += 0.1f;
-            _entityManager.Workspace[0].Sprites[0].Orientation += 1f;
-            _entityManager.Workspace[0].Sprites[3].Orientation += 1.2f;
-            _entityManager.Workspace[0].Sprites[1].Orientation -= 2f;
-            _entityManager.Workspace[0].Sprites[5].Orientation += 1.2f;
-            _entityManager.Workspace[0].Sprites[4].Orientation -= 2f;
 
         }
 

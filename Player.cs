@@ -38,7 +38,7 @@ namespace MinecraftAlpha
                         float Light = Map[i, j].brightness;
                         var block = blockManager.Blocks[Map[i, j].ID];
                         
-                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, Color.White * Light, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
                         
                     }
                 }

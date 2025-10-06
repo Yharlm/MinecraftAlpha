@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
@@ -23,13 +24,19 @@ namespace MinecraftAlpha
 
         public Vector2 Velocity;
 
+        public void Update()
+        {
+            lifeTime += 0.1f;
+
+        }
         public void DrawParticles(SpriteBatch spriteBatch, Vector2 Camera, float Size,Texture2D Preset)
         {
+            var Ractangle = new Microsoft.Xna.Framework.Rectangle(0,0,8,8);
             spriteBatch.Begin();
             spriteBatch.Draw(
-                Preset,
+                Texture,
                 Camera - Position * Size,
-                null,
+                Ractangle,
                 Microsoft.Xna.Framework.Color.White,
                 0f, // Orientation
                 Vector2.Zero, //
@@ -42,12 +49,13 @@ namespace MinecraftAlpha
     }
     public class ParticleSystem
     {
+        public ContentManager Content;
         public ParticleSystem() { }
 
         public List<Particle> Particles = new List<Particle>()
         {   new Particle
             {
-            
+                TextureName = "ParticleSmokeEffect"
             }
 
         };

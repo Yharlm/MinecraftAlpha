@@ -154,6 +154,10 @@ namespace MinecraftAlpha
             }
             foreach (var win in this.windows)
             {
+                if (win.Visible != true)
+                {
+                    continue;
+                }
                 foreach (var ItemSlot in win.ItemsSlots)
                 {
                     if (ItemSlot.IsInBounds(Mouse))
@@ -206,7 +210,7 @@ namespace MinecraftAlpha
             windows = new List<WindowFrame>();
 
             var list = new List<ItemSlot>();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
@@ -220,7 +224,7 @@ namespace MinecraftAlpha
             var window = new WindowFrame()
             {
 
-                Name = "Chest",
+                Name = "Inventory",
                 Position = new Vector2(300, 0),
                 ItemsSlots = list
             };
