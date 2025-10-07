@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Color = Microsoft.Xna.Framework.Color;
+using System.Reflection.Emit;
+using System.Security.Cryptography;
 
 namespace MinecraftAlpha;
 
@@ -190,11 +192,71 @@ public class Game1 : Game
         // TODO: use this.Content to load your game content here
     }
 
+    public void Iluminate(int x,int y,float val1, TileGrid[,] grid)
+    {
+        int val = (int)val1;
+        int mid = val / 2;
+        for (int i = 0; i < val; i++)
+        {
+            int distance = Math.Abs(mid - i);
+            int start = distance;
+            int end = val - distance - 1;
+
+            for (int j = start; j <= end; j++)
+            {
+                float dist = (new Vector2(j,i) - new Vector2(mid,mid)).Length();
+                grid[i+y-val/2,j+x- val / 2].brightness += 1-dist/val*1;
+            }
+        }
+    }
+
+    public void Lighting(TileGrid[,] map,float layer)
+    {
+        var Grid = map;
+        Vector2 pos = player.position;
+        for (float i = pos.Y - 20; i < pos.Y + 20; i++)
+        {
+            for (float j = pos.X - 20; j < pos.X + 20; j++)
+            {
+                var grid = Grid[(int)i, (int)j];
+
+                grid.brightness = 0f;
+
+            }
+        }
+        for (int i = (int)pos.X - 20; i < pos.X + 20; i += 1)
+        {
+            int localY = (int)pos.Y - 20;
+            while (localY < (int)pos.Y + 20)
+            {
+                if (Grid[localY + 1, i].ID != 0)
+                {
+                    Iluminate(i, localY, layer, Grid); break;
+                }
+                localY += 1;
+            }
+        }
+    }
+
     protected override void Update(GameTime gameTime)
     {
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
+        //Lighting Setter
+
+        Lighting(BackGround, 35);
+        Lighting(World,7);
+        
+
+
+
+
+
+
+
+
+
 
         // TODO: Add your update logic here
         Input();
@@ -238,7 +300,7 @@ public class Game1 : Game
 
         PLR.Animations[2].Paused = true;
 
-
+        
 
 
 
@@ -447,7 +509,9 @@ public class Game1 : Game
         }
         // 2 cycles to render both directions of the world
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 1f, player.position);
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position);
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, player.position);
+        
         //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
 
         base.Draw(gameTime);

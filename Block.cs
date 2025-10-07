@@ -70,7 +70,8 @@ namespace MinecraftAlpha
         public TileGrid() { }
         public int ID = 0;
         public int state = 0;
-        public float brightness = 0;
+        public float brightness =0;
+        public float LightSource = 0;
         public string Data { get; set; } = string.Empty;
 
     }

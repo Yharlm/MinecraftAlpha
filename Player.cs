@@ -1,12 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector4 = Microsoft.Xna.Framework.Vector4;
 
 namespace MinecraftAlpha
 {
@@ -22,24 +18,50 @@ namespace MinecraftAlpha
         public Vector2 position = new Vector2(530, -500);
         public Vector2 size { get; set; } = new Vector2(800, 600);
 
-        public void RenderLayer(BlockManager blockManager,SpriteBatch _spriteBatch, TileGrid[,] Map,float layer,Vector2 pos)
+        public void RenderLayer(BlockManager blockManager, SpriteBatch _spriteBatch, TileGrid[,] Map, float layer, Vector2 pos)
         {
+            var Grid = Map;
+            
+            
+            //for (float i = pos.Y - 20; i < pos.Y + 20; i++)
+            //{
+            //    for (float j = pos.X - 20; j < pos.X + 20; j++)
+            //    {
+            //        var grid = Grid[(int)i, (int)j];
+
+            //        float DistanceFromTorch = (new Vector2(j, i) - pos).Length();
+            //        if (DistanceFromTorch < 12)
+            //        {
+                        
+            //            grid.brightness = 1 - DistanceFromTorch / layer;
+            //        }
+
+            //    }
+            //}
+
+            
+
+
             var BlockSize = blockManager.BlockSize;
             var Camera = this;
 
             // Render the world based on the position and size
-            _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             for (int i = (int)pos.Y - 20; i < Map.GetLength(0) && i < (int)pos.Y + 20; i++)
             {
-                for (int j = (int)pos.X - 20; j < Map.GetLength(1) && j< (int)pos.X + 20; j++)
+                for (int j = (int)pos.X - 20; j < Map.GetLength(1) && j < (int)pos.X + 20; j++)
                 {
                     if (Map[i, j].ID != 0)
                     {
+                        
+                        
                         float Light = Map[i, j].brightness;
+                        float Light01 = Light - layer;
+                        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01 , Light01 , 1));
                         var block = blockManager.Blocks[Map[i, j].ID];
-                        
-                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
-                        
+
+                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, color, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+
                     }
                 }
             }
