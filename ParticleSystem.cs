@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Numerics;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace MinecraftAlpha
 {
@@ -14,7 +15,7 @@ namespace MinecraftAlpha
         public float lifeTime { get; set; }
         public float Changespeed { get; set; }
 
-        public Color Color { get; set; }
+        public Microsoft.Xna.Framework.Color Color { get; set; }
 
         public string TextureName;
 
@@ -26,21 +27,28 @@ namespace MinecraftAlpha
 
         public void Update()
         {
-            lifeTime += 0.1f;
-
+            
+            lifeTime += 0.01f;
+            Index = (int)lifeTime;
+            Position += Velocity/lifeTime/20;
+            
         }
-        public void DrawParticles(SpriteBatch spriteBatch, Vector2 Camera, float Size,Texture2D Preset)
+        public void DrawParticles(SpriteBatch spriteBatch, Vector2 Camera, float Size, Texture2D Preset)
         {
-            var Ractangle = new Microsoft.Xna.Framework.Rectangle(0,0,8,8);
-            spriteBatch.Begin();
+            if(Texture == null)
+            {
+                Texture = Preset;
+            }
+            var Ractangle = new Microsoft.Xna.Framework.Rectangle(Index*8, 0, 8, 8);
+            spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 Texture,
-                Camera - Position * Size,
+                Size * Position + Camera,
                 Ractangle,
-                Microsoft.Xna.Framework.Color.White,
+                Color,
                 0f, // Orientation
                 Vector2.Zero, //
-                Vector2.One,
+                Size/8,
                 SpriteEffects.None,
                 1f
                 );
@@ -59,10 +67,15 @@ namespace MinecraftAlpha
             }
 
         };
+        public void Load()
+        {
+            foreach (var item in Particles)
+            {
+                item.Texture = Content.Load<Texture2D>(item.TextureName);
+            }
 
-
+        }
     }
-
 
 
 }

@@ -22,16 +22,16 @@ namespace MinecraftAlpha
         public Vector2 position = new Vector2(530, -500);
         public Vector2 size { get; set; } = new Vector2(800, 600);
 
-        public void RenderLayer(BlockManager blockManager,SpriteBatch _spriteBatch, TileGrid[,] Map,float layer)
+        public void RenderLayer(BlockManager blockManager,SpriteBatch _spriteBatch, TileGrid[,] Map,float layer,Vector2 pos)
         {
             var BlockSize = blockManager.BlockSize;
             var Camera = this;
 
             // Render the world based on the position and size
             _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
-            for (int i = 0; i < Map.GetLength(0); i++)
+            for (int i = (int)pos.Y - 20; i < Map.GetLength(0) && i < (int)pos.Y + 20; i++)
             {
-                for (int j = 0; j < Map.GetLength(1); j++)
+                for (int j = (int)pos.X - 20; j < Map.GetLength(1) && j< (int)pos.X + 20; j++)
                 {
                     if (Map[i, j].ID != 0)
                     {

@@ -42,6 +42,8 @@ namespace MinecraftAlpha
                new Block { Name = "Grass", TexturePath = "grass_block_side" },
                new Block { Name = "Stone", TexturePath = "stone" },
                new Block { Name = "Wood", TexturePath = "oak_planks" },
+               //new Block { Name = "Wood", TexturePath = "oak_planks" },
+               //new Block { Name = "Wood", TexturePath = "oak_planks" },
                //new Block { Name = "Chest", TexturePath = "chest" },
             };
             return list;
