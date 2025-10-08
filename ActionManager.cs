@@ -40,29 +40,44 @@ namespace MinecraftAlpha
             return list;
         }
 
+        public bool CheckAround(int x,int y, TileGrid[,] Map)
+        {
+            bool Placable = true;
+            if (Map[y, x].ID == 0) Placable = false;
+            if (Map[y, x+1].ID == 0) Placable = false;
+            if (Map[y, x-1].ID == 0) Placable = false;
+            if (Map[y+1, x].ID == 0) Placable = false;
+            if (Map[y-1, x].ID == 0) Placable = false;
+            return Placable;
+        }
         public void PlaceBlock(int X, int Y)
         {
-            var ItemSelected = Game._userInterfaceManager.selectedItem;
-            if (ItemSelected != null && Game._userInterfaceManager.amount > 0 && Game.World[Y, X].ID == 0)
+            foreach(var Grid in Game.Layers)
             {
-                var BlockId = Game._blockManager.Blocks.IndexOf(ItemSelected); // Set to air
+                if(!CheckAround(X,Y,Grid)) continue;
+                var ItemSelected = Game._userInterfaceManager.selectedItem;
+                if (ItemSelected != null && Game._userInterfaceManager.amount > 0 && Grid[Y, X].ID == 0)
+                {
+                    var BlockId = Game._blockManager.Blocks.IndexOf(ItemSelected); // Set to air
 
-                Game.World[Y, X].ID = BlockId;
-                Game._userInterfaceManager.amount -= 1;
-            }
-            if (Game._userInterfaceManager.amount <= 0)
-            {
-                Game._userInterfaceManager.selectedItem = null;
+                    Grid[Y, X].ID = BlockId;
+                    Game._userInterfaceManager.amount -= 1;
+                }
+                if (Game._userInterfaceManager.amount <= 0)
+                {
+                    Game._userInterfaceManager.selectedItem = null;
 
+                }
             }
+            
         }
 
         public void BreakBlock(int X, int Y)
-        {
+        {var block = Game._blockManager.Blocks[Game.World[Y, X].ID];
 
             if (Game.World[Y, X].ID != 0)
             {
-
+                
                 foreach (var islot in Game._userInterfaceManager.windows[0].ItemsSlots)
                 {
                     if (islot.Item != null && islot.Item != Game._blockManager.Blocks[Game.World[Y, X].ID])
@@ -76,6 +91,12 @@ namespace MinecraftAlpha
 
 
                     }
+                }
+               
+                if(block.Health > Game.World[Y, X].MinedHealth)
+                {
+                    Game.World[Y, X].MinedHealth += 0.1f;
+                    return;
                 }
                 Game.World[Y, X].ID = 0;
 

@@ -15,6 +15,24 @@ namespace MinecraftAlpha
         public float lifeTime { get; set; }
         public float Changespeed { get; set; }
 
+        //static void Main(string[] args) // Tween color to another color
+        //{
+        //    Vector3 A = new Vector3(0, 255, 0);
+        //    Vector3 B = new Vector3(255, 0, 255);
+        //    Console.WriteLine(A);
+        //    int div = 255;
+        //    var RGB = (B - A) / div;
+        //    for (int i = 0; i < div; i++)
+        //    {
+
+
+        //        A += RGB;
+
+        //        Console.WriteLine(A);
+
+        //    }
+
+        //}
         public Microsoft.Xna.Framework.Color Color { get; set; }
 
         public string TextureName;

@@ -23,7 +23,7 @@ public class Game1 : Game
     public EntityAnimationService _entityAnimationService = new EntityAnimationService();
     public ParticleSystem _particleSystem = new ParticleSystem();
 
-
+    public Texture2D BreakTexture;
 
     Player Player = new Player();
 
@@ -43,6 +43,15 @@ public class Game1 : Game
 
     static public int WorldSizeX = 300;
     static public int WorldSizeY = 300;
+
+    public List<TileGrid[,]> Layers = new List<TileGrid[,]>()
+    {
+        new TileGrid[WorldSizeX, WorldSizeY], // Background3
+        new TileGrid[WorldSizeX, WorldSizeY], // Background2
+        new TileGrid[WorldSizeX, WorldSizeY], // Background
+        new TileGrid[WorldSizeX, WorldSizeY], // Main World
+        new TileGrid[WorldSizeX, WorldSizeY], // Foreground
+    };
     public TileGrid[,] BackGround { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
     public TileGrid[,] Foreground { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
     public TileGrid[,] World { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
@@ -165,7 +174,7 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
-
+        //BreakTexture = Content.Load<Texture2D>("break_animation");
 
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -192,22 +201,45 @@ public class Game1 : Game
         // TODO: use this.Content to load your game content here
     }
 
-    public void Iluminate(int x,int y,float val1, TileGrid[,] grid)
+    public void IluminateDiamond(int x,int y,float val1, TileGrid[,] grid)
     {
         int val = (int)val1;
-        int mid = val / 2;
-        for (int i = 0; i < val; i++)
+        
+        int size = (int)val1;
+        int mid = size / 2;
+        for (int i = 0; i <= size; i++)
         {
-            int distance = Math.Abs(mid - i);
-            int start = distance;
-            int end = val - distance - 1;
-
-            for (int j = start; j <= end; j++)
+            int diff = Math.Abs(mid - i);
+            for (int j = diff; j <= size - diff; j++)
             {
-                float dist = (new Vector2(j,i) - new Vector2(mid,mid)).Length();
-                grid[i+y-val/2,j+x- val / 2].brightness += 1-dist/val*1;
+                var Distancex = mid - j;
+                var Distancey = mid - i;
+                var DistanceToMid = 1 - Math.Sqrt(Distancex * Distancex + Distancey * Distancey) / mid;
+
+
+                float dist = (new Vector2(j, i) - new Vector2(mid, mid)).Length();
+                grid[i + y - val / 2, j + x - val / 2].brightness += 1 - (float)DistanceToMid;
             }
+
         }
+
+        //int size = 14;
+        //int mid = size / 2;
+        //for (int i = 0; i <= size; i++)
+        //{
+        //    int diff = Math.Abs(mid - i);
+        //    for (int j = diff; j <= size - diff; j++)
+        //    {
+        //        var Distancex = mid - j;
+        //        var Distancey = mid - i;
+        //        var DistanceToMid = 1 - Math.Sqrt(Distancex * Distancex + Distancey * Distancey) / mid;
+
+
+
+        //        WriteAt(j * 2, i, DistanceToMid.ToString());
+        //    }
+
+        //}
     }
 
     public void Lighting(TileGrid[,] map,float layer)
@@ -231,7 +263,7 @@ public class Game1 : Game
             {
                 if (Grid[localY + 1, i].ID != 0)
                 {
-                    Iluminate(i, localY, layer, Grid); break;
+                    IluminateDiamond(i, localY, layer, Grid); break;
                 }
                 localY += 1;
             }

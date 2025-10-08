@@ -7,7 +7,7 @@ namespace MinecraftAlpha
 {
     public class Block
     {
-
+        public float Health = 30;
         public string Name { get; set; }
         public string Description { get; set; }
 
@@ -37,11 +37,11 @@ namespace MinecraftAlpha
             //Create Blocks here
             var list = new List<Block>()
             {
-               new Block { Name = "Air", TexturePath = "air" },
-               new Block { Name = "Dirt", TexturePath = "dirt" },
-               new Block { Name = "Grass", TexturePath = "grass_block_side" },
-               new Block { Name = "Stone", TexturePath = "stone" },
-               new Block { Name = "Wood", TexturePath = "oak_planks" },
+               new Block { Name = "Air", TexturePath = "air" ,Health = 100},
+               new Block { Name = "Dirt", TexturePath = "dirt",Health = 14 },
+               new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 1 },
+               new Block { Name = "Stone", TexturePath = "stone" ,Health = 64},
+               new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 30},
                //new Block { Name = "Wood", TexturePath = "oak_planks" },
                //new Block { Name = "Wood", TexturePath = "oak_planks" },
                //new Block { Name = "Chest", TexturePath = "chest" },
@@ -72,6 +72,7 @@ namespace MinecraftAlpha
         public int state = 0;
         public float brightness =0;
         public float LightSource = 0;
+        public float MinedHealth = 0; // How much health has been mined from this block
         public string Data { get; set; } = string.Empty;
 
     }
