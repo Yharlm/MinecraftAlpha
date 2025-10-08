@@ -18,7 +18,7 @@ namespace MinecraftAlpha
         public Vector2 position = new Vector2(530, -500);
         public Vector2 size { get; set; } = new Vector2(800, 600);
 
-        public void RenderLayer(BlockManager blockManager, SpriteBatch _spriteBatch, TileGrid[,] Map, float layer, Vector2 pos)
+        public void RenderLayer(BlockManager blockManager, SpriteBatch _spriteBatch, TileGrid[,] Map, float layer, Vector2 pos,Texture2D BreakingTexture)
         {
             var Grid = Map;
             
@@ -54,13 +54,27 @@ namespace MinecraftAlpha
                     if (Map[i, j].ID != 0)
                     {
                         
-                        
+
                         float Light = Map[i, j].brightness;
                         float Light01 = Light - layer;
                         var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01 , Light01 , 1));
                         var block = blockManager.Blocks[Map[i, j].ID];
+                        int healthPercent = (int)Map[i, j].MinedHealth / 10;
+                        Rectangle sourceRectangle = new Rectangle(healthPercent* BreakingTexture.Height, 0, BreakingTexture.Height, BreakingTexture.Height);
+                        if ((int)Map[i, j].MinedHealth <= 0)
+                        {
+                            sourceRectangle = new Rectangle(0, 0, 0, 0);
+                        }
+                        Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
 
-                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, null, color, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                        int State = block.DefaultState;
+                        if (Map[i, j].state > 0)
+                        {
+                            BlockState = new Rectangle(State, 0, block.Texture.Width, block.Texture.Height);
+                        }
+                        
+                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, BlockState, color, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(BreakingTexture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
 
                     }
                 }

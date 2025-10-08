@@ -31,6 +31,7 @@ public class Game1 : Game
     public List<Entity> Entities;
     public List<Block> BlockTypes;
 
+    
 
     Entity player;
 
@@ -196,34 +197,21 @@ public class Game1 : Game
 
         _userInterfaceManager.windows[0].ItemsSlots[0].Item = _blockManager.Blocks[4];
         _userInterfaceManager.windows[0].ItemsSlots[0].Count = 64;
-
+        _userInterfaceManager.windows[0].ItemsSlots[1].Item = _blockManager.Blocks[5];
+        _userInterfaceManager.windows[0].ItemsSlots[1].Count = 64;
+        BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
         _particleSystem.Load();
+        _blockManager.LoadActions();
+        _userInterfaceManager.selectedItem = _blockManager.Blocks[3];
+        _userInterfaceManager.amount = 5;
         // TODO: use this.Content to load your game content here
     }
 
     public void IluminateDiamond(int x,int y,float val1, TileGrid[,] grid)
     {
         int val = (int)val1;
-        
+
         int size = (int)val1;
-        int mid = size / 2;
-        for (int i = 0; i <= size; i++)
-        {
-            int diff = Math.Abs(mid - i);
-            for (int j = diff; j <= size - diff; j++)
-            {
-                var Distancex = mid - j;
-                var Distancey = mid - i;
-                var DistanceToMid = 1 - Math.Sqrt(Distancex * Distancex + Distancey * Distancey) / mid;
-
-
-                float dist = (new Vector2(j, i) - new Vector2(mid, mid)).Length();
-                grid[i + y - val / 2, j + x - val / 2].brightness += 1 - (float)DistanceToMid;
-            }
-
-        }
-
-        //int size = 14;
         //int mid = size / 2;
         //for (int i = 0; i <= size; i++)
         //{
@@ -235,11 +223,29 @@ public class Game1 : Game
         //        var DistanceToMid = 1 - Math.Sqrt(Distancex * Distancex + Distancey * Distancey) / mid;
 
 
-
-        //        WriteAt(j * 2, i, DistanceToMid.ToString());
+        //        float dist = (new Vector2(j, i) - new Vector2(mid, mid)).Length();
+        //        grid[i + y - val / 2, j + x - val / 2].brightness += 1 - (float)DistanceToMid;
         //    }
 
         //}
+
+        //int size = 14;
+        int mid = size / 2;
+        for (int i = 0; i <= size; i++)
+        {
+            int diff = Math.Abs(mid - i);
+            for (int j = diff; j <= size - diff; j++)
+            {
+                var Distancex = mid - j;
+                var Distancey = mid - i;
+                var DistanceToMid = Math.Sqrt(Distancex * Distancex + Distancey * Distancey) / mid;
+
+
+
+                grid[i + y - val / 2, j + x - val / 2].brightness += 1 - (float)DistanceToMid;
+            }
+
+        }
     }
 
     public void Lighting(TileGrid[,] map,float layer)
@@ -306,14 +312,15 @@ public class Game1 : Game
 
             entity.collisionBox.UpdateCollision(entity, World);
 
-            if(entity.velocity.velocity.Y > 6)
+            if(entity.velocity.Gravity.Y > 0.3f)
             {
-                entity.Fall_damage = 6-(int)entity.velocity.velocity.Y;
+                entity.Fall_damage =(int)(entity.velocity.Gravity.Y*24);
             }
 
             if(entity.collisionBox.Bottom )
             {
                 entity.Health-= entity.Fall_damage;
+                entity.Fall_damage = 0;
             }
             
             // Example gravity, can be replaced with actual logic
@@ -382,7 +389,7 @@ public class Game1 : Game
 
             _userInterfaceManager.ClickAction(MousePosition, _actionManager, false);
 
-
+            _actionManager.Interact(WorldMousePos);
 
 
 
@@ -555,8 +562,8 @@ public class Game1 : Game
         }
         // 2 cycles to render both directions of the world
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position);
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, player.position);
+        //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position, BreakTexture);
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, player.position,BreakTexture);
         
         //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
 
@@ -566,6 +573,8 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.cam.position.ToString(), Vector2.One, Color.Wheat);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), player.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), player.Health.ToString(), Vector2.One*30, Color.Red);
         _spriteBatch.End();
 
 

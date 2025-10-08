@@ -13,7 +13,8 @@ namespace MinecraftAlpha
 
         public bool Placable = true;
 
-        
+        public int DefaultState = 0; // Default state of the block
+
 
         public Texture2D Texture { get; set; }
         public string TexturePath { get; set; }
@@ -37,14 +38,14 @@ namespace MinecraftAlpha
             //Create Blocks here
             var list = new List<Block>()
             {
-               new Block { Name = "Air", TexturePath = "air" ,Health = 100},
-               new Block { Name = "Dirt", TexturePath = "dirt",Health = 14 },
-               new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 1 },
-               new Block { Name = "Stone", TexturePath = "stone" ,Health = 64},
-               new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 30},
+               new Block { Name = "Air", TexturePath = "air" ,Health = 1000},
+               new Block { Name = "Dirt", TexturePath = "dirt",Health = 30 },
+               new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
+               new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
+               new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 50},
                //new Block { Name = "Wood", TexturePath = "oak_planks" },
                //new Block { Name = "Wood", TexturePath = "oak_planks" },
-               //new Block { Name = "Chest", TexturePath = "chest" },
+               new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null},
             };
             return list;
         }
@@ -54,10 +55,10 @@ namespace MinecraftAlpha
         }
         public void LoadActions()
         {
-            getBlock("Chest").Interaction = () =>
+            Blocks[5].Interaction = () =>
             {
-                Game._userInterfaceManager.windows[0].Visible = true;
-
+                
+                Game._userInterfaceManager.windows[1].Visible = !Game._userInterfaceManager.windows[1].Visible;
             };
 
         }

@@ -51,6 +51,7 @@ namespace MinecraftAlpha
                 }
                 foreach (var item in Window.ItemsSlots)
                 {
+                    
                     string AmmountInSlot = "";
                     spriteBatch.Draw(item.Texture, new Rectangle((int)item.Position.X, (int)item.Position.Y, 32, 32), Color.White);
                     if (item.Item != null)
@@ -228,9 +229,31 @@ namespace MinecraftAlpha
                 Position = new Vector2(300, 0),
                 ItemsSlots = list
             };
+
             
             windows.Add(window);
-            
+            list = new List<ItemSlot>();
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    list.Add(new ItemSlot()
+                    {
+                        Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One) + new Vector2(400,0),
+                    }
+                    );
+                }
+            }
+            window = new WindowFrame()
+            {
+
+                Name = "Chest",
+                Position = new Vector2(1300, 400),
+                ItemsSlots = list
+            };
+
+
+            windows.Add(window);
 
             return windows;
         }
@@ -340,7 +363,7 @@ namespace MinecraftAlpha
 
     }
 
-    public class Frame 
+    public class UIFrame 
     {
         public Vector2 Position = new Vector2(0,0);
         public Vector2 Size = new Vector2(100,30);

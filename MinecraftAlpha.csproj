@@ -11,10 +11,13 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\bin\DesktopGL\Chest.xnb" />
     <None Remove="Content\bin\DesktopGL\Content\Entities\Steve.xnb" />
     <None Remove="Content\bin\DesktopGL\Content\Steve.xnb" />
     <None Remove="Content\bin\DesktopGL\Steve.xnb" />
+    <None Remove="Content\Chest.png" />
     <None Remove="Content\File.spritefont" />
+    <None Remove="Content\obj\DesktopGL\Chest.mgcontent" />
     <None Remove="Content\obj\DesktopGL\net8.0\Content\Entities\Steve.mgcontent" />
     <None Remove="Content\obj\DesktopGL\net8.0\Content\Steve.mgcontent" />
     <None Remove="Content\obj\DesktopGL\Sprite-0004-Sheet.mgcontent" />

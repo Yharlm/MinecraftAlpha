@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MinecraftAlpha
 {
@@ -55,11 +56,11 @@ namespace MinecraftAlpha
         }
         public void PlaceBlock(int X, int Y)
         {
-            foreach(var Grid in Game.Layers)
-            {
-                if(!CheckAround(X,Y,Grid)) continue;
-                var ItemSelected = Game._userInterfaceManager.selectedItem;
-                if (ItemSelected != null && Game._userInterfaceManager.amount > 0 && Grid[Y, X].ID == 0)
+                var Grid = Game.World;
+            //if(!CheckAround(X,Y,Grid)) continue;
+            var ItemSelected = Game._userInterfaceManager.selectedItem;
+                if(ItemSelected == null) return;
+                if (Game._userInterfaceManager.amount > 0 && Grid[Y, X].ID == 0)
                 {
                     var BlockId = Game._blockManager.Blocks.IndexOf(ItemSelected); // Set to air
 
@@ -71,7 +72,7 @@ namespace MinecraftAlpha
                     Game._userInterfaceManager.selectedItem = null;
 
                 }
-            }
+            
             
         }
         public void Interact(Vector2 WorldPos)
@@ -88,7 +89,7 @@ namespace MinecraftAlpha
             }
 
 
-            Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
+            //Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
             var block = Game._blockManager.Blocks[Game.World[(int)WorldPos.Y, (int)WorldPos.X].ID];
             if(block.Interaction != null)
             {
@@ -105,7 +106,12 @@ namespace MinecraftAlpha
 
             if (Game.World[Y, X].ID != 0)
             {
-                
+                if (block.Health > Game.World[Y, X].MinedHealth)
+                {
+                    Game.World[Y, X].MinedHealth += 0.5f;
+                    return;
+                }
+
                 foreach (var islot in Game._userInterfaceManager.windows[0].ItemsSlots)
                 {
                     if (islot.Item != null && islot.Item != Game._blockManager.Blocks[Game.World[Y, X].ID])
@@ -113,7 +119,7 @@ namespace MinecraftAlpha
                     else
                     {
                         islot.Item = Game._blockManager.Blocks[Game.World[Y, X].ID];
-
+                        Game.World[Y, X].MinedHealth = 0;
 
                         islot.Count += 1; break;
 
@@ -121,11 +127,7 @@ namespace MinecraftAlpha
                     }
                 }
                
-                if(block.Health > Game.World[Y, X].MinedHealth)
-                {
-                    Game.World[Y, X].MinedHealth += 0.1f;
-                    return;
-                }
+                
                 Game.World[Y, X].ID = 0;
 
             }
