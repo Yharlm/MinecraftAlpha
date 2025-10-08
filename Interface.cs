@@ -339,4 +339,40 @@ namespace MinecraftAlpha
         public string ID = "Key";
 
     }
+
+    public class Frame 
+    {
+        public Vector2 Position = new Vector2(0,0);
+        public Vector2 Size = new Vector2(100,30);
+        public Vector2 Cornersize = new vector2(0,0);
+        public Texture2D Window = null;
+        public void Render(SpriteBatch Spritebatch)
+        {
+            int Tx = Texture.Width;
+            int Ty = Texture.Height;
+            int Cx = (int)CornerSize.X;
+            int Cy = (int)CornerSize.Y;
+            int Sizex = (int)Size.X;
+            int Sizey = (int)Size.Y;
+
+            
+            Ractangle[] Corners = {
+                new Ractangle(0,0,Cx,Cy),
+                new Ractangle(Tx-Cx,0,Cx,Cy),
+                new Ractangle(Tx-Cx,Ty-Cy,Cx,Cy),
+                new Ractangle(0,Ty-Cy,Cx,Cy)
+            }
+            Ractangle[] Borders = {
+                new Ractangle(0,Cy,Cx,Ty-Cy*2),
+                new Ractangle(Cx,0,Sizex-Cx*2 - Tx,Cy),
+                new Ractangle(Tx-Cx,Cy,Cx,Ty-Cy*2 - Ty),
+                new Ractangle(Cx,Sizey-Cy,Sizex-Cx*2,Cy)
+                    
+            }
+            Ractangle Background= new Ractangle(Cx,Cy,Sizex-Cx*2,Sizey-Cy*2);
+            spriteBatch.Begin();
+            spritebatch.Draw();
+            Spritebatch.End();
+        }
+    }
 }
