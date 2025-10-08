@@ -310,7 +310,15 @@ public class Game1 : Game
 
             entity.collisionBox.UpdateCollision(entity, World);
 
+            if(entity.Velocity.Velocity.Y > 6)
+            {
+                entity.FallDamage = 6-(int)entity.Velocity.Velocity.Y;
+            }
 
+            if(entity.CollisionBox.Bottom )
+            {
+                entity.Health-= entity.FallDamage;
+            }
             
             // Example gravity, can be replaced with actual logic
 
