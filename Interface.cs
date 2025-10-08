@@ -344,34 +344,35 @@ namespace MinecraftAlpha
     {
         public Vector2 Position = new Vector2(0,0);
         public Vector2 Size = new Vector2(100,30);
-        public Vector2 Cornersize = new vector2(0,0);
+        public Vector2 CornerSize = new Vector2(0,0);
         public Texture2D Window = null;
+
         public void Render(SpriteBatch Spritebatch)
         {
-            int Tx = Texture.Width;
-            int Ty = Texture.Height;
+            int Tx = Window.Width;
+            int Ty = Window.Height;
             int Cx = (int)CornerSize.X;
             int Cy = (int)CornerSize.Y;
             int Sizex = (int)Size.X;
             int Sizey = (int)Size.Y;
 
-            
-            Ractangle[] Corners = {
-                new Ractangle(0,0,Cx,Cy),
-                new Ractangle(Tx-Cx,0,Cx,Cy),
-                new Ractangle(Tx-Cx,Ty-Cy,Cx,Cy),
-                new Ractangle(0,Ty-Cy,Cx,Cy)
-            }
-            Ractangle[] Borders = {
-                new Ractangle(0,Cy,Cx,Ty-Cy*2),
-                new Ractangle(Cx,0,Sizex-Cx*2 - Tx,Cy),
-                new Ractangle(Tx-Cx,Cy,Cx,Ty-Cy*2 - Ty),
-                new Ractangle(Cx,Sizey-Cy,Sizex-Cx*2,Cy)
-                    
-            }
-            Ractangle Background= new Ractangle(Cx,Cy,Sizex-Cx*2,Sizey-Cy*2);
-            spriteBatch.Begin();
-            spritebatch.Draw();
+
+            Rectangle[] Corners = {
+                new Rectangle(0,0,Cx,Cy),
+                new Rectangle(Tx-Cx,0,Cx,Cy),
+                new Rectangle(Tx-Cx,Ty-Cy,Cx,Cy),
+                new Rectangle(0,Ty-Cy,Cx,Cy)
+            };
+            Rectangle[] Borders = {
+                new Rectangle(0,Cy,Cx,Ty-Cy*2),
+                new Rectangle(Cx,0,Sizex-Cx*2 - Tx,Cy),
+                new Rectangle(Tx-Cx,Cy,Cx,Ty-Cy*2 - Ty),
+                new Rectangle(Cx,Sizey-Cy,Sizex-Cx*2,Cy)
+
+            };
+            Rectangle Background = new Rectangle(Cx,Cy,Sizex-Cx*2,Sizey-Cy*2);
+            Spritebatch.Begin();
+            //Spritebatch.Draw(Window,Rectangle.Empty,);
             Spritebatch.End();
         }
     }

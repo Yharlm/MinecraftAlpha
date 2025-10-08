@@ -27,7 +27,7 @@ public class Game1 : Game
 
     Player Player = new Player();
 
-
+    public float Daytime = 0f;
     public List<Entity> Entities;
     public List<Block> BlockTypes;
 
@@ -279,16 +279,12 @@ public class Game1 : Game
 
         Lighting(BackGround, 35);
         Lighting(World,7);
-        
 
-
-
-
-
-
-
-
-
+        Daytime += 0.01f;
+        if (Daytime >= 24)
+        {
+            Daytime = 0f;
+        }
 
         // TODO: Add your update logic here
         Input();
@@ -310,14 +306,14 @@ public class Game1 : Game
 
             entity.collisionBox.UpdateCollision(entity, World);
 
-            if(entity.Velocity.Velocity.Y > 6)
+            if(entity.velocity.velocity.Y > 6)
             {
-                entity.FallDamage = 6-(int)entity.Velocity.Velocity.Y;
+                entity.Fall_damage = 6-(int)entity.velocity.velocity.Y;
             }
 
-            if(entity.CollisionBox.Bottom )
+            if(entity.collisionBox.Bottom )
             {
-                entity.Health-= entity.FallDamage;
+                entity.Health-= entity.Fall_damage;
             }
             
             // Example gravity, can be replaced with actual logic
@@ -533,7 +529,16 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
+
+
         GraphicsDevice.Clear(Color.CornflowerBlue);
+        
+        //SunImage
+
+        //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        //_spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Daytime.ToString("0.00"), new Vector2(700, (float)Math.Sin(Daytime/12)), Color.Wheat);
+        //_spriteBatch.End();
+
         _spriteBatch.Begin(samplerState: SamplerState.LinearClamp);
         foreach (var Mob in Entities)
         {

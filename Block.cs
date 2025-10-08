@@ -62,7 +62,25 @@ namespace MinecraftAlpha
 
         }
 
-        
+        public ItemSlot[,] RandomiseLoot()
+        {
+            Random random = new Random();
+            ItemSlot[,] Chest = new ItemSlot[3, 9];
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (random.Next(0, 100) < 20) // 20% chance to spawn an item
+                    {
+                        int itemId = random.Next(1, 6); // Assuming item IDs range from 1 to 5
+                        int amount = random.Next(1, 65); // Random amount between 1 and 64
+                        Chest[i, j] = new ItemSlot { Item = Blocks[itemId], Count = amount };
+                    }
+                }
+            }
+            return Chest;
+        }
+
     }
 
     public class TileGrid
@@ -77,4 +95,15 @@ namespace MinecraftAlpha
 
     }
 
+
+    public class Structure()
+    {
+        public int Width = 0;
+        public int Height = 0;
+
+        public TileGrid[,] Layout;
+
+    }
+
+    
 }

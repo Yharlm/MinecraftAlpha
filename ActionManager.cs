@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace MinecraftAlpha
 {
     public class Event
     {
-
+        
 
 
         public string Name = "New Event";
@@ -21,6 +23,7 @@ namespace MinecraftAlpha
     }
     public class ActionManager
     {
+        public Random random = new Random();
         public Game1 Game;
         public List<Event> Actions = new List<Event>();
         public ActionManager() { Actions = LoadActions(); }
@@ -71,7 +74,32 @@ namespace MinecraftAlpha
             }
             
         }
+        public void Interact(Vector2 WorldPos)
+        {
+            foreach(Entity entity in Game._entityManager.Workspace)
+            {
+                if(LogicsClass.IsInBounds(WorldPos, entity.collisionBox.Size))
+                {
+                    Game._particleSystem.Particles.Add(new Particle()
+                    {
+                        Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f)
+                    });
+                }
+            }
 
+
+            Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
+            var block = Game._blockManager.Blocks[Game.World[(int)WorldPos.Y, (int)WorldPos.X].ID];
+            if(block.Interaction != null)
+            {
+                block.Interaction.Invoke();
+            }
+        }
+
+        public void Punch(Vector2 WorldPos)
+        {
+
+        }
         public void BreakBlock(int X, int Y)
         {var block = Game._blockManager.Blocks[Game.World[Y, X].ID];
 

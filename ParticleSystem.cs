@@ -35,7 +35,7 @@ namespace MinecraftAlpha
         //}
         public Microsoft.Xna.Framework.Color Color { get; set; }
 
-        public string TextureName;
+        public string TextureName = "ParticleSmokeEffect";
 
         public Texture2D Texture = null;
 
