@@ -311,10 +311,11 @@ public class Game1 : Game
             entity.collisionBox.UpdateCollision(entity, World);
 
 
-
+            
             // Example gravity, can be replaced with actual logic
 
         }
+        _entityManager.Workspace.RemoveAll(x => x.Health <= 0);
         foreach (var entity in _particleSystem.Particles)
         {
             entity.Update();
