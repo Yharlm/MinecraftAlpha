@@ -80,6 +80,7 @@ namespace MinecraftAlpha
 
     public class Entity
     {
+        public int Fall_damage = 0;
         public bool paused = false;
         public bool Fliped = true;
         //public List<PotionEffects> = new List<PotionEffects>()
