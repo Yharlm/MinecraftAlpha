@@ -19,8 +19,8 @@ namespace MinecraftAlpha
         public Texture2D Texture { get; set; }
         public string TexturePath { get; set; }
 
-        public Action Interaction = null; 
-        public Action Update = null;
+        public Action<TileGrid> Interaction = null; 
+        public Action<TileGrid> Update = null;
     }
 
     public class BlockManager
@@ -54,41 +54,52 @@ namespace MinecraftAlpha
         {
             return Blocks.Find(x => x.Name == "");
         }
-        public void LoadActions(TileGrid pos)
+        public void LoadActions()
         {
-            Blocks[5].Interaction = () =>
+            Blocks[5].Interaction = (Pos) =>
             {
                 
                 string Items = Pos.Data;
-                var Window = Game._userInterfaceManager.windows[1]
+                var Window = Game._userInterfaceManager.windows[1];
                 Window.Visible = !Window.Visible;
-                foreach(var item in Items.Split(','))
+                foreach (var slot in Window.ItemsSlots)
                 {
+                    slot.Item = null;
+                    slot.Count = 0;
+                }
+                foreach (var item in Items.Split(','))
+                {
+                    if (item == "")
+                    {  continue; }
                     var a = item.Split(':');
-                    var Slot = Window[a[1],a[2]];
-                    Slot.ID = a[0]; Slot.Count= a[3];
+                    var Slot = Window.ItemsSlots[int.Parse(a[0])];
+                    Slot.Item = Blocks[int.Parse(a[1])];
+                    Slot.Count = int.Parse(a[2]);
                     
                 }
             };
-            Blocks[5].Update = () => 
+            Blocks[5].Update = (Pos) =>
             {
                 var Window = Game._userInterfaceManager.windows[1];
-                    string Data= "";
-                for(int i = 0;i < Window.Itemslots.GetLenght(0); i++)
+                string Data = "";
+
+                foreach (var slot in Window.ItemsSlots)
                 {
-                    for(int j = 0; j < Window.Items.GetLength(1);j++)
+                    if (slot.Item != null)
                     {
-                        var item = Window.Items[i,j];
-                        if(item == null) continue;
-                        if(item.Count <=0 ) continue;
-                        Data += $"{i}:{j}:{item.Item.ID}:{item.Count},";
+                        Data += $"{slot.ID}:{GetBlockID(slot.Item)}:{slot.Count},";
                     }
                 }
-                pos.Data = Data;
-                    
-                
-            }
+                Pos.Data = Data;
 
+
+            };
+
+        }
+
+        public int GetBlockID(Block block)
+        {
+            return Blocks.IndexOf(block);
         }
 
         public ItemSlot[,] RandomiseLoot()

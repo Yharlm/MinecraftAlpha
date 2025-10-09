@@ -1,14 +1,12 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MinecraftAlpha
 {
     public class Event
     {
-        
+
 
 
         public string Name = "New Event";
@@ -38,48 +36,49 @@ namespace MinecraftAlpha
                 new Event("KIll","", () => { Game.Entities.Clear(); }),
                 // 
                 new Event("LeftInteract","",() => {  })
-                
+
 
             };
             return list;
         }
 
-        public bool CheckAround(int x,int y, TileGrid[,] Map)
+        public bool CheckAround(int x, int y, TileGrid[,] Map)
         {
             bool Placable = true;
             if (Map[y, x].ID == 0) Placable = false;
-            if (Map[y, x+1].ID == 0) Placable = false;
-            if (Map[y, x-1].ID == 0) Placable = false;
-            if (Map[y+1, x].ID == 0) Placable = false;
-            if (Map[y-1, x].ID == 0) Placable = false;
+            if (Map[y, x + 1].ID == 0) Placable = false;
+            if (Map[y, x - 1].ID == 0) Placable = false;
+            if (Map[y + 1, x].ID == 0) Placable = false;
+            if (Map[y - 1, x].ID == 0) Placable = false;
             return Placable;
         }
         public void PlaceBlock(int X, int Y)
         {
-                var Grid = Game.World;
+            var Grid = Game.World;
             //if(!CheckAround(X,Y,Grid)) continue;
             var ItemSelected = Game._userInterfaceManager.selectedItem;
-                if(ItemSelected == null) return;
-                if (Game._userInterfaceManager.amount > 0 && Grid[Y, X].ID == 0)
-                {
-                    var BlockId = Game._blockManager.Blocks.IndexOf(ItemSelected); // Set to air
+            if (ItemSelected == null) return;
+            if (Game._userInterfaceManager.amount > 0 && Grid[Y, X].ID == 0)
+            {
+                var BlockId = Game._blockManager.Blocks.IndexOf(ItemSelected); // Set to air
 
-                    Grid[Y, X].ID = BlockId;
-                    Game._userInterfaceManager.amount -= 1;
-                }
-                if (Game._userInterfaceManager.amount <= 0)
-                {
-                    Game._userInterfaceManager.selectedItem = null;
+                Grid[Y, X].ID = BlockId;
+                Game._userInterfaceManager.amount -= 1;
+            }
+            if (Game._userInterfaceManager.amount <= 0)
+            {
+                Game._userInterfaceManager.selectedItem = null;
 
-                }
-            
-            
+            }
+
+
         }
+        public Block Lastblock = null;
         public void Interact(Vector2 WorldPos)
         {
-            foreach(Entity entity in Game._entityManager.Workspace)
+            foreach (Entity entity in Game._entityManager.Workspace)
             {
-                if(LogicsClass.IsInBounds(WorldPos, entity.collisionBox.Size))
+                if (LogicsClass.IsInBounds(WorldPos, entity.collisionBox.Size))
                 {
                     Game._particleSystem.Particles.Add(new Particle()
                     {
@@ -90,11 +89,19 @@ namespace MinecraftAlpha
 
 
             //Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
+            TileGrid Grid = Game.World[(int)WorldPos.Y, (int)WorldPos.X];
             var block = Game._blockManager.Blocks[Game.World[(int)WorldPos.Y, (int)WorldPos.X].ID];
-            if(block.Interaction != null)
+            if (block.Interaction != null)
             {
-                block.Interaction.Invoke();
+                if (Game._userInterfaceManager.windows[1].Visible && Lastblock == block)
+                {
+                    block.Update.Invoke(Grid);
+                }
+
+                block.Interaction.Invoke(Grid);
+                
             }
+            Lastblock = block;
         }
 
         public void Punch(Vector2 WorldPos)
@@ -102,7 +109,8 @@ namespace MinecraftAlpha
 
         }
         public void BreakBlock(int X, int Y)
-        {var block = Game._blockManager.Blocks[Game.World[Y, X].ID];
+        {
+            var block = Game._blockManager.Blocks[Game.World[Y, X].ID];
 
             if (Game.World[Y, X].ID != 0)
             {
@@ -126,8 +134,8 @@ namespace MinecraftAlpha
 
                     }
                 }
-               
-                
+
+
                 Game.World[Y, X].ID = 0;
 
             }

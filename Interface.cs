@@ -233,6 +233,7 @@ namespace MinecraftAlpha
             
             windows.Add(window);
             list = new List<ItemSlot>();
+            int id = 0;
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 10; j++)
@@ -240,6 +241,7 @@ namespace MinecraftAlpha
                     list.Add(new ItemSlot()
                     {
                         Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One) + new Vector2(400,0),
+                        ID = id++,
                     }
                     );
                 }
@@ -260,11 +262,12 @@ namespace MinecraftAlpha
     }
     public class ItemSlot
     {
+        public int ID =0;
         public Vector2 Position;
         Vector2 Scale = Vector2.One * 32;
         public Block Item;
         public int Count = 0;
-
+        
         public Texture2D Texture;
         public bool IsInBounds(Vector2 Pos)
         {
