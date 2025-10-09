@@ -20,6 +20,7 @@ namespace MinecraftAlpha
         public string TexturePath { get; set; }
 
         public Action Interaction = null; 
+        public Action Update = null;
     }
 
     public class BlockManager
@@ -53,13 +54,40 @@ namespace MinecraftAlpha
         {
             return Blocks.Find(x => x.Name == "");
         }
-        public void LoadActions()
+        public void LoadActions(TileGrid pos)
         {
             Blocks[5].Interaction = () =>
             {
                 
-                Game._userInterfaceManager.windows[1].Visible = !Game._userInterfaceManager.windows[1].Visible;
+                string Items = Pos.Data;
+                var Window = Game._userInterfaceManager.windows[1]
+                Window.Visible = !Window.Visible;
+                foreach(var item in Items.Split(','))
+                {
+                    var a = item.Split(':');
+                    var Slot = Window[a[1],a[2]];
+                    Slot.ID = a[0]; Slot.Count= a[3];
+                    
+                }
             };
+            Blocks[5].Update = () => 
+            {
+                var Window = Game._userInterfaceManager.windows[1];
+                    string Data= "";
+                for(int i = 0;i < Window.Itemslots.GetLenght(0); i++)
+                {
+                    for(int j = 0; j < Window.Items.GetLength(1);j++)
+                    {
+                        var item = Window.Items[i,j];
+                        if(item == null) continue;
+                        if(item.Count <=0 ) continue;
+                        Data += $"{i}:{j}:{item.Item.ID}:{item.Count},";
+                    }
+                }
+                pos.Data = Data;
+                    
+                
+            }
 
         }
 
