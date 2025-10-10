@@ -119,6 +119,8 @@ namespace MinecraftAlpha
             //SB.Draw(Texture, BlockSize * position + Cam, null, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize SpriteEffects.None, 0f);
 
             //SB.End();
+            
+
             foreach (Joint Joint in Joints)
             {
                 Joint.B_Sprite.ParentOrianetation = Joint.A_Sprite.Orientation;
@@ -159,7 +161,8 @@ namespace MinecraftAlpha
 
 
 
-                }
+                },
+                
 
 
             };

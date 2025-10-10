@@ -204,9 +204,15 @@ public class Game1 : Game
         _blockManager.LoadActions();
         _userInterfaceManager.selectedItem = _blockManager.Blocks[3];
         _userInterfaceManager.amount = 5;
+
+        var Grass = Content.Load<Texture2D>("dirt");
+
+        test = new Sprite3D(Grass, Grass, Grass, Grass);
+
+
         // TODO: use this.Content to load your game content here
     }
-
+    Sprite3D test;
     public void IluminateDiamond(int x,int y,float val1, TileGrid[,] grid)
     {
         int val = (int)val1;
@@ -246,6 +252,7 @@ public class Game1 : Game
             }
 
         }
+
     }
 
     public void Lighting(TileGrid[,] map,float layer)
@@ -278,6 +285,10 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        // block drop testing remove later
+        test.Update();
+
+
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
@@ -532,7 +543,8 @@ public class Game1 : Game
 
     }
 
-
+    
+    
 
     protected override void Draw(GameTime gameTime)
     {
