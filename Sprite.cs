@@ -48,9 +48,9 @@ namespace MinecraftAlpha
         }
         public Sides2_3D[] Sides = new Sides2_3D[4]; // 0 = front/back, 1 = left/right
 
-        public Vector2 Position = Vector2.Zero;
+        public Vector2 Position = new Vector2(100,100);
 
-        public float Size = 3f;
+        public float Size = 1f;
 
         public float Orientation = 0f; // 0,90,180,270
         public void Draw(SpriteBatch spritebatch)
@@ -59,7 +59,7 @@ namespace MinecraftAlpha
             for (int i = 0; i < Sides.Length; i++)
             {
                 float Angle = (i * 90);
-                if (Orientation >= Angle - 45 && Orientation < Angle + 45)
+                if (Orientation >= Angle - 45 && Orientation <= Angle + 45)
                 {
                     Visible = Sides[i];
                 }
@@ -67,13 +67,23 @@ namespace MinecraftAlpha
 
 
 
-            float sizeRatio = (float)Math.Sin(MathF.PI / 180 * Orientation);
+            float sizeRatio = Orientation/360;
 
             Color lightingA = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(sizeRatio, sizeRatio, sizeRatio, 1));
             Color lightingB = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(1 - sizeRatio, 1 - sizeRatio, 1 - sizeRatio, 1));
 
-            Vector2 SizeA = new Vector2(sizeRatio, 1) * Size;
-            Vector2 SizeB = new Vector2(1 - sizeRatio, 1) * Size;
+            Vector2 SizeA = new Vector2(sizeRatio, 1);
+            Vector2 SizeB = new Vector2((1 - sizeRatio), 1);
+
+            if (Visible == null)
+            {
+                if (Orientation > 180 + 45 || Orientation < 45)
+                {
+                    Visible = Sides[0];
+                }
+                
+                    //return;
+            }
             spritebatch.Begin();
 
 
@@ -84,7 +94,7 @@ namespace MinecraftAlpha
 
             spritebatch.Draw(
                 Visible.SideA,
-                Position- Vector2.UnitX * sizeRatio,
+                Position + new Vector2(sizeRatio+ Orientation/360*16, 0),
                 null,
                 lightingA,
                 0f, // Orientation
@@ -98,7 +108,7 @@ namespace MinecraftAlpha
 
             spritebatch.Draw(
                 Visible.SideB,
-                Position + Vector2.UnitX * (1-sizeRatio),
+                Position + new Vector2(sizeRatio+Orientation/360*16, 0),
                 null,
                 lightingB,
                 0f, // Orientation

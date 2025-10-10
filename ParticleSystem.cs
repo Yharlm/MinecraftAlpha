@@ -43,6 +43,8 @@ namespace MinecraftAlpha
 
         public Vector2 Velocity;
 
+        public bool ParticleRactangleCHose = false;
+
         public void Update()
         {
             
@@ -51,13 +53,26 @@ namespace MinecraftAlpha
             Position += Velocity/lifeTime/20;
             
         }
+        Random rnd = new Random();
         public void DrawParticles(SpriteBatch spriteBatch, Vector2 Camera, float Size, Texture2D Preset)
         {
             if(Texture == null)
             {
+                
+
                 Texture = Preset;
             }
+
             var Ractangle = new Microsoft.Xna.Framework.Rectangle(Index*8, 0, 8, 8);
+
+            if (TextureName == "BlockMineEffect" && !ParticleRactangleCHose)
+            {
+                int x = rnd.Next(0, Texture.Width);
+                int y = rnd.Next(0, Texture.Height);
+                Ractangle = new Microsoft.Xna.Framework.Rectangle(x,y,x+3,y+3);
+                ParticleRactangleCHose = true;
+            }
+
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 Texture,

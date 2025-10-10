@@ -206,8 +206,9 @@ public class Game1 : Game
         _userInterfaceManager.amount = 5;
 
         var Grass = Content.Load<Texture2D>("dirt");
+        var wood = Content.Load<Texture2D>("oak_planks");
 
-        test = new Sprite3D(Grass, Grass, Grass, Grass);
+        test = new Sprite3D(Grass, wood, wood, wood);
 
 
         // TODO: use this.Content to load your game content here
@@ -584,10 +585,13 @@ public class Game1 : Game
         _userInterfaceManager.DrawUI(_spriteBatch, Content);
 
         _spriteBatch.Begin();
+        
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.cam.position.ToString(), Vector2.One, Color.Wheat);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), player.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), player.Health.ToString(), Vector2.One*30, Color.Red);
         _spriteBatch.End();
+
+        test.Draw(_spriteBatch);
 
 
     }

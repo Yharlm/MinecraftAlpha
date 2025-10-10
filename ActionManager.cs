@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace MinecraftAlpha
 {
@@ -80,10 +83,7 @@ namespace MinecraftAlpha
             {
                 if (LogicsClass.IsInBounds(WorldPos, entity.collisionBox.Size))
                 {
-                    Game._particleSystem.Particles.Add(new Particle()
-                    {
-                        Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f)
-                    });
+                    
                 }
             }
 
@@ -96,12 +96,14 @@ namespace MinecraftAlpha
                 if (Game._userInterfaceManager.windows[1].Visible && Lastblock == block)
                 {
                     block.Update.Invoke(Grid);
+
                 }
 
                 block.Interaction.Invoke(Grid);
-                
+                Lastblock = block;
+
             }
-            Lastblock = block;
+            
         }
 
         public void Punch(Vector2 WorldPos)
@@ -117,6 +119,19 @@ namespace MinecraftAlpha
                 if (block.Health > Game.World[Y, X].MinedHealth)
                 {
                     Game.World[Y, X].MinedHealth += 0.5f;
+                    var part = new Particle()
+                    {
+                        Position = Game.WorldMousePos,
+                        TextureName = "BlockMineEffect",
+                        Texture = block.Texture,
+                        lifeTime = 1,
+                        Color = Color.White,
+
+                        Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
+
+                    };
+
+                    Game._particleSystem.Particles.Add(part);
                     return;
                 }
 
@@ -128,7 +143,7 @@ namespace MinecraftAlpha
                     {
                         islot.Item = Game._blockManager.Blocks[Game.World[Y, X].ID];
                         Game.World[Y, X].MinedHealth = 0;
-
+                        
                         islot.Count += 1; break;
 
 
