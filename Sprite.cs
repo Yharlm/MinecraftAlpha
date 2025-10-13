@@ -67,7 +67,7 @@ namespace MinecraftAlpha
 
 
 
-            float sizeRatio = Orientation/360;
+            float sizeRatio = Orientation%90/90;
 
             Color lightingA = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(sizeRatio, sizeRatio, sizeRatio, 1));
             Color lightingB = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(1 - sizeRatio, 1 - sizeRatio, 1 - sizeRatio, 1));
@@ -94,7 +94,7 @@ namespace MinecraftAlpha
 
             spritebatch.Draw(
                 Visible.SideA,
-                Position + new Vector2(sizeRatio+ Orientation/360*16, 0),
+                Position + new Vector2(sizeRatio*16, 0),
                 null,
                 lightingA,
                 0f, // Orientation
@@ -108,7 +108,7 @@ namespace MinecraftAlpha
 
             spritebatch.Draw(
                 Visible.SideB,
-                Position + new Vector2(sizeRatio+Orientation/360*16, 0),
+                Position + new Vector2(sizeRatio*16, 0),
                 null,
                 lightingB,
                 0f, // Orientation
