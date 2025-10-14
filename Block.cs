@@ -43,7 +43,7 @@ namespace MinecraftAlpha
                new Block { Name = "Dirt", TexturePath = "dirt",Health = 30 },
                new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
-               new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 50},
+               new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
                //new Block { Name = "Wood", TexturePath = "oak_planks" },
                //new Block { Name = "Wood", TexturePath = "oak_planks" },
                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null},

@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Color = Microsoft.Xna.Framework.Color;
+using Microsoft.Xna.Framework.Graphics;
+using System.Security.Cryptography;
 
 namespace MinecraftAlpha
 {
@@ -118,16 +120,25 @@ namespace MinecraftAlpha
             {
                 if (block.Health > Game.World[Y, X].MinedHealth)
                 {
+                    
+                    int x = random.Next(0, block.Texture.Width);
+                    int y = random.Next(0, block.Texture.Height);
+                    //    Ractangle = new Microsoft.Xna.Framework.Rectangle(x,y,x+3,y+3);
+                    //    ParticleRactangleCHose = true;
                     Game.World[Y, X].MinedHealth += 0.5f;
+                    if (block.Health %0.2f == 0) return;
                     var part = new Particle()
                     {
-                        Position = Game.WorldMousePos,
+                        Position = (new Vector2(X + (float)x/ block.Texture.Width, Y + (float)y / block.Texture.Height)),
                         TextureName = "BlockMineEffect",
                         Texture = block.Texture,
-                        lifeTime = 1,
+                        lifeTime = 0.2f,
+                        size = 0.4f,
                         Color = Color.White,
-
+                        Rectangle = new Microsoft.Xna.Framework.Rectangle(x, y, 3, 3),
                         Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
+                        Acceleration = new Vector2(0, -1f),
+                        gravity = 0.1f
 
                     };
 
@@ -143,7 +154,31 @@ namespace MinecraftAlpha
                     {
                         islot.Item = Game._blockManager.Blocks[Game.World[Y, X].ID];
                         Game.World[Y, X].MinedHealth = 0;
-                        
+                        for (int i = 0; i < 50;i++)
+                        {
+                            int x = random.Next(0, block.Texture.Width);
+                            int y = random.Next(0, block.Texture.Height);
+                            //    Ractangle = new Microsoft.Xna.Framework.Rectangle(x,y,x+3,y+3);
+                            //    ParticleRactangleCHose = true;
+                            Game.World[Y, X].MinedHealth += 0.5f;
+                            if (block.Health % 0.2f == 0) return;
+                            var part = new Particle()
+                            {
+                                Position = (new Vector2(X + (float)x / block.Texture.Width, (float)Y)),
+                                TextureName = "BlockMineEffect",
+                                Texture = block.Texture,
+                                lifeTime = 0.5f,
+                                size = 0.4f,
+                                Color = Color.White,
+                                Rectangle = new Microsoft.Xna.Framework.Rectangle(x, y, 3, 3),
+                                Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
+                                Acceleration = new Vector2(0, -0f),
+                                gravity = 0.02f
+
+                            };
+                            Game._particleSystem.Particles.Add(part);
+
+                        }
                         islot.Count += 1; break;
 
 

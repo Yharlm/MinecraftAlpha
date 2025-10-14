@@ -208,7 +208,7 @@ public class Game1 : Game
         var Grass = Content.Load<Texture2D>("dirt");
         var wood = Content.Load<Texture2D>("oak_planks");
 
-        test = new Sprite3D(Grass, wood, wood, wood);
+        test = new Sprite3D(wood, Grass, wood, wood);
 
 
         // TODO: use this.Content to load your game content here
@@ -339,10 +339,12 @@ public class Game1 : Game
 
         }
         _entityManager.Workspace.RemoveAll(x => x.Health <= 0);
+        
         foreach (var entity in _particleSystem.Particles)
         {
             entity.Update();
         }
+        _particleSystem.Particles.RemoveAll(x => x.lifeTime <= 0);
 
     }
 
@@ -354,13 +356,17 @@ public class Game1 : Game
     {
         var PLR = _entityManager.Workspace[0];
 
+        
+
+        
+
         PLR.Animations[2].Paused = true;
 
         
 
 
 
-        _particleSystem.Particles[0].Position = PLR.position;
+        //_particleSystem.Particles[0].Position = PLR.position;
         _userInterfaceManager.HoverAction(MousePosition, _actionManager);
         if (Mouse.GetState().LeftButton == ButtonState.Pressed && !LeftClicked)
         {
@@ -411,19 +417,19 @@ public class Game1 : Game
         {
             for (int i = 0; i < 4; i++)
             {
-                var part = new Particle()
-                {
-                    Position = WorldMousePos,
-                    TextureName = "ParticleSmokeEffect",
-                    lifeTime = (float)random.NextDouble(),
-                    Color = Microsoft.Xna.Framework.Color.FromNonPremultiplied(
-                        new Vector4((float)random.NextDouble(),2f,0f, 1)
-                        ),
-                    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
+                //var part = new Particle()
+                //{
+                //    Position = WorldMousePos,
+                //    TextureName = "ParticleSmokeEffect",
+                //    lifeTime = (float)random.NextDouble()*2,
+                //    Color = Microsoft.Xna.Framework.Color.FromNonPremultiplied(
+                //        new Vector4((float)random.NextDouble(),2f,0f, 1)
+                //        ),
+                //    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
 
-                };
+                //};
 
-                _particleSystem.Particles.Add(part);
+                //_particleSystem.Particles.Add(part);
             }
             if (!_userInterfaceManager.Clicked)
             {
@@ -568,18 +574,18 @@ public class Game1 : Game
 
         }
         _spriteBatch.End();
-        foreach (var P in _particleSystem.Particles)
-        {
-
-            P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, _particleSystem.Particles[0].Texture);
-        }
+        
         // 2 cycles to render both directions of the world
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position, BreakTexture);
         Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, player.position,BreakTexture);
-        
-        //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
 
+        //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
+        foreach (var P in _particleSystem.Particles)
+        {
+
+            P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
+        }
         base.Draw(gameTime);
         _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
         _userInterfaceManager.DrawUI(_spriteBatch, Content);

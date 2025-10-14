@@ -50,7 +50,7 @@ namespace MinecraftAlpha
 
         public Vector2 Position = new Vector2(100,100);
 
-        public float Size = 1f;
+        public float Size = 3f;
 
         public float Orientation = 0f; // 0,90,180,270
         public void Draw(SpriteBatch spritebatch)
@@ -58,8 +58,8 @@ namespace MinecraftAlpha
             Sides2_3D Visible = null;
             for (int i = 0; i < Sides.Length; i++)
             {
-                float Angle = (i * 90);
-                if (Orientation >= Angle - 45 && Orientation <= Angle + 45)
+                float Angle = (i*90);
+                if (Orientation >= Angle && Orientation <= Angle + 90)
                 {
                     Visible = Sides[i];
                 }
@@ -67,26 +67,23 @@ namespace MinecraftAlpha
 
 
 
-            float sizeRatio = Orientation%90/90;
+            float sizeRatio = (Orientation%90)/90;
 
-            Color lightingA = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(sizeRatio, sizeRatio, sizeRatio, 1));
-            Color lightingB = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(1 - sizeRatio, 1 - sizeRatio, 1 - sizeRatio, 1));
+            Color lightingA = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(1 - sizeRatio, 1 - sizeRatio, 1 - sizeRatio, 1));
+            Color lightingB = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(0.3f + sizeRatio, 0.3f + sizeRatio, 0.3f + sizeRatio, 1));
 
-            Vector2 SizeA = new Vector2(sizeRatio, 1);
-            Vector2 SizeB = new Vector2((1 - sizeRatio), 1);
+
+            Vector2 SizeA = new Vector2(1 - sizeRatio, 1)*Size;
+            Vector2 SizeB = new Vector2(( sizeRatio) , 1)*Size;
 
             if (Visible == null)
             {
-                if (Orientation > 180 + 45 || Orientation < 45)
-                {
-                    Visible = Sides[0];
-                }
-                
-                    //return;
+
+                return;
             }
             spritebatch.Begin();
 
-
+            float Floating = float.Cos(Orientation * MathF.PI / 180) * 10;
 
             //spritebatch.Draw(Visible.SideA, new Rectangle(0, 0, (int)(Visible.SideA.Width * SizeA.X), (int)(Visible.SideA.Height * SizeA.Y)), lightingA);
             //spritebatch.Draw(Visible.SideB, new Rectangle((int)(Visible.SideA.Width * SizeA.X), 0, (int)(Visible.SideB.Width * SizeB.X), (int)(Visible.SideB.Height * SizeB.Y)), lightingB);
@@ -94,11 +91,11 @@ namespace MinecraftAlpha
 
             spritebatch.Draw(
                 Visible.SideA,
-                Position + new Vector2(sizeRatio*16, 0),
+                Position + new Vector2(0, Floating),
                 null,
                 lightingA,
                 0f, // Orientation
-                new Vector2(Visible.SideA.Width, Visible.SideA.Height) / 2 , //
+                Vector2.Zero, //
                 SizeA,
                 SpriteEffects.None,
                 1f
@@ -108,11 +105,11 @@ namespace MinecraftAlpha
 
             spritebatch.Draw(
                 Visible.SideB,
-                Position + new Vector2(sizeRatio*16, 0),
+                Position + new Vector2(SizeA.X*16, Floating),
                 null,
                 lightingB,
                 0f, // Orientation
-                new Vector2(Visible.SideB.Width, Visible.SideB.Height) / 2, //
+                Vector2.Zero, //
                 SizeB,
                 SpriteEffects.None,
                 1f
@@ -134,10 +131,14 @@ namespace MinecraftAlpha
 
         public void Update()
         {
-            Orientation += 1f;
+            Orientation -= 1f;
             if (Orientation >= 360f)
             {
                 Orientation = 0f;
+            }
+            if (Orientation < 0f)
+            {
+                Orientation = 360f;
             }
         }
 

@@ -12,8 +12,11 @@ namespace MinecraftAlpha
     {
         public Vector2 Position { get; set; }
 
+        public Microsoft.Xna.Framework.Rectangle Rectangle = new Microsoft.Xna.Framework.Rectangle(0,0,0,0);
         public float lifeTime { get; set; }
         public float Changespeed { get; set; }
+
+        public float size = 1f;
 
         //static void Main(string[] args) // Tween color to another color
         //{
@@ -43,14 +46,17 @@ namespace MinecraftAlpha
 
         public Vector2 Velocity;
 
+        public Vector2 Acceleration;
+         public float gravity = 0.01f;
+
         public bool ParticleRactangleCHose = false;
 
         public void Update()
         {
             
-            lifeTime += 0.01f;
+            lifeTime -= 0.01f;
             Index = (int)lifeTime;
-            Position += Velocity/lifeTime/20;
+            Position += (Acceleration+ Velocity) / /*lifeTime/*/20 + gravity * Vector2.UnitY;
             
         }
         Random rnd = new Random();
@@ -65,12 +71,22 @@ namespace MinecraftAlpha
 
             var Ractangle = new Microsoft.Xna.Framework.Rectangle(Index*8, 0, 8, 8);
 
-            if (TextureName == "BlockMineEffect" && !ParticleRactangleCHose)
+            //if (TextureName == "BlockMineEffect")
+            //{
+            //    if (!ParticleRactangleCHose)
+            //    {
+            //        return;
+            //    }
+            //    int x = rnd.Next(0, Texture.Width);
+            //    int y = rnd.Next(0, Texture.Height);
+            //    Ractangle = new Microsoft.Xna.Framework.Rectangle(x,y,x+3,y+3);
+            //    ParticleRactangleCHose = true;
+            //}
+
+            if (!this.Rectangle.IsEmpty)
             {
-                int x = rnd.Next(0, Texture.Width);
-                int y = rnd.Next(0, Texture.Height);
-                Ractangle = new Microsoft.Xna.Framework.Rectangle(x,y,x+3,y+3);
-                ParticleRactangleCHose = true;
+                Ractangle = this.Rectangle;
+
             }
 
             spriteBatch.Begin(samplerState:SamplerState.PointClamp);
@@ -81,7 +97,7 @@ namespace MinecraftAlpha
                 Color,
                 0f, // Orientation
                 Vector2.Zero, //
-                Size/8,
+                size *Size/8,
                 SpriteEffects.None,
                 1f
                 );
