@@ -195,6 +195,7 @@ namespace MinecraftAlpha
                         }
                         if (LastUsedBlock != null)
                         {
+
                             AM.Game._blockManager.Blocks[LastUsedBlock.ID].Update.Invoke(LastUsedBlock);
                         }
                     }
@@ -206,7 +207,7 @@ namespace MinecraftAlpha
 
             if (!In_interface)
             {
-                windows.Find(x => x.Name == "Crafting").Visible = false;
+                //windows.Find(x => x.Name == "Crafting").Visible = false;
                 windows.Find(x => x.Name == "Chest").Visible = false;
                 
             }
@@ -267,7 +268,7 @@ namespace MinecraftAlpha
             {
 
                 Name = "Chest",
-                Position = new Vector2(1300, 400),
+                Position = new Vector2(2200, 400),
                 ItemsSlots = list
             };
             windows.Add(window);
@@ -279,7 +280,7 @@ namespace MinecraftAlpha
                 {
                     list.Add(new ItemSlot()
                     {
-                        Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One) + new Vector2(200, 0),
+                        Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One) + new Vector2(400, 0),
                         ID = id++,
                     }
                     );
@@ -305,7 +306,7 @@ namespace MinecraftAlpha
             return windows;
         }
     }
-    public class ItemSlot
+    public class ItemSlot : WindowFrame
     {
         public int ID =0;
         public Vector2 Position;
@@ -325,6 +326,8 @@ namespace MinecraftAlpha
                 }
             return false;
         }
+
+        public Action Update = () => { };
 
         public void TakeItem(int Amount, UserInterfaceManager UI)
         {
@@ -417,6 +420,7 @@ namespace MinecraftAlpha
         public Vector2 Size = new Vector2(100,30);
         public Vector2 CornerSize = new Vector2(0,0);
         public Texture2D Window = null;
+        
 
         public void Render(SpriteBatch Spritebatch)
         {
@@ -443,7 +447,20 @@ namespace MinecraftAlpha
             };
             Rectangle Background = new Rectangle(Cx,Cy,Sizex-Cx*2,Sizey-Cy*2);
             Spritebatch.Begin();
-            //Spritebatch.Draw(Window,Rectangle.Empty,);
+            Spritebatch.Draw(Window, Position, Background, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+
+            foreach (var corner in Corners)
+            {
+                Spritebatch.Draw(Window, Position + new Vector2(corner.X, corner.Y), corner, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+
+            }
+            foreach (var border in Borders)
+            {
+                Spritebatch.Draw(Window, Position + new Vector2(border.X, border.Y), border, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+
+            }
+
+
             Spritebatch.End();
         }
     }

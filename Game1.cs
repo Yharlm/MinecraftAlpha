@@ -22,6 +22,7 @@ public class Game1 : Game
     public ActionManager _actionManager = new ActionManager();
     public EntityAnimationService _entityAnimationService = new EntityAnimationService();
     public ParticleSystem _particleSystem = new ParticleSystem();
+    public CraftingRecipe
 
 
     public Texture2D BreakTexture;
@@ -208,7 +209,9 @@ public class Game1 : Game
         _userInterfaceManager.windows[0].ItemsSlots[0].Count = 64;
         _userInterfaceManager.windows[0].ItemsSlots[1].Item = _blockManager.Blocks[5];
         _userInterfaceManager.windows[0].ItemsSlots[1].Count = 64;
-        
+        _userInterfaceManager.windows[0].ItemsSlots[2].Item = _blockManager.Blocks[6];
+        _userInterfaceManager.windows[0].ItemsSlots[2].Count = 64;
+
 
 
 
@@ -394,8 +397,12 @@ public class Game1 : Game
         {
             if (!_userInterfaceManager.Clicked)
             {
-                PLR.Animations[2].Time = 0f;
-                PLR.Animations[2].Paused = false;
+                if (PLR.Animations[2].Playing == false)
+                {
+                    PLR.Animations[2].Time = 0f;
+                    PLR.Animations[2].Paused = false;
+                }
+                
                 if (WorldMousePos.X > 0 && WorldMousePos.Y > 0)
                 {
                     int BlockX = (int)(WorldMousePos.X);
@@ -610,6 +617,7 @@ public class Game1 : Game
         _spriteBatch.End();
 
         test.Draw(_spriteBatch);
+
 
 
     }

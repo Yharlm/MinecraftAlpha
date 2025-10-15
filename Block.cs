@@ -20,7 +20,7 @@ namespace MinecraftAlpha
         public string TexturePath { get; set; }
 
         public Action<TileGrid> Interaction = null; 
-        public Action<TileGrid> Update = null;
+        public Action<TileGrid> Update = (Grid) => { };
     }
 
     public class BlockManager
@@ -45,8 +45,9 @@ namespace MinecraftAlpha
                new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
                new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
                //new Block { Name = "Wood", TexturePath = "oak_planks" },
-               new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60},
                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null},
+                new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
+
             };
             return list;
         }
@@ -92,6 +93,15 @@ namespace MinecraftAlpha
                 }
                 Pos.Data = Data;
 
+
+            };
+            Blocks[6].Interaction = (Pos) =>
+            {
+
+                var Window = Game._userInterfaceManager.windows[2];
+                Window.Visible = !Window.Visible;
+
+                
 
             };
 

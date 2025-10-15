@@ -110,6 +110,8 @@ public class Frame
 }
 public class EntityAnimation
 {
+    public bool Playing = false;
+    public bool Fliped = false;
     public Entity parent;
     public bool Looped = false;
     public bool Paused = true;
@@ -139,8 +141,10 @@ public class EntityAnimation
             float Distance = GetDistanceBetweenAngles(Parent.orientation, frame.Angle);
             if (Looped && Time > duration )
             {
+                Playing = false;
                 Time = 0f;
             }
+
 
 
             if (frame.Durration + frame.start >= Time && frame.start <= Time)
