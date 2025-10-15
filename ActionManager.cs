@@ -85,7 +85,7 @@ namespace MinecraftAlpha
             {
                 if (LogicsClass.IsInBounds(WorldPos, entity.collisionBox.Size))
                 {
-                    
+                    entity.Interaction.Action.Invoke();
                 }
             }
 
@@ -95,23 +95,15 @@ namespace MinecraftAlpha
             var block = Game._blockManager.Blocks[Game.World[(int)WorldPos.Y, (int)WorldPos.X].ID];
             if (block.Interaction != null)
             {
-                if (Game._userInterfaceManager.windows[1].Visible && Lastblock == block)
-                {
-                    block.Update.Invoke(Grid);
-
-                }
-
+                
                 block.Interaction.Invoke(Grid);
-                Lastblock = block;
+                Game._userInterfaceManager.LastUsedBlock = Grid;
 
             }
             
         }
 
-        public void Punch(Vector2 WorldPos)
-        {
-
-        }
+        
         public void BreakBlock(int X, int Y)
         {
             var block = Game._blockManager.Blocks[Game.World[Y, X].ID];
@@ -123,11 +115,14 @@ namespace MinecraftAlpha
                     
                     int x = random.Next(0, block.Texture.Width);
                     int y = random.Next(0, block.Texture.Height);
-                    //    Ractangle = new Microsoft.Xna.Framework.Rectangle(x,y,x+3,y+3);
-                    //    ParticleRactangleCHose = true;
                     Game.World[Y, X].MinedHealth += 0.5f;
+
+
                     if (block.Health %0.2f == 0) return;
-                    var part = new Particle()
+
+
+
+                    var part = new Particle() 
                     {
                         Position = (new Vector2(X + (float)x/ block.Texture.Width, Y + (float)y / block.Texture.Height)),
                         TextureName = "BlockMineEffect",
@@ -141,6 +136,8 @@ namespace MinecraftAlpha
                         gravity = 0.1f
 
                     };
+
+
 
                     Game._particleSystem.Particles.Add(part);
                     return;

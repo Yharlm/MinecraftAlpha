@@ -13,7 +13,7 @@ namespace MinecraftAlpha
     public class UserInterfaceManager
 
     {
-
+        public TileGrid LastUsedBlock = null;
         public List<WindowFrame> windows = new List<WindowFrame>();
         public List<Button> Buttons = new List<Button>();
         public List<ItemSlot> ItemSlots = new List<ItemSlot>();
@@ -144,14 +144,16 @@ namespace MinecraftAlpha
         }
         public void ClickAction(Vector2 Mouse, ActionManager AM, bool Mouse1)
         {
+            bool In_interface = false;
             foreach (var button in Buttons)
             {
                 if (button.IsInBounds(Mouse))
                 {
-                    
+                    In_interface = true;
                     AM.GetAction(button.Action);
 
                 }
+                
             }
             foreach (var win in this.windows)
             {
@@ -159,10 +161,13 @@ namespace MinecraftAlpha
                 {
                     continue;
                 }
+
+
                 foreach (var ItemSlot in win.ItemsSlots)
                 {
                     if (ItemSlot.IsInBounds(Mouse))
                     {
+                        In_interface = true;
                         Clicked = true;
                         if (Mouse1)
                         {
@@ -188,10 +193,22 @@ namespace MinecraftAlpha
                                 ItemSlot.AddItem(1, this);
                             }
                         }
-                        
+                        if (LastUsedBlock != null)
+                        {
+                            AM.Game._blockManager.Blocks[LastUsedBlock.ID].Update.Invoke(LastUsedBlock);
+                        }
                     }
 
                 }
+
+                
+            }
+
+            if (!In_interface)
+            {
+                windows.Find(x => x.Name == "Crafting").Visible = false;
+                windows.Find(x => x.Name == "Chest").Visible = false;
+                
             }
         }
 
@@ -250,6 +267,34 @@ namespace MinecraftAlpha
             {
 
                 Name = "Chest",
+                Position = new Vector2(1300, 400),
+                ItemsSlots = list
+            };
+            windows.Add(window);
+            list = new List<ItemSlot>();
+            id = 1;
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    list.Add(new ItemSlot()
+                    {
+                        Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One) + new Vector2(200, 0),
+                        ID = id++,
+                    }
+                    );
+                }
+            }
+            list.Add(new ItemSlot()
+            {
+                Position = Vector2.One * 32 * (new Vector2(0.5f, 2.5f) + Vector2.One) + new Vector2(200, 0),
+                ID = id++,
+            }
+                    );
+            window = new WindowFrame()
+            {
+                Visible = true,
+                Name = "Crafting",
                 Position = new Vector2(1300, 400),
                 ItemsSlots = list
             };

@@ -29,6 +29,19 @@ namespace MinecraftAlpha
             Workspace.Add(mobClone);
 
         }
+
+        public void ItemDrop(Vector2 position, Block item)
+        {
+            Entity entity = new Entity(-1, item.Name, item.TexturePath, 1000)
+            {
+                
+                position = position,
+                collisionBox = new CollisionBox(),
+
+                
+                
+            };
+        }
         public void UpdateAll()
         {
             foreach (var entity in Workspace)

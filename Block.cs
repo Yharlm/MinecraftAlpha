@@ -15,7 +15,7 @@ namespace MinecraftAlpha
 
         public int DefaultState = 0; // Default state of the block
 
-
+        
         public Texture2D Texture { get; set; }
         public string TexturePath { get; set; }
 
@@ -45,7 +45,7 @@ namespace MinecraftAlpha
                new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
                new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
                //new Block { Name = "Wood", TexturePath = "oak_planks" },
-               //new Block { Name = "Wood", TexturePath = "oak_planks" },
+               new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60},
                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null},
             };
             return list;

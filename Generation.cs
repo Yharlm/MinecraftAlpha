@@ -45,6 +45,8 @@ namespace MinecraftAlpha
         //Terrain algoritms
 
 
+         
+
         static float[,] GenerateFlat(int Width, int Height, float peak)
         {
             float[,] Noise = new float[Height, Width];

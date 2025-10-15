@@ -23,17 +23,18 @@ public class Game1 : Game
     public EntityAnimationService _entityAnimationService = new EntityAnimationService();
     public ParticleSystem _particleSystem = new ParticleSystem();
 
+
     public Texture2D BreakTexture;
 
-    Player Player = new Player();
+    public Player Player = new Player();
 
     public float Daytime = 0f;
     public List<Entity> Entities;
     public List<Block> BlockTypes;
 
-    
 
-    Entity player;
+
+    
 
 
     public Vector2 WorldMousePos = Vector2.Zero;
@@ -58,7 +59,7 @@ public class Game1 : Game
     public TileGrid[,] World { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
 
 
-    public List<Block> Blocks;
+    
 
 
 
@@ -184,6 +185,9 @@ public class Game1 : Game
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
 
+
+
+
         //_userInterfaceManager.ItemSlots = UserInterfaceManager.LoadItemSlots(_blockManager.Blocks);
         _entityManager.LoadEntities();
         _entityManager.LoadSprites(Content);
@@ -192,14 +196,22 @@ public class Game1 : Game
         _userInterfaceManager.LoadTextures(Content);
         _entityAnimationService.CreateAnimations(Entities);
         _entityAnimationService.LoadAnimations(_entityManager.entities);
-        player = _entityManager.entities[0];
-        _entityManager.Workspace.Add(player);
+        BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
+
+        //Making player
+        Player.Plr = _entityManager.entities[0];
+        _entityManager.Workspace.Add(Player.Plr);
+
+
 
         _userInterfaceManager.windows[0].ItemsSlots[0].Item = _blockManager.Blocks[4];
         _userInterfaceManager.windows[0].ItemsSlots[0].Count = 64;
         _userInterfaceManager.windows[0].ItemsSlots[1].Item = _blockManager.Blocks[5];
         _userInterfaceManager.windows[0].ItemsSlots[1].Count = 64;
-        BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
+        
+
+
+
         _particleSystem.Load();
         _blockManager.LoadActions();
         _userInterfaceManager.selectedItem = _blockManager.Blocks[3];
@@ -259,7 +271,7 @@ public class Game1 : Game
     public void Lighting(TileGrid[,] map,float layer)
     {
         var Grid = map;
-        Vector2 pos = player.position;
+        Vector2 pos = Player.Plr.position;
         for (float i = pos.Y - 20; i < pos.Y + 20; i++)
         {
             for (float j = pos.X - 20; j < pos.X + 20; j++)
@@ -309,7 +321,7 @@ public class Game1 : Game
 
 
 
-        Player.cam.position = -player.position * BlockSize + new Vector2(400, 202);
+        Player.cam.position = -Player.Plr.position * BlockSize + new Vector2(400, 202);
         base.Update(gameTime);
         MousePosition = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
 
@@ -460,7 +472,7 @@ public class Game1 : Game
         }
 
         Vector2 plrVel = Vector2.Zero;
-        player.velocity.velocity = new Vector2(0, 0);
+        Player.Plr.velocity.velocity = new Vector2(0, 0);
         float zoomScale = 0.3f;
         var keyboardState = Keyboard.GetState();
 
@@ -578,7 +590,7 @@ public class Game1 : Game
         // 2 cycles to render both directions of the world
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position, BreakTexture);
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, player.position,BreakTexture);
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position,BreakTexture);
 
         //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
         foreach (var P in _particleSystem.Particles)
@@ -593,8 +605,8 @@ public class Game1 : Game
         _spriteBatch.Begin();
         
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.cam.position.ToString(), Vector2.One, Color.Wheat);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), player.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), player.Health.ToString(), Vector2.One*30, Color.Red);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One*30, Color.Red);
         _spriteBatch.End();
 
         test.Draw(_spriteBatch);

@@ -6,7 +6,7 @@ using Vector4 = Microsoft.Xna.Framework.Vector4;
 
 namespace MinecraftAlpha
 {
-    class Player
+    public class Player
     {
         public Entity Plr;
         public Cammera cam = new Cammera();
@@ -23,23 +23,7 @@ namespace MinecraftAlpha
             var Grid = Map;
             
             
-            //for (float i = pos.Y - 20; i < pos.Y + 20; i++)
-            //{
-            //    for (float j = pos.X - 20; j < pos.X + 20; j++)
-            //    {
-            //        var grid = Grid[(int)i, (int)j];
-
-            //        float DistanceFromTorch = (new Vector2(j, i) - pos).Length();
-            //        if (DistanceFromTorch < 12)
-            //        {
-                        
-            //            grid.brightness = 1 - DistanceFromTorch / layer;
-            //        }
-
-            //    }
-            //}
-
-            
+           
 
 
             var BlockSize = blockManager.BlockSize;
