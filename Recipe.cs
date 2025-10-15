@@ -1,5 +1,4 @@
 using MinecraftAlpha;
-using System;
 using System.Collections.Generic;
 
 public class RecipeManager
@@ -13,51 +12,65 @@ public class RecipeManager
     public List<CraftingRecipe> LoadRecipes()
     {
         var List = new List<CraftingRecipe>()
+
         {
-            CraftingRecipe()
+            new CraftingRecipe(new int[,] {
+                { 4, 4 },
+                { 4, 4 }} ,6,1),
+            new CraftingRecipe(new int[,] {
+                { 2, 0 },
+                { 0, 0 }} ,3,1),
+            new CraftingRecipe(new int[,] {
+                { 0, 0 },
+                { 0, 0 }} ,0,1),
         };
+
+
+
+
+        return List;
     }
+
+
 }
 
 public class CraftingRecipe
 {
     public ItemSlot item = null;
-    public ItemSlot[,] RecipeGrid = new ItemSlot[3, 3];
+    public ItemSlot[,] RecipeGrid = new ItemSlot[2, 2];
 
     public bool Typebased = false;
 
-    public CraftingRecipe()
+    public CraftingRecipe(int[,] Grid, int resulet, int count)
     {
-
-    }
-
-    public ItemSlot Craft(ItemSlot[,] Input)
-    {
-        for (int i = 0; i < Input.GetLength(0); i++)
+        for (int x = 0; x < 2; x++)
         {
-            for (int j = 0; i < Input.GetLength(1); j++)
+            for (int y = 0; y < 2; y++)
             {
-                if (RecipeGrid[i, j].Item == Input[i, j].Item)
-                {
-                    foreach (var item in Input)
-                    {
-                        item.Count -= 1;
-                    }
-                    return this.item;
-                }
+                RecipeGrid[x, y] = new ItemSlot() { ID = Grid[x, y] };
             }
         }
-        return null;
-
+        item = new ItemSlot() { ID = resulet, Count = count };
     }
 
-    public List<ItemSlot> LoadRecipeString(string Grid2x2)
+
+
+
+    public bool CheckRecipe(ItemSlot[,] Grid)
     {
+        bool confirm = true;
+        for (int i = 0; i < RecipeGrid.GetLength(0); i++)
+        {
+            for (int j = 0; j < RecipeGrid.GetLength(1); j++)
+            {
 
-        var ingredients = new List<ItemSlot>();
-        
+                if (RecipeGrid[i, j].Item != Grid[i, j].Item)
+                {
+                    confirm = false;
+                }
 
-
-        return ingredients;
+            }
+        }
+        return confirm;
     }
 }

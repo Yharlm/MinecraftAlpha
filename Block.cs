@@ -46,7 +46,7 @@ namespace MinecraftAlpha
                new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
                //new Block { Name = "Wood", TexturePath = "oak_planks" },
                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null},
-                new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
+               new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
 
             };
             return list;
@@ -100,6 +100,25 @@ namespace MinecraftAlpha
 
                 var Window = Game._userInterfaceManager.windows[2];
                 Window.Visible = !Window.Visible;
+                var item = Blocks[0];
+
+                var grid = Game._userInterfaceManager.windows[2].ItemsSlots;
+
+                ItemSlot[,] Grid2x2 = new ItemSlot[2, 2]
+                {
+                    { grid[0], grid[1] },
+                    { grid[2], grid[3] }
+                };
+                foreach (var Recipe in Game._RecipeManager.Recipes)
+                {
+                    if(Recipe.CheckRecipe(Grid2x2))
+                    {
+                        Window.ItemsSlots[4].Item = Recipe.item.Item;
+                        Window.ItemsSlots[4].Count = Recipe.item.Count;
+                    }
+                }
+
+               
 
                 
 

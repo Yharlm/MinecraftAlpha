@@ -22,7 +22,7 @@ public class Game1 : Game
     public ActionManager _actionManager = new ActionManager();
     public EntityAnimationService _entityAnimationService = new EntityAnimationService();
     public ParticleSystem _particleSystem = new ParticleSystem();
-    public CraftingRecipe
+    public RecipeManager _RecipeManager = new RecipeManager();
 
 
     public Texture2D BreakTexture;
