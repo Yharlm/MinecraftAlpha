@@ -220,10 +220,10 @@ public class Game1 : Game
         _userInterfaceManager.selectedItem = _blockManager.Blocks[3];
         _userInterfaceManager.amount = 5;
 
-        var Grass = Content.Load<Texture2D>("dirt");
-        var wood = Content.Load<Texture2D>("oak_planks");
+        //var Grass = Content.Load<Texture2D>("dirt");
+        //var wood = Content.Load<Texture2D>("oak_planks");
 
-        test = new Sprite3D(wood, Grass, wood, wood);
+        //test = new Sprite3D(wood, Grass, wood, wood);
 
 
         // TODO: use this.Content to load your game content here
@@ -302,7 +302,7 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         // block drop testing remove later
-        test.Update();
+        //test.Update();
 
 
 
@@ -332,6 +332,13 @@ public class Game1 : Game
         _blockManager.BlockSize = BlockSize;
         foreach (var entity in _entityManager.Workspace)
         {
+
+            if (entity.ID == -1)
+            {
+                entity.Model3D.Update();
+                continue;
+            }
+
 
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             entity.UpdateAnimation();
@@ -616,7 +623,7 @@ public class Game1 : Game
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One*30, Color.Red);
         _spriteBatch.End();
 
-        test.Draw(_spriteBatch);
+        //test.Draw(_spriteBatch);
 
 
 

@@ -6,6 +6,7 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Color = Microsoft.Xna.Framework.Color;
 using Microsoft.Xna.Framework.Graphics;
 using System.Security.Cryptography;
+using System.Linq;
 
 namespace MinecraftAlpha
 {
@@ -153,6 +154,9 @@ namespace MinecraftAlpha
                         Game.World[Y, X].MinedHealth = 0;
                         for (int i = 0; i < 50;i++)
                         {
+
+                            // Item Entity
+                            
                             int x = random.Next(0, block.Texture.Width);
                             int y = random.Next(0, block.Texture.Height);
                             //    Ractangle = new Microsoft.Xna.Framework.Rectangle(x,y,x+3,y+3);
@@ -184,6 +188,9 @@ namespace MinecraftAlpha
 
 
                 Game.World[Y, X].ID = 0;
+                Game._entityManager.Workspace.Add(Entity.CloneEntity(Game._entityManager.entities[1], Game.Player.Plr.position));
+                Game._entityManager.Workspace.Last().TextureName = "null";
+                Game._entityManager.Workspace.Last().Model3D = new Sprite3D(block.Texture, block.Texture, block.Texture, block.Texture);
 
             }
 

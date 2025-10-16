@@ -119,6 +119,72 @@ namespace MinecraftAlpha
 
         }
 
+        public void Draw(SpriteBatch spritebatch,Vector2 Pos,float size)
+        {
+            Sides2_3D Visible = null;
+            for (int i = 0; i < Sides.Length; i++)
+            {
+                float Angle = (i * 90);
+                if (Orientation >= Angle && Orientation <= Angle + 90)
+                {
+                    Visible = Sides[i];
+                }
+            }
+
+
+
+            float sizeRatio = (Orientation % 90) / 90;
+
+            Color lightingA = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(1 - sizeRatio, 1 - sizeRatio, 1 - sizeRatio, 1));
+            Color lightingB = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(0.3f + sizeRatio, 0.3f + sizeRatio, 0.3f + sizeRatio, 1));
+
+
+            Vector2 SizeA = new Vector2(1 - sizeRatio, 1) * Size;
+            Vector2 SizeB = new Vector2((sizeRatio), 1) * Size;
+
+            if (Visible == null)
+            {
+
+                return;
+            }
+            spritebatch.Begin();
+
+            float Floating = float.Cos(Orientation * MathF.PI / 180) * 10;
+
+            //spritebatch.Draw(Visible.SideA, new Rectangle(0, 0, (int)(Visible.SideA.Width * SizeA.X), (int)(Visible.SideA.Height * SizeA.Y)), lightingA);
+            //spritebatch.Draw(Visible.SideB, new Rectangle((int)(Visible.SideA.Width * SizeA.X), 0, (int)(Visible.SideB.Width * SizeB.X), (int)(Visible.SideB.Height * SizeB.Y)), lightingB);
+
+
+            spritebatch.Draw(
+                Visible.SideA,
+                Pos + new Vector2(0, Floating),
+                null,
+                lightingA,
+                0f, // Orientation
+                Vector2.Zero, //
+                SizeA,
+                SpriteEffects.None,
+                1f
+                );
+
+            // Draws the second side
+
+            spritebatch.Draw(
+                Visible.SideB,
+                Pos + new Vector2(SizeA.X * 16, Floating),
+                null,
+                lightingB,
+                0f, // Orientation
+                Vector2.Zero, //
+                SizeB,
+                SpriteEffects.None,
+                1f
+                );
+            spritebatch.End();
+
+
+        }
+
         public Sprite3D(Texture2D sideA, Texture2D sideB, Texture2D sideC, Texture2D sideD)
         {
 
@@ -213,7 +279,7 @@ namespace MinecraftAlpha
 
         public static void LoadSprites(ContentManager Content, Entity mob)
         {
-            if (mob.TextureName != "null")
+            if (mob.TextureName != "null" )
             {
                 var texture = Content.Load<Texture2D>(mob.TextureName);
                 mob.Texture = texture;
