@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -26,7 +27,7 @@ namespace MinecraftAlpha
         public UserInterfaceManager()
         {
             Buttons = LoadButtons();
-            
+
         }
 
         public void DrawUI(SpriteBatch spriteBatch, ContentManager Contnet)
@@ -51,7 +52,7 @@ namespace MinecraftAlpha
                 }
                 foreach (var item in Window.ItemsSlots)
                 {
-                    
+
                     string AmmountInSlot = "";
                     spriteBatch.Draw(item.Texture, new Rectangle((int)item.Position.X, (int)item.Position.Y, 32, 32), Color.White);
                     if (item.Item != null)
@@ -107,14 +108,14 @@ namespace MinecraftAlpha
             };
             return list;
         }
-        
+
         public void LoadTextures(ContentManager Content)
         {
             foreach (var button in Buttons)
             {
                 button.Background = Content.Load<Texture2D>("dirt");
             }
-            foreach(var window in windows)
+            foreach (var window in windows)
             {
                 foreach (var ItemSlot in window.ItemsSlots)
                 {
@@ -153,7 +154,7 @@ namespace MinecraftAlpha
                     AM.GetAction(button.Action);
 
                 }
-                
+
             }
             foreach (var win in this.windows)
             {
@@ -202,14 +203,14 @@ namespace MinecraftAlpha
 
                 }
 
-                
+
             }
 
             if (!In_interface)
             {
                 //windows.Find(x => x.Name == "Crafting").Visible = false;
                 windows.Find(x => x.Name == "Chest").Visible = false;
-                
+
             }
         }
 
@@ -249,7 +250,7 @@ namespace MinecraftAlpha
                 ItemsSlots = list
             };
 
-            
+
             windows.Add(window);
             list = new List<ItemSlot>();
             int id = 0;
@@ -259,7 +260,7 @@ namespace MinecraftAlpha
                 {
                     list.Add(new ItemSlot()
                     {
-                        Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One) + new Vector2(400,0),
+                        Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One) + new Vector2(400, 0),
                         ID = id++,
                     }
                     );
@@ -287,18 +288,27 @@ namespace MinecraftAlpha
                     );
                 }
             }
+
             list.Add(new ItemSlot()
             {
                 Position = Vector2.One * 32 * (new Vector2(0.5f, 2.5f) + Vector2.One) + new Vector2(200, 0),
                 ID = id++,
+
             }
+
                     );
+            list.Last().Clicked = () =>
+            {
+                for (int i = 0; i < 4; i++)
+                { list[i].TakeItem(1); }
+            };
             window = new WindowFrame()
             {
                 Visible = true,
                 Name = "Crafting",
                 Position = new Vector2(1300, 400),
-                ItemsSlots = list
+                ItemsSlots = list,
+
             };
 
 
@@ -309,12 +319,12 @@ namespace MinecraftAlpha
     }
     public class ItemSlot : WindowFrame
     {
-        public int ID =0;
+        public int ID = 0;
         public Vector2 Position;
         Vector2 Scale = Vector2.One * 32;
         public Block Item;
         public int Count = 0;
-        
+
         public Texture2D Texture;
         public bool IsInBounds(Vector2 Pos)
         {
@@ -328,11 +338,11 @@ namespace MinecraftAlpha
             return false;
         }
 
-        public Action Update = () => { };
+        public Action Clicked = () => { };
 
         public void TakeItem(int Amount, UserInterfaceManager UI)
         {
-            
+
             if (Amount == -1)
             {
                 Amount = Count;
@@ -344,12 +354,23 @@ namespace MinecraftAlpha
             {
                 Item = null;
             }
+            Clicked.Invoke();
+        }
+
+        public void TakeItem(int Amount)
+        {
+       
+            this.Count -= Amount;
+            if (this.Count <= 0)
+            {
+                Item = null;
+            }
             
         }
 
         public void AddItem(int Amount, UserInterfaceManager UI)
         {
-            
+
             if (UI.selectedItem == null)
             {
                 return;
@@ -369,7 +390,7 @@ namespace MinecraftAlpha
             {
                 UI.selectedItem = null;
             }
-            
+            Clicked.Invoke();
         }
 
     }
@@ -407,21 +428,21 @@ namespace MinecraftAlpha
     }
 
     public class textLabel
-    { 
-        public Vector2 Position = new Vector2 (0, 0);
+    {
+        public Vector2 Position = new Vector2(0, 0);
         public string Text = "TextLabel";
 
         public string ID = "Key";
 
     }
 
-    public class UIFrame 
+    public class UIFrame
     {
-        public Vector2 Position = new Vector2(0,0);
-        public Vector2 Size = new Vector2(100,30);
-        public Vector2 CornerSize = new Vector2(0,0);
+        public Vector2 Position = new Vector2(0, 0);
+        public Vector2 Size = new Vector2(100, 30);
+        public Vector2 CornerSize = new Vector2(0, 0);
         public Texture2D Window = null;
-        
+
 
         public void Render(SpriteBatch Spritebatch)
         {
@@ -446,7 +467,7 @@ namespace MinecraftAlpha
                 new Rectangle(Cx,Sizey-Cy,Sizex-Cx*2,Cy)
 
             };
-            Rectangle Background = new Rectangle(Cx,Cy,Sizex-Cx*2,Sizey-Cy*2);
+            Rectangle Background = new Rectangle(Cx, Cy, Sizex - Cx * 2, Sizey - Cy * 2);
             Spritebatch.Begin();
             Spritebatch.Draw(Window, Position, Background, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
 

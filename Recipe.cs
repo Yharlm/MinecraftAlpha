@@ -4,25 +4,22 @@ using System.Collections.Generic;
 public class RecipeManager
 {
     public List<CraftingRecipe> Recipes = new List<CraftingRecipe>();
-    public RecipeManager()
-    {
-        Recipes = LoadRecipes();
-    }
+    
 
-    public List<CraftingRecipe> LoadRecipes()
+    public List<CraftingRecipe> LoadRecipes(BlockManager blocksManager)
     {
         var List = new List<CraftingRecipe>()
 
         {
             new CraftingRecipe(new int[,] {
                 { 4, 4 },
-                { 4, 4 }} ,6,1),
+                { 4, 4 }} ,6,4,blocksManager),
             new CraftingRecipe(new int[,] {
                 { 2, 0 },
-                { 0, 0 }} ,3,1),
+                { 0, 0 }} ,3,1,blocksManager),
             new CraftingRecipe(new int[,] {
                 { 0, 0 },
-                { 0, 0 }} ,0,1),
+                { 0, 0 }} ,0,1, blocksManager),
         };
 
 
@@ -41,16 +38,23 @@ public class CraftingRecipe
 
     public bool Typebased = false;
 
-    public CraftingRecipe(int[,] Grid, int resulet, int count)
+    public CraftingRecipe(int[,] Grid, int Result, int count,BlockManager manager)
     {
         for (int x = 0; x < 2; x++)
         {
             for (int y = 0; y < 2; y++)
             {
-                RecipeGrid[x, y] = new ItemSlot() { ID = Grid[x, y] };
+                if (Grid[x, y] == 0)
+                {
+                    RecipeGrid[x, y] = new ItemSlot() { Item = null };
+                    continue;
+                }
+
+                RecipeGrid[x, y] = new ItemSlot() { Item = manager.Blocks[Grid[x, y]] };
+
             }
         }
-        item = new ItemSlot() { ID = resulet, Count = count };
+        item = new ItemSlot() { Item = manager.Blocks[Result], Count = count };
     }
 
 

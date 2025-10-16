@@ -198,7 +198,7 @@ public class Game1 : Game
         _entityAnimationService.CreateAnimations(Entities);
         _entityAnimationService.LoadAnimations(_entityManager.entities);
         BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
-
+        _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
         //Making player
         Player.Plr = _entityManager.entities[0];
         _entityManager.Workspace.Add(Player.Plr);
@@ -304,6 +304,18 @@ public class Game1 : Game
         // block drop testing remove later
         //test.Update();
 
+        for(int i = 0;i < World.GetLength(0);i++)
+        {
+            for(int j = 0;j < World.GetLength(1);j++)
+            {
+                var grid = World[i, j];
+                Block block = BlockTypes[grid.ID];
+
+                block.Update(grid);
+                
+                
+            }
+        }
 
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))

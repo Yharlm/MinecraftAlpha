@@ -100,6 +100,19 @@ namespace MinecraftAlpha
 
                 var Window = Game._userInterfaceManager.windows[2];
                 Window.Visible = !Window.Visible;
+                
+
+               
+
+                
+
+            };
+            Blocks[6].Update = (Pos) =>
+            {
+
+                var Window = Game._userInterfaceManager.windows[2];
+
+                if (!Window.Visible) return;
                 var item = Blocks[0];
 
                 var grid = Game._userInterfaceManager.windows[2].ItemsSlots;
@@ -111,17 +124,18 @@ namespace MinecraftAlpha
                 };
                 foreach (var Recipe in Game._RecipeManager.Recipes)
                 {
-                    if(Recipe.CheckRecipe(Grid2x2))
+                    if (Recipe.CheckRecipe(Grid2x2))
                     {
+
                         Window.ItemsSlots[4].Item = Recipe.item.Item;
                         Window.ItemsSlots[4].Count = Recipe.item.Count;
+                        return;
+                    }
+                    else
+                    {
+                        Window.ItemsSlots[4].TakeItem(64);
                     }
                 }
-
-               
-
-                
-
             };
 
         }
