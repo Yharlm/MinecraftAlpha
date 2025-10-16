@@ -221,6 +221,7 @@ namespace MinecraftAlpha
         public string Name { get; set; }
         public Vector2 Position;
         public List<ItemSlot> ItemsSlots;
+        public Action Update = () => { };
 
         public static List<WindowFrame> LoadGUI()
         {
