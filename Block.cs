@@ -15,7 +15,7 @@ namespace MinecraftAlpha
 
         public int DefaultState = 0; // Default state of the block
 
-        
+        public Color Color = Color.White;
         public Texture2D Texture { get; set; }
         public string TexturePath { get; set; }
 
@@ -44,9 +44,10 @@ namespace MinecraftAlpha
                new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
                new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
-               //new Block { Name = "Wood", TexturePath = "oak_planks" },
                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null},
                new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
+               new Block { Name = "Log", TexturePath = "oak_log", Health = 60},
+               new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.DarkGreen},
 
             };
             return list;

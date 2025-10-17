@@ -11,6 +11,26 @@ namespace MinecraftAlpha
         public Entity Plr;
         public Cammera cam = new Cammera();
         public bool Jumping = false;
+
+        public void PickupItem(Block item,int amount,WindowFrame inventory)
+        {
+            foreach (var slot in inventory.ItemsSlots)
+            {
+                if (slot.Item == null)
+                {
+                    slot.Item = item;
+                    slot.Count = amount;
+                    break;
+                }
+                if (slot.Item.Name == item.Name && slot.Count <64)
+                {
+                    slot.Count += amount;
+                    break;
+                }
+
+            }
+        }
+
     }
 
     public class Cammera
@@ -41,8 +61,9 @@ namespace MinecraftAlpha
 
                         float Light = Map[i, j].brightness;
                         float Light01 = Light - layer;
-                        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01 , Light01 , 1));
                         var block = blockManager.Blocks[Map[i, j].ID];
+                        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) * block.Color;
+
                         int healthPercent = (int)Map[i, j].MinedHealth / 10;
                         Rectangle sourceRectangle = new Rectangle(healthPercent* BreakingTexture.Height, 0, BreakingTexture.Height, BreakingTexture.Height);
                         if ((int)Map[i, j].MinedHealth <= 0)

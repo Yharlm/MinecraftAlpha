@@ -56,9 +56,9 @@ namespace MinecraftAlpha
                 entity.DrawEntity(SB, Size, Pos);
             }
         }
-        public void LoadEntities()
+        public void LoadEntities(Game1 game)
         {
-            entities = Entity.LoadEntites();
+            entities = Entity.LoadEntites(game);
             //foreach (var entity in entities)
             //{
 

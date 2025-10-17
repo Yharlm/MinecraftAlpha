@@ -87,11 +87,11 @@ namespace MinecraftAlpha
 
             //spritebatch.Draw(Visible.SideA, new Rectangle(0, 0, (int)(Visible.SideA.Width * SizeA.X), (int)(Visible.SideA.Height * SizeA.Y)), lightingA);
             //spritebatch.Draw(Visible.SideB, new Rectangle((int)(Visible.SideA.Width * SizeA.X), 0, (int)(Visible.SideB.Width * SizeB.X), (int)(Visible.SideB.Height * SizeB.Y)), lightingB);
-
+            Vector2 position = Position + Vector2.One * 32f/2 * Size;
 
             spritebatch.Draw(
                 Visible.SideA,
-                Position + new Vector2(0, Floating),
+                position + new Vector2(0, Floating),
                 null,
                 lightingA,
                 0f, // Orientation
@@ -105,7 +105,7 @@ namespace MinecraftAlpha
 
             spritebatch.Draw(
                 Visible.SideB,
-                Position + new Vector2(SizeA.X*16, Floating),
+                position + new Vector2(SizeA.X*16, Floating),
                 null,
                 lightingB,
                 0f, // Orientation

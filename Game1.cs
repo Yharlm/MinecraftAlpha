@@ -197,7 +197,7 @@ public class Game1 : Game
 
 
         //_userInterfaceManager.ItemSlots = UserInterfaceManager.LoadItemSlots(_blockManager.Blocks);
-        _entityManager.LoadEntities();
+        _entityManager.LoadEntities(this);
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
         _userInterfaceManager.windows = WindowFrame.LoadGUI(this);
@@ -357,21 +357,26 @@ public class Game1 : Game
         foreach (var entity in _entityManager.Workspace)
         {
 
+           
+            foreach (Entity entity1 in _entityManager.Workspace)
+            {
+                if (entity == entity1) continue;
+                if(entity1.CheckCollisionEntity(entity))
+                {
+                    Entity.CollisionEventCollision(entity1, entity,this);
+                }
+            }
+            entity.collisionBox.UpdateCollision(entity, World);
+            entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             if (entity.ID == -1)
             {
                 entity.Model3D.Update();
                 continue;
             }
-            foreach (Entity entity1 in _entityManager.Workspace)
-            {
-                entity.CheckCollisionEntity(entity1);
-            }
-
-            entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             entity.UpdateAnimation();
 
 
-            entity.collisionBox.UpdateCollision(entity, World);
+            
 
             if(entity.velocity.Gravity.Y > 0.3f)
             {

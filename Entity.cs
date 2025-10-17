@@ -1,7 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MinecraftAlpha
 {
@@ -95,7 +96,7 @@ namespace MinecraftAlpha
                 //Events
                 Clone.Model3D = Example.Model3D;
 
-                Clone.Collision = Example.Collision;
+                
                 Clone.Interaction = Example.Interaction;
                 Clone.Update = Example.Update;
 
@@ -121,7 +122,7 @@ namespace MinecraftAlpha
                 Clone.Data = Data;
                 //Events
 
-                Clone.Collision = Example.Collision;
+                
                 Clone.Interaction = Example.Interaction;
                 Clone.Update = Example.Update;
 
@@ -172,7 +173,7 @@ namespace MinecraftAlpha
 
         } // Constructor
 
-        public Action<Entity> Collision = (ent) => { };
+        
 
         public Event Interaction;
 
@@ -180,6 +181,20 @@ namespace MinecraftAlpha
 
         public Event Damaged;
 
+        public static void CollisionEventCollision(Entity A,Entity B,Game1 game1)
+        {
+            if (A.ID == -1 && B.name == "Player") // ItemDrop
+            {
+                if ((A.position - B.position).Length() > 1f)
+                {
+                    A.velocity.velocity = (B.position - A.position) / 20;
+                }
+                int id = int.Parse(A.Data);
+
+                game1.Player.PickupItem(game1._blockManager.Blocks[id], 1, game1._userInterfaceManager.windows[0]);
+                A.Health = 0;
+            }
+        }
         public void ResetIframes()
         {
             if (IFrame <= 0) return;
@@ -215,7 +230,7 @@ namespace MinecraftAlpha
 
             }
         }
-        public static List<Entity> LoadEntites()
+        public static List<Entity> LoadEntites(Game1 game1)
         {
             int id = 0;
             List<Entity> Entities = new List<Entity>()
@@ -243,10 +258,7 @@ namespace MinecraftAlpha
                 {
 
                     position = Vector2.Zero,
-                    Collision = (ent) =>
-                    {
-                        // No collision for items
-                    },
+                    collisionBox = new CollisionBox() { Size = new Vector2(2f,2f) },
 
                 }
 
@@ -259,104 +271,105 @@ namespace MinecraftAlpha
 
 
         }
-    public void CheckCollisionEntity(Entity entity)
-    {
-        Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
-        Rectangle B = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
-        if (A.Intersects(B))
+        public bool CheckCollisionEntity(Entity entity)
         {
-            //entity.velocity.velocity = (this.position - entity.position) / entity.Mass;
-
-            this.Collision.Invoke(entity);
-
-            return; // invokes?
-        }
-    }
-    public void UpdateAnimation()
-    {
-        if (Animations.Count < 0) return;
-        bool idle = true;
-        foreach (var anim in Animations)
-        {
-            if (!anim.Paused && anim.name != "idle")
+            Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
+            Rectangle B = new Rectangle((int)(position.X * 32), (int)(position.Y * 32), (int)(collisionBox.Size.X * 32), (int)(collisionBox.Size.Y * 32));
+            if (A.Intersects(B))
             {
-                idle = false;
+                //entity.velocity.velocity = (this.position - entity.position) / entity.Mass;
+
+                
+
+                return true; // invokes?
+            }
+            return false;
+        }
+        public void UpdateAnimation()
+        {
+            if (Animations.Count < 0) return;
+            bool idle = true;
+            foreach (var anim in Animations)
+            {
+                if (!anim.Paused && anim.name != "idle")
+                {
+                    idle = false;
+                }
+
+            }
+            if (idle)
+            {
+                Animations[0].ResetAnim();
+                return;
             }
 
+
+            foreach (EntityAnimation anim in Animations)
+            {
+
+
+                anim.Update();
+            }
         }
-        if (idle)
+        public void Attack(Entity entity)
         {
-            Animations[0].ResetAnim();
-            return;
+            entity.Health -= 1;
+
         }
 
 
-        foreach (EntityAnimation anim in Animations)
-        {
 
 
-            anim.Update();
-        }
+
     }
-    public void Attack(Entity entity)
+
+    public class Velocity
     {
-        entity.Health -= 1;
+        public Vector2 Gravity = new Vector2(0, 0.1f);
+        public Vector2 velocity { get; set; } = Vector2.Zero;
+
+        public void apply_velocity(Entity entity)
+        {
+            var Acceleration = 0.1f;
+            var Vel = Vector2.Zero;
+
+            if (!entity.collisionBox.Left && velocity.X < 0)
+            {
+                Vel.X -= Acceleration;
+                velocity -= Acceleration * Vector2.UnitX;
+            }
+            if (!entity.collisionBox.Right && velocity.X > 0)
+            {
+                Vel.X += Acceleration;
+                velocity += Acceleration * Vector2.UnitX;
+            }
+            if (!entity.collisionBox.Top && velocity.Y < 0)
+            {
+                Vel.Y -= Acceleration;
+                velocity -= Acceleration * Vector2.UnitY;
+            }
+            if (!entity.collisionBox.Bottom && velocity.Y > 0)
+            {
+
+                Vel.Y += Acceleration;
+                velocity += Acceleration * Vector2.UnitY;
+            }
+
+
+            if (entity.collisionBox.Bottom)
+            {
+                Gravity.Y = 0;
+            }
+            else
+            {
+                Gravity.Y += Acceleration / 20;
+            }
+
+
+
+            entity.position += Vel + Gravity;
+        }
+
 
     }
-
-
-
-
-
-}
-
-public class Velocity
-{
-    public Vector2 Gravity = new Vector2(0, 0.1f);
-    public Vector2 velocity { get; set; } = Vector2.Zero;
-
-    public void apply_velocity(Entity entity)
-    {
-        var Acceleration = 0.1f;
-        var Vel = Vector2.Zero;
-
-        if (!entity.collisionBox.Left && velocity.X < 0)
-        {
-            Vel.X -= Acceleration;
-            velocity -= Acceleration * Vector2.UnitX;
-        }
-        if (!entity.collisionBox.Right && velocity.X > 0)
-        {
-            Vel.X += Acceleration;
-            velocity += Acceleration * Vector2.UnitX;
-        }
-        if (!entity.collisionBox.Top && velocity.Y < 0)
-        {
-            Vel.Y -= Acceleration;
-            velocity -= Acceleration * Vector2.UnitY;
-        }
-        if (!entity.collisionBox.Bottom && velocity.Y > 0)
-        {
-
-            Vel.Y += Acceleration;
-            velocity += Acceleration * Vector2.UnitY;
-        }
-
-
-        if (entity.collisionBox.Bottom)
-        {
-            Gravity.Y = 0;
-        }
-        else
-        {
-            Gravity.Y += Acceleration / 20;
-        }
-
-
-
-        entity.position += Vel + Gravity;
-    }
-
-
-}
 }

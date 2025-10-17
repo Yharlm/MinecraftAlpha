@@ -144,52 +144,54 @@ namespace MinecraftAlpha
                     return;
                 }
 
-                foreach (var islot in Game._userInterfaceManager.windows[0].ItemsSlots)
-                {
-                    if (islot.Item != null && islot.Item != Game._blockManager.Blocks[Game.World[Y, X].ID])
-                    { continue; }
-                    else
-                    {
-                        islot.Item = Game._blockManager.Blocks[Game.World[Y, X].ID];
-                        Game.World[Y, X].MinedHealth = 0;
-                        for (int i = 0; i < 50;i++)
-                        {
+                //foreach (var islot in Game._userInterfaceManager.windows[0].ItemsSlots)
+                //{
+                //    if (islot.Item != null && islot.Item != Game._blockManager.Blocks[Game.World[Y, X].ID])
+                //    { continue; }
+                //    else
+                //    {
+                //        islot.Item = Game._blockManager.Blocks[Game.World[Y, X].ID];
+                //        Game.World[Y, X].MinedHealth = 0;
+                //        for (int i = 0; i < 50;i++)
+                //        {
 
-                            // Item Entity
+                //            // Item Entity
                             
-                            int x = random.Next(0, block.Texture.Width);
-                            int y = random.Next(0, block.Texture.Height);
-                            //    Ractangle = new Microsoft.Xna.Framework.Rectangle(x,y,x+3,y+3);
-                            //    ParticleRactangleCHose = true;
-                            Game.World[Y, X].MinedHealth += 0.5f;
-                            if (block.Health % 0.2f == 0) return;
-                            var part = new Particle()
-                            {
-                                Position = (new Vector2(X + (float)x / block.Texture.Width, (float)Y)),
-                                TextureName = "BlockMineEffect",
-                                Texture = block.Texture,
-                                lifeTime = 0.5f,
-                                size = 0.4f,
-                                Color = Color.White,
-                                Rectangle = new Microsoft.Xna.Framework.Rectangle(x, y, 3, 3),
-                                Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
-                                Acceleration = new Vector2(0, -0f),
-                                gravity = 0.02f
+                //            int x = random.Next(0, block.Texture.Width);
+                //            int y = random.Next(0, block.Texture.Height);
+                //            //    Ractangle = new Microsoft.Xna.Framework.Rectangle(x,y,x+3,y+3);
+                //            //    ParticleRactangleCHose = true;
+                //            Game.World[Y, X].MinedHealth += 0.5f;
+                //            if (block.Health % 0.2f == 0) return;
+                //            var part = new Particle()
+                //            {
+                //                Position = (new Vector2(X + (float)x / block.Texture.Width, (float)Y)),
+                //                TextureName = "BlockMineEffect",
+                //                Texture = block.Texture,
+                //                lifeTime = 0.5f,
+                //                size = 0.4f,
+                //                Color = Color.White,
+                //                Rectangle = new Microsoft.Xna.Framework.Rectangle(x, y, 3, 3),
+                //                Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
+                //                Acceleration = new Vector2(0, -0f),
+                //                gravity = 0.02f
 
-                            };
-                            Game._particleSystem.Particles.Add(part);
+                //            };
+                //            Game._particleSystem.Particles.Add(part);
 
-                        }
-                        islot.Count += 1; break;
+                //        }
+                //        islot.Count += 1; break;
 
 
-                    }
-                }
+                //    }
+                //}
 
 
                 Game.World[Y, X].ID = 0;
-                Game._entityManager.Workspace.Add(Entity.CloneEntity(Game._entityManager.entities[1], Game.Player.Plr.position));
+                Game._entityManager.Workspace.Add(Entity.CloneEntity(Game._entityManager.entities[1], new Vector2((float)X , (float)Y )  + Vector2.One * 0.5f));
                 Game._entityManager.Workspace.Last().TextureName = "null";
+                Game._entityManager.Workspace.Last().Data =Game._blockManager.GetBlockID(block).ToString();
+                
                 Game._entityManager.Workspace.Last().Model3D = new Sprite3D(block.Texture, block.Texture, block.Texture, block.Texture);
 
             }

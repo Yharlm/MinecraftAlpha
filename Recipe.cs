@@ -12,6 +12,9 @@ public class RecipeManager
 
         {
             new CraftingRecipe(new int[,] {
+                { 7, 0 },
+                { 0, 0 }} ,4,4,blocksManager),
+            new CraftingRecipe(new int[,] {
                 { 4, 4 },
                 { 4, 4 }} ,6,4,blocksManager),
             new CraftingRecipe(new int[,] {

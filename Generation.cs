@@ -19,11 +19,11 @@ namespace MinecraftAlpha
                     id = 0,
                     BluePrint = GetBluePrint(new int[,]
                     {
-                        {0,5,0},
-                        {0,5,0},
-                        {0,5,0},
-                        {2,2,2},
-                        {2,2,2}
+                        {0,8,8,8,0},
+                        {0,8,7,8,0},
+                        {8,8,7,8,8},
+                        {8,8,7,8,8},
+                        {0,0,7,0,0},
                     }
                     )
                 }
@@ -35,16 +35,16 @@ namespace MinecraftAlpha
         public string Name;
         public int id;
         public Vector2 position = new Vector2(0, 0);
-        public TileGrid[,,] BluePrint;
+        public TileGrid[,] BluePrint;
 
-        static public TileGrid[,,] GetBluePrint(int[,] structure)
+        static public TileGrid[,] GetBluePrint(int[,] structure)
         {
-            var tilegrid = new TileGrid[structure.GetLength(0), structure.GetLength(1), 0];
-            for (int x = 0; x < structure.GetLength(0); x++)
+            var tilegrid = new TileGrid[structure.GetLength(0), structure.GetLength(1)];
+            for (int y = 0; y < structure.GetLength(0); y++)
             {
-                for (int y = 0; y < structure.GetLength(1); y++)
+                for (int x = 0; x < structure.GetLength(1); x++)
                 {
-                    tilegrid[x, y, 0] = new TileGrid() { ID = structure[x, y] };
+                    tilegrid[y, x] = new TileGrid() { ID = structure[y, x] };
                 }
             }
             return tilegrid;
@@ -52,13 +52,13 @@ namespace MinecraftAlpha
 
         public void GenerateStructure(TileGrid[,] World, Vector2 position, bool Replace)
         {
-            for (int x = 0; x < BluePrint.GetLength(0); x++)
+            for (int y = 0; y < BluePrint.GetLength(0); y++)
             {
-                for (int y = 0; y < BluePrint.GetLength(1); y++)
+                for (int x = 0; x < BluePrint.GetLength(1); x++)
                 {
-                    var grid = World[(int)(position.X + x), (int)(position.Y + y)];
+                    var grid = World[(int)(position.Y + y), (int)(position.X + x)];
 
-                    var blueprintGrid = BluePrint[x, y, 0];
+                    var blueprintGrid = BluePrint[y,x];
 
                     grid.ID = blueprintGrid.ID;
 
