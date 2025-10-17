@@ -10,6 +10,9 @@ namespace MinecraftAlpha
 {
     public class Particle
     {
+
+        
+
         public Vector2 Position { get; set; }
 
         public Microsoft.Xna.Framework.Rectangle Rectangle = new Microsoft.Xna.Framework.Rectangle(0,0,0,0);
@@ -124,6 +127,8 @@ namespace MinecraftAlpha
             }
 
         }
+
+       
     }
 
 

@@ -179,14 +179,7 @@ namespace MinecraftAlpha
     }
 
 
-    public class Structure()
-    {
-        public int Width = 0;
-        public int Height = 0;
-
-        public TileGrid[,] Layout;
-
-    }
+    
 
     
 }

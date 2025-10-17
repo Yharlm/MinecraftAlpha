@@ -1,23 +1,95 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Microsoft.Xna.Framework;
 
 namespace MinecraftAlpha
 {
+
+    public class Structure
+    {
+
+        public static List<Structure> LoadStructures()
+        {
+            var list = new List<Structure>()
+            {
+                new Structure()
+                {
+                    Name = "Tree",
+                    id = 0,
+                    BluePrint = GetBluePrint(new int[,]
+                    {
+                        {0,5,0},
+                        {0,5,0},
+                        {0,5,0},
+                        {2,2,2},
+                        {2,2,2}
+                    }
+                    )
+                }
+            };
+
+            return list;
+        }
+
+        public string Name;
+        public int id;
+        public Vector2 position = new Vector2(0, 0);
+        public TileGrid[,,] BluePrint;
+
+        static public TileGrid[,,] GetBluePrint(int[,] structure)
+        {
+            var tilegrid = new TileGrid[structure.GetLength(0), structure.GetLength(1), 0];
+            for (int x = 0; x < structure.GetLength(0); x++)
+            {
+                for (int y = 0; y < structure.GetLength(1); y++)
+                {
+                    tilegrid[x, y, 0] = new TileGrid() { ID = structure[x, y] };
+                }
+            }
+            return tilegrid;
+        }
+
+        public void GenerateStructure(TileGrid[,] World, Vector2 position, bool Replace)
+        {
+            for (int x = 0; x < BluePrint.GetLength(0); x++)
+            {
+                for (int y = 0; y < BluePrint.GetLength(1); y++)
+                {
+                    var grid = World[(int)(position.X + x), (int)(position.Y + y)];
+
+                    var blueprintGrid = BluePrint[x, y, 0];
+
+                    grid.ID = blueprintGrid.ID;
+
+
+                }
+            }
+        }
+
+
+
+    }
+
+
+
+
     public class Generation
     {
+
+
+
+
         int seed;
 
-        
+
         public Generation(int Seed)
         {
             seed = Seed;
         }
 
         //Generate a layer of terrain at position (x, y)
-        public float[,] GenerateGround(int x,int y)
+        public float[,] GenerateGround(int x, int y)
         {
             int Width = 32;
             int Height = 5;
@@ -29,8 +101,8 @@ namespace MinecraftAlpha
 
             // Mountains
 
-            
-            
+
+
 
 
             return Layer;
@@ -45,17 +117,17 @@ namespace MinecraftAlpha
         //Terrain algoritms
 
 
-         
+
 
         static float[,] GenerateFlat(int Width, int Height, float peak)
         {
             float[,] Noise = new float[Height, Width];
-            
+
             for (int i = 0; i < Height; i++)
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    
+
                     Noise[i, j] = peak;
                 }
             }

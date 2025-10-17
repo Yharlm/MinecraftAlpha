@@ -139,8 +139,8 @@ namespace MinecraftAlpha
             Color lightingB = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(0.3f + sizeRatio, 0.3f + sizeRatio, 0.3f + sizeRatio, 1));
 
 
-            Vector2 SizeA = new Vector2(1 - sizeRatio, 1) * Size * size/8;
-            Vector2 SizeB = new Vector2((sizeRatio), 1) * Size * size /8;
+            Vector2 SizeA = new Vector2(1 - sizeRatio, 1) * Size * size/2.3f;
+            Vector2 SizeB = new Vector2((sizeRatio), 1) * Size * size /2.3f;
 
             if (Visible == null)
             {

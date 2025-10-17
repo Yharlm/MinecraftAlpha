@@ -34,6 +34,13 @@ public class Game1 : Game
     public List<Block> BlockTypes;
 
 
+    //Structures
+
+
+
+
+
+
 
     
 
@@ -355,7 +362,10 @@ public class Game1 : Game
                 entity.Model3D.Update();
                 continue;
             }
-
+            foreach (Entity entity1 in _entityManager.Workspace)
+            {
+                entity.CheckCollisionEntity(entity1);
+            }
 
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             entity.UpdateAnimation();
@@ -578,6 +588,14 @@ public class Game1 : Game
             //InventoryOpen = !InventoryOpen;
             _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
             _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
+
+
+        }
+        if (keyboardState.IsKeyDown(Keys.F))
+        {
+            //InventoryOpen = !InventoryOpen;
+            Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
+
 
 
         }

@@ -243,6 +243,10 @@ namespace MinecraftAlpha
                 {
 
                     position = Vector2.Zero,
+                    Collision = (ent) =>
+                    {
+                        // No collision for items
+                    },
 
                 }
 
