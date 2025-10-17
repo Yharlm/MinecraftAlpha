@@ -50,7 +50,7 @@ namespace MinecraftAlpha
 
         public Vector2 Position = new Vector2(100,100);
 
-        public float Size = 3f;
+        public float Size = 1f;
 
         public float Orientation = 0f; // 0,90,180,270
         public void Draw(SpriteBatch spritebatch)
@@ -139,8 +139,8 @@ namespace MinecraftAlpha
             Color lightingB = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(0.3f + sizeRatio, 0.3f + sizeRatio, 0.3f + sizeRatio, 1));
 
 
-            Vector2 SizeA = new Vector2(1 - sizeRatio, 1) * Size;
-            Vector2 SizeB = new Vector2((sizeRatio), 1) * Size;
+            Vector2 SizeA = new Vector2(1 - sizeRatio, 1) * Size * size/8;
+            Vector2 SizeB = new Vector2((sizeRatio), 1) * Size * size /8;
 
             if (Visible == null)
             {
@@ -153,6 +153,10 @@ namespace MinecraftAlpha
 
             //spritebatch.Draw(Visible.SideA, new Rectangle(0, 0, (int)(Visible.SideA.Width * SizeA.X), (int)(Visible.SideA.Height * SizeA.Y)), lightingA);
             //spritebatch.Draw(Visible.SideB, new Rectangle((int)(Visible.SideA.Width * SizeA.X), 0, (int)(Visible.SideB.Width * SizeB.X), (int)(Visible.SideB.Height * SizeB.Y)), lightingB);
+
+            
+
+
 
 
             spritebatch.Draw(
@@ -175,7 +179,7 @@ namespace MinecraftAlpha
                 null,
                 lightingB,
                 0f, // Orientation
-                Vector2.Zero, //
+                Vector2.Zero , //
                 SizeB,
                 SpriteEffects.None,
                 1f

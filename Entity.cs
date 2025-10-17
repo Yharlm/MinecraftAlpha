@@ -270,7 +270,7 @@ namespace MinecraftAlpha
     }
     public void UpdateAnimation()
     {
-        if (Animations.Count > 0) return;
+        if (Animations.Count < 0) return;
         bool idle = true;
         foreach (var anim in Animations)
         {

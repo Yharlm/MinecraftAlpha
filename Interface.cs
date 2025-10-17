@@ -14,6 +14,7 @@ namespace MinecraftAlpha
     public class UserInterfaceManager
 
     {
+        
         public TileGrid LastUsedBlock = null;
         public List<WindowFrame> windows = new List<WindowFrame>();
         public List<Button> Buttons = new List<Button>();
@@ -27,7 +28,7 @@ namespace MinecraftAlpha
         public UserInterfaceManager()
         {
             Buttons = LoadButtons();
-
+            
         }
 
         public void DrawUI(SpriteBatch spriteBatch, ContentManager Contnet)
@@ -218,13 +219,17 @@ namespace MinecraftAlpha
 
     public class WindowFrame
     {
+        
+
         public bool Visible = false;
         public string Name { get; set; }
         public Vector2 Position;
         public List<ItemSlot> ItemsSlots;
         public Action Update = () => { };
 
-        public static List<WindowFrame> LoadGUI()
+        
+
+        public static List<WindowFrame> LoadGUI(Game1 Game)
         {
 
             List<WindowFrame> windows;
@@ -291,7 +296,7 @@ namespace MinecraftAlpha
 
             list.Add(new ItemSlot()
             {
-                Position = Vector2.One * 32 * (new Vector2(0.5f, 2.5f) + Vector2.One) + new Vector2(200, 0),
+                Position = Vector2.One * 32 * (new Vector2(2.5f, 0.5f) + Vector2.One) + new Vector2(400, 0),
                 ID = id++,
 
             }
@@ -308,7 +313,36 @@ namespace MinecraftAlpha
                 Name = "Crafting",
                 Position = new Vector2(1300, 400),
                 ItemsSlots = list,
+                Update = () =>
+                {
+                    var blocks = Game._blockManager.Blocks;
+                    var Window = window;
 
+                    if (!Window.Visible) return;
+                    var item =blocks[0];
+
+                    var grid = Game._userInterfaceManager.windows[2].ItemsSlots;
+
+                    ItemSlot[,] Grid2x2 = new ItemSlot[2, 2]
+                    {
+                    { grid[0], grid[1] },
+                    { grid[2], grid[3] }
+                    };
+                    foreach (var Recipe in Game._RecipeManager.Recipes)
+                    {
+                        if (Recipe.CheckRecipe(Grid2x2))
+                        {
+
+                            Window.ItemsSlots[4].Item = Recipe.item.Item;
+                            Window.ItemsSlots[4].Count = Recipe.item.Count;
+                            return;
+                        }
+                        else
+                        {
+                            Window.ItemsSlots[4].TakeItem(64);
+                        }
+                    }
+                }
             };
 
 

@@ -141,7 +141,7 @@ public class EntityAnimation
             float Distance = GetDistanceBetweenAngles(Parent.orientation, frame.Angle);
             if (Looped && Time > duration )
             {
-                Playing = false;
+                //Playing = false;
                 Time = 0f;
             }
 

@@ -71,7 +71,7 @@ public class Game1 : Game
     {
 
         _blockManager = new BlockManager(this);
-
+            
         _actionManager.Game = this;
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
@@ -193,7 +193,7 @@ public class Game1 : Game
         _entityManager.LoadEntities();
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
-        _userInterfaceManager.windows = WindowFrame.LoadGUI();
+        _userInterfaceManager.windows = WindowFrame.LoadGUI(this);
         _userInterfaceManager.LoadTextures(Content);
         _entityAnimationService.CreateAnimations(Entities);
         _entityAnimationService.LoadAnimations(_entityManager.entities);
@@ -315,6 +315,11 @@ public class Game1 : Game
                 
                 
             }
+        }
+
+        foreach(var Window in _userInterfaceManager.windows)
+        {
+            Window.Update();
         }
 
 
@@ -572,7 +577,7 @@ public class Game1 : Game
         {
             //InventoryOpen = !InventoryOpen;
             _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
-
+            _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
 
 
         }
