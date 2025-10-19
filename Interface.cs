@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -463,7 +464,7 @@ namespace MinecraftAlpha
 
     public class textLabel
     {
-        public Vector2 Position = new Vector2(0, 0);
+        public Vector2 Position = new Vector2(300, 100);
         public string Text = "TextLabel";
 
         public string ID = "Key";
@@ -472,14 +473,15 @@ namespace MinecraftAlpha
 
     public class UIFrame
     {
-        public Vector2 Position = new Vector2(0, 0);
-        public Vector2 Size = new Vector2(100, 30);
-        public Vector2 CornerSize = new Vector2(0, 0);
+        public Vector2 Position = new Vector2(300, 100);
+        public Vector2 Size = new Vector2(30, 50);
+       
         public Texture2D Window = null;
 
 
         public void Render(SpriteBatch Spritebatch)
         {
+            Vector2 CornerSize = Size;
             int Tx = Window.Width;
             int Ty = Window.Height;
             int Cx = (int)CornerSize.X;
@@ -491,31 +493,20 @@ namespace MinecraftAlpha
             Rectangle[] Corners = {
                 new Rectangle(0,0,Cx,Cy),
                 new Rectangle(Tx-Cx,0,Cx,Cy),
+                
+                new Rectangle(0,Ty-Cy,Cx,Cy),
                 new Rectangle(Tx-Cx,Ty-Cy,Cx,Cy),
-                new Rectangle(0,Ty-Cy,Cx,Cy)
             };
-            Rectangle[] Borders = {
-                new Rectangle(0,Cy,Cx,Ty-Cy*2),
-                new Rectangle(Cx,0,Sizex-Cx*2 - Tx,Cy),
-                new Rectangle(Tx-Cx,Cy,Cx,Ty-Cy*2 - Ty),
-                new Rectangle(Cx,Sizey-Cy,Sizex-Cx*2,Cy)
+            
+            Spritebatch.Begin(samplerState:SamplerState.PointClamp);
+            //Spritebatch.Draw(Window, Position, Background, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 1f);
 
-            };
-            Rectangle Background = new Rectangle(Cx, Cy, Sizex - Cx * 2, Sizey - Cy * 2);
-            Spritebatch.Begin();
-            Spritebatch.Draw(Window, Position, Background, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+            Spritebatch.Draw(Window, Position, Corners[0], Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+            Spritebatch.Draw(Window, Position + new Vector2(Size.X + CornerSize.X, 0), Corners[1], Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+            Spritebatch.Draw(Window, Position + new Vector2(0, Size.Y + CornerSize.Y), Corners[2], Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+            Spritebatch.Draw(Window, Position + new Vector2(Size.X + CornerSize.X, Size.Y + CornerSize.Y), Corners[3], Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
 
-            foreach (var corner in Corners)
-            {
-                Spritebatch.Draw(Window, Position + new Vector2(corner.X, corner.Y), corner, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
-
-            }
-            foreach (var border in Borders)
-            {
-                Spritebatch.Draw(Window, Position + new Vector2(border.X, border.Y), border, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
-
-            }
-
+            
 
             Spritebatch.End();
         }

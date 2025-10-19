@@ -180,6 +180,7 @@ public class Game1 : Game
         base.Initialize();
     }
 
+    public UIFrame EFrame = new UIFrame();
 
 
     protected override void LoadContent()
@@ -220,7 +221,7 @@ public class Game1 : Game
         _userInterfaceManager.windows[0].ItemsSlots[2].Count = 64;
 
 
-
+        EFrame.Window = Content.Load<Texture2D>("UIelements/WindowFrame");
 
         _particleSystem.Load();
         _blockManager.LoadActions();
@@ -653,6 +654,7 @@ public class Game1 : Game
             P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
         }
         base.Draw(gameTime);
+        EFrame.Render(_spriteBatch);
         _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
         _userInterfaceManager.DrawUI(_spriteBatch, Content);
 
@@ -665,7 +667,7 @@ public class Game1 : Game
 
         //test.Draw(_spriteBatch);
 
-
+        
 
     }
 
