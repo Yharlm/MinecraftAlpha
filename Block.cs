@@ -13,6 +13,8 @@ namespace MinecraftAlpha
 
         public bool Placable = true;
 
+        public Block ItemDrop = null;
+
         public int DefaultState = 0; // Default state of the block
 
         public Color Color = Color.White;
