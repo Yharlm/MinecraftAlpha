@@ -147,6 +147,10 @@ namespace MinecraftAlpha
         {
             return Blocks.IndexOf(block);
         }
+        public Block GetBlockByName(string name)
+        {
+            return Blocks.Find(x => x.name = name);
+        }
 
         public ItemSlot[,] RandomiseLoot()
         {
