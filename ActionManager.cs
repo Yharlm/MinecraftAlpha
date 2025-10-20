@@ -190,6 +190,8 @@ namespace MinecraftAlpha
                 Game.World[Y, X].ID = 0;
                 Game._entityManager.Workspace.Add(Entity.CloneEntity(Game._entityManager.entities[1], new Vector2((float)X , (float)Y )  + Vector2.One * 0.5f));
                 Game._entityManager.Workspace.Last().TextureName = "null";
+var drop = block;
+                if(block.Itemdrop != null) drop = block.Itemdrop;
                 Game._entityManager.Workspace.Last().Data =Game._blockManager.GetBlockID(block).ToString();
                 
                 Game._entityManager.Workspace.Last().Model3D = new Sprite3D(block.Texture, block.Texture, block.Texture, block.Texture);
