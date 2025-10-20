@@ -206,6 +206,10 @@ public class Game1 : Game
         _entityAnimationService.CreateAnimations(Entities);
         _entityAnimationService.LoadAnimations(_entityManager.entities);
         BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
+        foreach(var Frame in _userInterfaceManager.Frames)
+        {
+            Frame.loadContent(Content);
+        }
         _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
         //Making player
         Player.Plr = _entityManager.entities[0];
@@ -221,7 +225,7 @@ public class Game1 : Game
         _userInterfaceManager.windows[0].ItemsSlots[2].Count = 64;
 
 
-        EFrame.Window = Content.Load<Texture2D>("UIelements/WindowFrame");
+        //EFrame.Window = Content.Load<Texture2D>("UIelements/WindowFrame");
 
         _particleSystem.Load();
         _blockManager.LoadActions();
@@ -654,7 +658,7 @@ public class Game1 : Game
             P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
         }
         base.Draw(gameTime);
-        EFrame.Render(_spriteBatch);
+        
         _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
         _userInterfaceManager.DrawUI(_spriteBatch, Content);
 

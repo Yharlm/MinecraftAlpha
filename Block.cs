@@ -149,7 +149,7 @@ namespace MinecraftAlpha
         }
         public Block GetBlockByName(string name)
         {
-            return Blocks.Find(x => x.name = name);
+            return Blocks.Find(x => x.Name == name);
         }
 
         public ItemSlot[,] RandomiseLoot()

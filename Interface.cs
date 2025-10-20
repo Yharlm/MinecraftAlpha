@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection.Metadata;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -20,6 +21,7 @@ namespace MinecraftAlpha
         public List<WindowFrame> windows = new List<WindowFrame>();
         public List<Button> Buttons = new List<Button>();
         public List<ItemSlot> ItemSlots = new List<ItemSlot>();
+        public List<UIFrame> Frames = new List<UIFrame>();
 
         public bool Clicked = false;
 
@@ -29,13 +31,16 @@ namespace MinecraftAlpha
         public UserInterfaceManager()
         {
             Buttons = LoadButtons();
-            
+            Frames = UIFrame.Load();
         }
 
         public void DrawUI(SpriteBatch spriteBatch, ContentManager Contnet)
         {
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-
+            foreach (var Frame in Frames)
+            {
+                Frame.Render(spriteBatch);
+            }
             foreach (var button in Buttons)
             {
                 var color = button.Hovered ? Color.Gray : Color.White;
@@ -252,7 +257,7 @@ namespace MinecraftAlpha
             {
 
                 Name = "Inventory",
-                Position = new Vector2(300, 0),
+                Position = new Vector2(100, 100),
                 ItemsSlots = list
             };
 
@@ -356,7 +361,7 @@ namespace MinecraftAlpha
     {
         public int ID = 0;
         public Vector2 Position;
-        Vector2 Scale = Vector2.One * 32;
+        public Vector2 Scale = Vector2.One * 32;
         public Block Item;
         public int Count = 0;
 
@@ -475,10 +480,28 @@ namespace MinecraftAlpha
     {
         public Vector2 Position = new Vector2(300, 100);
         public Vector2 Size = new Vector2(30, 50);
-       
+        public string textureName = "UIelements/WindowFrame";
         public Texture2D Window = null;
 
+        public void loadContent(ContentManager Content) 
+        {
+            Window = Content.Load<Texture2D>(this.textureName);
+        }
+        
+        public static List<UIFrame> Load()
+        {
+            List<UIFrame> uIFrames =
+            [
+                new UIFrame()
+                {textureName = "UIelements/WindowFrame",
+                    Position = new Vector2(100,100) - new Vector2(50,50), Size = new Vector2(100,100) + new Vector2(50, 50),
+                },
+            ];
 
+
+
+            return uIFrames;
+        }
         public void Render(SpriteBatch Spritebatch)
         {
             Vector2 CornerSize = Size;
@@ -498,7 +521,7 @@ namespace MinecraftAlpha
                 new Rectangle(Tx-Cx,Ty-Cy,Cx,Cy),
             };
             
-            Spritebatch.Begin(samplerState:SamplerState.PointClamp);
+            
             //Spritebatch.Draw(Window, Position, Background, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 1f);
 
             Spritebatch.Draw(Window, Position, Corners[0], Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
@@ -508,7 +531,7 @@ namespace MinecraftAlpha
 
             
 
-            Spritebatch.End();
+            
         }
     }
 }
