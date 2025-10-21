@@ -16,13 +16,13 @@ namespace MinecraftAlpha;
 
 public class Game1 : Game
 {
-    public UserInterfaceManager _userInterfaceManager = new UserInterfaceManager();
-    public EntityManager _entityManager = new EntityManager();
+    public UserInterfaceManager _userInterfaceManager = new();
+    public EntityManager _entityManager = new();
     public BlockManager _blockManager;
-    public ActionManager _actionManager = new ActionManager();
-    public EntityAnimationService _entityAnimationService = new EntityAnimationService();
-    public ParticleSystem _particleSystem = new ParticleSystem();
-    public RecipeManager _RecipeManager = new RecipeManager();
+    public ActionManager _actionManager = new();
+    public EntityAnimationService _entityAnimationService = new();
+    public ParticleSystem _particleSystem = new();
+    public RecipeManager _RecipeManager = new();
 
 
     public Texture2D BreakTexture;
@@ -201,15 +201,13 @@ public class Game1 : Game
         _entityManager.LoadEntities(this);
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
-        _userInterfaceManager.windows = WindowFrame.LoadGUI(this);
+        
         _userInterfaceManager.LoadTextures(Content);
         _entityAnimationService.CreateAnimations(Entities);
         _entityAnimationService.LoadAnimations(_entityManager.entities);
         BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
-        foreach(var Frame in _userInterfaceManager.Frames)
-        {
-            Frame.loadContent(Content);
-        }
+        
+
         _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
         //Making player
         Player.Plr = _entityManager.entities[0];
@@ -217,12 +215,7 @@ public class Game1 : Game
 
 
 
-        _userInterfaceManager.windows[0].ItemsSlots[0].Item = _blockManager.Blocks[4];
-        _userInterfaceManager.windows[0].ItemsSlots[0].Count = 64;
-        _userInterfaceManager.windows[0].ItemsSlots[1].Item = _blockManager.Blocks[5];
-        _userInterfaceManager.windows[0].ItemsSlots[1].Count = 64;
-        _userInterfaceManager.windows[0].ItemsSlots[2].Item = _blockManager.Blocks[6];
-        _userInterfaceManager.windows[0].ItemsSlots[2].Count = 64;
+        
 
 
         //EFrame.Window = Content.Load<Texture2D>("UIelements/WindowFrame");
@@ -239,6 +232,16 @@ public class Game1 : Game
 
 
         // TODO: use this.Content to load your game content here
+
+        _userInterfaceManager.LoadGUI();
+
+        _userInterfaceManager.windows[0].ItemSlots[0].Item = _blockManager.Blocks[4];
+        _userInterfaceManager.windows[0].ItemSlots[0].Count = 64;
+        _userInterfaceManager.windows[0].ItemSlots[1].Item = _blockManager.Blocks[5];
+        _userInterfaceManager.windows[0].ItemSlots[1].Count = 64;
+        _userInterfaceManager.windows[0].ItemSlots[2].Item = _blockManager.Blocks[6];
+        _userInterfaceManager.windows[0].ItemSlots[2].Count = 64;
+
     }
     Sprite3D test;
     public void IluminateDiamond(int x,int y,float val1, TileGrid[,] grid)
@@ -331,7 +334,7 @@ public class Game1 : Game
 
         foreach(var Window in _userInterfaceManager.windows)
         {
-            Window.Update();
+            Window.Update(this);
         }
 
 
@@ -593,14 +596,14 @@ public class Game1 : Game
             BlockSize = oldBlockSize - zoomScale;
             Player.cam.position = screenCenter - worldPos * (oldBlockSize - zoomScale);
         }
-        if (keyboardState.IsKeyDown(Keys.E))
-        {
-            //InventoryOpen = !InventoryOpen;
-            _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
-            _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
+        //if (keyboardState.IsKeyDown(Keys.E))
+        //{
+        //    //InventoryOpen = !InventoryOpen;
+        //    _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
+        //    _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
 
 
-        }
+        //}
         if (keyboardState.IsKeyDown(Keys.F))
         {
             //InventoryOpen = !InventoryOpen;

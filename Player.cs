@@ -14,7 +14,7 @@ namespace MinecraftAlpha
 
         public void PickupItem(Block item,int amount,WindowFrame inventory)
         {
-            foreach (var slot in inventory.ItemsSlots)
+            foreach (var slot in inventory.ItemSlots)
             {
                 if (slot.Item == null)
                 {

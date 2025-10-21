@@ -66,7 +66,7 @@ namespace MinecraftAlpha
                 string Items = Pos.Data;
                 var Window = Game._userInterfaceManager.windows[1];
                 Window.Visible = !Window.Visible;
-                foreach (var slot in Window.ItemsSlots)
+                foreach (var slot in Window.ItemSlots)
                 {
                     slot.Item = null;
                     slot.Count = 0;
@@ -76,7 +76,7 @@ namespace MinecraftAlpha
                     if (item == "")
                     {  continue; }
                     var a = item.Split(':');
-                    var Slot = Window.ItemsSlots[int.Parse(a[0])];
+                    var Slot = Window.ItemSlots[int.Parse(a[0])];
                     Slot.Item = Blocks[int.Parse(a[1])];
                     Slot.Count = int.Parse(a[2]);
                     
@@ -87,7 +87,7 @@ namespace MinecraftAlpha
                 var Window = Game._userInterfaceManager.windows[1];
                 string Data = "";
 
-                foreach (var slot in Window.ItemsSlots)
+                foreach (var slot in Window.ItemSlots)
                 {
                     if (slot.Item != null)
                     {
@@ -118,7 +118,7 @@ namespace MinecraftAlpha
                 if (!Window.Visible) return;
                 var item = Blocks[0];
 
-                var grid = Game._userInterfaceManager.windows[2].ItemsSlots;
+                var grid = Game._userInterfaceManager.windows[2].ItemSlots;
 
                 ItemSlot[,] Grid2x2 = new ItemSlot[2, 2]
                 {
@@ -130,13 +130,13 @@ namespace MinecraftAlpha
                     if (Recipe.CheckRecipe(Grid2x2))
                     {
 
-                        Window.ItemsSlots[4].Item = Recipe.item.Item;
-                        Window.ItemsSlots[4].Count = Recipe.item.Count;
+                        Window.ItemSlots[4].Item = Recipe.item.Item;
+                        Window.ItemSlots[4].Count = Recipe.item.Count;
                         return;
                     }
                     else
                     {
-                        Window.ItemsSlots[4].TakeItem(64);
+                        Window.ItemSlots[4].TakeItem(64);
                     }
                 }
             };

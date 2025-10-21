@@ -1,12 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Reflection.Metadata;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -14,15 +12,17 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 namespace MinecraftAlpha
 {
     public class UserInterfaceManager
-
     {
-        
-        public TileGrid LastUsedBlock = null;
+
+        //Base UI elements
         public List<WindowFrame> windows = new List<WindowFrame>();
         public List<Button> Buttons = new List<Button>();
         public List<ItemSlot> ItemSlots = new List<ItemSlot>();
         public List<UIFrame> Frames = new List<UIFrame>();
 
+
+
+        public TileGrid LastUsedBlock = null;
         public bool Clicked = false;
 
         public Block selectedItem = null;
@@ -31,50 +31,87 @@ namespace MinecraftAlpha
         public UserInterfaceManager()
         {
             Buttons = LoadButtons();
-            Frames = UIFrame.Load();
+            Frames = LoadFrames();
+            ItemSlots = LoadItemSlots();
+
+
+            
         }
 
+
+        
         public void DrawUI(SpriteBatch spriteBatch, ContentManager Contnet)
         {
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            foreach (var Frame in Frames)
+            //foreach (var Frame in Frames)
+            //{
+            //    if (Frame.Window == null) continue;
+            //    if (Frame.Parent.Visible == false)
+            //    {
+            //        continue;
+            //    }
+            //    Frame.Render(spriteBatch);
+            //}
+            //foreach (var button in Buttons)
+            //{
+            //    var color = button.Hovered ? Color.Gray : Color.White;
+            //    if (button.Background != null)
+            //    {
+
+            //        spriteBatch.Draw(button.Background, new Rectangle((int)button.Position.X, (int)button.Position.Y, (int)button.Scale.X, (int)button.Scale.Y), color);
+
+            //    }
+            //}
+            //foreach (var Window in windows)
+            //{
+            //    if (Window.Visible == false)
+            //    {
+            //        continue;
+            //    }
+            //    foreach (var item in Window.ItemSlots)
+            //    {
+
+            //        string AmmountInSlot = "";
+            //        spriteBatch.Draw(item.Texture, new Rectangle((int)item.Position.X, (int)item.Position.Y, 32, 32), Color.White);
+            //        if (item.Item != null)
+            //        {
+            //            spriteBatch.Draw(item.Item.Texture, item.Position + Vector2.One * 4, null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+
+            //        }
+            //        if (item.Count > 1)
+            //        {
+            //            AmmountInSlot = item.Count.ToString();
+            //        }
+            //        spriteBatch.DrawString(Contnet.Load<SpriteFont>("Font"), AmmountInSlot, item.Position + new Vector2(10, 14), Color.White);
+            //    }
+            //}
+
+            foreach (WindowFrame Window in windows)
             {
-                Frame.Render(spriteBatch);
-            }
-            foreach (var button in Buttons)
-            {
-                var color = button.Hovered ? Color.Gray : Color.White;
-                if (button.Background != null)
+                if (!Window.Visible) continue;
+                foreach ( UIFrame frame in Window.Frames)
                 {
-
-                    spriteBatch.Draw(button.Background, new Rectangle((int)button.Position.X, (int)button.Position.Y, (int)button.Scale.X, (int)button.Scale.Y), color);
-
+                    frame.Render(spriteBatch);
                 }
-            }
-            foreach (var Window in windows)
-            {
-                if (Window.Visible == false)
+                foreach (ItemSlot Slot in Window.ItemSlots)
                 {
-                    continue;
+                    Slot.Render(spriteBatch, Contnet);
                 }
-                foreach (var item in Window.ItemsSlots)
+                foreach (Button button in Window.Buttons)
                 {
-
-                    string AmmountInSlot = "";
-                    spriteBatch.Draw(item.Texture, new Rectangle((int)item.Position.X, (int)item.Position.Y, 32, 32), Color.White);
-                    if (item.Item != null)
-                    {
-                        spriteBatch.Draw(item.Item.Texture, item.Position + Vector2.One * 4, null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
-
-                    }
-                    if (item.Count > 1)
-                    {
-                        AmmountInSlot = item.Count.ToString();
-                    }
-                    spriteBatch.DrawString(Contnet.Load<SpriteFont>("Font"), AmmountInSlot, item.Position + new Vector2(10, 14), Color.White);
+                    
                 }
+                foreach (textLabel text in Window.TextLabels)
+                {
+                    
+                }
+
             }
+
+
             spriteBatch.End();
+
+
             DrawItemToMouse(spriteBatch, Contnet.Load<SpriteFont>("Font"));
         }
         public void DrawItemToMouse(SpriteBatch spriteBatch, SpriteFont Text)
@@ -94,6 +131,8 @@ namespace MinecraftAlpha
             spriteBatch.DrawString(Text, Amounts, mouse, Color.White);
             spriteBatch.End();
         }
+
+        //creates presets
         public static List<Button> LoadButtons()
         {
             var list = new List<Button>()
@@ -116,19 +155,111 @@ namespace MinecraftAlpha
             return list;
         }
 
+        public static List<UIFrame> LoadFrames()
+        {
+            var list = new List<UIFrame>()
+            {
+                new UIFrame()
+                {
+                    Name = "InventoryFrame",
+                    textureName = "UIelements/WindowFrame",
+                    Position = new Vector2(100,100) - new Vector2(80,80), Size = new Vector2(30,70),
+                },
+            };
+            return list;
+        }
+
+        public static List<ItemSlot> LoadItemSlots()
+        {
+            var list = new List<ItemSlot>()
+            {
+                new ItemSlot()
+                {
+                    Position = new Vector2(300,300),
+                },
+            };
+            return list;
+        }
+
+
         public void LoadTextures(ContentManager Content)
         {
             foreach (var button in Buttons)
             {
                 button.Background = Content.Load<Texture2D>("dirt");
             }
-            foreach (var window in windows)
+            foreach (var ItemSlot in ItemSlots)
             {
-                foreach (var ItemSlot in window.ItemsSlots)
-                {
-                    ItemSlot.Texture = Content.Load<Texture2D>("UIelements/ItemSlot");
-                }
+                ItemSlot.Texture = Content.Load<Texture2D>("UIelements/ItemSlot");
             }
+            foreach (var Frame in Frames)
+            {
+                Frame.loadContent(Content);
+            }
+        }
+
+        public void LoadGUI()
+        {
+            //Create Windows here
+
+            windows.Add(new WindowFrame()
+            {
+                Name = "Inventory",
+                Visible = true,
+                Frames = new() { },
+                Buttons = new() { },
+                ItemSlots = new() { },
+            });
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    ItemSlot slot = new()
+                    { ItemPosition = new Vector2(32 * i, 32 * j) + new Vector2(300, 30), Texture = ItemSlots[0].Texture };
+                    windows.Last().ItemSlots.Add(slot);
+                }
+                
+            }
+            windows.Add(new WindowFrame()
+            {
+                Name = "Chest",
+                Visible = true,
+                Frames = new() { },
+                Buttons = new() { },
+                ItemSlots = new() { },
+            });
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    ItemSlot slot = new()
+                    { ItemPosition = new Vector2(32 * i, 32 * j) + new Vector2(300, 130), Texture = ItemSlots[0].Texture };
+                    windows.Last().ItemSlots.Add(slot);
+                }
+
+            }
+
+            windows.Add(new WindowFrame()
+            {
+                Name = "Crafting2x2",
+                Visible = true,
+                Frames = new() { },
+                Buttons = new() { },
+                ItemSlots = new() { },
+            });
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    ItemSlot slot = new()
+                    { ItemPosition = new Vector2(32 * i, 32 * j) + new Vector2(100, 60), Texture = ItemSlots[0].Texture };
+                    windows.Last().ItemSlots.Add(slot);
+                }
+
+            }
+            ItemSlot result = new()
+            { ItemPosition = new Vector2(32, 32) + new Vector2(140, 30), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = () => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); }  } };
+            windows.Last().ItemSlots.Add(result);
         }
         public void HoverAction(Vector2 Mouse, ActionManager AM)
         {
@@ -171,7 +302,7 @@ namespace MinecraftAlpha
                 }
 
 
-                foreach (var ItemSlot in win.ItemsSlots)
+                foreach (var ItemSlot in win.ItemSlots)
                 {
                     if (ItemSlot.IsInBounds(Mouse))
                     {
@@ -216,7 +347,7 @@ namespace MinecraftAlpha
             if (!In_interface)
             {
                 //windows.Find(x => x.Name == "Crafting").Visible = false;
-                windows.Find(x => x.Name == "Chest").Visible = false;
+                //windows.Find(x => x.Name == "Chest").Visible = false;
 
             }
         }
@@ -225,142 +356,62 @@ namespace MinecraftAlpha
 
     public class WindowFrame
     {
-        
+
+
+        public List<Button> Buttons = new List<Button>();
+        public List<ItemSlot> ItemSlots = new List<ItemSlot>();
+        public List<UIFrame> Frames = new List<UIFrame>();
+        public List<textLabel> TextLabels = new List<textLabel>();
+
 
         public bool Visible = false;
         public string Name { get; set; }
         public Vector2 Position;
-        public List<ItemSlot> ItemsSlots;
-        public Action Update = () => { };
 
-        
 
-        public static List<WindowFrame> LoadGUI(Game1 Game)
+        public void Update(Game1 game)
         {
+            //Update Logic Here
 
-            List<WindowFrame> windows;
-            windows = new List<WindowFrame>();
-
-            var list = new List<ItemSlot>();
-            for (int i = 0; i < 4; i++)
+            if (Visible)
             {
-                for (int j = 0; j < 10; j++)
+                if (Name == "Crafting2x2")
                 {
-                    list.Add(new ItemSlot()
+                    foreach (CraftingRecipe Recipe in game._RecipeManager.Recipes)
                     {
-                        Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One),
-                    }
-                    );
-                }
-            }
-            var window = new WindowFrame()
-            {
-
-                Name = "Inventory",
-                Position = new Vector2(100, 100),
-                ItemsSlots = list
-            };
-
-
-            windows.Add(window);
-            list = new List<ItemSlot>();
-            int id = 0;
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    list.Add(new ItemSlot()
-                    {
-                        Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One) + new Vector2(400, 0),
-                        ID = id++,
-                    }
-                    );
-                }
-            }
-            window = new WindowFrame()
-            {
-
-                Name = "Chest",
-                Position = new Vector2(2200, 400),
-                ItemsSlots = list
-            };
-            windows.Add(window);
-            list = new List<ItemSlot>();
-            id = 1;
-            for (int i = 0; i < 2; i++)
-            {
-                for (int j = 0; j < 2; j++)
-                {
-                    list.Add(new ItemSlot()
-                    {
-                        Position = Vector2.One * 32 * (new Vector2(j, i) + Vector2.One) + new Vector2(400, 0),
-                        ID = id++,
-                    }
-                    );
-                }
-            }
-
-            list.Add(new ItemSlot()
-            {
-                Position = Vector2.One * 32 * (new Vector2(2.5f, 0.5f) + Vector2.One) + new Vector2(400, 0),
-                ID = id++,
-
-            }
-
-                    );
-            list.Last().Clicked = () =>
-            {
-                for (int i = 0; i < 4; i++)
-                { list[i].TakeItem(1); }
-            };
-            window = new WindowFrame()
-            {
-                Visible = true,
-                Name = "Crafting",
-                Position = new Vector2(1300, 400),
-                ItemsSlots = list,
-                Update = () =>
-                {
-                    var blocks = Game._blockManager.Blocks;
-                    var Window = window;
-
-                    if (!Window.Visible) return;
-                    var item =blocks[0];
-
-                    var grid = Game._userInterfaceManager.windows[2].ItemsSlots;
-
-                    ItemSlot[,] Grid2x2 = new ItemSlot[2, 2]
-                    {
-                    { grid[0], grid[1] },
-                    { grid[2], grid[3] }
-                    };
-                    foreach (var Recipe in Game._RecipeManager.Recipes)
-                    {
-                        if (Recipe.CheckRecipe(Grid2x2))
+                        //if (ItemSlots[4].Item != null) break;
+                        if (Recipe.CheckRecipe(new ItemSlot[,]
                         {
-
-                            Window.ItemsSlots[4].Item = Recipe.item.Item;
-                            Window.ItemsSlots[4].Count = Recipe.item.Count;
-                            return;
+                            { ItemSlots[0], ItemSlots[1] },
+                            { ItemSlots[2], ItemSlots[3] },
+                        }))
+                        {
+                            ItemSlots[4].Item = Recipe.item.Item;
+                            ItemSlots[4].Count = Recipe.item.Count;
+                            break;
+                            
                         }
                         else
                         {
-                            Window.ItemsSlots[4].TakeItem(64);
+                            ItemSlots[4].Count = 0;
+                            ItemSlots[4].Item = null;
                         }
+
                     }
                 }
-            };
+            }
 
-
-            windows.Add(window);
-
-            return windows;
         }
+
+
     }
     public class ItemSlot : WindowFrame
     {
+        public bool canTake = true;
+        public bool canPlace = true;
+        public string Tag = "";
         public int ID = 0;
-        public Vector2 Position;
+        public Vector2 ItemPosition;
         public Vector2 Scale = Vector2.One * 32;
         public Block Item;
         public int Count = 0;
@@ -369,8 +420,8 @@ namespace MinecraftAlpha
         public bool IsInBounds(Vector2 Pos)
         {
 
-            if (Pos.X >= Position.X && Pos.X <= Position.X + Scale.X)
-                if (Pos.Y > Position.Y && Pos.Y <= Position.Y + Scale.Y)
+            if (Pos.X >= ItemPosition.X && Pos.X <= ItemPosition.X + Scale.X)
+                if (Pos.Y > ItemPosition.Y && Pos.Y <= ItemPosition.Y + Scale.Y)
                 {
                     return true;
                     //Place Design shit here
@@ -382,7 +433,7 @@ namespace MinecraftAlpha
 
         public void TakeItem(int Amount, UserInterfaceManager UI)
         {
-
+            if (!canTake) return;
             if (Amount == -1)
             {
                 Amount = Count;
@@ -399,18 +450,18 @@ namespace MinecraftAlpha
 
         public void TakeItem(int Amount)
         {
-       
+
             this.Count -= Amount;
             if (this.Count <= 0)
             {
                 Item = null;
             }
-            
+
         }
 
         public void AddItem(int Amount, UserInterfaceManager UI)
         {
-
+            if (!canPlace) return;
             if (UI.selectedItem == null)
             {
                 return;
@@ -433,8 +484,25 @@ namespace MinecraftAlpha
             Clicked.Invoke();
         }
 
+        public void Render(SpriteBatch Spritebatch, ContentManager Content)
+        {
+            
+            string AmmountInSlot = "";
+            Spritebatch.Draw(Texture, new Rectangle((int)ItemPosition.X, (int)ItemPosition.Y, 32, 32), Color.White);
+            if (Item != null)
+            {
+                Spritebatch.Draw(Item.Texture, ItemPosition + Vector2.One * 4, null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+
+            }
+            if (Count > 1)
+            {
+                AmmountInSlot = Count.ToString();
+            }
+            Spritebatch.DrawString(Content.Load<SpriteFont>("Font"), AmmountInSlot, ItemPosition + new Vector2(10, 14), Color.White);
+
+        }
     }
-    public class Button
+    public class Button : WindowFrame
     {
         public Vector2 Position = new Vector2(0, 0);
         public Vector2 Scale = new Vector2(0, 0);
@@ -467,7 +535,7 @@ namespace MinecraftAlpha
 
     }
 
-    public class textLabel
+    public class textLabel : WindowFrame
     {
         public Vector2 Position = new Vector2(300, 100);
         public string Text = "TextLabel";
@@ -476,25 +544,29 @@ namespace MinecraftAlpha
 
     }
 
-    public class UIFrame
+    public class UIFrame : WindowFrame
     {
+        public string Name = "default";
         public Vector2 Position = new Vector2(300, 100);
         public Vector2 Size = new Vector2(30, 50);
         public string textureName = "UIelements/WindowFrame";
         public Texture2D Window = null;
+        public WindowFrame Parent = null;
 
-        public void loadContent(ContentManager Content) 
+        public void loadContent(ContentManager Content)
         {
             Window = Content.Load<Texture2D>(this.textureName);
         }
-        
+
         public static List<UIFrame> Load()
         {
             List<UIFrame> uIFrames =
             [
                 new UIFrame()
-                {textureName = "UIelements/WindowFrame",
-                    Position = new Vector2(100,100) - new Vector2(50,50), Size = new Vector2(100,100) + new Vector2(50, 50),
+                {
+                    Name = "Inventory",
+                    textureName = "UIelements/WindowFrame",
+                    Position = new Vector2(100,100) - new Vector2(80,80), Size = new Vector2(30,70),
                 },
             ];
 
@@ -516,12 +588,12 @@ namespace MinecraftAlpha
             Rectangle[] Corners = {
                 new Rectangle(0,0,Cx,Cy),
                 new Rectangle(Tx-Cx,0,Cx,Cy),
-                
+
                 new Rectangle(0,Ty-Cy,Cx,Cy),
                 new Rectangle(Tx-Cx,Ty-Cy,Cx,Cy),
             };
-            
-            
+
+
             //Spritebatch.Draw(Window, Position, Background, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 1f);
 
             Spritebatch.Draw(Window, Position, Corners[0], Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
@@ -529,9 +601,9 @@ namespace MinecraftAlpha
             Spritebatch.Draw(Window, Position + new Vector2(0, Size.Y + CornerSize.Y), Corners[2], Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
             Spritebatch.Draw(Window, Position + new Vector2(Size.X + CornerSize.X, Size.Y + CornerSize.Y), Corners[3], Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
 
-            
 
-            
+
+
         }
     }
 }
