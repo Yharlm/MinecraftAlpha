@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
+using System;
+using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MinecraftAlpha;
 
@@ -42,7 +39,7 @@ public class Game1 : Game
 
 
 
-    
+
 
 
     public Vector2 WorldMousePos = Vector2.Zero;
@@ -67,7 +64,7 @@ public class Game1 : Game
     public TileGrid[,] World { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
 
 
-    
+
 
 
 
@@ -78,7 +75,7 @@ public class Game1 : Game
     {
 
         _blockManager = new BlockManager(this);
-            
+
         _actionManager.Game = this;
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
@@ -201,12 +198,12 @@ public class Game1 : Game
         _entityManager.LoadEntities(this);
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
-        
+
         _userInterfaceManager.LoadTextures(Content);
         _entityAnimationService.CreateAnimations(Entities);
         _entityAnimationService.LoadAnimations(_entityManager.entities);
         BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
-        
+
 
         _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
         //Making player
@@ -215,7 +212,7 @@ public class Game1 : Game
 
 
 
-        
+
 
 
         //EFrame.Window = Content.Load<Texture2D>("UIelements/WindowFrame");
@@ -244,7 +241,7 @@ public class Game1 : Game
 
     }
     Sprite3D test;
-    public void IluminateDiamond(int x,int y,float val1, TileGrid[,] grid)
+    public void IluminateDiamond(int x, int y, float val1, TileGrid[,] grid)
     {
         int val = (int)val1;
 
@@ -286,7 +283,7 @@ public class Game1 : Game
 
     }
 
-    public void Lighting(TileGrid[,] map,float layer)
+    public void Lighting(TileGrid[,] map, float layer)
     {
         var Grid = map;
         Vector2 pos = Player.Plr.position;
@@ -319,20 +316,20 @@ public class Game1 : Game
         // block drop testing remove later
         //test.Update();
 
-        for(int i = 0;i < World.GetLength(0);i++)
+        for (int i = 0; i < World.GetLength(0); i++)
         {
-            for(int j = 0;j < World.GetLength(1);j++)
+            for (int j = 0; j < World.GetLength(1); j++)
             {
                 var grid = World[i, j];
                 Block block = BlockTypes[grid.ID];
 
                 block.Update(grid);
-                
-                
+
+
             }
         }
 
-        foreach(var Window in _userInterfaceManager.windows)
+        foreach (var Window in _userInterfaceManager.windows)
         {
             Window.Update(this);
         }
@@ -343,7 +340,7 @@ public class Game1 : Game
         //Lighting Setter
 
         Lighting(BackGround, 35);
-        Lighting(World,7);
+        Lighting(World, 7);
 
         Daytime += 0.01f;
         if (Daytime >= 24)
@@ -365,13 +362,13 @@ public class Game1 : Game
         foreach (var entity in _entityManager.Workspace)
         {
 
-           
+
             foreach (Entity entity1 in _entityManager.Workspace)
             {
                 if (entity == entity1) continue;
-                if(entity1.CheckCollisionEntity(entity))
+                if (entity1.CheckCollisionEntity(entity))
                 {
-                    Entity.CollisionEventCollision(entity1, entity,this);
+                    Entity.CollisionEventCollision(entity1, entity, this);
                 }
             }
             entity.collisionBox.UpdateCollision(entity, World);
@@ -384,24 +381,24 @@ public class Game1 : Game
             entity.UpdateAnimation();
 
 
-            
 
-            if(entity.velocity.Gravity.Y > 0.3f)
+
+            if (entity.velocity.Gravity.Y > 0.3f)
             {
-                entity.Fall_damage =(int)(entity.velocity.Gravity.Y*24);
+                entity.Fall_damage = (int)(entity.velocity.Gravity.Y * 24);
             }
 
-            if(entity.collisionBox.Bottom )
+            if (entity.collisionBox.Bottom)
             {
-                entity.Health-= entity.Fall_damage;
+                entity.Health -= entity.Fall_damage;
                 entity.Fall_damage = 0;
             }
-            
+
             // Example gravity, can be replaced with actual logic
 
         }
         _entityManager.Workspace.RemoveAll(x => x.Health <= 0);
-        
+
         foreach (var entity in _particleSystem.Particles)
         {
             entity.Update();
@@ -418,13 +415,13 @@ public class Game1 : Game
     {
         var PLR = _entityManager.Workspace[0];
 
-        
 
-        
+
+
 
         PLR.Animations[2].Paused = true;
 
-        
+
 
 
 
@@ -449,7 +446,7 @@ public class Game1 : Game
                     PLR.Animations[2].Time = 0f;
                     PLR.Animations[2].Paused = false;
                 }
-                
+
                 if (WorldMousePos.X > 0 && WorldMousePos.Y > 0)
                 {
                     int BlockX = (int)(WorldMousePos.X);
@@ -609,7 +606,34 @@ public class Game1 : Game
             //InventoryOpen = !InventoryOpen;
             Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
 
+            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[0], WorldMousePos));
 
+        }
+        if (keyboardState.IsKeyDown(Keys.T))
+        {
+            //InventoryOpen = !InventoryOpen;
+
+            var ent=Entity.GetentityAtPosition(WorldMousePos, _entityManager.Workspace);
+            if (ent != null)
+            {
+                ent.velocity.velocity = new Vector2(0, -35f);
+                ent.Health -= 3;
+            }
+        }
+        if (keyboardState.IsKeyDown(Keys.H))
+        {
+            //InventoryOpen = !InventoryOpen;
+            //Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
+
+            //_entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[1], WorldMousePos));
+
+        }
+        if (keyboardState.IsKeyDown(Keys.B))
+        {
+            //InventoryOpen = !InventoryOpen;
+            //Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
+
+            //_entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[1], WorldMousePos));
 
         }
 
@@ -621,18 +645,17 @@ public class Game1 : Game
 
 
 
-
     }
 
-    
-    
+
+
 
     protected override void Draw(GameTime gameTime)
     {
 
 
         GraphicsDevice.Clear(Color.CornflowerBlue);
-        
+
         //SunImage
 
         //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
@@ -648,11 +671,11 @@ public class Game1 : Game
 
         }
         _spriteBatch.End();
-        
+
         // 2 cycles to render both directions of the world
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position, BreakTexture);
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position,BreakTexture);
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
 
         //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
         foreach (var P in _particleSystem.Particles)
@@ -661,20 +684,20 @@ public class Game1 : Game
             P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
         }
         base.Draw(gameTime);
-        
+
         _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
         _userInterfaceManager.DrawUI(_spriteBatch, Content);
 
         _spriteBatch.Begin();
-        
+
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.cam.position.ToString(), Vector2.One, Color.Wheat);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One*30, Color.Red);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
         _spriteBatch.End();
 
         //test.Draw(_spriteBatch);
 
-        
+
 
     }
 

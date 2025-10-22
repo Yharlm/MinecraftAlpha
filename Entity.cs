@@ -195,6 +195,19 @@ namespace MinecraftAlpha
                 A.Health = 0;
             }
         }
+
+        static public Entity GetentityAtPosition(Vector2 Pos, List<Entity> Entities)
+        {
+            foreach (var entity in Entities)
+            {
+                Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
+                if (A.Contains((int)(Pos.X * 32), (int)(Pos.Y * 32)))
+                {
+                   return entity;
+                }
+            }
+            return null;
+        }
         public void ResetIframes()
         {
             if (IFrame <= 0) return;
