@@ -177,7 +177,7 @@ public class Game1 : Game
         base.Initialize();
     }
 
-    public UIFrame EFrame = new UIFrame();
+    //public UIFrame EFrame = new UIFrame();
 
 
     protected override void LoadContent()
@@ -200,7 +200,7 @@ public class Game1 : Game
         _entityManager.LoadJoints();
 
         _userInterfaceManager.LoadTextures(Content);
-        _entityAnimationService.CreateAnimations(Entities);
+        _entityAnimationService.entityAnimations = ;
         _entityAnimationService.LoadAnimations(_entityManager.entities);
         BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
 

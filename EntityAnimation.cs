@@ -17,7 +17,7 @@ namespace MinecraftAlpha
 
         }
 
-        public void CreateAnimations(List<Entity> entityList)
+        public List<EntityAnimation> CreateAnimations(List<Entity> entityList)
         {
             var mob = entityList;
             entityAnimations = new List<EntityAnimation>
@@ -72,7 +72,7 @@ namespace MinecraftAlpha
 
             };
 
-
+            return entityAnimations;
 
 
 

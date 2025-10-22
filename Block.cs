@@ -23,6 +23,7 @@ namespace MinecraftAlpha
 
         public Action<TileGrid> Interaction = null; 
         public Action<TileGrid> Update = (Grid) => { };
+        public Action<TileGrid> OnCollide = (Grid) => { };
     }
 
     public class BlockManager

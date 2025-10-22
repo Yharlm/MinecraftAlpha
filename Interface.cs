@@ -206,7 +206,7 @@ namespace MinecraftAlpha
             {
                 Name = "Inventory",
                 Visible = true,
-                Frames = new() { },
+                Frames = new() { new UIFrame(){Window = Frames[0].Window ,Size =new Vector2(40,40),Position = new Vector2(290, 20) } },
                 Buttons = new() { },
                 ItemSlots = new() { },
             });

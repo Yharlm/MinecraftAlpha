@@ -71,6 +71,18 @@ namespace MinecraftAlpha
 
     }
 
+    public class Chunk
+    {
+        public int x;
+        public int y;    
+        public TileGrid[,] Tiles = new TileGrid[32, 32];
+        public Chunk(int x, int y, TileGrid[,] Grid) 
+        {
+            this.x = x;
+            this.y = y;
+            Tiles = Grid;
+        }
+    }
 
 
 
