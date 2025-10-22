@@ -17,10 +17,10 @@ namespace MinecraftAlpha
 
         }
 
-        public List<EntityAnimation> CreateAnimations(List<Entity> entityList)
+        public static List<EntityAnimation> CreateAnimations()
         {
-            var mob = entityList;
-            entityAnimations = new List<EntityAnimation>
+            
+            var list = new List<EntityAnimation>
             {
                 new EntityAnimation(0,"idle",new List<Frame>()
                 {
@@ -72,7 +72,7 @@ namespace MinecraftAlpha
 
             };
 
-            return entityAnimations;
+            return list;
 
 
 

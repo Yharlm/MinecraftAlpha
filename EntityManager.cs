@@ -1,32 +1,91 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinecraftAlpha
 {
-    public class EntityManager
+    public class EntityManager : Game1
     {
         public EntityManager() { }
-        public List<Entity> entities = new List<Entity>();
-        public List<Entity> Workspace = new List<Entity>();
         
-        public void Spawn(Entity entity)
+        public List<Entity> Workspace = new List<Entity>();
+
+        
+
+        public static List<Mob> LoadMobs()
         {
-            Entity mobClone = new Entity(entity.ID,entity.name, entity.TextureName, entity.MaxHealth)
-            { 
-                Ractangles = entity.Ractangles,
-                position = Vector2.One * 50,
-                Joints = entity.Joints,
-                collisionBox = new CollisionBox() { Size = entity.collisionBox.Size },
+            int id = 0;
+            List<Mob> Mobs = new List<Mob>()
+            {
+                new Mob(id++,"Player","steve")
+                {
+                    Ractangles = new List<Vector4>()
+                    {
+                        // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
+                       
+                        new Vector4(12,8,4,12), // Right Arm
+                        new Vector4(24,8,4,12),// Body
+                        new Vector4(8,0,8,8), // Head
+                        new Vector4(12,12,4,12), // Left Arm
+                        new Vector4(12,44,4,12), // Right Leg
+                        new Vector4(12,32,4,12) // Left Leg
+                    },
+
+
+
+
+
+                },
+                new Mob(id++,"Zombie","steve")
+                {
+                    Ractangles = new List<Vector4>()
+                    {
+                        // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
+                       
+                        new Vector4(12,8,4,12), // Right Arm
+                        new Vector4(24,8,4,12),// Body
+                        new Vector4(8,0,8,8), // Head
+                        new Vector4(12,12,4,12), // Left Arm
+                        new Vector4(12,44,4,12), // Right Leg
+                        new Vector4(12,32,4,12) // Left Leg
+                    },
+
+
+
+
+
+                },
+                new Mob(-1,"Item","null")
+                {
+
+                    
+                    collisionBox = new CollisionBox() { Size = new Vector2(2f,2f) },
+
+                }
+
+
+
             };
-            Workspace.Add(mobClone);
+
+            return Mobs;
+
+
+
+
+        }
+
+        static public Entity Spawn(Mob Template)
+        {
+            Entity mobClone = new Entity()
+            {
+                Texture = Template.Texture,
+                position = Vector2.Zero,
+                PlayingAnimations = new List<EntityAnimation>(),
+                 = Template.collisionBox
+
+            };
+            return mobClone;
 
         }
 
@@ -34,22 +93,22 @@ namespace MinecraftAlpha
         {
             Entity entity = new Entity(-1, item.Name, item.TexturePath, 1000)
             {
-                
+
                 position = position,
                 collisionBox = new CollisionBox(),
 
-                
-                
+
+
             };
         }
         public void UpdateAll()
         {
             foreach (var entity in Workspace)
             {
-                
+
             }
         }
-        public void RenderAll(SpriteBatch SB,float Size,Vector2 Pos)
+        public void RenderAll(SpriteBatch SB, float Size, Vector2 Pos)
         {
             foreach (var entity in Workspace)
             {
@@ -58,7 +117,7 @@ namespace MinecraftAlpha
         }
         public void LoadEntities(Game1 game)
         {
-            entities = Entity.LoadEntites(game);
+            entities = EntityManager.Spawn();
             //foreach (var entity in entities)
             //{
 
@@ -122,7 +181,7 @@ namespace MinecraftAlpha
                 });
         }
 
-        
+
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
@@ -13,6 +14,7 @@ namespace MinecraftAlpha;
 
 public class Game1 : Game
 {
+    public ContentManager _Content => base.Content;
     public UserInterfaceManager _userInterfaceManager = new();
     public EntityManager _entityManager = new();
     public BlockManager _blockManager;
@@ -87,8 +89,11 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        _particleSystem.Content = Content;
+        
         Random random = new Random();
+
+
+
         // TODO: Add your initialization logic here
         Entities = _entityManager.entities;
         BlockTypes = _blockManager.Blocks;
@@ -200,7 +205,7 @@ public class Game1 : Game
         _entityManager.LoadJoints();
 
         _userInterfaceManager.LoadTextures(Content);
-        _entityAnimationService.entityAnimations = ;
+        _entityAnimationService.entityAnimations = EntityAnimationService.CreateAnimations();
         _entityAnimationService.LoadAnimations(_entityManager.entities);
         BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
 
@@ -606,7 +611,7 @@ public class Game1 : Game
             //InventoryOpen = !InventoryOpen;
             Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
 
-            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[0], WorldMousePos));
+            _entityManager.Workspace.Add(Entity.LoadEntities());
 
         }
         if (keyboardState.IsKeyDown(Keys.T))
