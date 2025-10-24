@@ -38,7 +38,7 @@ namespace MinecraftAlpha
     public class CollisionBox
     {
         public Vector2 Size = new Vector2(0.4f, 1);
-
+        
         public bool Left { get; set; } = false;
         public bool Right { get; set; } = false;
         public bool Top { get; set; } = false;
