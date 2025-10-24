@@ -205,8 +205,13 @@ public class Game1 : Game
         _entityManager.LoadJoints();
 
         _userInterfaceManager.LoadTextures(Content);
+<<<<<<< HEAD
         _entityAnimationService.entityAnimations = EntityAnimationService.CreateAnimations();
         _entityAnimationService.LoadAnimations(_entityManager.entities);
+=======
+        //_entityAnimationService.entityAnimations = EntityAnimationService.CreateAnimations();
+        //_entityAnimationService.LoadAnimations(_entityManager.entities);
+>>>>>>> Redo
         BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
 
 
@@ -364,6 +369,10 @@ public class Game1 : Game
 
         WorldMousePos = (MousePosition - Player.cam.position) / BlockSize;
         _blockManager.BlockSize = BlockSize;
+        foreach (var animation in _entityAnimationService.entityAnimations)
+        {
+            animation.Update();
+        }
         foreach (var entity in _entityManager.Workspace)
         {
 
@@ -383,7 +392,7 @@ public class Game1 : Game
                 entity.Model3D.Update();
                 continue;
             }
-            entity.UpdateAnimation();
+            //entity.UpdateAnimation();
 
 
 
@@ -418,7 +427,7 @@ public class Game1 : Game
     public bool LeftClicked = false;
     public void Input()
     {
-        var PLR = _entityManager.Workspace[0];
+        var PLR = Entity.CloneEntity(_entityManager.entities[0], Vector2.One * 50f);
 
 
 

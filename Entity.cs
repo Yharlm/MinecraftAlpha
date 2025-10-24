@@ -124,8 +124,23 @@ namespace MinecraftAlpha
         //        //Events
 
 
-        //        Clone.Interaction = Example.Interaction;
-        //        Clone.Update = Example.Update;
+        public Entity CloneEntity(Entity Example, Vector2 Position, string Data)
+        {
+            Entity Clone = new Entity(Example.ID, Example.name, Example.TextureName, Example.MaxHealth);
+            {
+                Clone.Ractangles = Example.Ractangles;
+                Clone.position = Position;
+                Clone.Joints = Example.Joints;
+                Clone.collisionBox = new CollisionBox() { Size = Example.collisionBox.Size };
+                Clone.Animations = EntityAnimationService.CreateAnimations().FindAll(x => x.parent.ID == Example.ID);
+                Clone.Sprites = Example.Sprites;
+                Clone.Texture = Example.Texture;
+                Clone.Fall_damage = Example.Fall_damage;
+                Clone.Mass = Example.Mass;
+                Clone.Fliped = Example.Fliped;
+                Clone.paused = Example.paused;
+                Clone.Data = Data;
+                //Events
 
         //    }
         //    return Clone;
