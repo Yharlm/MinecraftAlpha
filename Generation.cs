@@ -73,6 +73,8 @@ namespace MinecraftAlpha
 
     public class Chunk
     {
+
+
         public int x;
         public int y;    
         public TileGrid[,] Tiles = new TileGrid[32, 32];
@@ -82,6 +84,13 @@ namespace MinecraftAlpha
             this.y = y;
             Tiles = Grid;
         }
+
+        //public bool isinchunk(Vector2 pos)
+        //{
+        //    float ChunkSize = Tiles.GetLength(0) * 32f;
+        //    Vector2 chunkPos = new Vector2(x,y) * ChunkSize;
+        //    if ()
+        //}
     }
 
 

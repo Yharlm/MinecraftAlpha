@@ -73,6 +73,20 @@ namespace MinecraftAlpha
 
 
         }
+
+        public void CheckCollision(Entity entity, TileGrid[,] World)
+        {
+            foreach (var block in World)
+            {
+                if (LogicsClass.BlockCollide(entity.position, block.pos, 32 * Vector2.One))
+                {
+                    block.MinedHealth += 10;
+                }
+                   
+            }
+
+
+        }
     }
 
     public class Entity
@@ -82,11 +96,12 @@ namespace MinecraftAlpha
         {
             Entity Clone = new Entity(Example.ID, Example.name, Example.TextureName, Example.MaxHealth);
             {
+                Clone.ID = Example.ID;
                 Clone.Ractangles = Example.Ractangles;
                 Clone.position = Position;
                 Clone.Joints = Example.Joints;
-                Clone.collisionBox = new CollisionBox() { Size = Example.collisionBox.Size };
-                Clone.Animations = EntityAnimationService.CreateAnimations();
+                Clone.collisionBox = new CollisionBox();
+                Clone.Animations = EntityAnimationService.CreateAnimations(Example);
                 Clone.Sprites = Example.Sprites;
                 Clone.Texture = Example.Texture;
                 Clone.Fall_damage = Example.Fall_damage;
@@ -101,34 +116,35 @@ namespace MinecraftAlpha
                 Clone.Update = Example.Update;
 
             }
+            
             return Clone;
         }
 
-        public Entity CloneEntity(Entity Example, Vector2 Position, string Data)
-        {
-            Entity Clone = new Entity(Example.ID, Example.name, Example.TextureName, Example.MaxHealth);
-            {
-                Clone.Ractangles = Example.Ractangles;
-                Clone.position = Position;
-                Clone.Joints = Example.Joints;
-                Clone.collisionBox = new CollisionBox() { Size = Example.collisionBox.Size };
-                Clone.Animations = Example.Animations;
-                Clone.Sprites = Example.Sprites;
-                Clone.Texture = Example.Texture;
-                Clone.Fall_damage = Example.Fall_damage;
-                Clone.Mass = Example.Mass;
-                Clone.Fliped = Example.Fliped;
-                Clone.paused = Example.paused;
-                Clone.Data = Data;
-                //Events
+        //public Entity CloneEntity(Entity Example, Vector2 Position, string Data)
+        //{
+        //    Entity Clone = new Entity(Example.ID, Example.name, Example.TextureName, Example.MaxHealth);
+        //    {
+        //        Clone.Ractangles = Example.Ractangles;
+        //        Clone.position = Position;
+        //        Clone.Joints = Example.Joints;
+        //        Clone.collisionBox = new CollisionBox() { Size = Example.collisionBox.Size };
+        //        Clone.Animations = Example.Animations;
+        //        Clone.Sprites = Example.Sprites;
+        //        Clone.Texture = Example.Texture;
+        //        Clone.Fall_damage = Example.Fall_damage;
+        //        Clone.Mass = Example.Mass;
+        //        Clone.Fliped = Example.Fliped;
+        //        Clone.paused = Example.paused;
+        //        Clone.Data = Data;
+        //        //Events
 
                 
-                Clone.Interaction = Example.Interaction;
-                Clone.Update = Example.Update;
+        //        Clone.Interaction = Example.Interaction;
+        //        Clone.Update = Example.Update;
 
-            }
-            return Clone;
-        }
+        //    }
+        //    return Clone;
+        //}
 
 
         public List<EntityAnimation> Animations = new List<EntityAnimation>();

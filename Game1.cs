@@ -31,7 +31,10 @@ public class Game1 : Game
     public List<Block> BlockTypes;
 
 
-    //Structures
+    //Chunks list
+
+    public List<Chunk> Chunks;
+
 
 
 
@@ -96,7 +99,7 @@ public class Game1 : Game
         {
             for (int j = 0; j < WorldSizeX; j++)
             {
-                World[j, i] = new TileGrid();
+                World[j, i] = new TileGrid() { pos = new Vector2(j * 32, i * 32) };
                 BackGround[j, i] = new TileGrid();
             }
         }
@@ -207,7 +210,7 @@ public class Game1 : Game
 
         _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
         //Making player
-        Player.Plr = _entityManager.entities[0];
+        Player.Plr = Entity.CloneEntity(_entityManager.entities[0], new Vector2(40,30));
         _entityManager.Workspace.Add(Player.Plr);
 
 
@@ -363,9 +366,10 @@ public class Game1 : Game
         {
             Animation.Update();
         }
+        _entityAnimationService.entityAnimations.RemoveAll(x=> x.Time >= x.duration);
         foreach (var entity in _entityManager.Workspace)
         {
-
+            //entity.collisionBox.CheckCollision(entity,World);
 
             foreach (Entity entity1 in _entityManager.Workspace)
             {
@@ -417,13 +421,13 @@ public class Game1 : Game
     public bool LeftClicked = false;
     public void Input()
     {
-        var PLR = Entity.CloneEntity(_entityManager.entities[0], Vector2.One * 50f);
+        var PLR = Player.Plr;
 
 
 
 
 
-        PLR.Animations[2].Paused = true;
+        
 
 
 
@@ -445,11 +449,9 @@ public class Game1 : Game
         {
             if (!_userInterfaceManager.Clicked)
             {
-                if (PLR.Animations[2].Playing == false)
-                {
-                    PLR.Animations[2].Time = 0f;
-                    PLR.Animations[2].Paused = false;
-                }
+                
+                
+                
 
                 if (WorldMousePos.X > 0 && WorldMousePos.Y > 0)
                 {
@@ -500,8 +502,7 @@ public class Game1 : Game
             }
             if (!_userInterfaceManager.Clicked)
             {
-                PLR.Animations[2].Time = 0f;
-                PLR.Animations[2].Paused = false;
+                _entityAnimationService.Play(PLR.Animations[2]);
                 int BlockX = (int)(WorldMousePos.X);
                 int BlockY = (int)(WorldMousePos.Y);
 
@@ -534,7 +535,7 @@ public class Game1 : Game
         var keyboard = Keyboard.GetState().GetPressedKeys();
 
 
-        PLR.Animations[1].Paused = true;
+        //PLR.Animations[1].Paused = true;
 
         foreach (var key in keyboard)
         {
@@ -550,13 +551,13 @@ public class Game1 : Game
             }
             if (key == Keys.A)
             {
-                PLR.Animations[1].Paused = false;
+                //PLR.Animations[1].Paused = false;
                 PLR.Fliped = true;
                 plrVel += new Vector2(-1, 0);
             }
             if (key == Keys.D)
             {
-                PLR.Animations[1].Paused = false;
+                //PLR.Animations[1].Paused = false;
                 PLR.Fliped = false;
                 plrVel += new Vector2(+1, 0);
             }
@@ -679,8 +680,11 @@ public class Game1 : Game
         // 2 cycles to render both directions of the world
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position, BreakTexture);
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, Player.Plr.position, BreakTexture);
+        
 
+        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
+        //Player.cam.RenderLayer(_blockManager, _spriteBatch, Foreground, 0f, Player.Plr.position, BreakTexture);
         //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
         foreach (var P in _particleSystem.Particles)
         {

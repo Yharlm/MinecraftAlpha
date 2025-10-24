@@ -176,6 +176,7 @@ namespace MinecraftAlpha
 
     public class TileGrid
     {
+        public Vector2 pos;
         public TileGrid() { }
         public int ID = 0;
         public int state = 0;

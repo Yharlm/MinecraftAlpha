@@ -1,4 +1,5 @@
-﻿using MinecraftAlpha;
+﻿using Microsoft.Xna.Framework;
+using MinecraftAlpha;
 using System;
 using System.Collections.Generic;
 
@@ -17,7 +18,18 @@ namespace MinecraftAlpha
 
         }
 
-        public static List<EntityAnimation> CreateAnimations()
+        public void Play(EntityAnimation Anim)
+        {
+            if (!entityAnimations.Contains(Anim))
+            {
+                entityAnimations.Add(Anim); 
+                Anim.Paused = false;
+                Anim.Time = 0;
+            }
+
+
+        }
+        public static List<EntityAnimation> CreateAnimations(Entity Example)
         {
             var
             entityAnimations = new List<EntityAnimation>
@@ -71,6 +83,8 @@ namespace MinecraftAlpha
 
 
             };
+            foreach (var a in entityAnimations) a.parent = Example;
+
 
             return entityAnimations;
 
@@ -110,6 +124,7 @@ public class Frame
 }
 public class EntityAnimation
 {
+    
     public bool Playing = false;
     public bool Fliped = false;
     public Entity parent;
@@ -166,7 +181,7 @@ public class EntityAnimation
             joint.orientation = frame.Angle;
         }
     }
-
+    
     
 
     public float GetDistanceBetweenAngles(float start, float end)
