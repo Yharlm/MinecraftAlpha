@@ -7,7 +7,7 @@ namespace MinecraftAlpha
     public class EntityAnimationService()
     {
 
-        public List<EntityAnimation> entityAnimations = new List<EntityAnimation>(); // Handles all running animations
+        public List<EntityAnimation> entityAnimations = new List<EntityAnimation>();
         public void LoadAnimations(List<Entity> entityList)
         {
             foreach (Entity entity in entityList)
@@ -19,12 +19,8 @@ namespace MinecraftAlpha
 
         public static List<EntityAnimation> CreateAnimations()
         {
-            
-<<<<<<< HEAD
-            var list = new List<EntityAnimation>
-=======
-            var entityAnimations = new List<EntityAnimation>
->>>>>>> Redo
+            var
+            entityAnimations = new List<EntityAnimation>
             {
                 new EntityAnimation(0,"idle",new List<Frame>()
                 {
@@ -76,13 +72,9 @@ namespace MinecraftAlpha
 
             };
 
-<<<<<<< HEAD
-            return list;
-
-
-=======
             return entityAnimations;
->>>>>>> Redo
+
+
 
         }
         public List<EntityAnimation> ReturnWhereID(int ID,Entity parent)
@@ -95,13 +87,6 @@ namespace MinecraftAlpha
 
             }
             return list;
-        }
-
-        public void Play(EntityAnimation anim)
-        {
-            if (entityAnimations.Contains(anim)) entityAnimations.Remove(anim);
-            entityAnimations.Add(anim);
-
         }
     }
     

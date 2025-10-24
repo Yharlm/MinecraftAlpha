@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
@@ -14,7 +13,6 @@ namespace MinecraftAlpha;
 
 public class Game1 : Game
 {
-    public ContentManager _Content => base.Content;
     public UserInterfaceManager _userInterfaceManager = new();
     public EntityManager _entityManager = new();
     public BlockManager _blockManager;
@@ -89,11 +87,8 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        
+        _particleSystem.Content = Content;
         Random random = new Random();
-
-
-
         // TODO: Add your initialization logic here
         Entities = _entityManager.entities;
         BlockTypes = _blockManager.Blocks;
@@ -205,13 +200,8 @@ public class Game1 : Game
         _entityManager.LoadJoints();
 
         _userInterfaceManager.LoadTextures(Content);
-<<<<<<< HEAD
-        _entityAnimationService.entityAnimations = EntityAnimationService.CreateAnimations();
-        _entityAnimationService.LoadAnimations(_entityManager.entities);
-=======
-        //_entityAnimationService.entityAnimations = EntityAnimationService.CreateAnimations();
+        
         //_entityAnimationService.LoadAnimations(_entityManager.entities);
->>>>>>> Redo
         BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
 
 
@@ -369,9 +359,9 @@ public class Game1 : Game
 
         WorldMousePos = (MousePosition - Player.cam.position) / BlockSize;
         _blockManager.BlockSize = BlockSize;
-        foreach (var animation in _entityAnimationService.entityAnimations)
+        foreach(var Animation in _entityAnimationService.entityAnimations)
         {
-            animation.Update();
+            Animation.Update();
         }
         foreach (var entity in _entityManager.Workspace)
         {
@@ -620,7 +610,7 @@ public class Game1 : Game
             //InventoryOpen = !InventoryOpen;
             Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
 
-            _entityManager.Workspace.Add(Entity.LoadEntities());
+            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[0], WorldMousePos));
 
         }
         if (keyboardState.IsKeyDown(Keys.T))

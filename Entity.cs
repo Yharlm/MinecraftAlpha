@@ -75,54 +75,34 @@ namespace MinecraftAlpha
         }
     }
 
-    public class Entity // Container for a npc,
+    public class Entity
     {
-        public Mob Template = null;
 
-        //public static Entity CloneEntity(Entity Example, Vector2 Position)
-        //{
-        //    Entity Clone = new Entity(Example.ID, Example.name, Example.TextureName, Example.MaxHealth);
-        //    {
-        //        Clone.Ractangles = Example.Ractangles;
-        //        Clone.position = Position;
-        //        Clone.Joints = Example.Joints;
-        //        Clone.collisionBox = new CollisionBox() { Size = Example.collisionBox.Size };
-        //        Clone.Animations = Example.Animations;
-        //        Clone.Sprites = Example.Sprites;
-        //        Clone.Texture = Example.Texture;
-        //        Clone.Fall_damage = Example.Fall_damage;
-        //        Clone.Mass = Example.Mass;
-        //        Clone.Fliped = Example.Fliped;
-        //        Clone.paused = Example.paused;
-        //        //Events
-        //        Clone.Model3D = Example.Model3D;
+        public static Entity CloneEntity(Entity Example, Vector2 Position)
+        {
+            Entity Clone = new Entity(Example.ID, Example.name, Example.TextureName, Example.MaxHealth);
+            {
+                Clone.Ractangles = Example.Ractangles;
+                Clone.position = Position;
+                Clone.Joints = Example.Joints;
+                Clone.collisionBox = new CollisionBox() { Size = Example.collisionBox.Size };
+                Clone.Animations = EntityAnimationService.CreateAnimations();
+                Clone.Sprites = Example.Sprites;
+                Clone.Texture = Example.Texture;
+                Clone.Fall_damage = Example.Fall_damage;
+                Clone.Mass = Example.Mass;
+                Clone.Fliped = Example.Fliped;
+                Clone.paused = Example.paused;
+                //Events
+                Clone.Model3D = Example.Model3D;
 
+                
+                Clone.Interaction = Example.Interaction;
+                Clone.Update = Example.Update;
 
-        //        Clone.Interaction = Example.Interaction;
-        //        Clone.Update = Example.Update;
-
-        //    }
-        //    return Clone;
-        //}
-
-        //public Entity CloneEntity(Entity Example, Vector2 Position, string Data)
-        //{
-        //    Entity Clone = new Entity(Example.ID, Example.name, Example.TextureName, Example.MaxHealth);
-        //    {
-        //        Clone.Ractangles = Example.Ractangles;
-        //        Clone.position = Position;
-        //        Clone.Joints = Example.Joints;
-        //        Clone.collisionBox = new CollisionBox() { Size = Example.collisionBox.Size };
-        //        Clone.Animations = Example.Animations;
-        //        Clone.Sprites = Example.Sprites;
-        //        Clone.Texture = Example.Texture;
-        //        Clone.Fall_damage = Example.Fall_damage;
-        //        Clone.Mass = Example.Mass;
-        //        Clone.Fliped = Example.Fliped;
-        //        Clone.paused = Example.paused;
-        //        Clone.Data = Data;
-        //        //Events
-
+            }
+            return Clone;
+        }
 
         public Entity CloneEntity(Entity Example, Vector2 Position, string Data)
         {
@@ -132,7 +112,7 @@ namespace MinecraftAlpha
                 Clone.position = Position;
                 Clone.Joints = Example.Joints;
                 Clone.collisionBox = new CollisionBox() { Size = Example.collisionBox.Size };
-                Clone.Animations = EntityAnimationService.CreateAnimations().FindAll(x => x.parent.ID == Example.ID);
+                Clone.Animations = Example.Animations;
                 Clone.Sprites = Example.Sprites;
                 Clone.Texture = Example.Texture;
                 Clone.Fall_damage = Example.Fall_damage;
@@ -142,208 +122,218 @@ namespace MinecraftAlpha
                 Clone.Data = Data;
                 //Events
 
-        //    }
-        //    return Clone;
-        //}
+                
+                Clone.Interaction = Example.Interaction;
+                Clone.Update = Example.Update;
+
+            }
+            return Clone;
+        }
 
 
-
-
-        //Animation handing
-        //public List<EntityAnimation> CurrentAnimations = new List<EntityAnimation>();
-        public List<EntityAnimation> PlayingAnimations = new List<EntityAnimation>();
+        public List<EntityAnimation> Animations = new List<EntityAnimation>();
         public bool paused = false;
         public bool Fliped = true;
-        public List<Vector4> Ractangles = new List<Vector4>();
-        public List<Joint> Joints = new List<Joint>(); // used to connect limbs together
-        public List<Sprite> Sprites = new List<Sprite>();
-        public Texture2D Texture = null;
-        public Sprite3D Model3D = null;
 
-        //Physics data
 
         //public List<PotionEffects> = new List<PotionEffects>()
         public string Data = ""; // armor, items, if Itemdrop ammount, 
-        
-        public CollisionBox collisionBox = new CollisionBox();
-
-        public Vector2 position { get; set; } = Vector2.One * 50;
-
-        public Velocity velocity = new Velocity();
-
-        public int Fall_damage = 0;
-
         public int Health;
-        
-        
-
-
-        
-        
-        
-        
-        
-
-
-        
-
-
-        
-        
-        
-
-        
-
-        
-
-        
-
-        //public static void CollisionEventCollision(Entity A,Entity B,Game1 game1)
-        //{
-        //    if (A.ID == -1 && B.name == "Player") // ItemDrop
-        //    {
-        //        if ((A.position - B.position).Length() > 1f)
-        //        {
-        //            A.velocity.velocity = (B.position - A.position) / 20;
-        //        }
-        //        int id = int.Parse(A.Data);
-
-        //        game1.Player.PickupItem(game1._blockManager.Blocks[id], 1, game1._userInterfaceManager.windows[0]);
-        //        A.Health = 0;
-        //    }
-        //}
-        //static public Entity GetentityAtPosition(Vector2 Pos, List<Entity> Entities)
-        //{
-        //    foreach (var entity in Entities)
-        //    {
-        //        Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
-        //        if (A.Contains((int)(Pos.X * 32), (int)(Pos.Y * 32)))
-        //        {
-        //           return entity;
-        //        }
-        //    }
-        //    return null;
-        //}
-        //public void ResetIframes()
-        //{
-        //    if (IFrame <= 0) return;
-        //    IFrame -= 0.1f;
-        //}
-        //public void DrawEntity(SpriteBatch SB, float BlockSize, Vector2 Cam)
-        //{
-
-        //    //SB.Begin();
-        //    //SB.Draw(Texture, BlockSize * position + Cam, null, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize SpriteEffects.None, 0f);
-
-        //    //SB.End();
-        //    if (this.Model3D != null)
-        //    {
-        //        this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18);
-        //        return;
-        //    }
-
-
-        //    foreach (Joint Joint in Joints)
-        //    {
-        //        Joint.B_Sprite.ParentOrianetation = Joint.A_Sprite.Orientation;
-        //        //Joint.A_Sprite.Joints.Add(Joint.A);
-        //        Joint.B_Sprite.Attachment = Joint.B;
-        //        Joint.B_Sprite.Parent = Joint.A;
-        //        Joint.B_Sprite.JointOrientation = MathF.PI / 180 * Joint.orientation;
-        //    }
-        //    foreach (Sprite s in Sprites)
-        //    {
-
-        //        s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped);
-
-        //    }
-        //}
-        //public bool CheckCollisionEntity(Entity entity)
-        //{
-        //    Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
-        //    Rectangle B = new Rectangle((int)(position.X * 32), (int)(position.Y * 32), (int)(collisionBox.Size.X * 32), (int)(collisionBox.Size.Y * 32));
-        //    if (A.Intersects(B))
-        //    {
-        //        //entity.velocity.velocity = (this.position - entity.position) / entity.Mass;
-
-                
-
-        //        return true; // invokes?
-        //    }
-        //    return false;
-        //}
-        //public void UpdateAnimation()
-        //{
-        //    if (Animations.Count < 0) return;
-        //    bool idle = true;
-        //    foreach (var anim in Animations)
-        //    {
-        //        if (!anim.Paused && anim.name != "idle")
-        //        {
-        //            idle = false;
-        //        }
-
-        //    }
-        //    if (idle)
-        //    {
-        //        Animations[0].ResetAnim();
-        //        return;
-        //    }
-
-
-        //    foreach (EntityAnimation anim in Animations)
-        //    {
-
-
-        //        anim.Update();
-        //    }
-        //}
-        //public void Attack(Entity entity)
-        //{
-        //    entity.Health -= 1;
-
-        //}
-
-
-
-
-
-    }
-
-    public class Mob //Reference for each mob
-    {
-
-        public Mob(int ID,string Name,string texturePath) 
-        {
-            ID = ID;
-            name = Name;
-            TextureName = texturePath;
-
-        
-        }
         public int MaxHealth;
         public int ID = 0;
-        public string BuiltData = "";
-        public string TextureName = "null";
-        public Texture2D Texture = null;
-        public string name = "_name";
-        public List<EntityAnimation> Animations = new List<EntityAnimation>();
-        public List<Vector4> Ractangles = new List<Vector4>();
+
+
+        public string name { get; set; } = "nullEntity";
         public List<Joint> Joints = new List<Joint>(); // used to connect limbs together
+        public Texture2D Texture; // Main texture where all the limbs will originate from!
+        public string TextureName = "null"; // Name of the texture to be loaded
+        public List<Vector4> Ractangles = new List<Vector4>();
         public List<Sprite> Sprites = new List<Sprite>();
         public Sprite3D Model3D = null;
         public CollisionBox collisionBox = new CollisionBox();
+
+
+        //public List<EntityAnimation> CurrentAnimations = new List<EntityAnimation>();
+
+
+        public Vector2 position { get; set; } = Vector2.One * 50;
+        public Velocity velocity = new Velocity();
+        public int Fall_damage = 0;
+        public float Mass = 1f;
         public float IFrame = 3f; // Invincibility Frames
         public bool CanDamage = true;
-        public float Mass = 1f;
 
+        public Entity(int id, string Name, string TextureName, int Health)
+        {
+            ID = id;
+            name = Name;
+            this.TextureName = TextureName;
+            this.Health = Health;
+            this.MaxHealth = Health;
 
+        } // Constructor
+
+        
 
         public Event Interaction;
 
         public Event Update;
 
         public Event Damaged;
+
+        public static void CollisionEventCollision(Entity A,Entity B,Game1 game1)
+        {
+            if (A.ID == -1 && B.name == "Player") // ItemDrop
+            {
+                if ((A.position - B.position).Length() > 1f)
+                {
+                    A.velocity.velocity = (B.position - A.position) / 20;
+                }
+                int id = int.Parse(A.Data);
+
+                game1.Player.PickupItem(game1._blockManager.Blocks[id], 1, game1._userInterfaceManager.windows[0]);
+                A.Health = 0;
+            }
+        }
+
+        static public Entity GetentityAtPosition(Vector2 Pos, List<Entity> Entities)
+        {
+            foreach (var entity in Entities)
+            {
+                Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
+                if (A.Contains((int)(Pos.X * 32), (int)(Pos.Y * 32)))
+                {
+                   return entity;
+                }
+            }
+            return null;
+        }
+        public void ResetIframes()
+        {
+            if (IFrame <= 0) return;
+            IFrame -= 0.1f;
+        }
+
+        public void DrawEntity(SpriteBatch SB, float BlockSize, Vector2 Cam)
+        {
+
+            //SB.Begin();
+            //SB.Draw(Texture, BlockSize * position + Cam, null, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize SpriteEffects.None, 0f);
+
+            //SB.End();
+            if (this.Model3D != null)
+            {
+                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18);
+                return;
+            }
+
+
+            foreach (Joint Joint in Joints)
+            {
+                Joint.B_Sprite.ParentOrianetation = Joint.A_Sprite.Orientation;
+                //Joint.A_Sprite.Joints.Add(Joint.A);
+                Joint.B_Sprite.Attachment = Joint.B;
+                Joint.B_Sprite.Parent = Joint.A;
+                Joint.B_Sprite.JointOrientation = MathF.PI / 180 * Joint.orientation;
+            }
+            foreach (Sprite s in Sprites)
+            {
+
+                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped);
+
+            }
+        }
+        public static List<Entity> LoadEntites(Game1 game1)
+        {
+            int id = 0;
+            List<Entity> Entities = new List<Entity>()
+            {
+                new Entity(id++,"Player","steve",20)
+                {
+                    Ractangles = new List<Vector4>()
+                    {
+                        // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
+                       
+                        new Vector4(12,8,4,12), // Right Arm
+                        new Vector4(24,8,4,12),// Body
+                        new Vector4(8,0,8,8), // Head
+                        new Vector4(12,12,4,12), // Left Arm
+                        new Vector4(12,44,4,12), // Right Leg
+                        new Vector4(12,32,4,12) // Left Leg
+                    },
+
+
+
+
+
+                },
+                new Entity(-1,"Item","null",100)
+                {
+
+                    position = Vector2.Zero,
+                    collisionBox = new CollisionBox() { Size = new Vector2(2f,2f) },
+
+                }
+
+
+
+        };
+
+            return Entities;
+
+
+
+        }
+        public bool CheckCollisionEntity(Entity entity)
+        {
+            Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
+            Rectangle B = new Rectangle((int)(position.X * 32), (int)(position.Y * 32), (int)(collisionBox.Size.X * 32), (int)(collisionBox.Size.Y * 32));
+            if (A.Intersects(B))
+            {
+                //entity.velocity.velocity = (this.position - entity.position) / entity.Mass;
+
+                
+
+                return true; // invokes?
+            }
+            return false;
+        }
+        public void UpdateAnimation()
+        {
+            if (Animations.Count < 0) return;
+            bool idle = true;
+            foreach (var anim in Animations)
+            {
+                if (!anim.Paused && anim.name != "idle")
+                {
+                    idle = false;
+                }
+
+            }
+            if (idle)
+            {
+                Animations[0].ResetAnim();
+                return;
+            }
+
+
+            foreach (EntityAnimation anim in Animations)
+            {
+
+
+                anim.Update();
+            }
+        }
+        public void Attack(Entity entity)
+        {
+            entity.Health -= 1;
+
+        }
+
+
+
+
+
     }
 
     public class Velocity
