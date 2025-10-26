@@ -42,7 +42,7 @@ namespace MinecraftAlpha
         
         public void DrawUI(SpriteBatch spriteBatch, ContentManager Contnet)
         {
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp,effect: Contnet.Load<Effect>("Shaders/Shader"));
             //foreach (var Frame in Frames)
             //{
             //    if (Frame.Window == null) continue;

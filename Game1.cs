@@ -393,7 +393,7 @@ public class Game1 : Game
 
             if (entity.velocity.Gravity.Y > 0.3f)
             {
-                entity.Fall_damage = (int)(entity.velocity.Gravity.Y * 24);
+                entity.Fall_damage = (int)(entity.velocity.Gravity.Y * 3);
             }
 
             if (entity.collisionBox.Bottom)
