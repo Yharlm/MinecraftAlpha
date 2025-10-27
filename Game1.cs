@@ -104,6 +104,20 @@ public class Game1 : Game
             }
         }
 
+        Generation gen = new gen(102);
+
+        var Map = gen.Static(5,120);
+        Map = gen.Perlin();
+        
+        int Height = 14
+        for(int i = 0;i< Map.getlength(1);i++)
+        {
+            float Y = Map[0,i];
+            PlaceBlock(x, Height* Y,dirt);
+            place blocks Downwards from here
+        }
+
+        
 
         // World generation
 
