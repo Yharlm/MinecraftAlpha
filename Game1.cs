@@ -106,6 +106,10 @@ public class Game1 : Game
 
 
         // World generation
+
+        
+        
+        /*
         int t = 100;
         int x = 0;
         while (x < World.GetLength(1))
@@ -176,7 +180,7 @@ public class Game1 : Game
 
         }
 
-
+        */
         base.Initialize();
     }
 
