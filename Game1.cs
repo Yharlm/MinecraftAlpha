@@ -104,17 +104,18 @@ public class Game1 : Game
             }
         }
 
-        Generation gen = new gen(102);
-
-        var Map = gen.Static(5,120);
-        Map = gen.Perlin();
         
-        int Height = 14
-        for(int i = 0;i< Map.getlength(1);i++)
+
+        var Map = Generation.GenerateWhiteNoise(250,5,0,0);
+        Map = Generation.GeneratePerlinNoise(Map, 6, 1f);
+        Generation.SumMaps(Map, Generation.GenerateFlat(250, 5, 0.2f), 0.5f);
+        Map = Generation.GenerateFlat(250, 5, 0.2f);
+        int Height = 20;
+        for(int i = 0;i< Map.GetLength(1);i++)
         {
-            float Y = Map[0,i];
-            PlaceBlock(x, Height* Y,dirt);
-            place blocks Downwards from here
+            float Y = (Map[0,i]) * Height + 30;
+            World[(int)Y, i].ID = 2;
+            //place blocks Downwards from here
         }
 
         
@@ -716,7 +717,7 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.cam.position.ToString(), Vector2.One, Color.Wheat);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.cam.position/32f).ToString(), Vector2.One, Color.Wheat);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
         _spriteBatch.End();

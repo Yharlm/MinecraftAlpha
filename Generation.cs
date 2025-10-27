@@ -140,7 +140,7 @@ namespace MinecraftAlpha
 
 
 
-        static float[,] GenerateFlat(int Width, int Height, float peak)
+        public static float[,] GenerateFlat(int Width, int Height, float peak)
         {
             float[,] Noise = new float[Height, Width];
 
@@ -158,7 +158,7 @@ namespace MinecraftAlpha
             return Noise;
         }
 
-        static float[,] GenerateWhiteNoise(int Width, int Height, int seed, int Area)
+        public static float[,] GenerateWhiteNoise(int Width, int Height, int seed, int Area)
         {
             float[,] Noise = new float[Height, Width];
             Random random = new Random(seed);
@@ -179,12 +179,12 @@ namespace MinecraftAlpha
             return Noise;
         }
 
-        private static float Lerp(float x0, float x1, float alpha)
+        public static float Lerp(float x0, float x1, float alpha)
         {
             return x0 * (1 - alpha) + alpha * x1;
         }
 
-        static float[,] GenerateSmoothNoise(float[,] Grid, int octave)
+        public static float[,] GenerateSmoothNoise(float[,] Grid, int octave)
         {
 
 
@@ -220,7 +220,7 @@ namespace MinecraftAlpha
             return smoothed;
         }
 
-        static float[,] GeneratePerlinNoise(float[,] Base, int octaves, float persistance)
+        public static float[,] GeneratePerlinNoise(float[,] Base, int octaves, float persistance)
         {
             int width = Base.GetLength(1);
             int height = Base.GetLength(0);
@@ -265,7 +265,7 @@ namespace MinecraftAlpha
 
         }
 
-        static void SumMaps(float[,] baseMap, float[,] addedMap, float weight)
+        public static void SumMaps(float[,] baseMap, float[,] addedMap, float weight)
         {
             for (int i = 0; i < baseMap.GetLength(0); i++)
             {
@@ -275,7 +275,7 @@ namespace MinecraftAlpha
                 }
             }
         }
-        static void SubMaps(float[,] baseMap, float[,] addedMap, float weight)
+        public static void SubMaps(float[,] baseMap, float[,] addedMap, float weight)
         {
             for (int i = 0; i < baseMap.GetLength(0); i++)
             {
@@ -286,7 +286,7 @@ namespace MinecraftAlpha
             }
         }
 
-        static void Mask(float[,] baseMap, float[,] Mask, float weight)
+        public static void Mask(float[,] baseMap, float[,] Mask, float weight)
         {
             for (int i = 0; i < baseMap.GetLength(0); i++)
             {
