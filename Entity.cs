@@ -14,6 +14,12 @@ namespace MinecraftAlpha
         public Sprite B_Sprite;
         public Vector2 A = Vector2.Zero;
         public Vector2 B = Vector2.Zero;
+
+
+
+
+        public int A_Index = -1;
+        public int B_Index = -1;
         public Joint() { }
         public Joint(Sprite a, Sprite b)
         {
@@ -101,8 +107,8 @@ namespace MinecraftAlpha
                 Clone.position = Position;
                 Clone.Joints = Example.Joints;
                 Clone.collisionBox = new CollisionBox();
-                Clone.Animations = EntityAnimationService.CreateAnimations(Example);
-                Clone.Sprites = Example.Sprites;
+                Clone.Animations = Example.Animations;
+               
                 Clone.Texture = Example.Texture;
                 Clone.Fall_damage = Example.Fall_damage;
                 Clone.Mass = Example.Mass;
@@ -116,7 +122,7 @@ namespace MinecraftAlpha
                 Clone.Update = Example.Update;
 
             }
-            
+            Clone.Sprites = Sprite.LoadSprites(Example);
             return Clone;
         }
 
@@ -259,47 +265,7 @@ namespace MinecraftAlpha
 
             }
         }
-        public static List<Entity> LoadEntites(Game1 game1)
-        {
-            int id = 0;
-            List<Entity> Entities = new List<Entity>()
-            {
-                new Entity(id++,"Player","steve",20)
-                {
-                    Ractangles = new List<Vector4>()
-                    {
-                        // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
-                       
-                        new Vector4(12,8,4,12), // Right Arm
-                        new Vector4(24,8,4,12),// Body
-                        new Vector4(8,0,8,8), // Head
-                        new Vector4(12,12,4,12), // Left Arm
-                        new Vector4(12,44,4,12), // Right Leg
-                        new Vector4(12,32,4,12) // Left Leg
-                    },
-
-
-
-
-
-                },
-                new Entity(-1,"Item","null",100)
-                {
-
-                    position = Vector2.Zero,
-                    collisionBox = new CollisionBox() { Size = new Vector2(2f,2f) },
-
-                }
-
-
-
-        };
-
-            return Entities;
-
-
-
-        }
+        
         public bool CheckCollisionEntity(Entity entity)
         {
             Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
@@ -333,12 +299,7 @@ namespace MinecraftAlpha
             }
 
 
-            foreach (EntityAnimation anim in Animations)
-            {
-
-
-                anim.Update();
-            }
+            
         }
         public void Attack(Entity entity)
         {

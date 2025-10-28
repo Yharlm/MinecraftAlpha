@@ -18,18 +18,19 @@ namespace MinecraftAlpha
 
         }
 
-        public void Play(EntityAnimation Anim)
+        public void Play(EntityAnimation Anim,Entity parent)
         {
             if (!entityAnimations.Contains(Anim))
             {
                 entityAnimations.Add(Anim); 
+                Anim.parent = parent;
                 Anim.Paused = false;
                 Anim.Time = 0;
             }
 
 
         }
-        public static List<EntityAnimation> CreateAnimations(Entity Example)
+        public static List<EntityAnimation> PlayerAnim()
         {
             var
             entityAnimations = new List<EntityAnimation>
@@ -83,7 +84,7 @@ namespace MinecraftAlpha
 
 
             };
-            foreach (var a in entityAnimations) a.parent = Example;
+            
 
 
             return entityAnimations;

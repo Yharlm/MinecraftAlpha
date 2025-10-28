@@ -43,7 +43,7 @@ public class Game1 : Game
 
 
 
-
+    
 
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
@@ -66,7 +66,7 @@ public class Game1 : Game
     public TileGrid[,] Foreground { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
     public TileGrid[,] World { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
 
-
+    
 
 
 
@@ -91,115 +91,127 @@ public class Game1 : Game
     protected override void Initialize()
     {
         _particleSystem.Content = Content;
+
+
+
         Random random = new Random();
+
+
+
+
         // TODO: Add your initialization logic here
         Entities = _entityManager.entities;
         BlockTypes = _blockManager.Blocks;
-        for (int i = 0; i < WorldSizeY; i++)
+
+
+
         {
-            for (int j = 0; j < WorldSizeX; j++)
+            for (int i = 0; i < WorldSizeY; i++)
             {
-                World[j, i] = new TileGrid() { pos = new Vector2(j * 32, i * 32) };
-                BackGround[j, i] = new TileGrid();
-            }
-        }
-
-        
-
-        var Map = Generation.GenerateWhiteNoise(250,5,0,0);
-        Map = Generation.GeneratePerlinNoise(Map, 6, 1f);
-        Generation.SumMaps(Map, Generation.GenerateFlat(250, 5, 0.2f), 0.5f);
-        Map = Generation.GenerateFlat(250, 5, 0.2f);
-        int Height = 20;
-        for(int i = 0;i< Map.GetLength(1);i++)
-        {
-            float Y = (Map[0,i]) * Height + 30;
-            World[(int)Y, i].ID = 2;
-            //place blocks Downwards from here
-        }
-
-        
-
-        // World generation
-
-        
-        
-        /*
-        int t = 100;
-        int x = 0;
-        while (x < World.GetLength(1))
-        {
-
-
-
-            int y = random.Next(-1, 2);
-            t += y;
-            int length = random.Next(1, 7);
-            while (length > 0 && x < World.GetLength(1))
-            {
-                int DirtLayer = random.Next(3, 5);
-                int StoneLayer = 30;
-
-
-                while (StoneLayer > 0)
+                for (int j = 0; j < WorldSizeX; j++)
                 {
-                    World[t + StoneLayer, x].ID = 3; // Dirt
-                    StoneLayer--;
+                    World[j, i] = new TileGrid() { pos = new Vector2(j * 32, i * 32) };
+                    BackGround[j, i] = new TileGrid();
                 }
-
-                World[t, x].ID = 2; // Dirt
-                while (DirtLayer > 0)
-                {
-                    World[t + DirtLayer, x].ID = 1; // Dirt
-                    DirtLayer--;
-                }
-                x++;
-                length--;
             }
 
-        }
 
 
-        // BackGround generation
-        t = 95;
-        x = 0;
-        while (x < BackGround.GetLength(1))
-        {
-
-
-
-            int y = random.Next(-1, 2);
-            t += y;
-            int length = random.Next(1, 9);
-            while (length > 0 && x < BackGround.GetLength(1))
+            var Map = Generation.GenerateWhiteNoise(250, 5, 0, 0);
+            Map = Generation.GeneratePerlinNoise(Map, 6, 1f);
+            Generation.SumMaps(Map, Generation.GenerateFlat(250, 5, 0.2f), 0.5f);
+            Map = Generation.GenerateFlat(250, 5, 0.2f);
+            int Height = 20;
+            for (int i = 0; i < Map.GetLength(1); i++)
             {
-                int DirtLayer = random.Next(3, 5);
-                int StoneLayer = 30;
-
-
-                while (StoneLayer > 0)
-                {
-                    BackGround[t + StoneLayer, x].ID = 3; // Dirt
-                    StoneLayer--;
-                }
-
-                BackGround[t, x].ID = 2; // Dirt
-                while (DirtLayer > 0)
-                {
-                    BackGround[t + DirtLayer, x].ID = 1; // Dirt
-                    DirtLayer--;
-                }
-                x++;
-                length--;
+                float Y = (Map[0, i]) * Height + 30;
+                World[(int)Y, i].ID = 2;
+                //place blocks Downwards from here
             }
 
-        }
 
-        */
+
+            // World generation
+
+
+
+            /*
+            int t = 100;
+            int x = 0;
+            while (x < World.GetLength(1))
+            {
+
+
+
+                int y = random.Next(-1, 2);
+                t += y;
+                int length = random.Next(1, 7);
+                while (length > 0 && x < World.GetLength(1))
+                {
+                    int DirtLayer = random.Next(3, 5);
+                    int StoneLayer = 30;
+
+
+                    while (StoneLayer > 0)
+                    {
+                        World[t + StoneLayer, x].ID = 3; // Dirt
+                        StoneLayer--;
+                    }
+
+                    World[t, x].ID = 2; // Dirt
+                    while (DirtLayer > 0)
+                    {
+                        World[t + DirtLayer, x].ID = 1; // Dirt
+                        DirtLayer--;
+                    }
+                    x++;
+                    length--;
+                }
+
+            }
+
+
+            // BackGround generation
+            t = 95;
+            x = 0;
+            while (x < BackGround.GetLength(1))
+            {
+
+
+
+                int y = random.Next(-1, 2);
+                t += y;
+                int length = random.Next(1, 9);
+                while (length > 0 && x < BackGround.GetLength(1))
+                {
+                    int DirtLayer = random.Next(3, 5);
+                    int StoneLayer = 30;
+
+
+                    while (StoneLayer > 0)
+                    {
+                        BackGround[t + StoneLayer, x].ID = 3; // Dirt
+                        StoneLayer--;
+                    }
+
+                    BackGround[t, x].ID = 2; // Dirt
+                    while (DirtLayer > 0)
+                    {
+                        BackGround[t + DirtLayer, x].ID = 1; // Dirt
+                        DirtLayer--;
+                    }
+                    x++;
+                    length--;
+                }
+
+            }
+
+            */
+        }
         base.Initialize();
     }
 
-    //public UIFrame EFrame = new UIFrame();
+    
 
 
     protected override void LoadContent()
@@ -217,9 +229,12 @@ public class Game1 : Game
 
 
         //_userInterfaceManager.ItemSlots = UserInterfaceManager.LoadItemSlots(_blockManager.Blocks);
-        _entityManager.LoadEntities(this);
+        _entityManager.entities = EntityManager.LoadEntites(this);
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
+
+        Player.Plr = _entityManager.entities[0];
+
 
         _userInterfaceManager.LoadTextures(Content);
         
@@ -229,7 +244,10 @@ public class Game1 : Game
 
         _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
         //Making player
-        Player.Plr = Entity.CloneEntity(_entityManager.entities[0], new Vector2(40,30));
+        Player.Plr = Entity.CloneEntity(Player.Plr, new Vector2(40,30));
+
+
+
         _entityManager.Workspace.Add(Player.Plr);
 
 
@@ -381,15 +399,18 @@ public class Game1 : Game
 
         WorldMousePos = (MousePosition - Player.cam.position) / BlockSize;
         _blockManager.BlockSize = BlockSize;
-        foreach(var Animation in _entityAnimationService.entityAnimations)
-        {
-            Animation.Update();
-        }
+        
         _entityAnimationService.entityAnimations.RemoveAll(x=> x.Time >= x.duration);
         foreach (var entity in _entityManager.Workspace)
         {
             //entity.collisionBox.CheckCollision(entity,World);
-
+            foreach (var Animation in _entityAnimationService.entityAnimations)
+            {
+                if(entity == Animation.parent)
+                {
+                    Animation.Update();
+                }
+            }
             foreach (Entity entity1 in _entityManager.Workspace)
             {
                 if (entity == entity1) continue;
@@ -521,7 +542,7 @@ public class Game1 : Game
             }
             if (!_userInterfaceManager.Clicked)
             {
-                _entityAnimationService.Play(PLR.Animations[2]);
+                _entityAnimationService.Play(PLR.Animations[2],PLR);
                 int BlockX = (int)(WorldMousePos.X);
                 int BlockY = (int)(WorldMousePos.Y);
 
@@ -630,7 +651,7 @@ public class Game1 : Game
             //InventoryOpen = !InventoryOpen;
             Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
 
-            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[0], WorldMousePos));
+            _entityManager.Workspace.Add(Entity.CloneEntity(PLR, WorldMousePos));
 
         }
         if (keyboardState.IsKeyDown(Keys.T))

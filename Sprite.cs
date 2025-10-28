@@ -15,21 +15,7 @@ namespace MinecraftAlpha
     {
         public List<Sprite> Sprites = new List<Sprite>();
         public List<Sprite3D> Sprites3D = new List<Sprite3D>();
-        public SpriteManager()
-        {
-            Sprites = LoadSprites();
-        }
-        public static List<Sprite> LoadSprites()
-        {
-            var list = new List<Sprite>();
-            {
-                new Sprite()
-                {
-                    Layer = 0f
-                };
-            }
-            return list;
-        }
+        
     }
     // animation thing but also can be used for Sprite Selection
     public class Sprite3D
@@ -281,12 +267,12 @@ namespace MinecraftAlpha
             spriteBatch.End();
         }
 
-        public static void LoadSprites(ContentManager Content, Entity mob)
+        public static List<Sprite> LoadSprites(Entity mob)
         {
+            List < Sprite > sprites = new List<Sprite>();
             if (mob.TextureName != "null" )
             {
-                var texture = Content.Load<Texture2D>(mob.TextureName);
-                mob.Texture = texture;
+                var texture = mob.Texture;
                 // adds a new Sprite for each limb,
                 foreach (var R in mob.Ractangles)
                 {
@@ -298,10 +284,11 @@ namespace MinecraftAlpha
                         Margin = Ractangle,
                         texture = texture
                     };
-                    mob.Sprites.Add(sprite);
+                    sprites.Add(sprite);
                 }
 
             }
+            return sprites;
 
 
         }
