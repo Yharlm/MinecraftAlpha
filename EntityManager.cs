@@ -159,11 +159,21 @@ namespace MinecraftAlpha
             {
                 foreach(var joint in entity.Joints)
                 {
+                    
                     joint.A_Sprite = entity.Sprites[joint.A_Index];
                     joint.B_Sprite = entity.Sprites[joint.B_Index];
                 }
             }
 
+        }
+        public static void LoadJoins(Entity entity)
+        {
+            foreach (var joint in entity.Joints)
+            {
+
+                joint.A_Sprite = entity.Sprites[joint.A_Index];
+                joint.B_Sprite = entity.Sprites[joint.B_Index];
+            }
         }
     }
 

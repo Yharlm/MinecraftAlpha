@@ -123,6 +123,7 @@ namespace MinecraftAlpha
 
             }
             Clone.Sprites = Sprite.LoadSprites(Example);
+            EntityManager.LoadJoins(Clone);
             return Clone;
         }
 

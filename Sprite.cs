@@ -279,7 +279,7 @@ namespace MinecraftAlpha
                     var Ractangle = new Rectangle((int)R.X, (int)R.Y, (int)R.Z, (int)R.W);
                     Sprite sprite = new Sprite()
                     {
-
+                        
                         Layer = mob.Ractangles.IndexOf(R),
                         Margin = Ractangle,
                         texture = texture

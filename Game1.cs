@@ -651,7 +651,7 @@ public class Game1 : Game
             //InventoryOpen = !InventoryOpen;
             Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
 
-            _entityManager.Workspace.Add(Entity.CloneEntity(PLR, WorldMousePos));
+            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[0], WorldMousePos));
 
         }
         if (keyboardState.IsKeyDown(Keys.T))
