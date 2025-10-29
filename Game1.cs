@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
@@ -119,13 +121,16 @@ public class Game1 : Game
 
             var Map = Generation.GenerateWhiteNoise(250, 5, 0, 0);
             Map = Generation.GeneratePerlinNoise(Map, 6, 1f);
-            Generation.SumMaps(Map, Generation.GenerateFlat(250, 5, 0.2f), 0.5f);
-            Map = Generation.GenerateFlat(250, 5, 0.2f);
-            int Height = 20;
+            Generation.SumMaps(Map, Generation.GenerateFlat(250, 5, 0.2f), 0.7f);
+            Map = Generation.GenerateSmoothNoise(Map, 4);
+            //Map = Generation.GenerateFlat(250, 5, 0.2f);
+            int Height = 17;
             for (int i = 0; i < Map.GetLength(1); i++)
             {
-                float Y = (Map[0, i]) * Height + 30;
+                float Y = (Map[0, i]) * Height + 50;
                 World[(int)Y, i].ID = 2;
+                World[(int)Y+1, i].ID = 1;
+                World[(int)Y+2, i].ID = 1;
                 //place blocks Downwards from here
             }
 
@@ -233,7 +238,7 @@ public class Game1 : Game
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
 
-        Player.Plr = _entityManager.entities[0];
+        
 
 
         _userInterfaceManager.LoadTextures(Content);
@@ -244,7 +249,7 @@ public class Game1 : Game
 
         _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
         //Making player
-        Player.Plr = Entity.CloneEntity(Player.Plr, new Vector2(40,30));
+        Player.Plr = Entity.CloneEntity(_entityManager.entities[0], new Vector2(40,30));
 
 
 
@@ -399,18 +404,26 @@ public class Game1 : Game
 
         WorldMousePos = (MousePosition - Player.cam.position) / BlockSize;
         _blockManager.BlockSize = BlockSize;
-        
+        foreach (var Animation in _entityAnimationService.entityAnimations)
+        {
+            foreach (var entity in _entityManager.Workspace)
+            {
+                if (entity == Animation.parent)
+                {
+
+                }
+            }
+
+                
+            
+        }
+
+
         _entityAnimationService.entityAnimations.RemoveAll(x=> x.Time >= x.duration);
         foreach (var entity in _entityManager.Workspace)
         {
             //entity.collisionBox.CheckCollision(entity,World);
-            foreach (var Animation in _entityAnimationService.entityAnimations)
-            {
-                if(entity == Animation.parent)
-                {
-                    Animation.Update();
-                }
-            }
+            
             foreach (Entity entity1 in _entityManager.Workspace)
             {
                 if (entity == entity1) continue;

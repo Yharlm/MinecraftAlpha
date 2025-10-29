@@ -173,6 +173,8 @@ namespace MinecraftAlpha
 
                 joint.A_Sprite = entity.Sprites[joint.A_Index];
                 joint.B_Sprite = entity.Sprites[joint.B_Index];
+                joint.B_Sprite.Parent = joint.A;
+                joint.B_Sprite.Attachment = joint.B;
             }
         }
     }

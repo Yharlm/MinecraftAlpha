@@ -5,28 +5,32 @@ using System.Collections.Generic;
 
 namespace MinecraftAlpha
 {
+    public class AnimateEvent
+    {
+        public Entity parent;
+        public int id;
+    }
+
     public class EntityAnimationService()
     {
 
-        public List<EntityAnimation> entityAnimations = new List<EntityAnimation>();
-        public void LoadAnimations(List<Entity> entityList)
-        {
-            foreach (Entity entity in entityList)
-            {
-                entity.Animations = ReturnWhereID(entityList.IndexOf(entity), entity);
-            }
+        public List<AnimateEvent> entityAnimations = new List<AnimateEvent>();
+        
 
-        }
-
-        public void Play(EntityAnimation Anim,Entity parent)
+        public void Play(int ID,Entity parent)
         {
-            if (!entityAnimations.Contains(Anim))
+            var AnimEv = new AnimateEvent()
             {
-                entityAnimations.Add(Anim); 
-                Anim.parent = parent;
-                Anim.Paused = false;
-                Anim.Time = 0;
+                parent = parent,
+                id = ID
+
+            };
+            if (!entityAnimations.Contains(AnimEv))
+            {
+                entityAnimations.Add(AnimEv);
             }
+                
+            
 
 
         }
@@ -92,17 +96,7 @@ namespace MinecraftAlpha
 
 
         }
-        public List<EntityAnimation> ReturnWhereID(int ID,Entity parent)
-        {
-            List<EntityAnimation> list = new List<EntityAnimation>();
-            foreach (var entity in entityAnimations)
-            {
-                if (entity.ID == ID || ID == -1) // -1 is universal for every mob to be able to play it
-                    entity.parent = parent; list.Add(entity);
-
-            }
-            return list;
-        }
+        
     }
     
 }
@@ -194,6 +188,15 @@ public class EntityAnimation
         }
         return Distance;
 
+    }
+
+    public static List<EntityAnimation> LoadAnimation(Entity parent, List<EntityAnimation> Newlist)
+    {
+        foreach (var Anim in Newlist)
+        {
+            Anim.parent = parent;
+        }
+        return Newlist;
     }
 
 

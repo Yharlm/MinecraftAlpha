@@ -207,7 +207,7 @@ namespace MinecraftAlpha
     {
         public float Layer = 0f;
 
-        public List<Vector2> Joints = new List<Vector2>();
+        //public List<Vector2> Joints = new List<Vector2>();
         public Rectangle Margin;
         public Texture2D texture;
 

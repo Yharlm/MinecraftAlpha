@@ -107,7 +107,7 @@ namespace MinecraftAlpha
                 Clone.position = Position;
                 Clone.Joints = Example.Joints;
                 Clone.collisionBox = new CollisionBox();
-                Clone.Animations = Example.Animations;
+                Clone.Animations = EntityAnimation.LoadAnimation(Clone,Example.Animations);
                
                 Clone.Texture = Example.Texture;
                 Clone.Fall_damage = Example.Fall_damage;
@@ -122,6 +122,7 @@ namespace MinecraftAlpha
                 Clone.Update = Example.Update;
 
             }
+
             Clone.Sprites = Sprite.LoadSprites(Example);
             EntityManager.LoadJoins(Clone);
             return Clone;
