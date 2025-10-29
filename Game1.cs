@@ -406,20 +406,18 @@ public class Game1 : Game
         _blockManager.BlockSize = BlockSize;
         foreach (var Animation in _entityAnimationService.entityAnimations)
         {
-            foreach (var entity in _entityManager.Workspace)
-            {
-                if (entity == Animation.parent)
-                {
+            var Entity = Animation.parent;
 
-                }
-            }
+            var anim = Entity.Animations[Animation.id];
+            anim.Update();
+           
 
                 
             
         }
 
 
-        _entityAnimationService.entityAnimations.RemoveAll(x=> x.Time >= x.duration);
+        _entityAnimationService.entityAnimations.RemoveAll(x=> x.parent.Animations[x.id].Time<x.parent.Animations[x.id].duration);
         foreach (var entity in _entityManager.Workspace)
         {
             //entity.collisionBox.CheckCollision(entity,World);
@@ -555,7 +553,7 @@ public class Game1 : Game
             }
             if (!_userInterfaceManager.Clicked)
             {
-                _entityAnimationService.Play(PLR.Animations[2],PLR);
+                _entityAnimationService.Play(2,PLR);
                 int BlockX = (int)(WorldMousePos.X);
                 int BlockY = (int)(WorldMousePos.Y);
 
