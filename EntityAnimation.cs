@@ -141,10 +141,10 @@ public class EntityAnimation
     public float Time = 0f;
     public void Update()
     {
-        //if (Paused)
-        //{
-        //    return;
-        //}
+        if (Paused)
+        {
+            return;
+        }
         Time += 0.1f;
         foreach (var frame in frames)
         {

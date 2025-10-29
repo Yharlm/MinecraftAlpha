@@ -105,7 +105,7 @@ namespace MinecraftAlpha
                 Clone.ID = Example.ID;
                 Clone.Ractangles = Example.Ractangles;
                 Clone.position = Position;
-                Clone.Joints = Example.Joints;
+                //Clone.Joints = Example.Joints;
                 Clone.collisionBox = new CollisionBox();
                 Clone.Animations = EntityAnimation.LoadAnimation(Clone,Example.Animations);
                
@@ -124,7 +124,7 @@ namespace MinecraftAlpha
             }
 
             Clone.Sprites = Sprite.LoadSprites(Example);
-            EntityManager.LoadJoins(Clone);
+            EntityManager.LoadJoins(Example,Clone);
             return Clone;
         }
 

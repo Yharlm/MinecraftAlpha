@@ -410,10 +410,10 @@ public class Game1 : Game
 
             var anim = Entity.Animations[Animation.id];
             anim.Update();
-           
 
-                
-            
+
+
+
         }
 
 
@@ -649,14 +649,14 @@ public class Game1 : Game
             BlockSize = oldBlockSize - zoomScale;
             Player.cam.position = screenCenter - worldPos * (oldBlockSize - zoomScale);
         }
-        //if (keyboardState.IsKeyDown(Keys.E))
-        //{
-        //    //InventoryOpen = !InventoryOpen;
-        //    _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
-        //    _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
+        if (keyboardState.IsKeyDown(Keys.E))
+        {
+            //InventoryOpen = !InventoryOpen;
+            _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
+            _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
 
 
-        //}
+        }
         if (keyboardState.IsKeyDown(Keys.F))
         {
             //InventoryOpen = !InventoryOpen;
@@ -678,10 +678,7 @@ public class Game1 : Game
         }
         if (keyboardState.IsKeyDown(Keys.H))
         {
-            //InventoryOpen = !InventoryOpen;
-            //Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
-
-            //_entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[1], WorldMousePos));
+            _entityManager.Workspace[0].Joints[1].orientation += 10f;
 
         }
         if (keyboardState.IsKeyDown(Keys.B))

@@ -166,15 +166,25 @@ namespace MinecraftAlpha
             }
 
         }
-        public static void LoadJoins(Entity entity)
+        public static void LoadJoins(Entity example,Entity clone)
         {
-            foreach (var joint in entity.Joints)
+            for (var i = 0; i < example.Joints.Count; i++)
             {
+                var Ex = example.Joints[i];
+                var Cl = new Joint()
+                { 
+                    A_Index = Ex.A_Index,
+                    B_Index = Ex.B_Index,
+                    A = Ex.A,
+                    B = Ex.B,
+                    A_Sprite = clone.Sprites[Ex.A_Index],
+                    B_Sprite = clone.Sprites[Ex.B_Index],
 
-                joint.A_Sprite = entity.Sprites[joint.A_Index];
-                joint.B_Sprite = entity.Sprites[joint.B_Index];
-                joint.B_Sprite.Parent = joint.A;
-                joint.B_Sprite.Attachment = joint.B;
+                };
+                clone.Joints.Add(Cl);
+
+
+
             }
         }
     }
