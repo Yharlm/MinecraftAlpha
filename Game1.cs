@@ -518,7 +518,8 @@ public class Game1 : Game
             {
                 
                 
-                
+                _entityAnimationService.Play(2,PLR);
+                //add a attack part here instead
 
                 if (WorldMousePos.X > 0 && WorldMousePos.Y > 0)
                 {
@@ -569,7 +570,7 @@ public class Game1 : Game
             }
             if (!_userInterfaceManager.Clicked)
             {
-                _entityAnimationService.Play(2,PLR);
+                
                 int BlockX = (int)(WorldMousePos.X);
                 int BlockY = (int)(WorldMousePos.Y);
 
