@@ -409,15 +409,16 @@ public class Game1 : Game
             var Entity = Animation.parent;
 
             var anim = Entity.Animations[Animation.id];
+            anim.parent = Entity;
             anim.Update();
-
+            //Entity.Joints[1].orientation += 10;
 
 
 
         }
 
 
-        _entityAnimationService.entityAnimations.RemoveAll(x=> x.parent.Animations[x.id].Time<x.parent.Animations[x.id].duration);
+        _entityAnimationService.entityAnimations.RemoveAll(x=> x.parent.Animations[x.id].Paused);
         foreach (var entity in _entityManager.Workspace)
         {
             //entity.collisionBox.CheckCollision(entity,World);
@@ -438,6 +439,21 @@ public class Game1 : Game
                 continue;
             }
             //entity.UpdateAnimation();
+
+            bool Running = false;
+            if (float.Abs(entity.velocity.velocity.X) > 0.2)
+            {
+
+                Running = true;
+            }
+            
+            if(Running) _entityAnimationService.Play(1, entity);
+            else
+            {
+                _entityAnimationService.Stop(1, entity);
+            }
+
+
 
 
 
@@ -588,10 +604,19 @@ public class Game1 : Game
 
         //PLR.Animations[1].Paused = true;
 
+        
+
+
+
+
+
+
+
         foreach (var key in keyboard)
         {
             if (key == Keys.W)
             {
+                
                 plrVel += new Vector2(0, -12);
                 Player.Jumping = true;
             }
@@ -602,7 +627,8 @@ public class Game1 : Game
             }
             if (key == Keys.A)
             {
-                //PLR.Animations[1].Paused = false;
+                
+                
                 PLR.Fliped = true;
                 plrVel += new Vector2(-1, 0);
             }
@@ -624,6 +650,12 @@ public class Game1 : Game
                 Player.Jumping = false;
             }
         }
+
+
+
+
+
+
 
         // Get the center of the screen in screen coordinates
 

@@ -9,14 +9,32 @@ namespace MinecraftAlpha
     {
         public Entity parent;
         public int id;
+        
     }
 
     public class EntityAnimationService()
     {
 
         public List<AnimateEvent> entityAnimations = new List<AnimateEvent>();
-        
 
+        public void Stop(int ID, Entity parent)
+        {
+            var AnimEv = new AnimateEvent()
+            {
+                parent = parent,
+                id = ID
+
+            };
+            
+            if (!entityAnimations.Contains(AnimEv))
+            {
+                entityAnimations.Remove(AnimEv);
+            }
+
+
+
+
+        }
         public void Play(int ID,Entity parent)
         {
             var AnimEv = new AnimateEvent()
@@ -73,7 +91,7 @@ namespace MinecraftAlpha
                 })
                 {
                     duration =4f,
-                    Looped = true,
+                    Looped = false,
                 },
                 new EntityAnimation(0,"Swing",new List<Frame>()
                 {
@@ -151,11 +169,19 @@ public class EntityAnimation
             
             var Parent = parent.Joints[frame.Joint];
             float Distance = GetDistanceBetweenAngles(Parent.orientation, frame.Angle);
-            if (Looped && Time > duration )
+            if (Looped)
             {
-                //Playing = false;
                 Time = 0f;
+
             }
+            if (Time >= duration)
+            {
+                ResetAnim();
+                Paused = true ;
+                return;
+
+            }
+            
 
 
 
@@ -188,7 +214,7 @@ public class EntityAnimation
         {
             Distance = -360;
         }
-        return Distance;
+        return Distance%360;
 
     }
 
