@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
@@ -35,7 +33,11 @@ public class Game1 : Game
 
     //Chunks list
 
-    public List<Chunk> Chunks;
+    public List<Chunk> Chunks = new List<Chunk>()
+    {
+        new Chunk(0,0)
+
+    };
 
 
 
@@ -45,7 +47,8 @@ public class Game1 : Game
 
 
 
-    
+
+
 
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
@@ -68,7 +71,7 @@ public class Game1 : Game
     public TileGrid[,] Foreground { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
     public TileGrid[,] World { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
 
-    
+
 
 
 
@@ -93,6 +96,21 @@ public class Game1 : Game
     protected override void Initialize()
     {
         _particleSystem.Content = Content;
+
+        foreach (Chunk c in Chunks)
+        {
+            for (int i = 0; i < c.Tiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < c.Tiles.GetLength(1); j++)
+                {
+                    c.Tiles[i, j] = new TileGrid()
+                    { ID = j+i};
+
+                }
+            }
+        }
+        
+
 
 
 
@@ -129,8 +147,8 @@ public class Game1 : Game
             {
                 float Y = (Map[0, i]) * Height + 50;
                 World[(int)Y, i].ID = 2;
-                World[(int)Y+1, i].ID = 1;
-                World[(int)Y+2, i].ID = 1;
+                World[(int)Y + 1, i].ID = 1;
+                World[(int)Y + 2, i].ID = 1;
                 //place blocks Downwards from here
             }
 
@@ -216,7 +234,7 @@ public class Game1 : Game
         base.Initialize();
     }
 
-    
+
 
 
     protected override void LoadContent()
@@ -238,18 +256,18 @@ public class Game1 : Game
         _entityManager.LoadSprites(Content);
         _entityManager.LoadJoints();
 
-        
+
 
 
         _userInterfaceManager.LoadTextures(Content);
-        
+
         //_entityAnimationService.LoadAnimations(_entityManager.entities);
         BreakTexture = Content.Load<Texture2D>("UIelements/destroy_stage_0-Sheet");
 
 
         _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
         //Making player
-        Player.Plr = Entity.CloneEntity(_entityManager.entities[0], new Vector2(40,30));
+        Player.Plr = Entity.CloneEntity(_entityManager.entities[0], new Vector2(40, 30));
 
 
 
@@ -418,11 +436,11 @@ public class Game1 : Game
         }
 
 
-        _entityAnimationService.entityAnimations.RemoveAll(x=> x.parent.Animations[x.id].Paused);
+        _entityAnimationService.entityAnimations.RemoveAll(x => x.parent.Animations[x.id].Paused);
         foreach (var entity in _entityManager.Workspace)
         {
             //entity.collisionBox.CheckCollision(entity,World);
-            
+
             foreach (Entity entity1 in _entityManager.Workspace)
             {
                 if (entity == entity1) continue;
@@ -446,8 +464,8 @@ public class Game1 : Game
 
                 Running = true;
             }
-            
-            if(Running) _entityAnimationService.Play(1, entity);
+
+            if (Running) _entityAnimationService.Play(1, entity);
             else
             {
                 _entityAnimationService.Stop(1, entity);
@@ -494,7 +512,7 @@ public class Game1 : Game
 
 
 
-        
+
 
 
 
@@ -516,9 +534,9 @@ public class Game1 : Game
         {
             if (!_userInterfaceManager.Clicked)
             {
-                
-                
-                _entityAnimationService.Play(2,PLR);
+
+
+                _entityAnimationService.Play(2, PLR);
                 //add a attack part here instead
 
                 if (WorldMousePos.X > 0 && WorldMousePos.Y > 0)
@@ -570,7 +588,7 @@ public class Game1 : Game
             }
             if (!_userInterfaceManager.Clicked)
             {
-                
+
                 int BlockX = (int)(WorldMousePos.X);
                 int BlockY = (int)(WorldMousePos.Y);
 
@@ -605,7 +623,7 @@ public class Game1 : Game
 
         //PLR.Animations[1].Paused = true;
 
-        
+
 
 
 
@@ -617,7 +635,7 @@ public class Game1 : Game
         {
             if (key == Keys.W)
             {
-                
+
                 plrVel += new Vector2(0, -12);
                 Player.Jumping = true;
             }
@@ -628,8 +646,8 @@ public class Game1 : Game
             }
             if (key == Keys.A)
             {
-                
-                
+
+
                 PLR.Fliped = true;
                 plrVel += new Vector2(-1, 0);
             }
@@ -695,23 +713,24 @@ public class Game1 : Game
             //InventoryOpen = !InventoryOpen;
             Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
 
-            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[0], WorldMousePos));
 
         }
         if (keyboardState.IsKeyDown(Keys.T))
         {
             //InventoryOpen = !InventoryOpen;
 
-            var ent=Entity.GetentityAtPosition(WorldMousePos, _entityManager.Workspace);
+
+
+            var ent = Entity.GetentityAtPosition(WorldMousePos, _entityManager.Workspace);
             if (ent != null)
             {
-                ent.velocity.velocity = new Vector2(0, -35f);
+                ent.velocity.velocity = PLR.position - ent.position * 3;
                 ent.Health -= 3;
             }
         }
         if (keyboardState.IsKeyDown(Keys.H))
         {
-            _entityManager.Workspace[0].Joints[1].orientation += 10f;
+            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[0], WorldMousePos));
 
         }
         if (keyboardState.IsKeyDown(Keys.B))
@@ -762,7 +781,7 @@ public class Game1 : Game
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position, BreakTexture);
         Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, Player.Plr.position, BreakTexture);
-        
+
 
         Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, Foreground, 0f, Player.Plr.position, BreakTexture);
@@ -779,9 +798,16 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.cam.position/32f).ToString(), Vector2.One, Color.Wheat);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X/ Chunks[0].Tiles.GetLength(1))).ToString(), Vector2.One, Color.Wheat);
+
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
+        var Block = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);
+        if (Block != null)
+        {
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Block.ID.ToString(), Vector2.One * 40, Color.GhostWhite);
+
+        }
         _spriteBatch.End();
 
         //test.Draw(_spriteBatch);

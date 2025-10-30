@@ -9,7 +9,15 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace MinecraftAlpha
 {
-    
+
+    public class Debuging
+    {
+        public static void DrawBlockLayout(TileGrid Tile,int Position)
+        {
+
+        }
+    }
+
     internal class LogicsClass
     {
         public static bool BlockCollide(Vector2 point,Vector2 Position,Vector2 size)

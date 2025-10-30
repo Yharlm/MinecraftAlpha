@@ -84,7 +84,19 @@ namespace MinecraftAlpha
             this.y = y;
             Tiles = Grid;
         }
-
+        public Chunk(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+            for (int i = 0; i < Tiles.GetLength(0); i++)
+            {
+                for(int j = 0; j < Tiles.GetLength(1);j++)
+                {
+                    Tiles[i,j] = new TileGrid()
+                    { ID = 1 };
+                }
+            }
+        }
         //public bool isinchunk(Vector2 pos)
         //{
         //    float ChunkSize = Tiles.GetLength(0) * 32f;

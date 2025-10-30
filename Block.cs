@@ -21,7 +21,7 @@ namespace MinecraftAlpha
         public Texture2D Texture { get; set; }
         public string TexturePath { get; set; }
 
-        public Action<TileGrid> Interaction = null; 
+        public Action<TileGrid> Interaction = null;
         public Action<TileGrid> Update = (Grid) => { };
         public Action<TileGrid> OnCollide = (Grid) => { };
     }
@@ -63,7 +63,7 @@ namespace MinecraftAlpha
         {
             Blocks[5].Interaction = (Pos) =>
             {
-                
+
                 string Items = Pos.Data;
                 var Window = Game._userInterfaceManager.windows[1];
                 Window.Visible = !Window.Visible;
@@ -75,12 +75,12 @@ namespace MinecraftAlpha
                 foreach (var item in Items.Split(','))
                 {
                     if (item == "")
-                    {  continue; }
+                    { continue; }
                     var a = item.Split(':');
                     var Slot = Window.ItemSlots[int.Parse(a[0])];
                     Slot.Item = Blocks[int.Parse(a[1])];
                     Slot.Count = int.Parse(a[2]);
-                    
+
                 }
             };
             Blocks[5].Update = (Pos) =>
@@ -104,11 +104,11 @@ namespace MinecraftAlpha
 
                 var Window = Game._userInterfaceManager.windows[2];
                 Window.Visible = !Window.Visible;
-                
 
-               
 
-                
+
+
+
 
             };
             Blocks[6].Update = (Pos) =>
@@ -172,6 +172,30 @@ namespace MinecraftAlpha
             return Chest;
         }
 
+        public static TileGrid GetBlockAtPos(Vector2 pos, List<Chunk> Chunks)
+        {
+            TileGrid Tile = null;
+            int size = Chunks[0].Tiles.GetLength(1);
+            int ChunkX = (int)(pos.X / size);
+
+           
+
+            if (ChunkX < Chunks.Count && ChunkX >= 0)
+            {
+                var Grid = Chunks[ChunkX].Tiles;
+                int x = (int)(pos.X % size);
+                int y = (int)(pos.Y % size);
+
+                if(x >= 0 && y >= 0 && x +y < size*2)
+                {
+                    Tile = Grid[4, x];
+
+                }
+                
+            }
+
+            return Tile;
+        }
     }
 
     public class TileGrid
@@ -180,7 +204,7 @@ namespace MinecraftAlpha
         public TileGrid() { }
         public int ID = 0;
         public int state = 0;
-        public float brightness =0;
+        public float brightness = 0;
         public float LightSource = 0;
         public float MinedHealth = 0; // How much health has been mined from this block
         public string Data { get; set; } = string.Empty;
@@ -188,7 +212,7 @@ namespace MinecraftAlpha
     }
 
 
-    
 
-    
+
+
 }
