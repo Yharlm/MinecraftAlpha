@@ -188,7 +188,7 @@ namespace MinecraftAlpha
 
                 if(x >= 0 && y >= 0 && x +y < size*2)
                 {
-                    Tile = Grid[4, x];
+                    Tile = Grid[y, x];
 
                 }
                 

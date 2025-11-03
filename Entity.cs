@@ -364,4 +364,13 @@ namespace MinecraftAlpha
 
 
     }
+
+    public class Behaviour
+    {
+        public int MobId = -1;
+
+        public Behaviour() { }
+
+        
+    }
 }

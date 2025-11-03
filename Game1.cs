@@ -104,7 +104,7 @@ public class Game1 : Game
                 for (int j = 0; j < c.Tiles.GetLength(1); j++)
                 {
                     c.Tiles[i, j] = new TileGrid()
-                    { ID = j+i};
+                    { ID =j+i};
 
                 }
             }
