@@ -326,6 +326,7 @@ namespace MinecraftAlpha
 
     public class Velocity
     {
+        public bool flying = false;
         public Vector2 Gravity = new Vector2(0, 0.1f);
         public Vector2 velocity { get; set; } = Vector2.Zero;
 
@@ -356,7 +357,7 @@ namespace MinecraftAlpha
                 velocity += Acceleration * Vector2.UnitY;
             }
 
-
+            
             if (entity.collisionBox.Bottom)
             {
                 Gravity.Y = 0;
@@ -366,7 +367,10 @@ namespace MinecraftAlpha
                 Gravity.Y += Acceleration / 20;
             }
 
-
+            if (flying)
+            {
+                Gravity.Y -= Acceleration / 3;
+            }
 
             entity.position += Vel + Gravity;
         }

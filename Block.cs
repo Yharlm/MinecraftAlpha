@@ -176,8 +176,8 @@ namespace MinecraftAlpha
         {
             TileGrid Tile = null;
             int size = Chunks[0].Tiles.GetLength(1);
-            int ChunkX = (int)(pos.X / size);
-            int ChunkY = (int)(pos.Y / size);
+            int ChunkX = (int)Math.Ceiling(pos.X / size);
+            int ChunkY = (int)Math.Ceiling(pos.Y / size);
 
 
             //if (ChunkX < Chunks.Count && ChunkX >= 0)

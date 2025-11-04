@@ -499,7 +499,6 @@ public class Game1 : Game
 
 
 
-
             if (entity.velocity.Gravity.Y > 0.3f)
             {
                 entity.Fall_damage = (int)(entity.velocity.Gravity.Y * 3);
@@ -666,7 +665,7 @@ public class Game1 : Game
             if (key == Keys.S)
             {
 
-                plrVel += new Vector2(0, +1);
+                plrVel += new Vector2(0, +12);
             }
             if (key == Keys.A)
             {
@@ -680,6 +679,11 @@ public class Game1 : Game
                 //PLR.Animations[1].Paused = false;
                 PLR.Fliped = false;
                 plrVel += new Vector2(+1, 0);
+            }
+            if (key == Keys.X)
+            {
+                PLR.velocity.flying = !PLR.velocity.flying;
+
             }
         }
         
@@ -767,7 +771,7 @@ public class Game1 : Game
 
 
 
-
+    
     protected override void Draw(GameTime gameTime)
     {
 
