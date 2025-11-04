@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MinecraftAlpha;
@@ -35,7 +37,10 @@ public class Game1 : Game
 
     public List<Chunk> Chunks = new List<Chunk>()
     {
-        new Chunk(0,0)
+        new Chunk(1,2),
+        new Chunk(0,2),
+        new Chunk(-1,2),
+
 
     };
 
@@ -95,6 +100,7 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
+        Random random = new Random();
         _particleSystem.Content = Content;
 
         foreach (Chunk c in Chunks)
@@ -104,7 +110,7 @@ public class Game1 : Game
                 for (int j = 0; j < c.Tiles.GetLength(1); j++)
                 {
                     c.Tiles[i, j] = new TileGrid()
-                    { ID =j+i};
+                    { ID = random.Next(1,_blockManager.Blocks.Count)};
 
                 }
             }
@@ -114,7 +120,7 @@ public class Game1 : Game
 
 
 
-        Random random = new Random();
+       
 
 
 
@@ -379,18 +385,18 @@ public class Game1 : Game
         // block drop testing remove later
         //test.Update();
 
-        for (int i = 0; i < World.GetLength(0); i++)
-        {
-            for (int j = 0; j < World.GetLength(1); j++)
-            {
-                var grid = World[i, j];
-                Block block = BlockTypes[grid.ID];
+        //for (int i = 0; i < World.GetLength(0); i++)
+        //{
+        //    for (int j = 0; j < World.GetLength(1); j++)
+        //    {
+        //        var grid = World[i, j];
+        //        Block block = BlockTypes[grid.ID];
 
-                block.Update(grid);
+        //        block.Update(grid);
 
 
-            }
-        }
+        //    }
+        //}
 
         foreach (var Window in _userInterfaceManager.windows)
         {
@@ -402,8 +408,8 @@ public class Game1 : Game
             Exit();
         //Lighting Setter
 
-        Lighting(BackGround, 35);
-        Lighting(World, 7);
+        //Lighting(BackGround, 35);
+        //Lighting(World, 7);
 
         Daytime += 0.01f;
         if (Daytime >= 24)
@@ -449,7 +455,7 @@ public class Game1 : Game
                     Entity.CollisionEventCollision(entity1, entity, this);
                 }
             }
-            entity.collisionBox.UpdateCollision(entity, World);
+            entity.collisionBox.UpdateCollision(entity, Chunks);
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             if (entity.ID == -1)
             {
@@ -472,6 +478,24 @@ public class Game1 : Game
             }
 
 
+
+
+            var EntVal = entity.velocity.velocity;
+
+            
+            
+
+            if (entity.Jumping)
+            {
+                if (!entity.collisionBox.Bottom)
+                {
+                    EntVal += new Vector2(0, -12);
+                }
+                else
+                {
+                    entity.Jumping = false;
+                }
+            }
 
 
 
@@ -501,7 +525,7 @@ public class Game1 : Game
     }
 
 
-    Random random = new Random();
+    
     public bool RightClicked = false;
     public bool LeftClicked = false;
     public void Input()
@@ -637,7 +661,7 @@ public class Game1 : Game
             {
 
                 plrVel += new Vector2(0, -12);
-                Player.Jumping = true;
+                Player.Plr.Jumping = true;
             }
             if (key == Keys.S)
             {
@@ -658,18 +682,7 @@ public class Game1 : Game
                 plrVel += new Vector2(+1, 0);
             }
         }
-        if (Player.Jumping)
-        {
-            if (!PLR.collisionBox.Bottom)
-            {
-                plrVel += new Vector2(0, -12);
-            }
-            else
-            {
-                Player.Jumping = false;
-            }
-        }
-
+        
 
 
 
@@ -780,10 +793,36 @@ public class Game1 : Game
         // 2 cycles to render both directions of the world
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position, BreakTexture);
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, Player.Plr.position, BreakTexture);
+        //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, Player.Plr.position, BreakTexture);
+
+        //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, Player.Plr.position, BreakTexture);
+        //Player.cam.RenderChunk(_blockManager, _spriteBatch, Chunks[0], 0f, Player.Plr.position, BreakTexture);
+        //Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
+
+        _spriteBatch.Begin();
+        foreach (var chunk in Chunks)
+        {
+            for (var i = 0;i < chunk.Tiles.GetLength(0);i++)
+            {
+                for (var j = 0;j < chunk.Tiles.GetLength(1);j++)
+                {
+
+                    Vector2 ChunkPos = new Vector2(chunk.x,chunk.y) * chunk.Tiles.GetLength(1) * BlockSize;
+
+                    var block = _blockManager.Blocks[chunk.Tiles[i, j].ID];
+                    Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
+                    _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                    
+                }
+            }
+                
+        }
+        _spriteBatch.End();
 
 
-        Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
+
+
+
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, Foreground, 0f, Player.Plr.position, BreakTexture);
         //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
         foreach (var P in _particleSystem.Particles)
@@ -799,7 +838,7 @@ public class Game1 : Game
         _spriteBatch.Begin();
 
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X/ Chunks[0].Tiles.GetLength(1))).ToString(), Vector2.One, Color.Wheat);
-
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
         var Block = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);

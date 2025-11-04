@@ -177,21 +177,32 @@ namespace MinecraftAlpha
             TileGrid Tile = null;
             int size = Chunks[0].Tiles.GetLength(1);
             int ChunkX = (int)(pos.X / size);
+            int ChunkY = (int)(pos.Y / size);
 
-           
 
-            if (ChunkX < Chunks.Count && ChunkX >= 0)
+            //if (ChunkX < Chunks.Count && ChunkX >= 0)
+            //{
+            //    var Grid = Chunks[ChunkX].Tiles;
+            //    
+            //    if(x >= 0 && y >= 0 && x +y < size*2)
+            //    {
+            //        Tile = Grid[y, x];
+
+            //    }
+
+            //}
+
+
+            foreach (Chunk C in Chunks)
             {
-                var Grid = Chunks[ChunkX].Tiles;
-                int x = (int)(pos.X % size);
-                int y = (int)(pos.Y % size);
-
-                if(x >= 0 && y >= 0 && x +y < size*2)
+                if (C.x == ChunkX && C.y == ChunkY)
                 {
-                    Tile = Grid[y, x];
+                    int x = int.Abs((int)(pos.X % size));
+                    int y = int.Abs((int)(pos.Y % size));
 
+                    Tile = C.Tiles[y,x];
                 }
-                
+
             }
 
             return Tile;

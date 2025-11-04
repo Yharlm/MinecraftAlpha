@@ -50,32 +50,40 @@ namespace MinecraftAlpha
         public bool Top { get; set; } = false;
         public bool Bottom { get; set; } = false;
 
-        public void UpdateCollision(Entity entity, TileGrid[,] World)
+        public void UpdateCollision(Entity entity, List<Chunk> World)
         {
-            if (entity.position.X < 0 || entity.position.X >= World.GetLength(1) || entity.position.Y < 0 || entity.position.Y >= World.GetLength(0))
-            {
-                return; // Skip if the entity is out of bounds
-            }
+            //if (entity.position.X < 0 || entity.position.X >= World.GetLength(1) || entity.position.Y < 0 || entity.position.Y >= World.GetLength(0))
+            //{
+            //    return; // Skip if the entity is out of bounds
+            //}
             entity.collisionBox = new CollisionBox(); // Reset collision box for each update
             float Collision_quality = 0.5f;
             //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
 
-            if (World[(int)(entity.position.Y - Size.Y), (int)(entity.position.X)].ID != 0)
-            {
-                entity.collisionBox.Top = true;
-            }
-            if (World[(int)(entity.position.Y + Size.Y), (int)(entity.position.X)].ID != 0)
+            //if (World[(int)(entity.position.Y - Size.Y), (int)(entity.position.X)].ID != 0)
+            //{
+            //    entity.collisionBox.Top = true;
+            //}
+            //if (World[(int)(entity.position.Y + Size.Y), (int)(entity.position.X)].ID != 0)
+            //{
+            //    entity.collisionBox.Bottom = true;
+            //}
+            //if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X - Size.X)].ID != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X - Size.X)].ID != 0)
+            //{
+            //    entity.collisionBox.Left = true;
+            //}
+            //if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X + Size.X)].ID != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X + Size.X)].ID != 0)
+            //{
+            //    entity.collisionBox.Right = true;
+            //}
+
+
+
+            if (BlockManager.GetBlockAtPos(entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y), World) != null)
             {
                 entity.collisionBox.Bottom = true;
             }
-            if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X - Size.X)].ID != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X - Size.X)].ID != 0)
-            {
-                entity.collisionBox.Left = true;
-            }
-            if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X + Size.X)].ID != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X + Size.X)].ID != 0)
-            {
-                entity.collisionBox.Right = true;
-            }
+            
 
 
         }
@@ -180,6 +188,7 @@ namespace MinecraftAlpha
         //public List<EntityAnimation> CurrentAnimations = new List<EntityAnimation>();
 
 
+        public bool Jumping = false;
         public Vector2 position { get; set; } = Vector2.One * 50;
         public Velocity velocity = new Velocity();
         public int Fall_damage = 0;
@@ -367,7 +376,14 @@ namespace MinecraftAlpha
 
     public class Behaviour
     {
-        public int MobId = -1;
+        public static void Jump(Entity entity)
+        {
+
+            var vel = entity.velocity.velocity;
+            entity.Jumping = true;
+            
+        }
+
 
         public Behaviour() { }
 
