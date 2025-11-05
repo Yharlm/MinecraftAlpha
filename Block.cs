@@ -197,19 +197,17 @@ namespace MinecraftAlpha
             {
                 if (C.x == ChunkX && C.y == ChunkY)
                 {
-                    int x = (int)pos.X - ChunkX;
-                    int y = (int)pos.Y - ChunkY;
-                    
-                    if (pos.X < 0)
+                    int x = (int)(pos.X % size);
+                    int y = (int)(pos.Y % size);
+
+                    if (x < 0)
                     {
-                        x = size-1 + x;
+                        x = size + x;
                     }
-                    if (pos.Y < 0)
+                    if (y < 0)
                     {
-                        y = size-1 + y;
+                        y = size + y;
                     }
-                    
-            
 
                     Tile = C.Tiles[y,x];
                 }

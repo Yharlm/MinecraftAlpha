@@ -843,7 +843,7 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X / Chunks[0].Tiles.GetLength(0))).ToString(), Vector2.One * 40, Color.Chartreuse);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)Math.Ceiling((WorldMousePos.X / 32))).ToString(), Vector2.One * 40, Color.Chartreuse);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
