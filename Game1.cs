@@ -38,7 +38,7 @@ public class Game1 : Game
     public List<Chunk> Chunks = new List<Chunk>()
     {
         new Chunk(1,0),
-        new Chunk(0,0),
+        new Chunk(0,1),
         new Chunk(-1,0),
 
 
@@ -430,6 +430,8 @@ public class Game1 : Game
         MousePosition = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
 
         WorldMousePos = (MousePosition - Player.cam.position) / BlockSize;
+
+        //
         _blockManager.BlockSize = BlockSize;
         foreach (var Animation in _entityAnimationService.entityAnimations)
         {
@@ -480,7 +482,7 @@ public class Game1 : Game
                 _entityAnimationService.Stop(1, entity);
             }
 
-
+            
 
 
             var EntVal = entity.velocity.velocity;
@@ -523,7 +525,9 @@ public class Game1 : Game
             entity.Update();
         }
         _particleSystem.Particles.RemoveAll(x => x.lifeTime <= 0);
-
+        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+        {
+        }
     }
 
 
@@ -847,6 +851,9 @@ public class Game1 : Game
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (32+(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
+        
+
         var Block = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);
         if (Block != null)
         {

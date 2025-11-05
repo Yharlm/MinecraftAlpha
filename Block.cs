@@ -200,13 +200,14 @@ namespace MinecraftAlpha
                     int x = (int)(pos.X % size);
                     int y = (int)(pos.Y % size);
 
-                    if (x < 0)
+                    if (pos.X < 0)
                     {
-                        x = size + x;
+                        
+                        x = size - Math.Abs(x);
                     }
-                    if (y < 0)
+                    if (pos.Y < 0)
                     {
-                        y = size + y;
+                        y = size - Math.Abs(y);
                     }
 
                     Tile = C.Tiles[y,x];
