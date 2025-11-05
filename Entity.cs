@@ -189,7 +189,7 @@ namespace MinecraftAlpha
 
 
         public bool Jumping = false;
-        public Vector2 position { get; set; } = Vector2.One * 50;
+        public Vector2 position { get; set; } = Vector2.Zero;
         public Velocity velocity = new Velocity();
         public int Fall_damage = 0;
         public float Mass = 1f;
@@ -369,7 +369,7 @@ namespace MinecraftAlpha
 
             if (flying)
             {
-                Gravity.Y -= Acceleration / 3;
+                Gravity.Y = 0f;
             }
 
             entity.position += Vel + Gravity;

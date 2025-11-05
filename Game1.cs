@@ -37,9 +37,9 @@ public class Game1 : Game
 
     public List<Chunk> Chunks = new List<Chunk>()
     {
-        new Chunk(1,2),
-        new Chunk(0,2),
-        new Chunk(-1,2),
+        new Chunk(1,0),
+        new Chunk(0,0),
+        new Chunk(-1,0),
 
 
     };
@@ -105,15 +105,18 @@ public class Game1 : Game
 
         foreach (Chunk c in Chunks)
         {
+            int ID = random.Next(1, _blockManager.Blocks.Count);
             for (int i = 0; i < c.Tiles.GetLength(0); i++)
             {
                 for (int j = 0; j < c.Tiles.GetLength(1); j++)
                 {
                     c.Tiles[i, j] = new TileGrid()
-                    { ID = random.Next(1,_blockManager.Blocks.Count)};
+                    { ID = ID };
 
                 }
             }
+            c.Tiles[0, 0] = new TileGrid()
+            { ID = random.Next(1, _blockManager.Blocks.Count) };
         }
         
 
@@ -273,7 +276,7 @@ public class Game1 : Game
 
         _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
         //Making player
-        Player.Plr = Entity.CloneEntity(_entityManager.entities[0], new Vector2(40, 30));
+        Player.Plr = Entity.CloneEntity(_entityManager.entities[0], new Vector2(0, 0));
 
 
 
@@ -811,8 +814,7 @@ public class Game1 : Game
                 for (var j = 0;j < chunk.Tiles.GetLength(1);j++)
                 {
 
-                    Vector2 ChunkPos = new Vector2(chunk.x,chunk.y) * chunk.Tiles.GetLength(1) * BlockSize;
-
+                    Vector2 ChunkPos = ( new Vector2(chunk.x,chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
                     var block = _blockManager.Blocks[chunk.Tiles[i, j].ID];
                     Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
                     _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
@@ -841,7 +843,7 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X/ Chunks[0].Tiles.GetLength(1))).ToString(), Vector2.One, Color.Wheat);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X / Chunks[0].Tiles.GetLength(0))).ToString(), Vector2.One * 40, Color.Chartreuse);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);

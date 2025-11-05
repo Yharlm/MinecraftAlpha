@@ -91,7 +91,7 @@ namespace MinecraftAlpha
                 }
             }
 
-
+            return;
             //Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
             TileGrid Grid = Game.World[(int)WorldPos.Y, (int)WorldPos.X];
             var block = Game._blockManager.Blocks[Game.World[(int)WorldPos.Y, (int)WorldPos.X].ID];
