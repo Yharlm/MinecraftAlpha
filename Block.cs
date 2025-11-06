@@ -203,14 +203,14 @@ namespace MinecraftAlpha
                     if (pos.X < 0)
                     {
                         
-                        x = size - Math.Abs(x);
+                        x = size-1 - Math.Abs(x);
                     }
                     if (pos.Y < 0)
                     {
-                        y = size - Math.Abs(y);
+                        y = size-1 - Math.Abs(y);
                     }
 
-                    Tile = C.Tiles[y,x];
+                    Tile = C.Tiles[y, x];
                 }
 
             }

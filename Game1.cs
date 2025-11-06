@@ -622,7 +622,7 @@ public class Game1 : Game
                 int BlockX = (int)(WorldMousePos.X);
                 int BlockY = (int)(WorldMousePos.Y);
 
-                _actionManager.PlaceBlock(BlockX, BlockY);
+                //_actionManager.PlaceBlock(BlockX, BlockY);
             }
         }
         else if (Mouse.GetState().RightButton == ButtonState.Released)
@@ -851,8 +851,10 @@ public class Game1 : Game
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (32+(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
-        
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
+
+
 
         var Block = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);
         if (Block != null)
