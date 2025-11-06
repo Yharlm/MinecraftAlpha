@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace MinecraftAlpha
 {
@@ -217,6 +219,14 @@ namespace MinecraftAlpha
 
             return Tile;
         }
+        public static int[] GetChunkAtPos(Vector2 pos)
+        {
+            int size = 32;
+            int ChunkX = (int)Math.Ceiling((pos.X / size));
+            int ChunkY = (int)Math.Ceiling((pos.Y / size));
+            return [ChunkX, ChunkY];
+        }
+
     }
 
     public class TileGrid

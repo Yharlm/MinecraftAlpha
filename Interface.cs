@@ -223,7 +223,7 @@ namespace MinecraftAlpha
             windows.Add(new WindowFrame()
             {
                 Name = "Chest",
-                Visible = true,
+                Visible = false,
                 Frames = new() { },
                 Buttons = new() { },
                 ItemSlots = new() { },

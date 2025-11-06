@@ -93,7 +93,7 @@ namespace MinecraftAlpha
                 for(int j = 0; j < Tiles.GetLength(1);j++)
                 {
                     Tiles[i,j] = new TileGrid()
-                    { ID = 1 };
+                    { ID = 0 };
                 }
             }
         }

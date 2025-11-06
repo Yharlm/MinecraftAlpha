@@ -37,9 +37,9 @@ public class Game1 : Game
 
     public List<Chunk> Chunks = new List<Chunk>()
     {
-        new Chunk(1,0),
-        new Chunk(0,1),
-        new Chunk(-1,0),
+        new Chunk(1,2),
+        new Chunk(0,2),
+        new Chunk(-1,2),
 
 
     };
@@ -105,18 +105,23 @@ public class Game1 : Game
 
         foreach (Chunk c in Chunks)
         {
-            int ID = random.Next(1, _blockManager.Blocks.Count);
+            
             for (int i = 0; i < c.Tiles.GetLength(0); i++)
             {
                 for (int j = 0; j < c.Tiles.GetLength(1); j++)
                 {
+                    if(i == 0)
+                    {
+                        
+                        c.Tiles[i, j] = new TileGrid()
+                        { ID = 2 };
+                        continue;
+                    }
                     c.Tiles[i, j] = new TileGrid()
-                    { ID = ID };
-
+                    { ID = 1 };
                 }
             }
-            c.Tiles[0, 0] = new TileGrid()
-            { ID = random.Next(1, _blockManager.Blocks.Count) };
+            
         }
         
 
@@ -569,13 +574,9 @@ public class Game1 : Game
                 _entityAnimationService.Play(2, PLR);
                 //add a attack part here instead
 
-                if (WorldMousePos.X > 0 && WorldMousePos.Y > 0)
-                {
-                    int BlockX = (int)(WorldMousePos.X);
-                    int BlockY = (int)(WorldMousePos.Y);
-
-                    _actionManager.BreakBlock(BlockX, BlockY);
-                }
+                
+                    _actionManager.BreakBlock(WorldMousePos);
+                
             }
 
         }
@@ -619,10 +620,9 @@ public class Game1 : Game
             if (!_userInterfaceManager.Clicked)
             {
 
-                int BlockX = (int)(WorldMousePos.X);
-                int BlockY = (int)(WorldMousePos.Y);
+               
 
-                //_actionManager.PlaceBlock(BlockX, BlockY);
+                _actionManager.PlaceBlock(WorldMousePos,_userInterfaceManager.selectedItem);
             }
         }
         else if (Mouse.GetState().RightButton == ButtonState.Released)
@@ -810,7 +810,7 @@ public class Game1 : Game
         //Player.cam.RenderChunk(_blockManager, _spriteBatch, Chunks[0], 0f, Player.Plr.position, BreakTexture);
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
 
-        _spriteBatch.Begin();
+        _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
         foreach (var chunk in Chunks)
         {
             for (var i = 0;i < chunk.Tiles.GetLength(0);i++)
