@@ -118,7 +118,7 @@ namespace MinecraftAlpha
                 }
             }
 
-            
+            return;
             //Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
             TileGrid Grid = Game.World[(int)WorldPos.Y, (int)WorldPos.X];
             var block = Game._blockManager.Blocks[Game.World[(int)WorldPos.Y, (int)WorldPos.X].ID];
@@ -136,7 +136,9 @@ namespace MinecraftAlpha
         public void BreakBlock(Vector2 Pos)
         {
             var Tile = BlockManager.GetBlockAtPos(Pos,Game.Chunks);
+            if (Tile == null) { return; }
             var block = Game._blockManager.Blocks[Tile.ID];
+            
             if (Tile.ID != 0)
             {
                 if (block.Health > Tile.MinedHealth)
@@ -171,7 +173,7 @@ namespace MinecraftAlpha
                     Game._particleSystem.Particles.Add(part);
                     return;
                 }
-
+                Tile.MinedHealth = 0;
                 //foreach (var islot in Game._userInterfaceManager.windows[0].ItemsSlots)
                 //{
                 //    if (islot.Item != null && islot.Item != Game._blockManager.Blocks[Game.World[Y, X].ID])
@@ -216,7 +218,7 @@ namespace MinecraftAlpha
 
 
                 Tile.ID = 0;
-                Game._entityManager.Workspace.Add(Entity.CloneEntity(Game._entityManager.entities[1], Pos  + Vector2.One * 0.5f));
+                Game._entityManager.Workspace.Add(Entity.CloneEntity(Game._entityManager.entities[1], Vector2.Floor( Pos)  + Vector2.One * 0.5f));
                 Game._entityManager.Workspace.Last().TextureName = "null";
                 var drop = block;
                 if(block.ItemDrop != null) drop = block.ItemDrop;

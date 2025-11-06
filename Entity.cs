@@ -76,14 +76,29 @@ namespace MinecraftAlpha
             //{
             //    entity.collisionBox.Right = true;
             //}
+            Vector2 Bottom = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y);
+            Vector2 Left = entity.position + new Vector2(0, entity.collisionBox.Size.Y/2f);
+            Vector2 Right = entity.position + new Vector2(entity.collisionBox.Size.X, entity.collisionBox.Size.Y / 2f);
+            Vector2 Top = entity.position + new Vector2(entity.collisionBox.Size.X / 2, 0);
 
 
-
-            if (BlockManager.GetBlockAtPos(entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y), World) != null)
+            if (BlockManager.GetBlockAtPos(Bottom, World) != null && BlockManager.GetBlockAtPos(Bottom, World).ID != 0)
             {
                 entity.collisionBox.Bottom = true;
             }
-            
+            if (BlockManager.GetBlockAtPos(Left, World) != null && BlockManager.GetBlockAtPos(Left, World).ID != 0)
+            {
+                entity.collisionBox.Left = true;
+            }
+            if (BlockManager.GetBlockAtPos(Right, World) != null && BlockManager.GetBlockAtPos(Right, World).ID != 0)
+            {
+                entity.collisionBox.Right = true;
+            }
+            if (BlockManager.GetBlockAtPos(Top, World) != null && BlockManager.GetBlockAtPos(Top, World).ID != 0)
+            {
+                entity.collisionBox.Top = true;
+            }
+
 
 
         }

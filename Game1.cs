@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection.Emit;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -418,12 +419,19 @@ public class Game1 : Game
 
         //Lighting(BackGround, 35);
         //Lighting(World, 7);
-
-        Daytime += 0.01f;
-        if (Daytime >= 24)
+        float Time = 1f;
+        if(Daytime <= 12)
         {
-            Daytime = 0f;
+            Daytime += Time;
+
         }
+        
+        if (Daytime > 12)
+        {
+            Daytime -= Time;
+
+        }
+        
 
         // TODO: Add your update logic here
         Input();
@@ -783,7 +791,7 @@ public class Game1 : Game
     {
 
 
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        GraphicsDevice.Clear(Color.FromNonPremultiplied(new Vector4(0.5f, 0.5f, Daytime / 12, 1)));
 
         //SunImage
 
@@ -813,19 +821,48 @@ public class Game1 : Game
         _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
         foreach (var chunk in Chunks)
         {
-            for (var i = 0;i < chunk.Tiles.GetLength(0);i++)
-            {
-                for (var j = 0;j < chunk.Tiles.GetLength(1);j++)
-                {
+            int RenderDistance = 2;
+            var Pos = BlockManager.GetChunkAtPos(Player.Plr.position);
+            int x = Pos[0];
+            int y = Pos[1];
 
-                    Vector2 ChunkPos = ( new Vector2(chunk.x,chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
-                    var block = _blockManager.Blocks[chunk.Tiles[i, j].ID];
-                    Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
-                    _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
-                    
+            if (chunk.x <= x + RenderDistance && chunk.x > x - RenderDistance)
+            {
+
+
+                for (var i = 0; i < chunk.Tiles.GetLength(0); i++)
+                {
+                    for (var j = 0; j < chunk.Tiles.GetLength(1); j++)
+                    {
+                        var block = _blockManager.Blocks[chunk.Tiles[i, j].ID];
+                        var Map = chunk.Tiles;
+                        float Light = Map[i, j].brightness;
+                        float Light01 = Light - 0.2f;
+
+                        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) * block.Color;
+
+                        int healthPercent = (int)Map[i, j].MinedHealth / 10;
+                        Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);
+                        if ((int)Map[i, j].MinedHealth <= 0)
+                        {
+                            sourceRectangle = new Rectangle(0, 0, 0, 0);
+                        }
+                        Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
+
+                        int State = block.DefaultState;
+                        if (Map[i, j].state > 0)
+                        {
+                            BlockState = new Rectangle(State, 0, block.Texture.Width, block.Texture.Height);
+                        }
+
+                        Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
+                        //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
+                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+
+                    }
                 }
             }
-                
         }
         _spriteBatch.End();
 

@@ -204,7 +204,6 @@ namespace MinecraftAlpha
 
                     if (pos.X < 0)
                     {
-                        
                         x = size-1 - Math.Abs(x);
                     }
                     if (pos.Y < 0)
