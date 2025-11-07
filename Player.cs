@@ -8,6 +8,7 @@ namespace MinecraftAlpha
 {
     public class Player
     {
+        public WindowFrame Inventory = null;
         public Entity Plr;
         public Cammera cam = new Cammera();
         public bool Jumping = false;

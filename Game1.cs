@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Reflection.Emit;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -543,14 +544,16 @@ public class Game1 : Game
         }
     }
 
+    int HotbarIndex;
 
-    
+
     public bool RightClicked = false;
     public bool LeftClicked = false;
     public void Input()
     {
         var PLR = Player.Plr;
 
+        HotbarIndex = (Mouse.GetState().ScrollWheelValue / 120) % 9 + 1;
 
 
 
@@ -698,6 +701,14 @@ public class Game1 : Game
             if (key == Keys.X)
             {
                 PLR.velocity.flying = !PLR.velocity.flying;
+
+            }
+            if (key == Keys.Y)
+            {
+                BlockManager.Makechunk(WorldMousePos, Chunks);
+                var Chunk = Chunks.Last();
+
+                Generation.GenerateChunk();
 
             }
         }
@@ -890,7 +901,7 @@ public class Game1 : Game
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Mouse.GetState().ScrollWheelValue/120).ToString() + " ScrollWheel", new Vector2(70,20), Color.Red);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (HotbarIndex).ToString(), new Vector2(70,20), Color.Red);
 
 
 

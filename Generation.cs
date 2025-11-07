@@ -97,6 +97,7 @@ namespace MinecraftAlpha
                 }
             }
         }
+
         //public bool isinchunk(Vector2 pos)
         //{
         //    float ChunkSize = Tiles.GetLength(0) * 32f;
@@ -141,7 +142,22 @@ namespace MinecraftAlpha
             return Layer;
         }
 
+        public static void GenerateChunk(Vector2 pos,Chunk chunk)
+        {
+            
+            var WhiteNoise = GenerateWhiteNoise(32, 32, seed, 0);
 
+            for (int i = 0;i < 32;i++)
+            {
+                for (int j = 0; j < 32; j++)
+                {
+                    float Val = WhiteNoise[i,j];
+
+                    chunk.Tiles[i,j].ID = (int)(Val*6);
+                }
+            }
+
+        }
 
 
 
