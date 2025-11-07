@@ -108,25 +108,26 @@ namespace MinecraftAlpha
         }
 
         public Block Lastblock = null;
-        public void Interact(Vector2 WorldPos)
+        public void Interact(Vector2 Pos)
         {
             foreach (Entity entity in Game._entityManager.Workspace)
             {
-                if (LogicsClass.IsInBounds(WorldPos, entity.collisionBox.Size))
+                if (LogicsClass.IsInBounds(Pos, entity.collisionBox.Size))
                 {
                     entity.Interaction.Action.Invoke();
                 }
             }
 
-            return;
+            
             //Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
-            TileGrid Grid = Game.World[(int)WorldPos.Y, (int)WorldPos.X];
-            var block = Game._blockManager.Blocks[Game.World[(int)WorldPos.Y, (int)WorldPos.X].ID];
+            TileGrid Tile = BlockManager.GetBlockAtPos(Pos,Game.Chunks);
+            if (Tile == null) return;
+            var block = Game._blockManager.Blocks[Tile.ID];
             if (block.Interaction != null)
             {
                 
-                block.Interaction.Invoke(Grid);
-                Game._userInterfaceManager.LastUsedBlock = Grid;
+                block.Interaction.Invoke(Tile);
+                Game._userInterfaceManager.LastUsedBlock = Tile;
 
             }
             

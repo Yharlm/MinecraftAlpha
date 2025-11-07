@@ -743,7 +743,7 @@ public class Game1 : Game
         if (keyboardState.IsKeyDown(Keys.F))
         {
             //InventoryOpen = !InventoryOpen;
-            Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
+            Structure.LoadStructures()[0].GenerateStructure(this,World, WorldMousePos, true);
 
 
         }
@@ -857,7 +857,7 @@ public class Game1 : Game
 
                         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
                         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
-                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, block.Color, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
                         _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
 
                     }
@@ -890,6 +890,7 @@ public class Game1 : Game
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Mouse.GetState().ScrollWheelValue/120).ToString() + " ScrollWheel", new Vector2(70,20), Color.Red);
 
 
 

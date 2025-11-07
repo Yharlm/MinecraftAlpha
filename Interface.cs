@@ -210,13 +210,16 @@ namespace MinecraftAlpha
                 Buttons = new() { },
                 ItemSlots = new() { },
             });
+            int ID = 0;
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
+                    
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(32 * i, 32 * j) + new Vector2(300, 30), Texture = ItemSlots[0].Texture };
+                    { ItemPosition = new Vector2(32 * i, 32 * j) + new Vector2(300, 30), Texture = ItemSlots[0].Texture ,ID = ID};
                     windows.Last().ItemSlots.Add(slot);
+                    ID++;
                 }
                 
             }
@@ -228,13 +231,15 @@ namespace MinecraftAlpha
                 Buttons = new() { },
                 ItemSlots = new() { },
             });
+            ID = 0;
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(32 * i, 32 * j) + new Vector2(300, 130), Texture = ItemSlots[0].Texture };
+                    { ItemPosition = new Vector2(32 * i, 32 * j) + new Vector2(300, 130), Texture = ItemSlots[0].Texture ,ID = ID };
                     windows.Last().ItemSlots.Add(slot);
+                    ID++;
                 }
 
             }

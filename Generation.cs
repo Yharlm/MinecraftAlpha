@@ -50,15 +50,15 @@ namespace MinecraftAlpha
             return tilegrid;
         }
 
-        public void GenerateStructure(TileGrid[,] World, Vector2 position, bool Replace)
+        public void GenerateStructure(Game1 game,TileGrid[,] World, Vector2 position, bool Replace)
         {
             for (int y = 0; y < BluePrint.GetLength(0); y++)
             {
                 for (int x = 0; x < BluePrint.GetLength(1); x++)
                 {
-                    var grid = World[(int)(position.Y + y), (int)(position.X + x)];
-
-                    var blueprintGrid = BluePrint[y,x];
+                    var grid = BlockManager.GetBlockAtPos(position + new Vector2(x,y),game.Chunks);
+                    if (grid == null) return;
+                    var blueprintGrid = BluePrint[y, x];
 
                     grid.ID = blueprintGrid.ID;
 

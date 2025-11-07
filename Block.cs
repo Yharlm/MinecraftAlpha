@@ -173,7 +173,20 @@ namespace MinecraftAlpha
             }
             return Chest;
         }
+        public static void Makechunk(Vector2 pos, List<Chunk> Chunks)
+        {
 
+            
+            
+            TileGrid Tile = BlockManager.GetBlockAtPos(pos, Chunks);
+            if (Tile == null)
+            {
+
+                var ChunkNot = BlockManager.GetChunkAtPos(pos);
+                Chunks.Add(new(ChunkNot[0], ChunkNot[1]));
+                Tile = BlockManager.GetBlockAtPos(pos, Chunks);
+            }
+        }
         public static TileGrid GetBlockAtPos(Vector2 pos, List<Chunk> Chunks)
         {
             TileGrid Tile = null;
