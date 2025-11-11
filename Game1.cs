@@ -708,7 +708,7 @@ public class Game1 : Game
                 BlockManager.Makechunk(WorldMousePos, Chunks);
                 var Chunk = Chunks.Last();
 
-                Generation.GenerateChunk();
+                Generation.GenerateChunk(WorldMousePos,Chunk);
 
             }
         }

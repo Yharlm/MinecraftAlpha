@@ -144,8 +144,8 @@ namespace MinecraftAlpha
 
         public static void GenerateChunk(Vector2 pos,Chunk chunk)
         {
-            
-            var WhiteNoise = GenerateWhiteNoise(32, 32, seed, 0);
+            int x = BlockManager.GetChunkAtPos(pos)[0];
+            var WhiteNoise = GenerateWhiteNoise(32, 32, 0 + x, 0);
 
             for (int i = 0;i < 32;i++)
             {
