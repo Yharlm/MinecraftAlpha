@@ -242,7 +242,7 @@ namespace MinecraftAlpha
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    Map[i, j] = 1 / centerX - j;
+                    Map[i, j] = 1 / centerX - j; make abs
 
 
                 }
