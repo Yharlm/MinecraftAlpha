@@ -144,21 +144,54 @@ namespace MinecraftAlpha
 
         public static void GenerateChunk(Vector2 pos,List<Chunk> chunks)
         {
-            var Flat = GenerateFlat(32*2, 32, 0.5f);
-            int x =( BlockManager.GetChunkAtPos(pos)[0]-1);
-            var WhiteNoise = GenerateWhiteNoise(32*2, 32, 0 + x, 1);
-            WhiteNoise = GenerateSmoothNoise(WhiteNoise, 2);
-            WhiteNoise = GeneratePerlinNoise(WhiteNoise, 5,0.5f);
-            SubMaps(Flat, WhiteNoise, new Random(-1,1));
-            for (int i = 16; i < 32*1.5; i++)
-            {
+            
+            int x =( BlockManager.GetChunkAtPos(pos)[0]);
+            //var Terrain = GenerateWhiteNoise(32, 32, 0 + x, 0);
+            //Terrain = GeneratePerlinNoise(Terrain, 5, 0.5f);
+            //Terrain = GenerateSmoothNoise(Terrain, 3);
+            //var Blend = GenerateMaskBlend(32, 32,1f);
+            //Mask(Terrain, Blend, 0.5f);
+            //SubMaps(Flat, Terrain, 1f);
+            //for (int i = 0; i < 32; i++)
+            //{
                 
-                float Val =(1- Flat[0, i]) * 32;
-                PlaceBlock(new Vector2(x*32 + i+1, Val),2, chunks);
-                //for (int j = 1; j < 5; j++)
-                //{
-                //    PlaceBlock(new Vector2(x * 32 + i + 1, Val + j), 1, chunks);
-                //}
+            //    float Val =(1- Flat[0, i]) * 32;
+            //    PlaceBlock(new Vector2(x*32 + i+1, Val),2, chunks);
+            //    //for (int j = 1; j < 5; j++)
+            //    //{
+            //    //    PlaceBlock(new Vector2(x * 32 + i + 1, Val + j), 1, chunks);
+            //    //}
+            //}
+
+            int y = new Random(x).Next(0,3)-1;
+
+            var terrain = GenerateFlat(32, 1, 1f);
+
+            if(y == -1)
+            {
+                var Mountain = GenerateWhiteNoise(32, 32, 100 + x, 0);
+                Mountain = GeneratePerlinNoise(Mountain, 6, 0.5f);
+                SubMaps(terrain, Mountain, 0.5f);
+
+                for (int i = 0;i < 32;i++)
+                {
+                    float Val = (1 - terrain[0, i]) * 32;
+                    PlaceBlock(new Vector2(x * 32 + i + 1, Val+y*32), 2, chunks);
+
+                }
+            }
+            if (y == 0)
+            {
+                var Hills = GenerateWhiteNoise(32, 32, x, 0);
+                Hills = GeneratePerlinNoise(Hills, 5, 0.5f);
+                SubMaps(terrain, Hills, 0.5f);
+
+                for (int i = 0; i < 32; i++)
+                {
+                    float Val = (1 - terrain[0, i]) * 32;
+                    PlaceBlock(new Vector2(x * 32 + i + 1, Val + y * 32), 4, chunks);
+
+                }
             }
 
         }
@@ -209,8 +242,9 @@ namespace MinecraftAlpha
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    Map[i, j] = Opacity * (new Vector2(i,j) - new Vector2(centerX,centerY)).Length()/centerX;
-                    
+                    Map[i, j] = 1 / centerX - j;
+
+
                 }
             }
 
