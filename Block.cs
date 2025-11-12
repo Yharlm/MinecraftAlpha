@@ -195,17 +195,7 @@ namespace MinecraftAlpha
             int ChunkY = (int)Math.Ceiling((pos.Y / size));
 
 
-            //if (ChunkX < Chunks.Count && ChunkX >= 0)
-            //{
-            //    var Grid = Chunks[ChunkX].Tiles;
-            //    
-            //    if(x >= 0 && y >= 0 && x +y < size*2)
-            //    {
-            //        Tile = Grid[y, x];
-
-            //    }
-
-            //}
+            
 
 
             foreach (Chunk C in Chunks)
@@ -228,6 +218,7 @@ namespace MinecraftAlpha
                 }
 
             }
+            
 
             return Tile;
         }

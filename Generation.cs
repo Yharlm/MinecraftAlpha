@@ -142,24 +142,38 @@ namespace MinecraftAlpha
             return Layer;
         }
 
-        public static void GenerateChunk(Vector2 pos,Chunk chunk)
+        public static void GenerateChunk(Vector2 pos,List<Chunk> chunks)
         {
-            int x = BlockManager.GetChunkAtPos(pos)[0];
-            var WhiteNoise = GenerateWhiteNoise(32, 32, 0 + x, 0);
-
-            for (int i = 0;i < 32;i++)
+            var Flat = GenerateFlat(32*2, 32, 0.5f);
+            int x =( BlockManager.GetChunkAtPos(pos)[0]-1);
+            var WhiteNoise = GenerateWhiteNoise(32*2, 32, 0 + x, 1);
+            WhiteNoise = GenerateSmoothNoise(WhiteNoise, 2);
+            WhiteNoise = GeneratePerlinNoise(WhiteNoise, 5,0.5f);
+            SubMaps(Flat, WhiteNoise, new Random(-1,1));
+            for (int i = 16; i < 32*1.5; i++)
             {
-                for (int j = 0; j < 32; j++)
-                {
-                    float Val = WhiteNoise[i,j];
-
-                    chunk.Tiles[i,j].ID = (int)(Val*6);
-                }
+                
+                float Val =(1- Flat[0, i]) * 32;
+                PlaceBlock(new Vector2(x*32 + i+1, Val),2, chunks);
+                //for (int j = 1; j < 5; j++)
+                //{
+                //    PlaceBlock(new Vector2(x * 32 + i + 1, Val + j), 1, chunks);
+                //}
             }
 
         }
 
-
+        public static void PlaceBlock(Vector2 pos, int id, List<Chunk> chunks)
+        {
+            var Tile = BlockManager.GetBlockAtPos(pos, chunks);
+            if (Tile == null)
+            {
+                BlockManager.Makechunk(pos, chunks);
+                Tile = BlockManager.GetBlockAtPos(pos, chunks);
+                
+            }
+            Tile.ID = id;
+        }
 
 
 
@@ -186,14 +200,36 @@ namespace MinecraftAlpha
             return Noise;
         }
 
+        public static float[,] GenerateMaskBlend(int Width, int Height, float Opacity)
+        {
+            float[,] Map = new float[Height, Width];
+            float centerX = Width / 2f;
+            float centerY = Height / 2f;
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    Map[i, j] = Opacity * (new Vector2(i,j) - new Vector2(centerX,centerY)).Length()/centerX;
+                    
+                }
+            }
+
+
+
+            return Map;
+        }
+
         public static float[,] GenerateWhiteNoise(int Width, int Height, int seed, int Area)
         {
             float[,] Noise = new float[Height, Width];
             Random random = new Random(seed);
             for (int i = 0; i < Height; i++)
             {
+                
+
                 for (int j = 0; j < Width; j++)
                 {
+                    
                     if (random.Next(0, Area + 1) != Area / 2)
                     {
                         continue;
@@ -295,9 +331,9 @@ namespace MinecraftAlpha
 
         public static void SumMaps(float[,] baseMap, float[,] addedMap, float weight)
         {
-            for (int i = 0; i < baseMap.GetLength(0); i++)
+            for (int i = 0; i < addedMap.GetLength(0); i++)
             {
-                for (int j = 0; j < baseMap.GetLength(1); j++)
+                for (int j = 0; j < addedMap.GetLength(1); j++)
                 {
                     baseMap[i, j] += addedMap[i, j] * weight;
                 }

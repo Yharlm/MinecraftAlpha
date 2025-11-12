@@ -705,10 +705,10 @@ public class Game1 : Game
             }
             if (key == Keys.Y)
             {
-                BlockManager.Makechunk(WorldMousePos, Chunks);
+                
                 var Chunk = Chunks.Last();
 
-                Generation.GenerateChunk(WorldMousePos,Chunk);
+                Generation.GenerateChunk(WorldMousePos,Chunks);
 
             }
         }
