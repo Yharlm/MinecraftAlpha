@@ -210,18 +210,33 @@ namespace MinecraftAlpha
 
             //        }
             //    }
-            int x = int.Abs(BlockManager.GetChunkAtPos(pos)[0])+1;
-            var PerlinMap = GenerateWhiteNoise(32*10, 10, 0+ x / 10, 0);
-            //PerlinMap = GeneratePerlinNoise(PerlinMap, 6, 0.4f);
+            int x = BlockManager.GetChunkAtPos(pos)[0];
+
+            int width = 1000;
+
+
+            var PerlinMap = GenerateWhiteNoise(width, 40, 1, 0);
+            
             PerlinMap = GenerateSmoothNoise(PerlinMap, 3);
+            PerlinMap = GeneratePerlinNoise(PerlinMap, 6, 0.4f);
 
-            for (int i = 0; i < 32; i++)
-            {
-                float Val = (PerlinMap[0,i + x*32]) * 10 + -20;
-                PlaceBlock(new Vector2(x * 32 + i + 1, Val), 2, chunks);
+            var Mountain = GenerateWhiteNoise(width, 40, 1, 1);
+            Mountain = GeneratePerlinNoise(Mountain, 6, 0.4f);
+            SubMaps(PerlinMap, Mountain, 0.6f);
+            PerlinMap = GenerateSmoothNoise(PerlinMap, 2);
 
-            }
 
+
+
+
+            //float Val = (PerlinMap[0, 1+int.Abs(x) * 31]) * 20;
+            //PlaceBlock(new Vector2((x * 32)-1, Val), 2, chunks);
+            int i = 0;
+            float Val = (PerlinMap[0, i + int.Abs(x) * 32]) * 20;
+            PlaceBlock(new Vector2((x * 32) + i, Val), 2, chunks);
+            i = 1;
+            Val = (PerlinMap[0, i + int.Abs(x) * 32]) * 20;
+            PlaceBlock(new Vector2((x * 32) + i, Val), 2, chunks);
 
 
 

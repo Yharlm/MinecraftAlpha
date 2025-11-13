@@ -706,7 +706,7 @@ public class Game1 : Game
             if (key == Keys.Y)
             {
                 
-                var Chunk = Chunks.Last();
+                //var Chunk = Chunks.Last();
 
                 Generation.GenerateChunk(WorldMousePos,Chunks);
 
@@ -780,7 +780,7 @@ public class Game1 : Game
         {
             //InventoryOpen = !InventoryOpen;
             //Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
-
+            Chunks.Clear();
             //_entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[1], WorldMousePos));
 
         }

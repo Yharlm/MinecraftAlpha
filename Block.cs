@@ -190,6 +190,8 @@ namespace MinecraftAlpha
         public static TileGrid GetBlockAtPos(Vector2 pos, List<Chunk> Chunks)
         {
             TileGrid Tile = null;
+            if (Chunks.Count == 0) return null;
+
             int size = Chunks[0].Tiles.GetLength(1);
             int ChunkX = (int)Math.Ceiling((pos.X / size));
             int ChunkY = (int)Math.Ceiling((pos.Y / size));
