@@ -908,7 +908,7 @@ public class Game1 : Game
         var Block = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);
         if (Block != null)
         {
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Block.ID.ToString(), Vector2.One * 40, Color.GhostWhite);
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), WorldMousePos.ToString(), Vector2.One * 40, Color.GhostWhite);
 
         }
         _spriteBatch.End();

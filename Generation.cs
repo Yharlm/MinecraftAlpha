@@ -145,71 +145,6 @@ namespace MinecraftAlpha
         public static void GenerateChunk(Vector2 pos, List<Chunk> chunks)
         {
 
-            //    int x =( BlockManager.GetChunkAtPos(pos)[0]);
-            //    //var Terrain = GenerateWhiteNoise(32, 32, 0 + x, 0);
-            //    //Terrain = GeneratePerlinNoise(Terrain, 5, 0.5f);
-            //    //Terrain = GenerateSmoothNoise(Terrain, 3);
-            //    var Blend = GenerateMaskBlend(32, 32, 1f);
-            //    //Mask(Terrain, Blend, 0.5f);
-            //    //SubMaps(Flat, Terrain, 1f);
-            //    //for (int i = 0; i < 32; i++)
-            //    //{
-
-            //    //    float Val =(1- Flat[0, i]) * 32;
-            //    //    PlaceBlock(new Vector2(x*32 + i+1, Val),2, chunks);
-            //    //    //for (int j = 1; j < 5; j++)
-            //    //    //{
-            //    //    //    PlaceBlock(new Vector2(x * 32 + i + 1, Val + j), 1, chunks);
-            //    //    //}
-            //    //}
-
-            //    int y = new Random(x).Next(0,3)-1;
-
-            //    var terrain = GenerateFlat(32, 32, 0.5f);
-
-            //    if(y == -1)
-            //    {
-            //        var Mountain = GenerateWhiteNoise(32, 32, 0 + x, 0);
-            //        Mountain = GeneratePerlinNoise(Mountain, 6, 0.5f);
-
-            //        Mask(Mountain, Blend, 0f);
-            //        SubMaps(terrain, Mountain, 0.2f);
-            //        for (int i = 0;i < 32;i++)
-            //        {
-            //            float Val = (terrain[0, i]) * 32;
-            //            PlaceBlock(new Vector2(x * 32 + i + 1, Val), 1, chunks);
-
-            //        }
-            //    }
-            //    if (y == 0)
-            //    {
-            //        var Hills = GenerateWhiteNoise(32, 32, 0 + x, 0);
-            //        Hills = GeneratePerlinNoise(Hills, 6, 0.7f);
-            //        Mask(Hills, Blend, 0f);
-            //        Hills = GenerateSmoothNoise(Hills, 3);
-            //        SumMaps(terrain, Hills, 0.7f);
-
-            //        for (int i = 0; i < 32; i++)
-            //        {
-            //            float Val = (1 - terrain[0, i]) * 32;
-            //            PlaceBlock(new Vector2(x * 32 + i + 1, Val), 2, chunks);
-
-            //        }
-            //    }
-            //    if (y == 1)
-            //    {
-            //        var Mountain = GenerateWhiteNoise(32, 32, 0 + x, 0);
-            //        Mountain = GeneratePerlinNoise(Mountain, 6, 0.2f);
-            //        Mask(Mountain, Blend, 0f);
-            //        SumMaps(terrain, Mountain, 0.3f);
-
-            //        for (int i = 0; i < 32; i++)
-            //        {
-            //            float Val = (1 - terrain[0, i]) * 32;
-            //            PlaceBlock(new Vector2(x * 32 + i + 1, Val), 3, chunks);
-
-            //        }
-            //    }
             int x = BlockManager.GetChunkAtPos(pos)[0];
 
             int width = 1000;
@@ -231,13 +166,13 @@ namespace MinecraftAlpha
 
             //float Val = (PerlinMap[0, 1+int.Abs(x) * 31]) * 20;
             //PlaceBlock(new Vector2((x * 32)-1, Val), 2, chunks);
-            int i = 0;
-            float Val = (PerlinMap[0, i + int.Abs(x) * 32]) * 20;
-            PlaceBlock(new Vector2((x * 32) + i, Val), 2, chunks);
-            i = 1;
-            Val = (PerlinMap[0, i + int.Abs(x) * 32]) * 20;
-            PlaceBlock(new Vector2((x * 32) + i, Val), 2, chunks);
-
+            
+            for(int i = 0; i < 32; i++)
+            {
+                int I = i;
+                float Val = (PerlinMap[0, I +(int.Abs(x) * 32)]) * 20;
+                PlaceBlock(new Vector2((x * 32)+0.2f + I, Val), 2, chunks);
+            }
 
 
             //float Val = (1 - terrain[0, i]) * 32;
@@ -247,12 +182,13 @@ namespace MinecraftAlpha
 
         public static void PlaceBlock(Vector2 pos, int id, List<Chunk> chunks)
         {
-            var Tile = BlockManager.GetBlockAtPos(pos, chunks);
+            TileGrid Tile = BlockManager.GetBlockAtPos(pos, chunks);
             if (Tile == null)
             {
-                BlockManager.Makechunk(pos, chunks);
+
+                var ChunkNot = BlockManager.GetChunkAtPos(pos);
+                chunks.Add(new(ChunkNot[0], ChunkNot[1]));
                 Tile = BlockManager.GetBlockAtPos(pos, chunks);
-                
             }
             Tile.ID = id;
         }
