@@ -407,6 +407,11 @@ public class Game1 : Game
 
         //    }
         //}
+        if (Keyboard.GetState().IsKeyDown(Keys.F11))
+        {
+            
+            _graphics.ToggleFullScreen();
+        }
 
         foreach (var Window in _userInterfaceManager.windows)
         {
@@ -435,7 +440,7 @@ public class Game1 : Game
         
 
         // TODO: Add your update logic here
-        Input();
+        Input(gameTime);
 
 
 
@@ -549,13 +554,13 @@ public class Game1 : Game
 
     public bool RightClicked = false;
     public bool LeftClicked = false;
-    public void Input()
+    public void Input(GameTime time)
     {
         var PLR = Player.Plr;
 
         HotbarIndex = (Mouse.GetState().ScrollWheelValue / 120) % 9 + 1;
 
-
+        
 
 
 
@@ -707,6 +712,7 @@ public class Game1 : Game
             {
                 
                 //var Chunk = Chunks.Last();
+                
 
                 Generation.GenerateChunk(WorldMousePos,Chunks);
 
@@ -754,7 +760,7 @@ public class Game1 : Game
         if (keyboardState.IsKeyDown(Keys.F))
         {
             //InventoryOpen = !InventoryOpen;
-            Structure.LoadStructures()[0].GenerateStructure(this,World, WorldMousePos, true);
+            Structure.LoadStructures()[0].GenerateStructure(Chunks, WorldMousePos, true);
 
 
         }

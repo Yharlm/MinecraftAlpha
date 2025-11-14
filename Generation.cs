@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-
-using Microsoft.Xna.Framework;
 
 namespace MinecraftAlpha
 {
@@ -50,13 +49,13 @@ namespace MinecraftAlpha
             return tilegrid;
         }
 
-        public void GenerateStructure(Game1 game,TileGrid[,] World, Vector2 position, bool Replace)
+        public void GenerateStructure(List<Chunk> list, Vector2 position, bool Replace)
         {
             for (int y = 0; y < BluePrint.GetLength(0); y++)
             {
                 for (int x = 0; x < BluePrint.GetLength(1); x++)
                 {
-                    var grid = BlockManager.GetBlockAtPos(position + new Vector2(x,y),game.Chunks);
+                    var grid = BlockManager.GetBlockAtPos(position + new Vector2(x, y), list);
                     if (grid == null) return;
                     var blueprintGrid = BluePrint[y, x];
 
@@ -76,9 +75,9 @@ namespace MinecraftAlpha
 
 
         public int x;
-        public int y;    
+        public int y;
         public TileGrid[,] Tiles = new TileGrid[32, 32];
-        public Chunk(int x, int y, TileGrid[,] Grid) 
+        public Chunk(int x, int y, TileGrid[,] Grid)
         {
             this.x = x;
             this.y = y;
@@ -90,9 +89,9 @@ namespace MinecraftAlpha
             this.y = y;
             for (int i = 0; i < Tiles.GetLength(0); i++)
             {
-                for(int j = 0; j < Tiles.GetLength(1);j++)
+                for (int j = 0; j < Tiles.GetLength(1); j++)
                 {
-                    Tiles[i,j] = new TileGrid()
+                    Tiles[i, j] = new TileGrid()
                     { ID = 0 };
                 }
             }
@@ -144,35 +143,63 @@ namespace MinecraftAlpha
 
         public static void GenerateChunk(Vector2 pos, List<Chunk> chunks)
         {
+            int seed = 42;
+            int x = BlockManager.GetChunkAtPos(pos)[0] - 1;
+            var random = new Random(seed);
 
-            int x = BlockManager.GetChunkAtPos(pos)[0];
 
             int width = 1000;
 
+            var PerlinMap = GenerateWhiteNoise(width, 40, seed, 0);
 
-            var PerlinMap = GenerateWhiteNoise(width, 40, 1, 0);
-            
             PerlinMap = GenerateSmoothNoise(PerlinMap, 3);
             PerlinMap = GeneratePerlinNoise(PerlinMap, 6, 0.4f);
 
-            var Mountain = GenerateWhiteNoise(width, 40, 1, 1);
+            var Mountain = GenerateWhiteNoise(width, 40, seed+1, 1);
             Mountain = GeneratePerlinNoise(Mountain, 6, 0.4f);
             SubMaps(PerlinMap, Mountain, 0.6f);
             PerlinMap = GenerateSmoothNoise(PerlinMap, 2);
 
-
+            var Trees = GenerateWhiteNoise(width, 40, seed+1, 1); 
+            Trees = GeneratePerlinNoise(Trees, 6, 0.5f);
+            Trees = GenerateSmoothNoise(Trees, 2);
 
 
 
             //float Val = (PerlinMap[0, 1+int.Abs(x) * 31]) * 20;
             //PlaceBlock(new Vector2((x * 32)-1, Val), 2, chunks);
-            
-            for(int i = 0; i < 32; i++)
+
+
+            for (int i = 0; i < 32; i++)
             {
                 int I = i;
-                float Val = (PerlinMap[0, I +(int.Abs(x) * 32)]) * 20;
-                PlaceBlock(new Vector2((x * 32)+0.2f + I, Val), 2, chunks);
+                float Val = (PerlinMap[0, I + (int.Abs(x) * 32)]) * 20;
+                Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
+                if (x < 0)
+                    placement= new Vector2((x * 32) + 0.2f + 32 - I, Val);
+
+                PlaceBlock(placement, 2, chunks);
+                if(random.Next(1,5) == 4)
+                {
+                    Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(0, 1), true);
+                }
+
+                
+                for (int j = 1; j < 5; j++)
+                {
+                    PlaceBlock(placement + new Vector2(0,j), 1, chunks);
+                }
+                for (int j = 5; j < 12; j++)
+                {
+                    PlaceBlock(placement + new Vector2(0, j), 3, chunks);
+                }
+
+
             }
+
+
+
+
 
 
             //float Val = (1 - terrain[0, i]) * 32;
@@ -227,7 +254,7 @@ namespace MinecraftAlpha
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    Map[i, j] = float.Abs(centerX - j)/16;
+                    Map[i, j] = float.Abs(centerX - j) / 16;
 
 
                 }
@@ -244,11 +271,11 @@ namespace MinecraftAlpha
             Random random = new Random(seed);
             for (int i = 0; i < Height; i++)
             {
-                
+
 
                 for (int j = 0; j < Width; j++)
                 {
-                    
+
                     if (random.Next(0, Area + 1) != Area / 2)
                     {
                         continue;
