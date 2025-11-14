@@ -1,6 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MinecraftAlpha
 {
@@ -111,7 +112,30 @@ namespace MinecraftAlpha
     {
 
 
+        public static List<Vector2> CaveGenerate(Vector2 position, int seed, int length)
+        {
+            Random random = new Random(seed);
+            float angle = 0f;
+            Vector2 Lastpos = position;
+            List<Vector2> points = new List<Vector2>();
+            for (int i = 0; i < length; i++)
+            {
+                angle += (float)(random.NextDouble() * 20 - 10); // 10 / -10*
+                var rot = Matrix4x4.CreateRotationZ(angle*float.Pi/180);
+                Vector2 dir = Vector2.Transform(new Vector2(5, 0), rot);
+                Vector2 point = Lastpos + dir;
+                
+                Lastpos = point;
 
+                
+
+
+
+                points.Add(point);
+                
+            }
+            return points;
+        }
 
         int seed;
 
@@ -155,14 +179,12 @@ namespace MinecraftAlpha
             PerlinMap = GenerateSmoothNoise(PerlinMap, 3);
             PerlinMap = GeneratePerlinNoise(PerlinMap, 6, 0.4f);
 
-            var Mountain = GenerateWhiteNoise(width, 40, seed+1, 1);
+            var Mountain = GenerateWhiteNoise(width, 40, seed + 1, 1);
             Mountain = GeneratePerlinNoise(Mountain, 6, 0.4f);
             SubMaps(PerlinMap, Mountain, 0.6f);
             PerlinMap = GenerateSmoothNoise(PerlinMap, 2);
 
-            var Trees = GenerateWhiteNoise(width, 40, seed+1, 1); 
-            Trees = GeneratePerlinNoise(Trees, 6, 0.5f);
-            Trees = GenerateSmoothNoise(Trees, 2);
+
 
 
 
@@ -176,18 +198,23 @@ namespace MinecraftAlpha
                 float Val = (PerlinMap[0, I + (int.Abs(x) * 32)]) * 20;
                 Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
                 if (x < 0)
-                    placement= new Vector2((x * 32) + 0.2f + 32 - I, Val);
+                    placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
 
-                PlaceBlock(placement, 2, chunks);
-                if(random.Next(1,5) == 4)
+
+                if (random.Next(1, 5) == 4)
                 {
-                    Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(0, 1), true);
-                }
 
-                
+                    Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 6), false);
+                    //if (random.Next(0, 3) == 2)
+                    //{
+                    //    Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), false);
+                    //}
+                }
+                PlaceBlock(placement, 2, chunks);
+
                 for (int j = 1; j < 5; j++)
                 {
-                    PlaceBlock(placement + new Vector2(0,j), 1, chunks);
+                    PlaceBlock(placement + new Vector2(0, j), 1, chunks);
                 }
                 for (int j = 5; j < 12; j++)
                 {

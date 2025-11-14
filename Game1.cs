@@ -760,7 +760,16 @@ public class Game1 : Game
         if (keyboardState.IsKeyDown(Keys.F))
         {
             //InventoryOpen = !InventoryOpen;
-            Structure.LoadStructures()[0].GenerateStructure(Chunks, WorldMousePos, true);
+            //Structure.LoadStructures()[0].GenerateStructure(Chunks, WorldMousePos, true);
+            var list = Generation.CaveGenerate(WorldMousePos, 0, 10);
+            foreach (var pos in list)
+            {
+                var tile = BlockManager.GetBlockAtPos(pos, Chunks);
+                if (tile != null)
+                {
+                    tile.ID = 0;
+                }
+            }
 
 
         }
