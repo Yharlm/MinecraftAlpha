@@ -54,7 +54,7 @@ namespace MinecraftAlpha
 
 
         }
-        public static List<EntityAnimation> PlayerAnim()
+        public static List<EntityAnimation> LoadAnimations()
         {
             var
             entityAnimations = new List<EntityAnimation>

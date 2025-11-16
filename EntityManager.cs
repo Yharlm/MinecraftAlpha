@@ -116,7 +116,12 @@ namespace MinecraftAlpha
                         B_Index = 4
                     }
                 },
-                Animations = EntityAnimationService.PlayerAnim()
+                Animations = new()
+                {
+                    EntityAnimationService.LoadAnimations()[0],
+                    EntityAnimationService.LoadAnimations()[1],
+                    EntityAnimationService.LoadAnimations()[2],
+                }
 
 
 
@@ -145,6 +150,13 @@ namespace MinecraftAlpha
 
 
 
+        }
+
+        public List<EntityAnimation> LoadEntityAnimations(int id)
+        {
+            var animations = new List<EntityAnimation>();
+            //animations.Add();
+            return animations;
         }
         public void LoadSprites(ContentManager contentManager)
         {
