@@ -78,6 +78,7 @@ namespace MinecraftAlpha
         public int x;
         public int y;
         public TileGrid[,] Tiles = new TileGrid[32, 32];
+        public TileGrid3D[,,] = new TileGrid[10,32,32];
         public Chunk(int x, int y, TileGrid[,] Grid)
         {
             this.x = x;
@@ -97,6 +98,7 @@ namespace MinecraftAlpha
                 }
             }
         }
+        
 
         //public bool isinchunk(Vector2 pos)
         //{
