@@ -861,13 +861,14 @@ public class Game1 : Game
                 {
                     for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
                     {
-                        int Z = 0;
+                        float Z = 0;
                         var Tile = chunk.Tiles[0, i, j];
                         for (int z = 0; z < chunk.Tiles.GetLength(0); z++)
                         {
-                            z = 9 / (z+1);
+                            
                             if (chunk.Tiles[z, i, j].ID != 0)
                             {
+                                Z = (float)z / 9f;
                                 Tile = chunk.Tiles[z, i, j];
                             }
                             
@@ -879,6 +880,7 @@ public class Game1 : Game
                         float Light01 = Light - 0.2f;
 
                         var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) * block.Color ;
+                        var Layer = Color.FromNonPremultiplied(new Vector4(Z, Z, Z, 1));
 
                         int healthPercent = (int)Tile.MinedHealth / 10;
                         Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);
@@ -896,8 +898,8 @@ public class Game1 : Game
 
                         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
                         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
-                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, block.Color, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
-                        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White* Z, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
 
                     }
                 }
