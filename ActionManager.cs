@@ -62,12 +62,12 @@ namespace MinecraftAlpha
         {
             var Chunks = Game.Chunks;
             if (block == null) return;
-            TileGrid Tile = BlockManager.GetBlockAtPos(pos, Chunks);
+            TileGrid Tile = BlockManager.GetLastBlockAtPos(pos, Chunks);
             if (Tile == null) {
                 
                 var ChunkNot = BlockManager.GetChunkAtPos(pos);
                 Chunks.Add(new(ChunkNot[0], ChunkNot[1]));
-                Tile = BlockManager.GetBlockAtPos(pos, Chunks);
+                Tile = BlockManager.GetLastBlockAtPos(pos, Chunks);
             }
 
 
@@ -120,7 +120,7 @@ namespace MinecraftAlpha
 
             
             //Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
-            TileGrid Tile = BlockManager.GetBlockAtPos(Pos,Game.Chunks);
+            TileGrid Tile = BlockManager.GetLastBlockAtPos(Pos,Game.Chunks);
             if (Tile == null) return;
             var block = Game._blockManager.Blocks[Tile.ID];
             if (block.Interaction != null)
@@ -136,7 +136,7 @@ namespace MinecraftAlpha
         
         public void BreakBlock(Vector2 Pos)
         {
-            var Tile = BlockManager.GetBlockAtPos(Pos,Game.Chunks);
+            var Tile = BlockManager.GetLastBlockAtPos(Pos,Game.Chunks);
             if (Tile == null) { return; }
             var block = Game._blockManager.Blocks[Tile.ID];
             

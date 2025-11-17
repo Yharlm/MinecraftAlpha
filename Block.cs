@@ -189,6 +189,10 @@ namespace MinecraftAlpha
         }
         public static TileGrid GetBlockAtPos(Vector2 pos, List<Chunk> Chunks)
         {
+            return GetBlockAtPos(pos, 9, Chunks);
+        }
+        public static TileGrid GetBlockAtPos(Vector2 pos,int z, List<Chunk> Chunks)
+        {
             TileGrid Tile = null;
             if (Chunks.Count == 0) return null;
 
@@ -216,7 +220,7 @@ namespace MinecraftAlpha
                         y = size-1 - Math.Abs(y);
                     }
 
-                    Tile = C.Tiles[y, x];
+                    Tile = C.Tiles[z,y, x];
                 }
 
             }
@@ -224,6 +228,26 @@ namespace MinecraftAlpha
 
             return Tile;
         }
+
+        public static TileGrid GetLastBlockAtPos(Vector2 pos, List<Chunk> Chunks)
+        {
+            
+            TileGrid Tile = GetBlockAtPos(pos,Chunks);
+            if (Tile == null) return null;
+            for (int i = 0;i < 10;i++)
+            {
+
+                if (GetBlockAtPos(pos, i, Chunks).ID != 0)
+                {
+                    Tile = GetBlockAtPos(pos,i, Chunks);
+                }
+            }
+
+            return Tile;
+        }
+
+
+
         public static int[] GetChunkAtPos(Vector2 pos)
         {
             int size = 32;

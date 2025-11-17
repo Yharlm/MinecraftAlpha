@@ -4,9 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Reflection.Emit;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -107,30 +104,31 @@ public class Game1 : Game
 
         foreach (Chunk c in Chunks)
         {
-            
-            for (int i = 0; i < c.Tiles.GetLength(0); i++)
+            for (int z = 0; z < c.Tiles.GetLength(0); z++)
             {
-                for (int j = 0; j < c.Tiles.GetLength(1); j++)
+                for (int i = 0; i < c.Tiles.GetLength(1); i++)
                 {
-                    if(i == 0)
+                    for (int j = 0; j < c.Tiles.GetLength(2); j++)
                     {
-                        
-                        c.Tiles[i, j] = new TileGrid()
-                        { ID = 2 };
-                        continue;
+                        if (i == 0)
+                        {
+
+                            c.Tiles[z, i, j] = new TileGrid()
+                            { ID = 2 };
+                            continue;
+                        }
+                        c.Tiles[z, i, j] = new TileGrid()
+                        { ID = 1 };
                     }
-                    c.Tiles[i, j] = new TileGrid()
-                    { ID = 1 };
                 }
             }
-            
         }
-        
 
 
 
 
-       
+
+
 
 
 
@@ -409,7 +407,7 @@ public class Game1 : Game
         //}
         if (Keyboard.GetState().IsKeyDown(Keys.F11))
         {
-            
+
             _graphics.ToggleFullScreen();
         }
 
@@ -426,18 +424,18 @@ public class Game1 : Game
         //Lighting(BackGround, 35);
         //Lighting(World, 7);
         float Time = 1f;
-        if(Daytime <= 12)
+        if (Daytime <= 12)
         {
             Daytime += Time;
 
         }
-        
+
         if (Daytime > 12)
         {
             Daytime -= Time;
 
         }
-        
+
 
         // TODO: Add your update logic here
         Input(gameTime);
@@ -501,13 +499,13 @@ public class Game1 : Game
                 _entityAnimationService.Stop(1, entity);
             }
 
-            
+
 
 
             var EntVal = entity.velocity.velocity;
 
-            
-            
+
+
 
             if (entity.Jumping)
             {
@@ -560,7 +558,7 @@ public class Game1 : Game
 
         HotbarIndex = (Mouse.GetState().ScrollWheelValue / 120) % 9 + 1;
 
-        
+
 
 
 
@@ -590,9 +588,9 @@ public class Game1 : Game
                 _entityAnimationService.Play(2, PLR);
                 //add a attack part here instead
 
-                
-                    _actionManager.BreakBlock(WorldMousePos);
-                
+
+                _actionManager.BreakBlock(WorldMousePos);
+
             }
 
         }
@@ -636,9 +634,9 @@ public class Game1 : Game
             if (!_userInterfaceManager.Clicked)
             {
 
-               
 
-                _actionManager.PlaceBlock(WorldMousePos,_userInterfaceManager.selectedItem);
+
+                _actionManager.PlaceBlock(WorldMousePos, _userInterfaceManager.selectedItem);
             }
         }
         else if (Mouse.GetState().RightButton == ButtonState.Released)
@@ -710,15 +708,15 @@ public class Game1 : Game
             }
             if (key == Keys.Y)
             {
-                
-                //var Chunk = Chunks.Last();
-                
 
-                Generation.GenerateChunk(WorldMousePos,Chunks);
+                //var Chunk = Chunks.Last();
+
+
+                Generation.GenerateChunk(WorldMousePos, Chunks);
 
             }
         }
-        
+
 
 
 
@@ -812,7 +810,7 @@ public class Game1 : Game
 
 
 
-    
+
     protected override void Draw(GameTime gameTime)
     {
 
@@ -844,7 +842,7 @@ public class Game1 : Game
         //Player.cam.RenderChunk(_blockManager, _spriteBatch, Chunks[0], 0f, Player.Plr.position, BreakTexture);
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
 
-        _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         foreach (var chunk in Chunks)
         {
             int RenderDistance = 2;
@@ -856,27 +854,42 @@ public class Game1 : Game
             {
 
 
-                for (var i = 0; i < chunk.Tiles.GetLength(0); i++)
+                
+
+
+                for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
                 {
-                    for (var j = 0; j < chunk.Tiles.GetLength(1); j++)
+                    for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
                     {
-                        var block = _blockManager.Blocks[chunk.Tiles[i, j].ID];
-                        var Map = chunk.Tiles;
-                        float Light = Map[i, j].brightness;
+                        int Z = 0;
+                        var Tile = chunk.Tiles[0, i, j];
+                        for (int z = 0; z < chunk.Tiles.GetLength(0); z++)
+                        {
+                            z = 9 / (z+1);
+                            if (chunk.Tiles[z, i, j].ID != 0)
+                            {
+                                Tile = chunk.Tiles[z, i, j];
+                            }
+                            
+                        }
+
+                        var block = _blockManager.Blocks[Tile.ID];
+                        
+                        float Light = Tile.brightness;
                         float Light01 = Light - 0.2f;
 
-                        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) * block.Color;
+                        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) * block.Color ;
 
-                        int healthPercent = (int)Map[i, j].MinedHealth / 10;
+                        int healthPercent = (int)Tile.MinedHealth / 10;
                         Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);
-                        if ((int)Map[i, j].MinedHealth <= 0)
+                        if ((int)Tile.MinedHealth <= 0)
                         {
                             sourceRectangle = new Rectangle(0, 0, 0, 0);
                         }
                         Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
 
                         int State = block.DefaultState;
-                        if (Map[i, j].state > 0)
+                        if (Tile.state > 0)
                         {
                             BlockState = new Rectangle(State, 0, block.Texture.Width, block.Texture.Height);
                         }
@@ -884,10 +897,11 @@ public class Game1 : Game
                         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
                         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
                         _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, block.Color, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
-                        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White* Z, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
 
                     }
                 }
+
             }
         }
         _spriteBatch.End();
@@ -916,7 +930,7 @@ public class Game1 : Game
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (HotbarIndex).ToString(), new Vector2(70,20), Color.Red);
+        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
 
 
 
