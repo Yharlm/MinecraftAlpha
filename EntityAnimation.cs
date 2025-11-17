@@ -220,11 +220,19 @@ public class EntityAnimation
 
     public static List<EntityAnimation> LoadAnimation(Entity parent, List<EntityAnimation> Newlist)
     {
-        foreach (var Anim in Newlist)
+        int id = parent.ID;
+        var animations = new List<EntityAnimation>();
+
+        foreach (var anim in Newlist)
         {
-            Anim.parent = parent;
+            if(anim.ID == id)
+            {
+                var newAnim = new EntityAnimation(anim.ID, anim.name, anim.frames);
+                newAnim.parent = parent;
+                animations.Add(newAnim);
+            }
         }
-        return Newlist;
+        return animations;
     }
 
 
