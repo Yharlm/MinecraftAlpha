@@ -12,6 +12,7 @@ namespace MinecraftAlpha
         public Entity Plr;
         public Cammera cam = new Cammera();
         public bool Jumping = false;
+        public int ZBuildMode = 8; // 0 = place, 1 = destroy
 
         public void PickupItem(Block item,int amount,WindowFrame inventory)
         {

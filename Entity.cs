@@ -57,7 +57,7 @@ namespace MinecraftAlpha
             //    return; // Skip if the entity is out of bounds
             //}
             entity.collisionBox = new CollisionBox(); // Reset collision box for each update
-            float Collision_quality = 0.5f;
+            //float Collision_quality = 0.5f;
             //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
 
             //if (World[(int)(entity.position.Y - Size.Y), (int)(entity.position.X)].ID != 0)
@@ -80,21 +80,21 @@ namespace MinecraftAlpha
             Vector2 Left = entity.position + new Vector2(0, entity.collisionBox.Size.Y/2f);
             Vector2 Right = entity.position + new Vector2(entity.collisionBox.Size.X, entity.collisionBox.Size.Y / 2f);
             Vector2 Top = entity.position + new Vector2(entity.collisionBox.Size.X / 2, 0);
+            int z = (int)entity.Layer;
 
-
-            if (BlockManager.GetBlockAtPos(Bottom, World) != null && BlockManager.GetBlockAtPos(Bottom, World).ID != 0)
+            if (BlockManager.GetBlockAtPos(Bottom, z, World) != null && BlockManager.GetBlockAtPos(Bottom, z, World).ID != 0)
             {
                 entity.collisionBox.Bottom = true;
             }
-            if (BlockManager.GetBlockAtPos(Left, World) != null && BlockManager.GetBlockAtPos(Left, World).ID != 0)
+            if (BlockManager.GetBlockAtPos(Left, z, World) != null && BlockManager.GetBlockAtPos(Left, z, World).ID != 0)
             {
                 entity.collisionBox.Left = true;
             }
-            if (BlockManager.GetBlockAtPos(Right, World) != null && BlockManager.GetBlockAtPos(Right, World).ID != 0)
+            if (BlockManager.GetBlockAtPos(Right, z, World) != null && BlockManager.GetBlockAtPos(Right, z, World).ID != 0)
             {
                 entity.collisionBox.Right = true;
             }
-            if (BlockManager.GetBlockAtPos(Top, World) != null && BlockManager.GetBlockAtPos(Top, World).ID != 0)
+            if (BlockManager.GetBlockAtPos(Top, z, World) != null && BlockManager.GetBlockAtPos(Top, z, World).ID != 0)
             {
                 entity.collisionBox.Top = true;
             }
@@ -210,6 +210,7 @@ namespace MinecraftAlpha
         public float Mass = 1f;
         public float IFrame = 3f; // Invincibility Frames
         public bool CanDamage = true;
+        public float Layer = 8;
 
         public Entity(int id, string Name, string TextureName, int Health)
         {
@@ -271,7 +272,7 @@ namespace MinecraftAlpha
             //SB.End();
             if (this.Model3D != null)
             {
-                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18);
+                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18,0);
                 return;
             }
 
@@ -286,8 +287,8 @@ namespace MinecraftAlpha
             }
             foreach (Sprite s in Sprites)
             {
-
-                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped);
+                int i = Sprites.IndexOf(s);
+                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, i/10);
 
             }
         }

@@ -105,7 +105,7 @@ namespace MinecraftAlpha
 
         }
 
-        public void Draw(SpriteBatch spritebatch,Vector2 Pos,float size)
+        public void Draw(SpriteBatch spritebatch,Vector2 Pos,float size,float Z)
         {
             Sides2_3D Visible = null;
             for (int i = 0; i < Sides.Length; i++)
@@ -133,7 +133,7 @@ namespace MinecraftAlpha
 
                 return;
             }
-            spritebatch.Begin();
+            //spritebatch.Begin();
 
             float Floating = float.Cos(Orientation * MathF.PI / 180) * 10;
 
@@ -168,9 +168,9 @@ namespace MinecraftAlpha
                 Vector2.Zero , //
                 SizeB,
                 SpriteEffects.None,
-                1f
+                1
                 );
-            spritebatch.End();
+            //spritebatch.End();
 
 
         }
@@ -232,7 +232,7 @@ namespace MinecraftAlpha
 
 
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
-        public void DrawSprite(SpriteBatch spriteBatch, Vector2 Pos, float size, float Rotation, bool Flip) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
+        public void DrawSprite(SpriteBatch spriteBatch, Vector2 Pos, float size, float Rotation, bool Flip,float Z) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
 
         {
             SpriteEffects spriteEffect = SpriteEffects.None;
@@ -252,7 +252,7 @@ namespace MinecraftAlpha
             var ParentPos = Vector2.Transform(Parent, AnglePos);
             var attachmentPos = Vector2.Transform(Attachment, AnglePos);
 
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            
             spriteBatch.Draw(
                 texture,
                 Pos - ParentPos * size,
@@ -262,9 +262,9 @@ namespace MinecraftAlpha
                 new Vector2(ract.Width, ract.Height) / 2 + Attachment, //
                 size,
                 spriteEffect,
-                1f
+                Z
                 );
-            spriteBatch.End();
+            
         }
 
         public static List<Sprite> LoadSprites(Entity mob)

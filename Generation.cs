@@ -199,37 +199,39 @@ public class Generation
         //float Val = (PerlinMap[0, 1+int.Abs(x) * 31]) * 20;
         //PlaceBlock(new Vector2((x * 32)-1, Val), 2, chunks);
 
-
-        for (int i = 0; i < 32; i++)
+        for (int z = 0; z < 10; z++)
         {
-            int I = i;
-            float Val = (PerlinMap[0, I + (int.Abs(x) * 32)]) * 20;
-            Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
-            if (x < 0)
-                placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
-
-
-            if (random.Next(1, 5) == 4)
+            for (int i = 0; i < 32; i++)
             {
+                int I = i;
+                float Val = (PerlinMap[z, I + (int.Abs(x) * 32)]) * 20;
+                Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
+                if (x < 0)
+                    placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
 
-                Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 6), false);
-                //if (random.Next(0, 3) == 2)
-                //{
-                //    Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), false);
-                //}
+
+                if (random.Next(1, 5) == 4)
+                {
+
+                    //Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 6), false);
+                    //if (random.Next(0, 3) == 2)
+                    //{
+                    //    Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), false);
+                    //}
+                }
+                PlaceBlock(placement,z, 2, chunks);
+
+                for (int j = 1; j < 5; j++)
+                {
+                    PlaceBlock(placement + new Vector2(0, j),z, 1, chunks);
+                }
+                for (int j = 5; j < 12; j++)
+                {
+                    PlaceBlock(placement + new Vector2(0, j),z, 3, chunks);
+                }
+
+
             }
-            PlaceBlock(placement, 2, chunks);
-
-            for (int j = 1; j < 5; j++)
-            {
-                PlaceBlock(placement + new Vector2(0, j), 1, chunks);
-            }
-            for (int j = 5; j < 12; j++)
-            {
-                PlaceBlock(placement + new Vector2(0, j), 3, chunks);
-            }
-
-
         }
 
 
@@ -242,15 +244,15 @@ public class Generation
 
     }
 
-    public static void PlaceBlock(Vector2 pos, int id, List<Chunk> chunks)
+    public static void PlaceBlock(Vector2 pos, int z,int id, List<Chunk> chunks)
     {
-        TileGrid Tile = BlockManager.GetBlockAtPos(pos, chunks);
+        TileGrid Tile = BlockManager.GetBlockAtPos(pos,z, chunks);
         if (Tile == null)
         {
 
             var ChunkNot = BlockManager.GetChunkAtPos(pos);
             chunks.Add(new(ChunkNot[0], ChunkNot[1]));
-            Tile = BlockManager.GetBlockAtPos(pos, chunks);
+            Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
         }
         Tile.ID = id;
     }

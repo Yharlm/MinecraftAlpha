@@ -42,7 +42,7 @@ namespace MinecraftAlpha
         
         public void DrawUI(SpriteBatch spriteBatch, ContentManager Contnet)
         {
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp,effect: Contnet.Load<Effect>("Shaders/Shader"));
+            //spriteBatch.Begin(samplerState: SamplerState.PointClamp,effect: Contnet.Load<Effect>("Shaders/Shader"));
             //foreach (var Frame in Frames)
             //{
             //    if (Frame.Window == null) continue;
@@ -109,7 +109,7 @@ namespace MinecraftAlpha
             }
 
 
-            spriteBatch.End();
+            //spriteBatch.End();
 
 
             DrawItemToMouse(spriteBatch, Contnet.Load<SpriteFont>("Font"));
@@ -126,10 +126,10 @@ namespace MinecraftAlpha
                 return;
             }
             Vector2 mouse = Mouse.GetState().Position.ToVector2();
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            
             spriteBatch.Draw(selectedItem.Texture, mouse - Vector2.One * selectedItem.Texture.Width, null, Color.White);
             spriteBatch.DrawString(Text, Amounts, mouse, Color.White);
-            spriteBatch.End();
+            
         }
 
         //creates presets

@@ -92,7 +92,7 @@ namespace MinecraftAlpha
 
             }
 
-            spriteBatch.Begin(samplerState:SamplerState.PointClamp);
+            //spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 Texture,
                 Size * Position + Camera,
@@ -104,7 +104,7 @@ namespace MinecraftAlpha
                 SpriteEffects.None,
                 1f
                 );
-            spriteBatch.End();
+            //spriteBatch.End();
         }
     }
     public class ParticleSystem

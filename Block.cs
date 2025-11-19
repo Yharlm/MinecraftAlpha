@@ -193,6 +193,7 @@ namespace MinecraftAlpha
         }
         public static TileGrid GetBlockAtPos(Vector2 pos,int z, List<Chunk> Chunks)
         {
+            if (z < 0 || z > 9) return null;
             TileGrid Tile = null;
             if (Chunks.Count == 0) return null;
 

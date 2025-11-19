@@ -677,13 +677,38 @@ public class Game1 : Game
 
         foreach (var key in keyboard)
         {
-            if (key == Keys.W)
+            if (key == Keys.Space)
             {
 
                 plrVel += new Vector2(0, -12);
                 Player.Plr.Jumping = true;
             }
             if (key == Keys.S)
+            {
+
+                var tile = BlockManager.GetBlockAtPos(Player.Plr.position, (int)Player.Plr.Layer + 1, Chunks);
+                if (tile != null)
+                {
+                    if (tile.ID == 0)
+                    {
+                        Player.Plr.Layer += 0.02f;
+                    }
+
+                }
+            }
+            if (key == Keys.W)
+            {
+                var tile = BlockManager.GetBlockAtPos(Player.Plr.position, (int)Player.Plr.Layer - 1, Chunks);
+                if (tile != null)
+                {
+                    if (tile.ID == 0)
+                    {
+                        Player.Plr.Layer -= 0.02f;
+                    }
+
+                }
+            }
+            if (key == Keys.LeftShift)
             {
 
                 plrVel += new Vector2(0, +12);
@@ -707,6 +732,15 @@ public class Game1 : Game
 
             }
             if (key == Keys.Y)
+            {
+
+                //var Chunk = Chunks.Last();
+
+
+                Generation.GenerateChunk(WorldMousePos, Chunks);
+
+            }
+            if (key == Keys.LeftControl)
             {
 
                 //var Chunk = Chunks.Last();
@@ -823,7 +857,7 @@ public class Game1 : Game
         //_spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Daytime.ToString("0.00"), new Vector2(700, (float)Math.Sin(Daytime/12)), Color.Wheat);
         //_spriteBatch.End();
 
-        _spriteBatch.Begin(samplerState: SamplerState.LinearClamp);
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp,sortMode:SpriteSortMode.BackToFront);
         foreach (var Mob in Entities)
         {
 
@@ -831,7 +865,7 @@ public class Game1 : Game
 
 
         }
-        _spriteBatch.End();
+        
 
         // 2 cycles to render both directions of the world
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
@@ -842,7 +876,7 @@ public class Game1 : Game
         //Player.cam.RenderChunk(_blockManager, _spriteBatch, Chunks[0], 0f, Player.Plr.position, BreakTexture);
         //Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
 
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        
         foreach (var chunk in Chunks)
         {
             int RenderDistance = 2;
@@ -874,39 +908,15 @@ public class Game1 : Game
                             
                         }
 
-                        var block = _blockManager.Blocks[Tile.ID];
-                        
-                        float Light = Tile.brightness;
-                        float Light01 = Light - 0.2f;
+                        DrawBlock(Tile, chunk, i, j, Z);
 
-                        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) * block.Color ;
-                        var Layer = Color.FromNonPremultiplied(new Vector4(Z, Z, Z, 1));
-
-                        int healthPercent = (int)Tile.MinedHealth / 10;
-                        Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);
-                        if ((int)Tile.MinedHealth <= 0)
-                        {
-                            sourceRectangle = new Rectangle(0, 0, 0, 0);
-                        }
-                        Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
-
-                        int State = block.DefaultState;
-                        if (Tile.state > 0)
-                        {
-                            BlockState = new Rectangle(State, 0, block.Texture.Width, block.Texture.Height);
-                        }
-
-                        Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
-                        //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
-                        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
-                        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
 
                     }
                 }
 
             }
         }
-        _spriteBatch.End();
+        
 
 
 
@@ -924,7 +934,7 @@ public class Game1 : Game
         _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
         _userInterfaceManager.DrawUI(_spriteBatch, Content);
 
-        _spriteBatch.Begin();
+        
 
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)Math.Ceiling((WorldMousePos.X / 32))).ToString(), Vector2.One * 40, Color.Chartreuse);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
@@ -950,7 +960,36 @@ public class Game1 : Game
 
     }
 
+    void DrawBlock(TileGrid Tile,Chunk chunk,int i,int j, float Z)
+    {
+        var block = _blockManager.Blocks[Tile.ID];
 
+        float Light = Tile.brightness;
+        float Light01 = Light - 0.2f;
+
+        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) * block.Color;
+        var Layer = Color.FromNonPremultiplied(new Vector4(Z, Z, Z, 1));
+
+        int healthPercent = (int)Tile.MinedHealth / 10;
+        Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);
+        if ((int)Tile.MinedHealth <= 0)
+        {
+            sourceRectangle = new Rectangle(0, 0, 0, 0);
+        }
+        Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
+
+        int State = block.DefaultState;
+        if (Tile.state > 0)
+        {
+            BlockState = new Rectangle(State, 0, block.Texture.Width, block.Texture.Height);
+        }
+
+        Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
+        //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
+        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, Z);
+        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, Z);
+
+    }
     // UI:
     // - SingleClick get stack
     // - DoubleClick get Pull all from container
