@@ -214,10 +214,10 @@ public class Generation
                 {
 
                     //Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 6), false);
-                    //if (random.Next(0, 3) == 2)
-                    //{
-                    //    Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), false);
-                    //}
+                    if (random.Next(0, 3) == 2)
+                    {
+                        Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), false);
+                    }
                 }
                 PlaceBlock(placement,z, 2, chunks);
 

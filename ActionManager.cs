@@ -60,14 +60,15 @@ namespace MinecraftAlpha
         }
         public void PlaceBlock(Vector2 pos,Block block)
         {
+            int Zindex = (int)Game.Player.Plr.Layer;
             var Chunks = Game.Chunks;
             if (block == null) return;
-            TileGrid Tile = BlockManager.GetLastBlockAtPos(pos, Chunks);
+            TileGrid Tile = BlockManager.GetBlockAtPos(pos,Zindex, Chunks);
             if (Tile == null) {
                 
                 var ChunkNot = BlockManager.GetChunkAtPos(pos);
                 Chunks.Add(new(ChunkNot[0], ChunkNot[1]));
-                Tile = BlockManager.GetLastBlockAtPos(pos, Chunks);
+                Tile = BlockManager.GetBlockAtPos(pos,Zindex, Chunks);
             }
 
 
@@ -118,9 +119,9 @@ namespace MinecraftAlpha
                 }
             }
 
-            
+            int Zindex = (int)Game.Player.Plr.Layer;
             //Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
-            TileGrid Tile = BlockManager.GetLastBlockAtPos(Pos,Game.Chunks);
+            TileGrid Tile = BlockManager.GetBlockAtPos(Pos,Zindex,Game.Chunks);
             if (Tile == null) return;
             var block = Game._blockManager.Blocks[Tile.ID];
             if (block.Interaction != null)
@@ -136,7 +137,8 @@ namespace MinecraftAlpha
         
         public void BreakBlock(Vector2 Pos)
         {
-            var Tile = BlockManager.GetLastBlockAtPos(Pos,Game.Chunks);
+            int Zindex = (int)Game.Player.Plr.Layer;
+            var Tile = BlockManager.GetBlockAtPos(Pos,Zindex,Game.Chunks);
             if (Tile == null) { return; }
             var block = Game._blockManager.Blocks[Tile.ID];
             

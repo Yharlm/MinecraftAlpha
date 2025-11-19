@@ -691,7 +691,7 @@ public class Game1 : Game
                 {
                     if (tile.ID == 0)
                     {
-                        Player.Plr.Layer += 0.02f;
+                        Player.Plr.Layer += 0.05f;
                     }
 
                 }
@@ -703,7 +703,7 @@ public class Game1 : Game
                 {
                     if (tile.ID == 0)
                     {
-                        Player.Plr.Layer -= 0.02f;
+                        Player.Plr.Layer -= 0.05f;
                     }
 
                 }
@@ -857,7 +857,7 @@ public class Game1 : Game
         //_spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Daytime.ToString("0.00"), new Vector2(700, (float)Math.Sin(Daytime/12)), Color.Wheat);
         //_spriteBatch.End();
 
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp,sortMode:SpriteSortMode.BackToFront);
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp,sortMode:SpriteSortMode.FrontToBack);
         foreach (var Mob in Entities)
         {
 
@@ -895,6 +895,7 @@ public class Game1 : Game
                 {
                     for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
                     {
+                        float zindex = 0f;
                         float Z = 0;
                         var Tile = chunk.Tiles[0, i, j];
                         for (int z = 0; z < chunk.Tiles.GetLength(0); z++)
@@ -902,13 +903,14 @@ public class Game1 : Game
                             
                             if (chunk.Tiles[z, i, j].ID != 0)
                             {
+                                zindex = z;
                                 Z = (float)z / 9f;
                                 Tile = chunk.Tiles[z, i, j];
                             }
                             
                         }
 
-                        DrawBlock(Tile, chunk, i, j, Z);
+                        DrawBlock(Tile, chunk, i, j, Z,zindex/10);
 
 
                     }
@@ -916,9 +918,10 @@ public class Game1 : Game
 
             }
         }
-        
+        _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
 
-
+        _spriteBatch.End();
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
 
 
@@ -931,7 +934,7 @@ public class Game1 : Game
         }
         base.Draw(gameTime);
 
-        _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
+        
         _userInterfaceManager.DrawUI(_spriteBatch, Content);
 
         
@@ -944,6 +947,12 @@ public class Game1 : Game
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
 
+        foreach (var Sprite in Player.Plr.Sprites)
+        {
+            float layer = Player.Plr.Sprites.IndexOf(Sprite);
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"),(Player.Plr.Layer/10+layer / 100).ToString() , new Vector2(500,20*layer), Color.WhiteSmoke);
+
+        }
 
 
         var Block = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);
@@ -960,7 +969,7 @@ public class Game1 : Game
 
     }
 
-    void DrawBlock(TileGrid Tile,Chunk chunk,int i,int j, float Z)
+    void DrawBlock(TileGrid Tile,Chunk chunk,int i,int j, float Z,float layer)
     {
         var block = _blockManager.Blocks[Tile.ID];
 
@@ -986,8 +995,8 @@ public class Game1 : Game
 
         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
-        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, Z);
-        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, Z);
+        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
+        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer+0.01f);
 
     }
     // UI:
