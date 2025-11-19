@@ -31,7 +31,7 @@ public class Game1 : Game
     public List<Entity> Entities;
     public List<Block> BlockTypes;
 
-
+    public bool creativeMode = true;
     //Chunks list
 
     public List<Chunk> Chunks = new List<Chunk>()
@@ -309,12 +309,12 @@ public class Game1 : Game
 
         _userInterfaceManager.LoadGUI();
 
-        _userInterfaceManager.windows[0].ItemSlots[0].Item = _blockManager.Blocks[4];
-        _userInterfaceManager.windows[0].ItemSlots[0].Count = 64;
-        _userInterfaceManager.windows[0].ItemSlots[1].Item = _blockManager.Blocks[5];
-        _userInterfaceManager.windows[0].ItemSlots[1].Count = 64;
-        _userInterfaceManager.windows[0].ItemSlots[2].Item = _blockManager.Blocks[6];
-        _userInterfaceManager.windows[0].ItemSlots[2].Count = 64;
+        
+        for(int i = 1; i < _blockManager.Blocks.Count; i++)
+        {
+            _userInterfaceManager.windows[0].ItemSlots[i].Item = _blockManager.Blocks[i];
+            _userInterfaceManager.windows[0].ItemSlots[i].Count = 64;
+        }
 
     }
     Sprite3D test;

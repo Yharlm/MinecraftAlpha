@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Numerics;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
-using Color = Microsoft.Xna.Framework.Color;
-using Microsoft.Xna.Framework.Graphics;
-using System.Security.Cryptography;
 using System.Linq;
+using Color = Microsoft.Xna.Framework.Color;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MinecraftAlpha
 {
@@ -58,17 +54,18 @@ namespace MinecraftAlpha
             if (Map[y - 1, x].ID == 0) Placable = false;
             return Placable;
         }
-        public void PlaceBlock(Vector2 pos,Block block)
+        public void PlaceBlock(Vector2 pos, Block block)
         {
             int Zindex = (int)Game.Player.Plr.Layer;
             var Chunks = Game.Chunks;
             if (block == null) return;
-            TileGrid Tile = BlockManager.GetBlockAtPos(pos,Zindex, Chunks);
-            if (Tile == null) {
-                
+            TileGrid Tile = BlockManager.GetBlockAtPos(pos, Zindex, Chunks);
+            if (Tile == null)
+            {
+
                 var ChunkNot = BlockManager.GetChunkAtPos(pos);
                 Chunks.Add(new(ChunkNot[0], ChunkNot[1]));
-                Tile = BlockManager.GetBlockAtPos(pos,Zindex, Chunks);
+                Tile = BlockManager.GetBlockAtPos(pos, Zindex, Chunks);
             }
 
 
@@ -81,12 +78,16 @@ namespace MinecraftAlpha
 
             Tile.ID = Game._blockManager.Blocks.IndexOf(block);
             Tile.MinedHealth = 0;
-            Game._userInterfaceManager.amount -= 1;
-            if (Game._userInterfaceManager.amount <= 0)
+            if (!Game.creativeMode)
             {
-                Game._userInterfaceManager.selectedItem = null;
+                Game._userInterfaceManager.amount -= 1;
+                if (Game._userInterfaceManager.amount <= 0)
+                {
+                    Game._userInterfaceManager.selectedItem = null;
 
+                }
             }
+
 
             //if(!CheckAround(X,Y,Grid)) continue;
             //var ItemSelected = Game._userInterfaceManager.selectedItem;
@@ -119,46 +120,47 @@ namespace MinecraftAlpha
                 }
             }
 
-            int Zindex = (int)Game.Player.Plr.Layer;
+
             //Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
-            TileGrid Tile = BlockManager.GetBlockAtPos(Pos,Zindex,Game.Chunks);
+            TileGrid Tile = BlockManager.GetLastBlockAtPos(Pos, Game.Chunks);
             if (Tile == null) return;
             var block = Game._blockManager.Blocks[Tile.ID];
             if (block.Interaction != null)
             {
-                
+
                 block.Interaction.Invoke(Tile);
                 Game._userInterfaceManager.LastUsedBlock = Tile;
 
             }
-            
+
         }
 
-        
+
         public void BreakBlock(Vector2 Pos)
         {
             int Zindex = (int)Game.Player.Plr.Layer;
-            var Tile = BlockManager.GetBlockAtPos(Pos,Zindex,Game.Chunks);
+            var Tile = BlockManager.GetBlockAtPos(Pos, Zindex, Game.Chunks);
             if (Tile == null) { return; }
             var block = Game._blockManager.Blocks[Tile.ID];
-            
+
             if (Tile.ID != 0)
             {
                 if (block.Health > Tile.MinedHealth)
                 {
-                    
+
                     int x = random.Next(0, block.Texture.Width);
                     int y = random.Next(0, block.Texture.Height);
+                    if(Game.creativeMode) { Tile.MinedHealth += 0.5f; }
                     Tile.MinedHealth += 0.5f;
 
 
-                    if (block.Health %0.2f == 0) return;
+                    if (block.Health % 0.2f == 0 ) return;
 
 
 
-                    var part = new Particle() 
+                    var part = new Particle()
                     {
-                        Position = (new Vector2(float.Floor(Pos.X) + (float)x/ block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height)),
+                        Position = (new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height)),
                         TextureName = "BlockMineEffect",
                         Texture = block.Texture,
                         lifeTime = 0.2f,
@@ -189,7 +191,7 @@ namespace MinecraftAlpha
                 //        {
 
                 //            // Item Entity
-                            
+
                 //            int x = random.Next(0, block.Texture.Width);
                 //            int y = random.Next(0, block.Texture.Height);
                 //            //    Ractangle = new Microsoft.Xna.Framework.Rectangle(x,y,x+3,y+3);
@@ -221,12 +223,12 @@ namespace MinecraftAlpha
 
 
                 Tile.ID = 0;
-                Game._entityManager.Workspace.Add(Entity.CloneEntity(Game._entityManager.entities[1], Vector2.Floor( Pos)  + Vector2.One * 0.5f));
+                Game._entityManager.Workspace.Add(Entity.CloneEntity(Game._entityManager.entities[1], Vector2.Floor(Pos) + Vector2.One * 0.5f));
                 Game._entityManager.Workspace.Last().TextureName = "null";
                 var drop = block;
-                if(block.ItemDrop != null) drop = block.ItemDrop;
-                Game._entityManager.Workspace.Last().Data =Game._blockManager.GetBlockID(block).ToString();
-                
+                if (block.ItemDrop != null) drop = block.ItemDrop;
+                Game._entityManager.Workspace.Last().Data = Game._blockManager.GetBlockID(block).ToString();
+
                 Game._entityManager.Workspace.Last().Model3D = new Sprite3D(block.Texture, block.Texture, block.Texture, block.Texture);
 
             }
