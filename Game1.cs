@@ -954,14 +954,13 @@ public class Game1 : Game
                             }
 
                         }
-
-
                         DrawBlock(Tile, chunk, i, j, Z, zindex / 10);
                         if (Transparent != null)
                         {
                             DrawBlock(Transparent, chunk, i, j, Z, TraZ / 10);
                         }
                         
+
 
                     }
                 }

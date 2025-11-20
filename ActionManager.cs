@@ -58,11 +58,13 @@ namespace MinecraftAlpha
         {
             int Zindex = (int)Game.Player.Plr.Layer;
             var Chunks = Game.Chunks;
+
+            if(Zindex < 0 || Zindex > 9) { return; }
             if (block == null) return;
             TileGrid Tile = BlockManager.GetBlockAtPos(pos, Zindex, Chunks);
             if (Tile == null)
             {
-
+                
                 var ChunkNot = BlockManager.GetChunkAtPos(pos);
                 Chunks.Add(new(ChunkNot[0], ChunkNot[1]));
                 Tile = BlockManager.GetBlockAtPos(pos, Zindex, Chunks);
