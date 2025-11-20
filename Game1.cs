@@ -898,20 +898,34 @@ public class Game1 : Game
                         float zindex = 0f;
                         float Z = 0;
                         var Tile = chunk.Tiles[0, i, j];
+                        float TraZ = 0f;
+                        TileGrid Transparent = null;
                         for (int z = 0; z < chunk.Tiles.GetLength(0); z++)
                         {
-                            
-                            if (chunk.Tiles[z, i, j].ID != 0)
+                            if (_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
                             {
+                                Transparent = chunk.Tiles[z, i, j];
+                                TraZ = z;
+                                Z = (float)z / 9f;
+                            }
+                            if (chunk.Tiles[z, i, j].ID != 0 && !_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
+                            {
+                                
+
+
                                 zindex = z;
                                 Z = (float)z / 9f;
                                 Tile = chunk.Tiles[z, i, j];
+                                
                             }
                             
                         }
 
                         DrawBlock(Tile, chunk, i, j, Z,zindex/10);
-
+                        if (Transparent != null)
+                        {
+                            DrawBlock(Transparent, chunk, i, j, Z, TraZ / 10);
+                        }
 
                     }
                 }
@@ -975,9 +989,9 @@ public class Game1 : Game
 
         float Light = Tile.brightness;
         float Light01 = Light - 0.2f;
-
-        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) * block.Color;
-        var Layer = Color.FromNonPremultiplied(new Vector4(Z, Z, Z, 1));
+        float a = Z /2 + 0.4f;
+        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) ;
+        var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
 
         int healthPercent = (int)Tile.MinedHealth / 10;
         Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);

@@ -9,6 +9,7 @@ namespace MinecraftAlpha
 {
     public class Block
     {
+        public int ID = 0;
         public float Health = 30;
         public string Name { get; set; }
         public string Description { get; set; }
@@ -16,6 +17,8 @@ namespace MinecraftAlpha
         public bool Placable = true;
 
         public Block ItemDrop = null;
+
+        public bool Transparent = false;
 
         public int DefaultState = 0; // Default state of the block
 
@@ -44,27 +47,49 @@ namespace MinecraftAlpha
             //Create Blocks here
             var list = new List<Block>()
             {
+               
                new Block { Name = "Air", TexturePath = "air" ,Health = 1000},
                new Block { Name = "Dirt", TexturePath = "dirt",Health = 30 },
                new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
+               new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
                new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
                new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
-               new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null},
+               new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true},
                new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
                new Block { Name = "Log", TexturePath = "oak_log", Health = 60},
-               new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.DarkGreen},
-               new Block { Name = "Glass block", TexturePath = "glass", Health = 4,},
+               new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
+               new Block { Name = "Glass block", TexturePath = "glass", Health = 4,Transparent = true},
+               
 
             };
+
+            for (int i = 0;i< list.Count;i++)
+            {
+                list[i].ID = i;
+            }
+            
+
+
             return list;
         }
         public Block getBlock(string Name)
         {
-            return Blocks.Find(x => x.Name == "");
+            var blocks = Blocks;
+            return blocks.Find(x => x.Name == Name);
+        }
+
+        public static Block getBlocks(string Name)
+        {
+            var blocks = LoadBlocks();
+            return blocks.Find(x => x.Name == Name);
         }
         public void LoadActions()
         {
-            Blocks[5].Interaction = (Pos) =>
+            
+            getBlock("Stone").ItemDrop = getBlock("Cobblestone");
+
+
+            getBlock("Chest").Interaction = (Pos) =>
             {
 
                 string Items = Pos.Data;
@@ -86,7 +111,7 @@ namespace MinecraftAlpha
 
                 }
             };
-            Blocks[5].Update = (Pos) =>
+            getBlock("Chest").Update = (Pos) =>
             {
                 var Window = Game._userInterfaceManager.windows[1];
                 string Data = "";
@@ -102,7 +127,7 @@ namespace MinecraftAlpha
 
 
             };
-            Blocks[6].Interaction = (Pos) =>
+            getBlock("Crafting Table").Interaction = (Pos) =>
             {
 
                 var Window = Game._userInterfaceManager.windows[2];
@@ -114,7 +139,7 @@ namespace MinecraftAlpha
 
 
             };
-            Blocks[6].Update = (Pos) =>
+            getBlock("Crafting Table").Update = (Pos) =>
             {
 
                 var Window = Game._userInterfaceManager.windows[2];

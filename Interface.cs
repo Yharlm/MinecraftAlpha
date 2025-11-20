@@ -163,7 +163,7 @@ namespace MinecraftAlpha
                 {
                     Name = "InventoryFrame",
                     textureName = "UIelements/WindowFrame",
-                    Position = new Vector2(100,100) - new Vector2(80,80), Size = new Vector2(30,70),
+                    Position = new Vector2(100,100) - new Vector2(80,80), Size = new Vector2(30,30),
                 },
             };
             return list;
@@ -206,7 +206,7 @@ namespace MinecraftAlpha
             {
                 Name = "Inventory",
                 Visible = true,
-                Frames = new() { new UIFrame(){Window = Frames[0].Window ,Size =new Vector2(40,40),Position = new Vector2(290, 20) } },
+                Frames = new() { new UIFrame(){Window = Frames[0].Window ,Size =new Vector2(80,30),Position = new Vector2(290, 20) } },
                 Buttons = new() { },
                 ItemSlots = new() { },
             });

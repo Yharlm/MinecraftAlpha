@@ -12,8 +12,15 @@ namespace MinecraftAlpha
 
         public static List<Structure> LoadStructures()
         {
+            
+            int a = BlockManager.getBlocks("Log").ID;
+            int b = BlockManager.getBlocks("Leaves").ID;
+
+
+
             var list = new List<Structure>()
             {
+                
                 new Structure()
                 {
 
@@ -21,11 +28,11 @@ namespace MinecraftAlpha
                     id = 0,
                     BluePrint = GetBluePrint(new int[,]
                     {
-                        {0,8,8,8,0},
-                        {0,8,7,8,0},
-                        {8,8,7,8,8},
-                        {8,8,7,8,8},
-                        {0,0,7,0,0},
+                        {0,b,b,b,0},
+                        {0,b,a,b,0},
+                        {b,b,a,b,b},
+                        {b,b,a,b,b},
+                        {0,0,a,0,0},
                     }
                     )
                 }
@@ -186,12 +193,13 @@ public class Generation
         var PerlinMap = GenerateWhiteNoise(width, 40, seed, 0);
 
         PerlinMap = GenerateSmoothNoise(PerlinMap, 3);
-        PerlinMap = GeneratePerlinNoise(PerlinMap, 6, 0.4f);
+        PerlinMap = GeneratePerlinNoise(PerlinMap, 3, 0.4f);
 
         var Mountain = GenerateWhiteNoise(width, 40, seed + 1, 1);
-        Mountain = GeneratePerlinNoise(Mountain, 6, 0.4f);
-        SubMaps(PerlinMap, Mountain, 0.6f);
+        Mountain = GeneratePerlinNoise(Mountain, 4, 0.4f);
+        SubMaps(PerlinMap, Mountain, 0.3f);
         PerlinMap = GenerateSmoothNoise(PerlinMap, 2);
+
 
 
 
@@ -204,6 +212,7 @@ public class Generation
         {
             for (int i = 0; i < 32; i++)
             {
+                
                 int I = i;
                 float Val = (PerlinMap[z, I + (int.Abs(x) * 32)]) * 20;
                 Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
@@ -211,13 +220,13 @@ public class Generation
                     placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
 
 
-                if (random.Next(1, 5) == 4)
+                if (random.Next(1, 7) == 4)
                 {
 
                     //Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 6), false);
-                    if (random.Next(0, 7) == 2)
+                    if (random.Next(0, 12) == 2)
                     {
-                        Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), false);
+                        Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), true);
                     }
                 }
                 PlaceBlock(placement,z, 2, chunks);
@@ -228,7 +237,7 @@ public class Generation
                 }
                 for (int j = 5; j < 12; j++)
                 {
-                    PlaceBlock(placement + new Vector2(0, j),z, 3, chunks);
+                    PlaceBlock(placement + new Vector2(0, j),z, 4, chunks);
                 }
 
 
