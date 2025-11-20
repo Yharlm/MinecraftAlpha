@@ -165,7 +165,7 @@ namespace MinecraftAlpha
                         Texture = block.Texture,
                         lifeTime = 0.2f,
                         size = 0.4f,
-                        Color = Color.White,
+                        Color = block.Color,
                         Rectangle = new Microsoft.Xna.Framework.Rectangle(x, y, 3, 3),
                         Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
                         Acceleration = new Vector2(0, -1f),
@@ -230,7 +230,7 @@ namespace MinecraftAlpha
                 if (block.ItemDrop != null) drop = block.ItemDrop;
                 Game._entityManager.Workspace.Last().Data = Game._blockManager.GetBlockID(drop).ToString();
                 Game._entityManager.Workspace.Last().Layer = Zindex;
-                Game._entityManager.Workspace.Last().Model3D = new Sprite3D(block.Texture, block.Texture, block.Texture, block.Texture);
+                Game._entityManager.Workspace.Last().Model3D = new Sprite3D(drop.Texture, drop.Texture, drop.Texture, drop.Texture);
 
             }
 

@@ -12,8 +12,7 @@ namespace MinecraftAlpha
         public Entity Plr;
         public Cammera cam = new Cammera();
         public bool Jumping = false;
-        public int ZBuildMode = 8; // 0 = place, 1 = destroy
-
+        
         public void PickupItem(Block item,int amount,WindowFrame inventory)
         {
             foreach (var slot in inventory.ItemSlots)
@@ -90,55 +89,7 @@ namespace MinecraftAlpha
 
         }
 
-        public void RenderChunk(BlockManager blockManager, SpriteBatch _spriteBatch, Chunk Map, float layer, Vector2 pos, Texture2D BreakingTexture)
-        {
-
-
-
-            var Grid = Map.Tiles;
-
-
-            var BlockSize = blockManager.BlockSize;
-            var Camera = this;
-
-            // Render the world based on the position and size
-            //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            //for (int i = (int)pos.Y - 20; i < Grid.GetLength(0) && i < (int)pos.Y + 20; i++)
-            //{
-            //    for (int j = (int)pos.X - 20; j < Grid.GetLength(1) && j < (int)pos.X + 20; j++)
-            //    {
-            //        if (Grid[i, j].ID != 0)
-            //        {
-
-
-            //            float Light = Grid[i, j].brightness;
-            //            float Light01 = Light - layer;
-            //            var block = blockManager.Blocks[Grid[i, j].ID * 0 + 1];
-            //            var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) * block.Color;
-
-            //            int healthPercent = (int)Grid[i, j].MinedHealth / 10;
-            //            Rectangle sourceRectangle = new Rectangle(healthPercent * BreakingTexture.Height, 0, BreakingTexture.Height, BreakingTexture.Height);
-            //            if ((int)Grid[i, j].MinedHealth <= 0)
-            //            {
-            //                sourceRectangle = new Rectangle(0, 0, 0, 0);
-            //            }
-            //            Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
-
-            //            int State = block.DefaultState;
-            //            if (Grid[i, j].state > 0)
-            //            {
-            //                BlockState = new Rectangle(State, 0, block.Texture.Width, block.Texture.Height);
-            //            }
-
-            //            _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, BlockState, color, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
-            //            _spriteBatch.Draw(BreakingTexture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
-
-            //        }
-            //    }
-            //}
-            //_spriteBatch.End();
-
-        }
+        
 
     }
 }

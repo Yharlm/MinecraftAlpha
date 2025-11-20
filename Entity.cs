@@ -288,7 +288,7 @@ namespace MinecraftAlpha
             foreach (Sprite s in Sprites)
             {
                 int i = Sprites.IndexOf(s);
-                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, Layer/10 + (float)i/60);
+                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer)/10 + (float)i/60, float.Floor(Layer));
 
             }
         }

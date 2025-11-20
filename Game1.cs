@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using static System.Net.Mime.MediaTypeNames;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -535,7 +537,7 @@ public class Game1 : Game
             // Example gravity, can be replaced with actual logic
 
         }
-        _entityManager.Workspace.RemoveAll(x => x.Health <= 0);
+        _entityManager.Workspace.RemoveAll(x => x.Health <= 0 || x.position.Y > 600);
 
         foreach (var entity in _particleSystem.Particles)
         {
@@ -559,124 +561,20 @@ public class Game1 : Game
         HotbarIndex = (Mouse.GetState().ScrollWheelValue / 120) % 9 + 1;
 
 
-
-
-
-
-
-
-
-
-        //_particleSystem.Particles[0].Position = PLR.position;
-        _userInterfaceManager.HoverAction(MousePosition, _actionManager);
-        if (Mouse.GetState().LeftButton == ButtonState.Pressed && !LeftClicked)
-        {
-
-            LeftClicked = true;
-            _userInterfaceManager.ClickAction(MousePosition, _actionManager, true);
-
-
-
-
-        }
-        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-        {
-            if (!_userInterfaceManager.Clicked)
-            {
-
-
-                _entityAnimationService.Play(2, PLR);
-                //add a attack part here instead
-
-
-                _actionManager.BreakBlock(WorldMousePos);
-
-            }
-
-        }
-        else if (Mouse.GetState().LeftButton == ButtonState.Released)
-        {
-
-            LeftClicked = false;
-        }
-
-
-        if (Mouse.GetState().RightButton == ButtonState.Pressed && !RightClicked)
-        {
-            RightClicked = true;
-
-            _userInterfaceManager.ClickAction(MousePosition, _actionManager, false);
-
-            _actionManager.Interact(WorldMousePos);
-
-
-
-
-        }
-        if (Mouse.GetState().RightButton == ButtonState.Pressed)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                //var part = new Particle()
-                //{
-                //    Position = WorldMousePos,
-                //    TextureName = "ParticleSmokeEffect",
-                //    lifeTime = (float)random.NextDouble()*2,
-                //    Color = Microsoft.Xna.Framework.Color.FromNonPremultiplied(
-                //        new Vector4((float)random.NextDouble(),2f,0f, 1)
-                //        ),
-                //    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
-
-                //};
-
-                //_particleSystem.Particles.Add(part);
-            }
-            if (!_userInterfaceManager.Clicked)
-            {
-
-
-
-                _actionManager.PlaceBlock(WorldMousePos, _userInterfaceManager.selectedItem);
-            }
-        }
-        else if (Mouse.GetState().RightButton == ButtonState.Released)
-        {
-            _userInterfaceManager.Clicked = false;
-            RightClicked = false;
-        }
-
-
-
-
-        if (TouchPanel.GetState().Count > 0)
-        {
-            var touch = TouchPanel.GetState()[0];
-            if (touch.State == TouchLocationState.Pressed || touch.State == TouchLocationState.Moved)
-            {
-                MousePosition = touch.Position.ToNumerics();
-            }
-        }
-
         Vector2 plrVel = Vector2.Zero;
         Player.Plr.velocity.velocity = new Vector2(0, 0);
         float zoomScale = 0.3f;
         var keyboardState = Keyboard.GetState();
 
+
+        bool Front = false;
+        bool Back = false;
         var keyboard = Keyboard.GetState().GetPressedKeys();
-
-
-        //PLR.Animations[1].Paused = true;
-
-
-
-
-
-
-
-
-
         foreach (var key in keyboard)
         {
+
+            
+
             if (key == Keys.Space)
             {
 
@@ -685,7 +583,7 @@ public class Game1 : Game
             }
             if (key == Keys.S)
             {
-
+                Front = true;
                 var tile = BlockManager.GetBlockAtPos(Player.Plr.position, (int)Player.Plr.Layer + 1, Chunks);
                 if (tile != null)
                 {
@@ -698,6 +596,7 @@ public class Game1 : Game
             }
             if (key == Keys.W)
             {
+                Back = true;
                 var tile = BlockManager.GetBlockAtPos(Player.Plr.position, (int)Player.Plr.Layer - 1, Chunks);
                 if (tile != null)
                 {
@@ -750,6 +649,136 @@ public class Game1 : Game
 
             }
         }
+
+
+
+
+
+
+
+        //_particleSystem.Particles[0].Position = PLR.position;
+        _userInterfaceManager.HoverAction(MousePosition, _actionManager);
+        if (Mouse.GetState().LeftButton == ButtonState.Pressed && !LeftClicked)
+        {
+
+            LeftClicked = true;
+            _userInterfaceManager.ClickAction(MousePosition, _actionManager, true);
+
+
+
+
+        }
+        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+        {
+            if (!_userInterfaceManager.Clicked)
+            {
+
+
+                _entityAnimationService.Play(2, PLR);
+                //add a attack part here instead
+
+                float TempLayer = PLR.Layer;
+
+                if (Front)
+                {
+                    PLR.Layer += 1;
+                }
+                if (Back)
+                {
+                    PLR.Layer -= 1;
+                }
+                _actionManager.BreakBlock(WorldMousePos);
+                PLR.Layer = TempLayer;
+            }
+
+        }
+        else if (Mouse.GetState().LeftButton == ButtonState.Released)
+        {
+
+            LeftClicked = false;
+        }
+
+
+        if (Mouse.GetState().RightButton == ButtonState.Pressed && !RightClicked)
+        {
+            RightClicked = true;
+
+            _userInterfaceManager.ClickAction(MousePosition, _actionManager, false);
+
+            _actionManager.Interact(WorldMousePos);
+
+
+
+
+        }
+        if (Mouse.GetState().RightButton == ButtonState.Pressed)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                //var part = new Particle()
+                //{
+                //    Position = WorldMousePos,
+                //    TextureName = "ParticleSmokeEffect",
+                //    lifeTime = (float)random.NextDouble()*2,
+                //    Color = Microsoft.Xna.Framework.Color.FromNonPremultiplied(
+                //        new Vector4((float)random.NextDouble(),2f,0f, 1)
+                //        ),
+                //    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
+
+                //};
+
+                //_particleSystem.Particles.Add(part);
+            }
+            if (!_userInterfaceManager.Clicked)
+            {
+
+                float TempLayer = PLR.Layer;
+
+                if (Front)
+                {
+                    PLR.Layer += 1;
+                }
+                if (Back)
+                {
+                    PLR.Layer -= 1;
+                }
+                _actionManager.PlaceBlock(WorldMousePos, _userInterfaceManager.selectedItem);
+                PLR.Layer = TempLayer;
+
+                
+            }
+        }
+        else if (Mouse.GetState().RightButton == ButtonState.Released)
+        {
+            _userInterfaceManager.Clicked = false;
+            RightClicked = false;
+        }
+
+
+
+
+        if (TouchPanel.GetState().Count > 0)
+        {
+            var touch = TouchPanel.GetState()[0];
+            if (touch.State == TouchLocationState.Pressed || touch.State == TouchLocationState.Moved)
+            {
+                MousePosition = touch.Position.ToNumerics();
+            }
+        }
+
+        
+
+        //PLR.Animations[1].Paused = true;
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -888,7 +917,7 @@ public class Game1 : Game
             {
 
 
-                
+
 
 
                 for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
@@ -900,36 +929,44 @@ public class Game1 : Game
                         var Tile = chunk.Tiles[0, i, j];
                         float TraZ = 0f;
                         TileGrid Transparent = null;
-                        for (int z = 0; z < chunk.Tiles.GetLength(0); z++)
+
+                        TileGrid Opaque = null;
+
+
+                        for (int z = 0; z < chunk.Tiles.GetLength(0) && z < float.Ceiling(Player.Plr.Layer); z++)
                         {
+
                             if (_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
                             {
                                 Transparent = chunk.Tiles[z, i, j];
                                 TraZ = z;
-                                Z = (float)z / 9f;
+                                Z = z / 9f;
                             }
                             if (chunk.Tiles[z, i, j].ID != 0 && !_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
                             {
-                                
+
 
 
                                 zindex = z;
-                                Z = (float)z / 9f;
+                                Z = z / 9f;
                                 Tile = chunk.Tiles[z, i, j];
-                                
+
                             }
-                            
+
                         }
 
-                        DrawBlock(Tile, chunk, i, j, Z,zindex/10);
+
+                        DrawBlock(Tile, chunk, i, j, Z, zindex / 10);
                         if (Transparent != null)
                         {
                             DrawBlock(Transparent, chunk, i, j, Z, TraZ / 10);
                         }
+                        
 
                     }
                 }
 
+                
             }
         }
         _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
@@ -961,12 +998,11 @@ public class Game1 : Game
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
         _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
 
-        foreach (var Sprite in Player.Plr.Sprites)
-        {
-            float layer = Player.Plr.Sprites.IndexOf(Sprite);
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"),(Player.Plr.Layer/10+layer / 100).ToString() , new Vector2(500,20*layer), Color.WhiteSmoke);
+        
+            
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"),((int)(Player.Plr.Layer)).ToString() , new Vector2(500,20), Color.WhiteSmoke);
 
-        }
+        
 
 
         var Block = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);
@@ -982,15 +1018,18 @@ public class Game1 : Game
 
 
     }
-
-    void DrawBlock(TileGrid Tile,Chunk chunk,int i,int j, float Z,float layer)
+    void DrawBlock(TileGrid Tile, Chunk chunk, int i, int j, float Z, float layer)
+    {
+        DrawBlock(Tile, chunk, i, j, Z, layer, false);
+    }
+    void DrawBlock(TileGrid Tile,Chunk chunk,int i,int j, float Z,float layer,bool Opaque)
     {
         var block = _blockManager.Blocks[Tile.ID];
 
         float Light = Tile.brightness;
         float Light01 = Light - 0.2f;
         float a = Z /2 + 0.4f;
-        var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) ;
+        //var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) ;
         var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
 
         int healthPercent = (int)Tile.MinedHealth / 10;
@@ -1007,10 +1046,14 @@ public class Game1 : Game
             BlockState = new Rectangle(State, 0, block.Texture.Width, block.Texture.Height);
         }
 
+        if (Opaque)
+        {
+             Layer *= Color.Red;
+        }
         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
-        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer+0.01f);
+        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer+0.01f);
 
     }
     // UI:
