@@ -8,21 +8,17 @@ public class RecipeManager
 
     public List<CraftingRecipe> LoadRecipes(BlockManager blocksManager)
     {
+        int log = blocksManager.GetBlockByName("Log").ID;
         var List = new List<CraftingRecipe>()
-
+        
         {
             new CraftingRecipe(new int[,] {
-                { 7, 0 },
+                { 8, 0 },
                 { 0, 0 }} ,4,4,blocksManager),
             new CraftingRecipe(new int[,] {
-                { 4, 4 },
-                { 4, 4 }} ,6,4,blocksManager),
-            new CraftingRecipe(new int[,] {
-                { 2, 0 },
-                { 0, 0 }} ,3,1,blocksManager),
-            new CraftingRecipe(new int[,] {
-                { 0, 0 },
-                { 0, 0 }} ,0,1, blocksManager),
+                { 5, 5 },
+                { 5, 5 }} ,6,4,blocksManager),
+            
         };
 
 

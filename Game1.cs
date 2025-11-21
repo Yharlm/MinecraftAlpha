@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using static System.Net.Mime.MediaTypeNames;
 using Color = Microsoft.Xna.Framework.Color;
@@ -822,7 +823,7 @@ public class Game1 : Game
         {
             //InventoryOpen = !InventoryOpen;
             //Structure.LoadStructures()[0].GenerateStructure(Chunks, WorldMousePos, true);
-            var list = Generation.CaveGenerate(WorldMousePos, 0, 10);
+            var list = Generation.CaveGenerate(WorldMousePos, (int)WorldMousePos.X + 0, 10);
             foreach (var pos in list)
             {
                 var tile = BlockManager.GetBlockAtPos(pos, Chunks);
@@ -932,10 +933,10 @@ public class Game1 : Game
 
                         TileGrid Opaque = null;
 
-
-                        for (int z = 0; z < chunk.Tiles.GetLength(0) && z < float.Ceiling(Player.Plr.Layer); z++)
+                        float plrZ = float.Floor(Player.Plr.Layer);
+                        for (int z = 0; z < chunk.Tiles.GetLength(0) && z <= plrZ; z++)
                         {
-
+                            
                             if (_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
                             {
                                 Transparent = chunk.Tiles[z, i, j];
@@ -954,12 +955,19 @@ public class Game1 : Game
                             }
 
                         }
+
+
                         DrawBlock(Tile, chunk, i, j, Z, zindex / 10);
+                        if (plrZ <= 8 && chunk.Tiles[(int)plrZ + 1, i, j] != null)
+                        {
+                            DrawBlock(chunk.Tiles[(int)plrZ + 1, i, j], chunk, i, j, Z, (TraZ + 9) / 10f, true);
+                        }
                         if (Transparent != null)
                         {
                             DrawBlock(Transparent, chunk, i, j, Z, TraZ / 10);
                         }
                         
+
 
 
                     }
@@ -1047,7 +1055,7 @@ public class Game1 : Game
 
         if (Opaque)
         {
-             Layer *= Color.Red;
+             Layer = Color.White * 0.2f;
         }
         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);

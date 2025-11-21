@@ -136,9 +136,9 @@ public class Generation
         List<Vector2> points = new List<Vector2>();
         for (int i = 0; i < length; i++)
         {
-            angle += (float)(random.NextDouble() * 20 - 10); // 10 / -10*
+            angle += (float)(random.NextDouble() * 2 - 1) * 50; // 10 / -10*
             var rot = Matrix4x4.CreateRotationZ(angle * float.Pi / 180);
-            Vector2 dir = Vector2.Transform(new Vector2(5, 0), rot);
+            Vector2 dir = Vector2.Transform(new Vector2(2, 0), rot);
             Vector2 point = Lastpos + dir;
 
             Lastpos = point;
@@ -193,12 +193,12 @@ public class Generation
         var PerlinMap = GenerateWhiteNoise(width, 40, seed, 0);
 
         PerlinMap = GenerateSmoothNoise(PerlinMap, 3);
-        PerlinMap = GeneratePerlinNoise(PerlinMap, 3, 0.4f);
+        PerlinMap = GeneratePerlinNoise(PerlinMap, 3, 0.6f);
 
         var Mountain = GenerateWhiteNoise(width, 40, seed + 1, 1);
-        Mountain = GeneratePerlinNoise(Mountain, 4, 0.4f);
-        SubMaps(PerlinMap, Mountain, 0.3f);
-        PerlinMap = GenerateSmoothNoise(PerlinMap, 2);
+        Mountain = GeneratePerlinNoise(Mountain, 4, 0.6f);
+        SubMaps(PerlinMap, Mountain, 0.2f);
+        PerlinMap = GenerateSmoothNoise(PerlinMap, 3);
 
 
 
