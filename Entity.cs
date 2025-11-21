@@ -262,6 +262,13 @@ namespace MinecraftAlpha
             if (IFrame <= 0) return;
             IFrame -= 0.1f;
         }
+        public void Iframes()
+        {
+            
+            IFrame = 4f;
+            
+            
+        }
 
         public void DrawEntity(SpriteBatch SB, float BlockSize, Vector2 Cam)
         {
@@ -288,7 +295,7 @@ namespace MinecraftAlpha
             foreach (Sprite s in Sprites)
             {
                 int i = Sprites.IndexOf(s);
-                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer)/10 + (float)i/60, float.Floor(Layer));
+                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer)/10 + (float)i/60, float.Floor(Layer),(IFrame > 0));
 
             }
         }
@@ -333,7 +340,16 @@ namespace MinecraftAlpha
             entity.Health -= 1;
 
         }
-
+        public void TakeDamage(Entity source,int DMG)
+        {
+            if (DMG <1) return;
+            Vector2 Knockback = Vector2.UnitY * 10;
+            if (IFrame > 0) return;
+            if (source != null) Knockback = (position - source.position);
+            velocity.velocity = Knockback * new Vector2(0.1f, 10);
+            Health -= DMG;
+            Iframes();
+        }
 
 
 
@@ -354,23 +370,23 @@ namespace MinecraftAlpha
             if (!entity.collisionBox.Left && velocity.X < 0)
             {
                 Vel.X -= Acceleration;
-                velocity -= Acceleration * Vector2.UnitX;
+                velocity += Acceleration * Vector2.UnitX;
             }
             if (!entity.collisionBox.Right && velocity.X > 0)
             {
                 Vel.X += Acceleration;
-                velocity += Acceleration * Vector2.UnitX;
+                velocity -= Acceleration * Vector2.UnitX;
             }
             if (!entity.collisionBox.Top && velocity.Y < 0)
             {
                 Vel.Y -= Acceleration;
-                velocity -= Acceleration * Vector2.UnitY;
+                velocity += Acceleration * Vector2.UnitY;
             }
             if (!entity.collisionBox.Bottom && velocity.Y > 0)
             {
 
                 Vel.Y += Acceleration;
-                velocity += Acceleration * Vector2.UnitY;
+                velocity -= Acceleration * Vector2.UnitY;
             }
 
             

@@ -47,6 +47,7 @@ namespace MinecraftAlpha
         {
             foreach (var entity in Workspace)
             {
+                
                 entity.DrawEntity(SB, Size, Pos);
             }
         }

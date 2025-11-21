@@ -490,7 +490,7 @@ public class Game1 : Game
             //entity.UpdateAnimation();
 
             bool Running = false;
-            if (float.Abs(entity.velocity.velocity.X) > 0.2)
+            if (float.Abs(entity.velocity.velocity.X) > 0)
             {
 
                 Running = true;
@@ -501,7 +501,7 @@ public class Game1 : Game
             {
                 _entityAnimationService.Stop(1, entity);
             }
-
+            entity.ResetIframes();
 
 
 
@@ -531,7 +531,7 @@ public class Game1 : Game
 
             if (entity.collisionBox.Bottom)
             {
-                entity.Health -= entity.Fall_damage;
+                entity.TakeDamage(null, entity.Fall_damage);
                 entity.Fall_damage = 0;
             }
 
@@ -790,7 +790,7 @@ public class Game1 : Game
         // Get the center of the screen in screen coordinates
 
         Vector2 screenCenter = Player.cam.size / 2f;
-        _entityManager.Workspace[0].velocity.velocity += plrVel * 0.1f; // Adjust speed as needed
+        PLR.velocity.velocity += plrVel * 0.2f; // Adjust speed as needed
         if (keyboardState.IsKeyDown(Keys.OemPlus))
         {
 
@@ -844,8 +844,7 @@ public class Game1 : Game
             var ent = Entity.GetentityAtPosition(WorldMousePos, _entityManager.Workspace);
             if (ent != null)
             {
-                ent.velocity.velocity = PLR.position - ent.position * 3;
-                ent.Health -= 3;
+                ent.TakeDamage(PLR, 2);
             }
         }
         if (keyboardState.IsKeyDown(Keys.H))
