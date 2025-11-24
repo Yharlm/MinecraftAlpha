@@ -30,6 +30,9 @@ public class Game1 : Game
 
     public Player Player = new Player();
 
+
+    public bool GameStarted = false;
+
     public float Daytime = 0f;
     public List<Entity> Entities;
     public List<Block> BlockTypes;
@@ -408,6 +411,27 @@ public class Game1 : Game
 
         //    }
         //}
+
+
+
+        if(!GameStarted)
+        {
+            _userInterfaceManager.HoverAction(MousePosition, _actionManager);
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed && !LeftClicked)
+            {
+
+                LeftClicked = true;
+                _userInterfaceManager.ClickAction(MousePosition, _actionManager, true);
+
+
+
+
+            }
+            return;
+        }
+
+
+
         if (Keyboard.GetState().IsKeyDown(Keys.F11))
         {
 
@@ -658,7 +682,7 @@ public class Game1 : Game
 
 
         //_particleSystem.Particles[0].Position = PLR.position;
-        _userInterfaceManager.HoverAction(MousePosition, _actionManager);
+        
         if (Mouse.GetState().LeftButton == ButtonState.Pressed && !LeftClicked)
         {
 
@@ -826,10 +850,17 @@ public class Game1 : Game
             var list = Generation.CaveGenerate(WorldMousePos, (int)WorldMousePos.X + 0, 10);
             foreach (var pos in list)
             {
-                var tile = BlockManager.GetBlockAtPos(pos, Chunks);
-                if (tile != null)
+                for(int x = -1; x <= 1; x += 1)
                 {
-                    tile.ID = 0;
+                    for(int y = -1; y <= 1; y += 1)
+                    {
+                        var tile = BlockManager.GetLastBlockAtPos(pos + new Vector2(x,y), Chunks);
+                        if (tile != null)
+                        {
+                            tile.ID = 0;
+                        }
+                    }
+                    
                 }
             }
 
@@ -881,143 +912,148 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.FromNonPremultiplied(new Vector4(0.5f, 0.5f, Daytime / 12, 1)));
 
         //SunImage
-
+        
         //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         //_spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Daytime.ToString("0.00"), new Vector2(700, (float)Math.Sin(Daytime/12)), Color.Wheat);
         //_spriteBatch.End();
 
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp,sortMode:SpriteSortMode.FrontToBack);
-        foreach (var Mob in Entities)
+        if (GameStarted)
         {
-
-            _spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Player.cam.position + (BlockSize) * Vector2.One / 2, null, Color.White, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
-
-
-        }
-        
-
-        // 2 cycles to render both directions of the world
-        //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
-        //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position, BreakTexture);
-        //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, Player.Plr.position, BreakTexture);
-
-        //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, Player.Plr.position, BreakTexture);
-        //Player.cam.RenderChunk(_blockManager, _spriteBatch, Chunks[0], 0f, Player.Plr.position, BreakTexture);
-        //Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
-
-        
-        foreach (var chunk in Chunks)
-        {
-            int RenderDistance = 2;
-            var Pos = BlockManager.GetChunkAtPos(Player.Plr.position);
-            int x = Pos[0];
-            int y = Pos[1];
-
-            if (chunk.x <= x + RenderDistance && chunk.x > x - RenderDistance)
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
+            foreach (var Mob in Entities)
             {
 
+                _spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Player.cam.position + (BlockSize) * Vector2.One / 2, null, Color.White, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
 
 
-
-
-                for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
-                {
-                    for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
-                    {
-                        float zindex = 0f;
-                        float Z = 0;
-                        var Tile = chunk.Tiles[0, i, j];
-                        float TraZ = 0f;
-                        TileGrid Transparent = null;
-
-                        TileGrid Opaque = null;
-
-                        float plrZ = float.Floor(Player.Plr.Layer);
-                        for (int z = 0; z < chunk.Tiles.GetLength(0) && z <= plrZ; z++)
-                        {
-                            
-                            if (_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
-                            {
-                                Transparent = chunk.Tiles[z, i, j];
-                                TraZ = z;
-                                Z = z / 9f;
-                            }
-                            if (chunk.Tiles[z, i, j].ID != 0 && !_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
-                            {
-
-
-
-                                zindex = z;
-                                Z = z / 9f;
-                                Tile = chunk.Tiles[z, i, j];
-
-                            }
-
-                        }
-
-
-                        DrawBlock(Tile, chunk, i, j, Z, zindex / 10);
-                        if (plrZ <= 8 && chunk.Tiles[(int)plrZ + 1, i, j] != null)
-                        {
-                            DrawBlock(chunk.Tiles[(int)plrZ + 1, i, j], chunk, i, j, Z, (TraZ + 9) / 10f, true);
-                        }
-                        if (Transparent != null)
-                        {
-                            DrawBlock(Transparent, chunk, i, j, Z, TraZ / 10);
-                        }
-                        
-
-
-
-                    }
-                }
-
-                
             }
-        }
-        _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
-
-        _spriteBatch.End();
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
 
+            // 2 cycles to render both directions of the world
+            //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f,(int)player.position.X - 30);
+            //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, player.position, BreakTexture);
+            //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, Player.Plr.position, BreakTexture);
 
-        //Player.cam.RenderLayer(_blockManager, _spriteBatch, Foreground, 0f, Player.Plr.position, BreakTexture);
-        //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
-        foreach (var P in _particleSystem.Particles)
-        {
+            //Player.cam.RenderLayer(_blockManager, _spriteBatch, BackGround, 0f, Player.Plr.position, BreakTexture);
+            //Player.cam.RenderChunk(_blockManager, _spriteBatch, Chunks[0], 0f, Player.Plr.position, BreakTexture);
+            //Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
 
-            P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
-        }
-        base.Draw(gameTime);
 
-        
-        _userInterfaceManager.DrawUI(_spriteBatch, Content);
+            foreach (var chunk in Chunks)
+            {
+                int RenderDistance = 2;
+                var Pos = BlockManager.GetChunkAtPos(Player.Plr.position);
+                int x = Pos[0];
+                int y = Pos[1];
 
-        
+                if (chunk.x <= x + RenderDistance && chunk.x > x - RenderDistance)
+                {
 
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)Math.Ceiling((WorldMousePos.X / 32))).ToString(), Vector2.One * 40, Color.Chartreuse);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
-        _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
 
-        
+
+
+
+                    for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
+                    {
+                        for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
+                        {
+                            float zindex = 0f;
+                            float Z = 0;
+                            var Tile = chunk.Tiles[0, i, j];
+                            float TraZ = 0f;
+                            TileGrid Transparent = null;
+
+                            TileGrid Opaque = null;
+
+                            float plrZ = float.Floor(Player.Plr.Layer);
+                            for (int z = 0; z < chunk.Tiles.GetLength(0) && z <= plrZ; z++)
+                            {
+
+                                if (_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
+                                {
+                                    Transparent = chunk.Tiles[z, i, j];
+                                    TraZ = z;
+                                    Z = z / 9f;
+                                }
+                                if (chunk.Tiles[z, i, j].ID != 0 && !_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
+                                {
+
+
+
+                                    zindex = z;
+                                    Z = z / 9f;
+                                    Tile = chunk.Tiles[z, i, j];
+
+                                }
+
+                            }
+
+
+                            DrawBlock(Tile, chunk, i, j, Z, zindex / 10);
+                            if (plrZ <= 8 && chunk.Tiles[(int)plrZ + 1, i, j] != null)
+                            {
+                                DrawBlock(chunk.Tiles[(int)plrZ + 1, i, j], chunk, i, j, Z, (TraZ + 9) / 10f, true);
+                            }
+                            if (Transparent != null)
+                            {
+                                DrawBlock(Transparent, chunk, i, j, Z, TraZ / 10);
+                            }
+
+
+
+
+                        }
+                    }
+
+
+                }
+            }
+            _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
+
+            _spriteBatch.End();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+
+
+            //Player.cam.RenderLayer(_blockManager, _spriteBatch, Foreground, 0f, Player.Plr.position, BreakTexture);
+            //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
+            foreach (var P in _particleSystem.Particles)
+            {
+
+                P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
+            }
+            base.Draw(gameTime);
+
+
             
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"),((int)(Player.Plr.Layer)).ToString() , new Vector2(500,20), Color.WhiteSmoke);
-
-        
 
 
-        var Block = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);
-        if (Block != null)
-        {
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), WorldMousePos.ToString(), Vector2.One * 40, Color.GhostWhite);
 
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)Math.Ceiling((WorldMousePos.X / 32))).ToString(), Vector2.One * 40, Color.Chartreuse);
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
+
+
+
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(Player.Plr.Layer)).ToString(), new Vector2(500, 20), Color.WhiteSmoke);
+
+
+
+
+            var Block = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);
+            if (Block != null)
+            {
+                _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), WorldMousePos.ToString(), Vector2.One * 40, Color.GhostWhite);
+
+            }
+            _spriteBatch.End();
         }
-        _spriteBatch.End();
+
+        _userInterfaceManager.DrawUI(_spriteBatch, Content);
 
         //test.Draw(_spriteBatch);
 

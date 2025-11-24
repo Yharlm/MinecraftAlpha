@@ -346,7 +346,7 @@ namespace MinecraftAlpha
             Vector2 Knockback = Vector2.UnitY * 10;
             if (IFrame > 0) return;
             if (source != null) Knockback = (position - source.position);
-            velocity.velocity = Knockback * new Vector2(0.1f, 10);
+            velocity.velocity = Knockback * new Vector2(0.2f, 10);
             Health -= DMG;
             Iframes();
         }

@@ -42,7 +42,7 @@ namespace MinecraftAlpha
         
         public void DrawUI(SpriteBatch spriteBatch, ContentManager Contnet)
         {
-            //spriteBatch.Begin(samplerState: SamplerState.PointClamp,effect: Contnet.Load<Effect>("Shaders/Shader"));
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp/*, effect: Contnet.Load<Effect>("Shaders/Shader")*/);
             //foreach (var Frame in Frames)
             //{
             //    if (Frame.Window == null) continue;
@@ -99,7 +99,7 @@ namespace MinecraftAlpha
                 }
                 foreach (Button button in Window.Buttons)
                 {
-                    
+                    button.Render(spriteBatch);
                 }
                 foreach (textLabel text in Window.TextLabels)
                 {
@@ -107,12 +107,12 @@ namespace MinecraftAlpha
                 }
 
             }
-
-
-            //spriteBatch.End();
-
-
             DrawItemToMouse(spriteBatch, Contnet.Load<SpriteFont>("Font"));
+
+            spriteBatch.End();
+
+
+            
         }
         public void DrawItemToMouse(SpriteBatch spriteBatch, SpriteFont Text)
         {
@@ -205,7 +205,7 @@ namespace MinecraftAlpha
             windows.Add(new WindowFrame()
             {
                 Name = "Inventory",
-                Visible = true,
+                Visible = false,
                 Frames = new() { new UIFrame(){Window = Frames[0].Window ,Size =new Vector2(80,30),Position = new Vector2(290, 20) } },
                 Buttons = new() { },
                 ItemSlots = new() { },
@@ -247,7 +247,7 @@ namespace MinecraftAlpha
             windows.Add(new WindowFrame()
             {
                 Name = "Crafting2x2",
-                Visible = true,
+                Visible = false,
                 Frames = new() { },
                 Buttons = new() { },
                 ItemSlots = new() { },
@@ -265,6 +265,17 @@ namespace MinecraftAlpha
             ItemSlot result = new()
             { ItemPosition = new Vector2(32, 32) + new Vector2(140, 30), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = () => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); }  } };
             windows.Last().ItemSlots.Add(result);
+            windows.Add(new WindowFrame()
+            {
+                Name = "Menu",
+                Visible = true,
+                Frames = new() { },
+                Buttons = new() { new() {Background = Frames[0].Window, Position = new Vector2(0,0), Scale = new Vector2(200,100)} },
+                ItemSlots = new() { },
+            });
+            
+            
+            
         }
         public void HoverAction(Vector2 Mouse, ActionManager AM)
         {
@@ -281,10 +292,7 @@ namespace MinecraftAlpha
                     button.Hovered = false;
                 }
             }
-            foreach (var ItemSlot in ItemSlots)
-            {
-
-            }
+            
         }
         public void ClickAction(Vector2 Mouse, ActionManager AM, bool Mouse1)
         {
@@ -535,6 +543,12 @@ namespace MinecraftAlpha
             return false;
         }
 
+        public void Render(SpriteBatch Spritebatch)
+        {
+            var color = Color.White;
+            if(Hovered) color = Color.Gray;
+            Spritebatch.Draw(Background,new Rectangle((int)Position.X, (int)Position.Y, (int)Scale.X,(int)Scale.Y),color);
+        }
 
 
 
