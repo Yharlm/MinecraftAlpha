@@ -88,7 +88,7 @@ namespace MinecraftAlpha
             
             getBlock("Stone").ItemDrop = getBlock("Cobblestone");
             getBlock("Leaves").ItemDrop = getBlock("Air");
-            getBlock("Grass").ItemDrop = getBlock("Cobblestone");
+            getBlock("Grass").ItemDrop = getBlock("Dirt");
 
 
             getBlock("Chest").Interaction = (Pos) =>

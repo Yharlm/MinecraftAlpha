@@ -393,7 +393,8 @@ public class Game1 : Game
             }
         }
     }
-
+    public bool Clicked = false;
+    
     protected override void Update(GameTime gameTime)
     {
         // block drop testing remove later
@@ -413,22 +414,49 @@ public class Game1 : Game
         //}
 
 
-
-        if(!GameStarted)
+        
+        MouseClick = 0;
+        if (Mouse.GetState().LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Released && Clicked)
         {
-            _userInterfaceManager.HoverAction(MousePosition, _actionManager);
-            if (Mouse.GetState().LeftButton == ButtonState.Pressed && !LeftClicked)
-            {
 
-                LeftClicked = true;
-                _userInterfaceManager.ClickAction(MousePosition, _actionManager, true);
+            Clicked = false;
+        }
+        //if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+        //{
+        //    MouseClick = -1;
+        //}
+        if (Mouse.GetState().LeftButton == ButtonState.Pressed && !Clicked)
+        {
+            MouseClick = 1;
+            Clicked = true;
+        }
+        
+        //if (Mouse.GetState().RightButton == ButtonState.Pressed)
+        //{
+        //    MouseClick = -2;
+        //}
+        if (Mouse.GetState().RightButton == ButtonState.Pressed && !Clicked)
+        {
+            MouseClick = 2;
+            Clicked = true;
+        }
+        
 
 
 
 
-            }
+
+        MousePosition = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
+        _userInterfaceManager.MouseAction(MousePosition, _actionManager, MouseClick);
+        
+        
+
+
+        if (!GameStarted)
+        {
             return;
         }
+        _userInterfaceManager.windows[3].Visible = false;
 
 
 
@@ -446,10 +474,10 @@ public class Game1 : Game
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-        //Lighting Setter
+        
 
-        //Lighting(BackGround, 35);
-        //Lighting(World, 7);
+        
+        
         float Time = 1f;
         if (Daytime <= 12)
         {
@@ -471,7 +499,7 @@ public class Game1 : Game
 
         Player.cam.position = -Player.Plr.position * BlockSize + new Vector2(400, 202);
         base.Update(gameTime);
-        MousePosition = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
+        
 
         WorldMousePos = (MousePosition - Player.cam.position) / BlockSize;
 
@@ -577,8 +605,8 @@ public class Game1 : Game
     int HotbarIndex;
 
 
-    public bool RightClicked = false;
-    public bool LeftClicked = false;
+    
+    public int MouseClick = 0;
     public void Input(GameTime time)
     {
         var PLR = Player.Plr;
@@ -682,18 +710,11 @@ public class Game1 : Game
 
 
         //_particleSystem.Particles[0].Position = PLR.position;
+
         
-        if (Mouse.GetState().LeftButton == ButtonState.Pressed && !LeftClicked)
-        {
+        
 
-            LeftClicked = true;
-            _userInterfaceManager.ClickAction(MousePosition, _actionManager, true);
-
-
-
-
-        }
-        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+        if (int.Abs(MouseClick) == 1)
         {
             if (!_userInterfaceManager.Clicked)
             {
@@ -717,26 +738,16 @@ public class Game1 : Game
             }
 
         }
-        else if (Mouse.GetState().LeftButton == ButtonState.Released)
+        
+
+        if (MouseClick == 2)
         {
-
-            LeftClicked = false;
-        }
-
-
-        if (Mouse.GetState().RightButton == ButtonState.Pressed && !RightClicked)
-        {
-            RightClicked = true;
-
-            _userInterfaceManager.ClickAction(MousePosition, _actionManager, false);
-
+           
             _actionManager.Interact(WorldMousePos);
 
 
-
-
         }
-        if (Mouse.GetState().RightButton == ButtonState.Pressed)
+        if (int.Abs(MouseClick) == 2)
         {
             for (int i = 0; i < 4; i++)
             {
@@ -770,14 +781,10 @@ public class Game1 : Game
                 _actionManager.PlaceBlock(WorldMousePos, _userInterfaceManager.selectedItem);
                 PLR.Layer = TempLayer;
 
-                
+
             }
         }
-        else if (Mouse.GetState().RightButton == ButtonState.Released)
-        {
-            _userInterfaceManager.Clicked = false;
-            RightClicked = false;
-        }
+        
 
 
 
