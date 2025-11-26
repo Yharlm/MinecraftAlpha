@@ -335,9 +335,11 @@ namespace MinecraftAlpha
 
             
         }
-        public void Attack(Entity entity)
+        public void Punch(Entity Target,Game1 game)
         {
-            entity.Health -= 1;
+            Target.TakeDamage(this, 1);
+
+            game._entityAnimationService.Play(2, this);
 
         }
         public void TakeDamage(Entity source,int DMG)
@@ -346,13 +348,30 @@ namespace MinecraftAlpha
             Vector2 Knockback = Vector2.UnitY * 10;
             if (IFrame > 0) return;
             if (source != null) Knockback = (position - source.position);
-            velocity.velocity = Knockback * new Vector2(0.2f, 10);
+            velocity.velocity = Vector2.Normalize(Knockback) * new Vector2(2, 0) ;
+            this.Jump();
             Health -= DMG;
             Iframes();
         }
 
+        public void WalkTo(Vector2 pos)
+        {
+            velocity.velocity = Vector2.Normalize((pos - position));
+        }
 
+        public void Brain(Game1 game)
+        {
+            WalkTo(game.Player.Plr.position);
+        }
 
+        public void Jump()
+        {
+            if (Jumping) return;
+
+            velocity.velocity = new Vector2(velocity.velocity.X, -0.1f);
+            //position += new Vector2(0, -0.2f);
+            //Jumping = true; 
+        }
 
     }
 

@@ -9,15 +9,17 @@ public class RecipeManager
     public List<CraftingRecipe> LoadRecipes(BlockManager blocksManager)
     {
         int log = blocksManager.GetBlockByName("Log").ID;
+        int wood = blocksManager.GetBlockByName("Wood").ID;
+        int CraftT = blocksManager.GetBlockByName("Crafting Table").ID;
         var List = new List<CraftingRecipe>()
         
         {
             new CraftingRecipe(new int[,] {
-                { 8, 0 },
-                { 0, 0 }} ,4,4,blocksManager),
+                { log, 0 },
+                { 0, 0 }} ,wood,4,blocksManager),
             new CraftingRecipe(new int[,] {
-                { 5, 5 },
-                { 5, 5 }} ,6,4,blocksManager),
+                { wood, wood },
+                { wood, wood }} ,CraftT,1,blocksManager),
             
         };
 

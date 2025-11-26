@@ -421,20 +421,20 @@ public class Game1 : Game
 
             Clicked = false;
         }
-        //if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-        //{
-        //    MouseClick = -1;
-        //}
+        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+        {
+            MouseClick = -1;
+        }
         if (Mouse.GetState().LeftButton == ButtonState.Pressed && !Clicked)
         {
             MouseClick = 1;
             Clicked = true;
         }
-        
-        //if (Mouse.GetState().RightButton == ButtonState.Pressed)
-        //{
-        //    MouseClick = -2;
-        //}
+
+        if (Mouse.GetState().RightButton == ButtonState.Pressed)
+        {
+            MouseClick = -2;
+        }
         if (Mouse.GetState().RightButton == ButtonState.Pressed && !Clicked)
         {
             MouseClick = 2;
@@ -555,6 +555,7 @@ public class Game1 : Game
             }
             entity.ResetIframes();
 
+            entity.Brain(this);
 
 
             var EntVal = entity.velocity.velocity;
@@ -562,16 +563,16 @@ public class Game1 : Game
 
 
 
-            if (entity.Jumping)
+            if (entity.Jumping || true)
             {
-                if (!entity.collisionBox.Bottom)
-                {
-                    EntVal += new Vector2(0, -12);
-                }
-                else
-                {
-                    entity.Jumping = false;
-                }
+                //if (!entity.collisionBox.Bottom)
+                //{
+                //    EntVal += new Vector2(0, -112);
+                //}
+                //else
+                //{
+                //    entity.Jumping = false;
+                //}
             }
 
 
@@ -619,7 +620,7 @@ public class Game1 : Game
         float zoomScale = 0.3f;
         var keyboardState = Keyboard.GetState();
 
-
+        bool jump = false;
         bool Front = false;
         bool Back = false;
         var keyboard = Keyboard.GetState().GetPressedKeys();
@@ -628,12 +629,7 @@ public class Game1 : Game
 
             
 
-            if (key == Keys.Space)
-            {
-
-                plrVel += new Vector2(0, -12);
-                Player.Plr.Jumping = true;
-            }
+            
             if (key == Keys.S)
             {
                 Front = true;
@@ -670,14 +666,20 @@ public class Game1 : Game
 
 
                 PLR.Fliped = true;
-                plrVel += new Vector2(-1, 0);
+                plrVel = new Vector2(-1, 0);
             }
             if (key == Keys.D)
             {
                 //PLR.Animations[1].Paused = false;
                 PLR.Fliped = false;
-                plrVel += new Vector2(+1, 0);
+                plrVel = new Vector2(+1, 0);
             }
+
+            if (key == Keys.Space)
+            {
+                jump = true;
+            }
+
             if (key == Keys.X)
             {
                 PLR.velocity.flying = !PLR.velocity.flying;
@@ -716,9 +718,7 @@ public class Game1 : Game
 
         if (int.Abs(MouseClick) == 1)
         {
-            if (!_userInterfaceManager.Clicked)
-            {
-
+            
 
                 _entityAnimationService.Play(2, PLR);
                 //add a attack part here instead
@@ -735,7 +735,7 @@ public class Game1 : Game
                 }
                 _actionManager.BreakBlock(WorldMousePos);
                 PLR.Layer = TempLayer;
-            }
+            
 
         }
         
@@ -765,8 +765,7 @@ public class Game1 : Game
 
                 //_particleSystem.Particles.Add(part);
             }
-            if (!_userInterfaceManager.Clicked)
-            {
+            
 
                 float TempLayer = PLR.Layer;
 
@@ -782,7 +781,7 @@ public class Game1 : Game
                 PLR.Layer = TempLayer;
 
 
-            }
+            
         }
         
 
@@ -821,7 +820,11 @@ public class Game1 : Game
         // Get the center of the screen in screen coordinates
 
         Vector2 screenCenter = Player.cam.size / 2f;
-        PLR.velocity.velocity += plrVel * 0.2f; // Adjust speed as needed
+        PLR.WalkTo(plrVel + PLR.position); // Adjust speed as needed
+        if(jump)
+        {
+            PLR.Jump();
+        }
         if (keyboardState.IsKeyDown(Keys.OemPlus))
         {
 
@@ -882,7 +885,7 @@ public class Game1 : Game
             var ent = Entity.GetentityAtPosition(WorldMousePos, _entityManager.Workspace);
             if (ent != null)
             {
-                ent.TakeDamage(PLR, 2);
+                PLR.Punch(ent, this);
             }
         }
         if (keyboardState.IsKeyDown(Keys.H))
@@ -916,7 +919,7 @@ public class Game1 : Game
     {
 
 
-        GraphicsDevice.Clear(Color.FromNonPremultiplied(new Vector4(0.5f, 0.5f, Daytime / 12, 1)));
+        GraphicsDevice.Clear(Color.CornflowerBlue);
 
         //SunImage
         

@@ -23,7 +23,7 @@ namespace MinecraftAlpha
 
 
         public TileGrid LastUsedBlock = null;
-        public bool Clicked = false;
+        //public bool Clicked = false;
 
         public Block selectedItem = null;
         public int amount = 0;
@@ -340,7 +340,7 @@ namespace MinecraftAlpha
                     if (ItemSlot.IsInBounds(Mouse))
                     {
                         In_interface = true;
-                        Clicked = true;
+                        //Clicked = true;
                         if (Mouse1 == 1)
                         {
                             if (selectedItem == null)
@@ -387,6 +387,7 @@ namespace MinecraftAlpha
                 //windows.Find(x => x.Name == "Chest").Visible = false;
 
             }
+
         }
 
     }
