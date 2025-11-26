@@ -96,7 +96,7 @@ namespace MinecraftAlpha
                 new EntityAnimation(0,"Swing",new List<Frame>()
                 {
 
-                    new Frame(1,0,0.5f,140),
+                    new Frame(1,0,0.5f,140,360-140+90),
                     new Frame(1,0.5f,0.7f,10),
                     new Frame(1,1,1,180),
 
@@ -130,9 +130,20 @@ public class Frame
         Angle = DesiredAngle;
 
     }
+    public Frame(int JointID, float StartPos, float Durration, float DesiredAngle,bool Flip)
+    {
+        Joint = JointID;
+        start = StartPos;
+        this.Durration = Durration;
+        Angle = DesiredAngle;
+        
+
+    }
+
     public float start = 3;
     public int Joint = 0;
     public float Angle = 0f;
+    public bool Flip = false;
     public float Durration = 1f;
 
 
@@ -168,7 +179,18 @@ public class EntityAnimation
         {
             
             var Parent = parent.Joints[frame.Joint];
-            float Distance = GetDistanceBetweenAngles(Parent.orientation, frame.Angle);
+
+            float Angle = frame.Angle;
+            if(parent.Fliped)
+            {
+                if (frame.FlipAngle != 0f)
+                {
+                    Angle = frame.FlipAngle;
+                }
+                
+            }
+
+            float Distance = GetDistanceBetweenAngles(Parent.orientation, Angle);
             if (Looped)
             {
                 Time = 0f;

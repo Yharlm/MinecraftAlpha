@@ -348,8 +348,8 @@ namespace MinecraftAlpha
             Vector2 Knockback = Vector2.UnitY * 10;
             if (IFrame > 0) return;
             if (source != null) Knockback = (position - source.position);
-            velocity.velocity = Vector2.Normalize(Knockback) * new Vector2(2, 0) ;
-            this.Jump();
+            velocity.velocity = Vector2.Normalize(Knockback) * new Vector2(1.6f, 1) ;
+            Jump();
             Health -= DMG;
             Iframes();
         }
@@ -361,7 +361,11 @@ namespace MinecraftAlpha
 
         public void Brain(Game1 game)
         {
-            WalkTo(game.Player.Plr.position);
+            if (IFrame <= 0)
+            {
+                WalkTo(game.Player.Plr.position);
+            }
+           
         }
 
         public void Jump()

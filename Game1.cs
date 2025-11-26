@@ -563,16 +563,9 @@ public class Game1 : Game
 
 
 
-            if (entity.Jumping || true)
+            if (entity.Jumping)
             {
-                //if (!entity.collisionBox.Bottom)
-                //{
-                //    EntVal += new Vector2(0, -112);
-                //}
-                //else
-                //{
-                //    entity.Jumping = false;
-                //}
+                entity.Jump();
             }
 
 
