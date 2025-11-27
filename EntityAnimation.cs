@@ -96,8 +96,8 @@ namespace MinecraftAlpha
                 new EntityAnimation(0,"Swing",new List<Frame>()
                 {
 
-                    new Frame(1,0,0.5f,140,360-140+90),
-                    new Frame(1,0.5f,0.7f,10),
+                    new Frame(1,0,0.5f,140,true),
+                    new Frame(1,0.5f,0.7f,10,true),
                     new Frame(1,1,1,180),
 
                 })
@@ -136,7 +136,7 @@ public class Frame
         start = StartPos;
         this.Durration = Durration;
         Angle = DesiredAngle;
-        
+        this.Flip = Flip;
 
     }
 
@@ -183,9 +183,9 @@ public class EntityAnimation
             float Angle = frame.Angle;
             if(parent.Fliped)
             {
-                if (frame.FlipAngle != 0f)
+                if (frame.Flip)
                 {
-                    Angle = frame.FlipAngle;
+                    Angle = frame.Angle + 180;
                 }
                 
             }

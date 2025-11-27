@@ -8,11 +8,22 @@ namespace MinecraftAlpha
 {
     public class Player
     {
+        public Vector2 SpawnPoint = new Vector2(0, 0);
+        public Game1 game;
         public WindowFrame Inventory = null;
         public Entity Plr;
         public Cammera cam = new Cammera();
         public bool Jumping = false;
+        public Vector2
         
+        
+        public void Respawn()
+        {
+            var plr = Entity.CloneEntity(game._entityManager.entities[0], SpawnPoint);
+            Plr = plr;
+
+            game._entityManager.Workspace.Add(Plr);
+        }
         public void PickupItem(Block item,int amount,WindowFrame inventory)
         {
             foreach (var slot in inventory.ItemSlots)

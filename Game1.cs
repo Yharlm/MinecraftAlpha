@@ -28,7 +28,7 @@ public class Game1 : Game
 
     public Texture2D BreakTexture;
 
-    public Player Player = new Player();
+    public Player Player;
 
 
     public bool GameStarted = false;
@@ -105,6 +105,8 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
+        _entityManager.game = this;
+        Player = new Player() { game = this};
         Random random = new Random();
         _particleSystem.Content = Content;
 
@@ -458,7 +460,10 @@ public class Game1 : Game
         }
         _userInterfaceManager.windows[3].Visible = false;
 
-
+        if(Player.Plr.Health <= 0)
+        {
+            Player.Respawn();
+        }
 
         if (Keyboard.GetState().IsKeyDown(Keys.F11))
         {
@@ -524,6 +529,13 @@ public class Game1 : Game
         {
             //entity.collisionBox.CheckCollision(entity,World);
 
+            if (entity.position.Y > 600)
+            {
+                entity.TakeDamage(null, 5);
+            }
+
+
+
             foreach (Entity entity1 in _entityManager.Workspace)
             {
                 if (entity == entity1) continue;
@@ -555,7 +567,7 @@ public class Game1 : Game
             }
             entity.ResetIframes();
 
-            entity.Brain(this);
+            _entityManager.AI(entity);
 
 
             var EntVal = entity.velocity.velocity;
@@ -584,7 +596,7 @@ public class Game1 : Game
             // Example gravity, can be replaced with actual logic
 
         }
-        _entityManager.Workspace.RemoveAll(x => x.Health <= 0 || x.position.Y > 600);
+        _entityManager.Workspace.RemoveAll(x => x.Health <= 0);
 
         foreach (var entity in _particleSystem.Particles)
         {
@@ -813,8 +825,9 @@ public class Game1 : Game
         // Get the center of the screen in screen coordinates
 
         Vector2 screenCenter = Player.cam.size / 2f;
-        PLR.WalkTo(plrVel + PLR.position); // Adjust speed as needed
-        if(jump)
+        
+        Player.Wa.WalkTo(plrVel + PLR.position); // Adjust speed as needed
+        if (jump)
         {
             PLR.Jump();
         }

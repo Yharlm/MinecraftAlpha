@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace MinecraftAlpha
 {
     public class EntityManager
     {
+        public Game1 game;
         public EntityManager() { }
         public List<Entity> entities = new List<Entity>();
         public List<Entity> Workspace = new List<Entity>();
@@ -23,7 +24,43 @@ namespace MinecraftAlpha
         //    Workspace.Add(mobClone);
 
         //}
+        public void AI(Entity mob)
+        {
 
+
+            Vector2 Pos = mob.position;
+
+            if (mob.Target != null)
+            {
+                Pos = mob.Target.position;
+            }
+
+
+            mob.WalkTo(Pos);
+
+            if (mob == game.Player.Plr) return;
+            foreach (var entity in Workspace)
+            {
+                if (entity != mob)
+                {
+                    if (Vector2.Distance(mob.position, entity.position) < 10f)
+                    {
+                        //mob.Target = entity;
+                    }
+
+                }
+            }
+
+            if (mob.Target != null)
+            {
+                var Targ = mob.Target;
+                if (Vector2.Distance(mob.position, Targ.position) < 1.5f)
+                {
+                    mob.Punch(Targ, game);
+                }
+            }
+
+        }
         public void ItemDrop(Vector2 position, Block item)
         {
             Entity entity = new Entity(-1, item.Name, item.TexturePath, 1000)
@@ -47,7 +84,7 @@ namespace MinecraftAlpha
         {
             foreach (var entity in Workspace)
             {
-                
+
                 entity.DrawEntity(SB, Size, Pos);
             }
         }
@@ -170,22 +207,22 @@ namespace MinecraftAlpha
         {
             foreach (var entity in entities)
             {
-                foreach(var joint in entity.Joints)
+                foreach (var joint in entity.Joints)
                 {
-                    
+
                     joint.A_Sprite = entity.Sprites[joint.A_Index];
                     joint.B_Sprite = entity.Sprites[joint.B_Index];
                 }
             }
 
         }
-        public static void LoadJoins(Entity example,Entity clone)
+        public static void LoadJoins(Entity example, Entity clone)
         {
             for (var i = 0; i < example.Joints.Count; i++)
             {
                 var Ex = example.Joints[i];
                 var Cl = new Joint()
-                { 
+                {
                     A_Index = Ex.A_Index,
                     B_Index = Ex.B_Index,
                     A = Ex.A,

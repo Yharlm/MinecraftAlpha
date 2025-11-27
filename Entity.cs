@@ -203,6 +203,9 @@ namespace MinecraftAlpha
         //public List<EntityAnimation> CurrentAnimations = new List<EntityAnimation>();
 
 
+        public Entity Target = null;
+
+
         public bool Jumping = false;
         public Vector2 position { get; set; } = Vector2.Zero;
         public Velocity velocity = new Velocity();
@@ -338,7 +341,7 @@ namespace MinecraftAlpha
         public void Punch(Entity Target,Game1 game)
         {
             Target.TakeDamage(this, 1);
-
+            Target.Target = this;
             game._entityAnimationService.Play(2, this);
 
         }
@@ -356,17 +359,12 @@ namespace MinecraftAlpha
 
         public void WalkTo(Vector2 pos)
         {
+            
             velocity.velocity = Vector2.Normalize((pos - position));
+            
         }
 
-        public void Brain(Game1 game)
-        {
-            if (IFrame <= 0)
-            {
-                WalkTo(game.Player.Plr.position);
-            }
-           
-        }
+        
 
         public void Jump()
         {
@@ -374,7 +372,7 @@ namespace MinecraftAlpha
 
             velocity.velocity = new Vector2(velocity.velocity.X, -0.1f);
             //position += new Vector2(0, -0.2f);
-            //Jumping = true; 
+            Jumping = false;
         }
 
     }
