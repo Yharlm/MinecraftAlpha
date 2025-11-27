@@ -14,7 +14,7 @@ namespace MinecraftAlpha
         public Entity Plr;
         public Cammera cam = new Cammera();
         public bool Jumping = false;
-        public Vector2
+        
         
         
         public void Respawn()

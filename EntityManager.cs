@@ -36,7 +36,7 @@ namespace MinecraftAlpha
             }
 
 
-            mob.WalkTo(Pos);
+            //mob.WalkTo(Pos);
 
             if (mob == game.Player.Plr) return;
             foreach (var entity in Workspace)

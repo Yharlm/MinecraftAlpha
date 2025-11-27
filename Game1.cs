@@ -575,10 +575,7 @@ public class Game1 : Game
 
 
 
-            if (entity.Jumping)
-            {
-                entity.Jump();
-            }
+            
 
 
 
@@ -591,6 +588,7 @@ public class Game1 : Game
             {
                 entity.TakeDamage(null, entity.Fall_damage);
                 entity.Fall_damage = 0;
+                entity.Jumping = false;
             }
 
             // Example gravity, can be replaced with actual logic
@@ -826,7 +824,7 @@ public class Game1 : Game
 
         Vector2 screenCenter = Player.cam.size / 2f;
         
-        Player.Wa.WalkTo(plrVel + PLR.position); // Adjust speed as needed
+        Player.Plr.WalkTo(plrVel + PLR.position); // Adjust speed as needed
         if (jump)
         {
             PLR.Jump();

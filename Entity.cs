@@ -370,9 +370,9 @@ namespace MinecraftAlpha
         {
             if (Jumping) return;
 
-            velocity.velocity = new Vector2(velocity.velocity.X, -0.1f);
+            velocity.velocity = new Vector2(velocity.velocity.X, -110f);
             //position += new Vector2(0, -0.2f);
-            Jumping = false;
+            Jumping = true;
         }
 
     }
@@ -381,51 +381,13 @@ namespace MinecraftAlpha
     {
         public bool flying = false;
         public Vector2 Gravity = new Vector2(0, 0.1f);
-        public Vector2 velocity { get; set; } = Vector2.Zero;
+        public Vector2 velocity = Vector2.Zero;
 
         public void apply_velocity(Entity entity)
         {
-            var Acceleration = 0.1f;
-            var Vel = Vector2.Zero;
 
-            if (!entity.collisionBox.Left && velocity.X < 0)
-            {
-                Vel.X -= Acceleration;
-                velocity += Acceleration * Vector2.UnitX;
-            }
-            if (!entity.collisionBox.Right && velocity.X > 0)
-            {
-                Vel.X += Acceleration;
-                velocity -= Acceleration * Vector2.UnitX;
-            }
-            if (!entity.collisionBox.Top && velocity.Y < 0)
-            {
-                Vel.Y -= Acceleration;
-                velocity += Acceleration * Vector2.UnitY;
-            }
-            if (!entity.collisionBox.Bottom && velocity.Y > 0)
-            {
 
-                Vel.Y += Acceleration;
-                velocity -= Acceleration * Vector2.UnitY;
-            }
-
-            
-            if (entity.collisionBox.Bottom)
-            {
-                Gravity.Y = 0;
-            }
-            else
-            {
-                Gravity.Y += Acceleration / 20;
-            }
-
-            if (flying)
-            {
-                Gravity.Y = 0f;
-            }
-
-            entity.position += Vel + Gravity;
+            entity.position += velocity / 10;
         }
 
 
