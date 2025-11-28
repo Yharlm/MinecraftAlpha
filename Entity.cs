@@ -359,7 +359,10 @@ namespace MinecraftAlpha
 
         public void WalkTo(Vector2 pos)
         {
-            
+            if (Single.IsNaN(pos.X) || Single.IsNaN(pos.Y))
+            {
+                return;
+            }
             velocity.velocity = Vector2.Normalize((pos - position));
             
         }
@@ -370,9 +373,9 @@ namespace MinecraftAlpha
         {
             if (Jumping) return;
 
-            velocity.velocity = new Vector2(velocity.velocity.X, -110f);
+            velocity.velocity = new Vector2(velocity.velocity.X, -1f);
             //position += new Vector2(0, -0.2f);
-            Jumping = true;
+            Jumping = false;
         }
 
     }
@@ -380,14 +383,70 @@ namespace MinecraftAlpha
     public class Velocity
     {
         public bool flying = false;
-        public Vector2 Gravity = new Vector2(0, 0.1f);
-        public Vector2 velocity = Vector2.Zero;
+        
+        public Vector2 Gravity = new(0, 0.1f);
+        public Vector2 velocity = new(0,0);
 
         public void apply_velocity(Entity entity)
         {
+            Vector2 vel = Vector2.Zero;
+            Vector2 gravity = new Vector2(0, 0.005f);
 
+            if (velocity.X > 0)
+            {
+                if (!entity.collisionBox.Right)
+                {
+                    vel.X = velocity.X / 5;
+                }
+                
+                velocity.X -= velocity.X / 5f;
+            }
+            if (velocity.X < 0)
+            {
+                if (!entity.collisionBox.Left)
+                {
+                    vel.X = velocity.X / 5f;
+                }
+                
+                velocity.X += velocity.X / 5;
+            }
+            if (velocity.Y > 0)
+            {
+                if (!entity.collisionBox.Bottom)
+                {
+                    vel.Y = velocity.Y / 5;
+                }
 
-            entity.position += velocity / 10;
+                velocity.Y -= velocity.Y / 5;
+            }
+            if (velocity.Y < 0)
+            {
+                if (!entity.collisionBox.Top)
+                {
+
+                    vel.Y = velocity.Y / 5;
+                }
+                
+                velocity.Y += velocity.Y / 5;
+            }
+            
+            if (Single.IsNaN(vel.X) || Single.IsNaN(vel.Y))
+            {
+                return;
+            }
+            
+            if (!entity.collisionBox.Bottom)
+            {
+                Gravity += gravity;
+            }
+            else
+            {
+                Gravity = new Vector2(0, 0);
+                
+            }
+            vel.Y += Gravity.Y;
+
+            entity.position += vel + Gravity;
         }
 
 
