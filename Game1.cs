@@ -608,8 +608,8 @@ public class Game1 : Game
 
     int HotbarIndex;
 
+    bool jump = false;
 
-    
     public int MouseClick = 0;
     public void Input(GameTime time)
     {
@@ -619,11 +619,11 @@ public class Game1 : Game
 
 
         Vector2 plrVel = Vector2.Zero;
-        Player.Plr.velocity.velocity = new Vector2(0, 0);
+        
         float zoomScale = 0.3f;
         var keyboardState = Keyboard.GetState();
 
-        bool jump = false;
+        
         bool Front = false;
         bool Back = false;
         var keyboard = Keyboard.GetState().GetPressedKeys();
@@ -680,7 +680,7 @@ public class Game1 : Game
 
             if (key == Keys.Space)
             {
-                jump = true;
+                PLR.Jumping = true;
             }
 
             if (key == Keys.X)
@@ -823,7 +823,7 @@ public class Game1 : Game
         // Get the center of the screen in screen coordinates
 
         Vector2 screenCenter = Player.cam.size / 2f;
-        
+
         Player.Plr.WalkTo(plrVel + PLR.position); // Adjust speed as needed
         if (jump)
         {
@@ -977,7 +977,7 @@ public class Game1 : Game
                             float TraZ = 0f;
                             TileGrid Transparent = null;
 
-                            TileGrid Opaque = null;
+                            //TileGrid Opaque = null;
 
                             float plrZ = float.Floor(Player.Plr.Layer);
                             for (int z = 0; z < chunk.Tiles.GetLength(0) && z <= plrZ; z++)

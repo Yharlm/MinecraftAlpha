@@ -36,7 +36,7 @@ namespace MinecraftAlpha
             }
 
 
-            //mob.WalkTo(Pos);
+
 
             if (mob == game.Player.Plr) return;
             foreach (var entity in Workspace)
@@ -50,7 +50,7 @@ namespace MinecraftAlpha
 
                 }
             }
-
+            mob.WalkTo(Pos);
             if (mob.Target != null)
             {
                 var Targ = mob.Target;

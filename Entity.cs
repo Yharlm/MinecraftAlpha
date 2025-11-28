@@ -341,17 +341,18 @@ namespace MinecraftAlpha
         public void Punch(Entity Target,Game1 game)
         {
             Target.TakeDamage(this, 1);
-            Target.Target = this;
+            //Target.Target = this;
             game._entityAnimationService.Play(2, this);
 
         }
         public void TakeDamage(Entity source,int DMG)
         {
             if (DMG <1) return;
+            //velocity.velocity += new Vector2(0, -1f);
             Vector2 Knockback = Vector2.UnitY * 10;
             if (IFrame > 0) return;
             if (source != null) Knockback = (position - source.position);
-            velocity.velocity = Vector2.Normalize(Knockback) * new Vector2(1.6f, 1) ;
+            velocity.velocity += Vector2.Normalize(Knockback)*3;
             Jump();
             Health -= DMG;
             Iframes();
@@ -363,8 +364,8 @@ namespace MinecraftAlpha
             {
                 return;
             }
-            velocity.velocity = Vector2.Normalize((pos - position));
-            
+            velocity.velocity = Vector2.Normalize((pos - position)/2);
+
         }
 
         
@@ -373,7 +374,7 @@ namespace MinecraftAlpha
         {
             if (Jumping) return;
 
-            velocity.velocity = new Vector2(velocity.velocity.X, -1f);
+            velocity.velocity = new Vector2(velocity.velocity.X, -4f);
             //position += new Vector2(0, -0.2f);
             Jumping = false;
         }
@@ -399,7 +400,7 @@ namespace MinecraftAlpha
                     vel.X = velocity.X / 5;
                 }
                 
-                velocity.X -= velocity.X / 5f;
+                velocity.X -= velocity.X / 6f;
             }
             if (velocity.X < 0)
             {
@@ -408,7 +409,7 @@ namespace MinecraftAlpha
                     vel.X = velocity.X / 5f;
                 }
                 
-                velocity.X += velocity.X / 5;
+                velocity.X += velocity.X / 6;
             }
             if (velocity.Y > 0)
             {
@@ -417,7 +418,7 @@ namespace MinecraftAlpha
                     vel.Y = velocity.Y / 5;
                 }
 
-                velocity.Y -= velocity.Y / 5;
+                velocity.Y -= velocity.Y / 6;
             }
             if (velocity.Y < 0)
             {
@@ -427,7 +428,7 @@ namespace MinecraftAlpha
                     vel.Y = velocity.Y / 5;
                 }
                 
-                velocity.Y += velocity.Y / 5;
+                velocity.Y += velocity.Y / 6;
             }
             
             if (Single.IsNaN(vel.X) || Single.IsNaN(vel.Y))
@@ -445,7 +446,7 @@ namespace MinecraftAlpha
                 
             }
             vel.Y += Gravity.Y;
-
+            
             entity.position += vel + Gravity;
         }
 
