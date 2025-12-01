@@ -206,7 +206,7 @@ namespace MinecraftAlpha
         public Entity Target = null;
 
 
-        public bool Jumping = false;
+        public bool Grounded = false;
         public Vector2 position { get; set; } = Vector2.Zero;
         public Velocity velocity = new Velocity();
         public int Fall_damage = 0;
@@ -360,11 +360,11 @@ namespace MinecraftAlpha
 
         public void WalkTo(Vector2 pos)
         {
-            if (Single.IsNaN(pos.X) || Single.IsNaN(pos.Y))
+            if (Single.IsNaN(pos.X) || Single.IsNaN(pos.Y) || pos.X + pos.Y == 0)
             {
                 return;
             }
-            velocity.velocity = Vector2.Normalize((pos - position)/2);
+            velocity.velocity += pos/10;
 
         }
 
@@ -372,11 +372,11 @@ namespace MinecraftAlpha
 
         public void Jump()
         {
-            if (Jumping) return;
+            //if (Grounded) return;
 
-            velocity.velocity = new Vector2(velocity.velocity.X, -4f);
+            velocity.velocity = new Vector2(velocity.velocity.X, -1f);
             //position += new Vector2(0, -0.2f);
-            Jumping = false;
+            
         }
 
     }
@@ -399,7 +399,7 @@ namespace MinecraftAlpha
                 {
                     vel.X = velocity.X / 5;
                 }
-                
+
                 velocity.X -= velocity.X / 6f;
             }
             if (velocity.X < 0)
@@ -408,7 +408,7 @@ namespace MinecraftAlpha
                 {
                     vel.X = velocity.X / 5f;
                 }
-                
+
                 velocity.X += velocity.X / 6;
             }
             if (velocity.Y > 0)
@@ -418,7 +418,7 @@ namespace MinecraftAlpha
                     vel.Y = velocity.Y / 5;
                 }
 
-                velocity.Y -= velocity.Y / 6;
+                velocity.Y += velocity.Y / 6;
             }
             if (velocity.Y < 0)
             {
@@ -427,10 +427,10 @@ namespace MinecraftAlpha
 
                     vel.Y = velocity.Y / 5;
                 }
-                
-                velocity.Y += velocity.Y / 6;
+
+                velocity.Y -= velocity.Y/6;
             }
-            
+
             if (Single.IsNaN(vel.X) || Single.IsNaN(vel.Y))
             {
                 return;
@@ -445,9 +445,9 @@ namespace MinecraftAlpha
                 Gravity = new Vector2(0, 0);
                 
             }
-            vel.Y += Gravity.Y;
+            //vel.Y += Gravity.Y;
             
-            entity.position += vel + Gravity;
+            entity.position += vel /*+ Gravity*/;
         }
 
 
@@ -459,7 +459,7 @@ namespace MinecraftAlpha
         {
 
             var vel = entity.velocity.velocity;
-            entity.Jumping = true;
+            
             
         }
 

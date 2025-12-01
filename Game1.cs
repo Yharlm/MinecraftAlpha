@@ -575,10 +575,10 @@ public class Game1 : Game
 
 
 
-            
 
 
 
+            entity.Grounded = true;
             if (entity.velocity.Gravity.Y > 0.3f)
             {
                 entity.Fall_damage = (int)(entity.velocity.Gravity.Y * 3);
@@ -588,7 +588,7 @@ public class Game1 : Game
             {
                 entity.TakeDamage(null, entity.Fall_damage);
                 entity.Fall_damage = 0;
-                entity.Jumping = false;
+                entity.Grounded = false;
             }
 
             // Example gravity, can be replaced with actual logic
@@ -608,11 +608,12 @@ public class Game1 : Game
 
     int HotbarIndex;
 
-    bool jump = false;
+    
 
     public int MouseClick = 0;
     public void Input(GameTime time)
     {
+        bool jump = false;
         var PLR = Player.Plr;
 
         HotbarIndex = (Mouse.GetState().ScrollWheelValue / 120) % 9 + 1;
@@ -680,7 +681,8 @@ public class Game1 : Game
 
             if (key == Keys.Space)
             {
-                PLR.Jumping = true;
+                //PLR.Jumping = true;
+                jump = true;
             }
 
             if (key == Keys.X)
@@ -1053,7 +1055,7 @@ public class Game1 : Game
 
 
 
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(Player.Plr.Layer)).ToString(), new Vector2(500, 20), Color.WhiteSmoke);
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((Player.Plr.velocity.velocity)).ToString(), new Vector2(500, 20), Color.WhiteSmoke);
 
 
 
