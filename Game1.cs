@@ -535,7 +535,18 @@ public class Game1 : Game
             }
 
 
+            entity.Grounded = true;
+            if (entity.velocity.velocity.Y > 60f)
+            {
+                entity.Fall_damage = (int)(entity.velocity.velocity.Y - 40);
+            }
 
+            if (entity.collisionBox.Bottom)
+            {
+                entity.TakeDamage(null, entity.Fall_damage);
+                entity.Fall_damage = 0;
+                entity.Grounded = false;
+            }
             foreach (Entity entity1 in _entityManager.Workspace)
             {
                 if (entity == entity1) continue;
@@ -578,18 +589,7 @@ public class Game1 : Game
 
 
 
-            entity.Grounded = true;
-            if (entity.velocity.Gravity.Y > 0.3f)
-            {
-                entity.Fall_damage = (int)(entity.velocity.Gravity.Y * 3);
-            }
-
-            if (entity.collisionBox.Bottom)
-            {
-                entity.TakeDamage(null, entity.Fall_damage);
-                entity.Fall_damage = 0;
-                entity.Grounded = false;
-            }
+            
 
             // Example gravity, can be replaced with actual logic
 
@@ -826,7 +826,7 @@ public class Game1 : Game
 
         Vector2 screenCenter = Player.cam.size / 2f;
 
-        Player.Plr.WalkTo(plrVel + PLR.position); // Adjust speed as needed
+        Player.Plr.WalkTo(plrVel); // Adjust speed as needed
         if (jump)
         {
             PLR.Jump();
@@ -897,7 +897,7 @@ public class Game1 : Game
         if (keyboardState.IsKeyDown(Keys.H))
         {
             _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[0], WorldMousePos));
-
+            _entityManager.Workspace.Last().Speed = 0.6f;
         }
         if (keyboardState.IsKeyDown(Keys.B))
         {

@@ -50,9 +50,12 @@ namespace MinecraftAlpha
 
                 }
             }
-            mob.WalkTo(Pos);
+            
+
+            
             if (mob.Target != null)
             {
+                mob.WalkTo(Vector2.Normalize(Pos - mob.position));
                 var Targ = mob.Target;
                 if (Vector2.Distance(mob.position, Targ.position) < 1.5f)
                 {

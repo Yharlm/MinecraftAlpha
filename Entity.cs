@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace MinecraftAlpha
 {
@@ -44,7 +43,7 @@ namespace MinecraftAlpha
     public class CollisionBox
     {
         public Vector2 Size = new Vector2(0.4f, 1);
-        
+
         public bool Left { get; set; } = false;
         public bool Right { get; set; } = false;
         public bool Top { get; set; } = false;
@@ -77,7 +76,7 @@ namespace MinecraftAlpha
             //    entity.collisionBox.Right = true;
             //}
             Vector2 Bottom = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y);
-            Vector2 Left = entity.position + new Vector2(0, entity.collisionBox.Size.Y/2f);
+            Vector2 Left = entity.position + new Vector2(0, entity.collisionBox.Size.Y / 2f);
             Vector2 Right = entity.position + new Vector2(entity.collisionBox.Size.X, entity.collisionBox.Size.Y / 2f);
             Vector2 Top = entity.position + new Vector2(entity.collisionBox.Size.X / 2, 0);
             int z = (int)entity.Layer;
@@ -111,7 +110,7 @@ namespace MinecraftAlpha
                 {
                     block.MinedHealth += 10;
                 }
-                   
+
             }
 
 
@@ -130,8 +129,8 @@ namespace MinecraftAlpha
                 Clone.position = Position;
                 //Clone.Joints = Example.Joints;
                 Clone.collisionBox = new CollisionBox();
-                Clone.Animations = EntityAnimation.LoadAnimation(Clone,Example.Animations);
-               
+                Clone.Animations = EntityAnimation.LoadAnimation(Clone, Example.Animations);
+                Clone.velocity = new Velocity();
                 Clone.Texture = Example.Texture;
                 Clone.Fall_damage = Example.Fall_damage;
                 Clone.Mass = Example.Mass;
@@ -140,14 +139,14 @@ namespace MinecraftAlpha
                 //Events
                 Clone.Model3D = Example.Model3D;
 
-                
+
                 Clone.Interaction = Example.Interaction;
                 Clone.Update = Example.Update;
 
             }
 
             Clone.Sprites = Sprite.LoadSprites(Example);
-            EntityManager.LoadJoins(Example,Clone);
+            EntityManager.LoadJoins(Example, Clone);
             return Clone;
         }
 
@@ -169,7 +168,7 @@ namespace MinecraftAlpha
         //        Clone.Data = Data;
         //        //Events
 
-                
+
         //        Clone.Interaction = Example.Interaction;
         //        Clone.Update = Example.Update;
 
@@ -188,6 +187,7 @@ namespace MinecraftAlpha
         public int Health;
         public int MaxHealth;
         public int ID = 0;
+        public float Speed = 1;
 
 
         public string name { get; set; } = "nullEntity";
@@ -225,7 +225,7 @@ namespace MinecraftAlpha
 
         } // Constructor
 
-        
+
 
         public Event Interaction;
 
@@ -233,7 +233,7 @@ namespace MinecraftAlpha
 
         public Event Damaged;
 
-        public static void CollisionEventCollision(Entity A,Entity B,Game1 game1)
+        public static void CollisionEventCollision(Entity A, Entity B, Game1 game1)
         {
             if (A.ID == -1 && B.name == "Player") // ItemDrop
             {
@@ -255,7 +255,7 @@ namespace MinecraftAlpha
                 Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
                 if (A.Contains((int)(Pos.X * 32), (int)(Pos.Y * 32)))
                 {
-                   return entity;
+                    return entity;
                 }
             }
             return null;
@@ -267,10 +267,10 @@ namespace MinecraftAlpha
         }
         public void Iframes()
         {
-            
+
             IFrame = 4f;
-            
-            
+
+
         }
 
         public void DrawEntity(SpriteBatch SB, float BlockSize, Vector2 Cam)
@@ -282,7 +282,7 @@ namespace MinecraftAlpha
             //SB.End();
             if (this.Model3D != null)
             {
-                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18,0);
+                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, 0);
                 return;
             }
 
@@ -298,11 +298,11 @@ namespace MinecraftAlpha
             foreach (Sprite s in Sprites)
             {
                 int i = Sprites.IndexOf(s);
-                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer)/10 + (float)i/60, float.Floor(Layer),(IFrame > 0));
+                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, float.Floor(Layer), (IFrame > 0));
 
             }
         }
-        
+
         public bool CheckCollisionEntity(Entity entity)
         {
             Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
@@ -311,7 +311,7 @@ namespace MinecraftAlpha
             {
                 //entity.velocity.velocity = (this.position - entity.position) / entity.Mass;
 
-                
+
 
                 return true; // invokes?
             }
@@ -336,23 +336,29 @@ namespace MinecraftAlpha
             }
 
 
-            
+
         }
-        public void Punch(Entity Target,Game1 game)
+        public void Punch(Entity Target, Game1 game)
         {
             Target.TakeDamage(this, 1);
-            //Target.Target = this;
+            Target.Target = this;
             game._entityAnimationService.Play(2, this);
 
         }
-        public void TakeDamage(Entity source,int DMG)
+        public void TakeDamage(Entity source, int DMG)
         {
-            if (DMG <1) return;
+            if (DMG < 1) return;
             //velocity.velocity += new Vector2(0, -1f);
-            Vector2 Knockback = Vector2.UnitY * 10;
+            Vector2 Knockback = new Vector2(0,1);
             if (IFrame > 0) return;
             if (source != null) Knockback = (position - source.position);
-            velocity.velocity += Vector2.Normalize(Knockback)*3;
+
+            if(Knockback == Vector2.Zero)
+            {
+                Knockback = new Vector2(0, 1);
+            }
+
+            velocity.velocity += Vector2.Normalize(Knockback) * 3;
             Jump();
             Health -= DMG;
             Iframes();
@@ -360,23 +366,23 @@ namespace MinecraftAlpha
 
         public void WalkTo(Vector2 pos)
         {
-            if (Single.IsNaN(pos.X) || Single.IsNaN(pos.Y) || pos.X + pos.Y == 0)
+            if(collisionBox.Left || collisionBox.Right)
             {
-                return;
+                Jump();
             }
-            velocity.velocity += pos/10;
+            velocity.velocity += pos * Vector2.UnitX * Speed;
 
         }
 
-        
+
 
         public void Jump()
         {
-            //if (Grounded) return;
+            if (Grounded) return;
 
-            velocity.velocity = new Vector2(velocity.velocity.X, -1f);
+            velocity.velocity += new Vector2(0, -4f);
             //position += new Vector2(0, -0.2f);
-            
+
         }
 
     }
@@ -384,88 +390,62 @@ namespace MinecraftAlpha
     public class Velocity
     {
         public bool flying = false;
-        
-        public Vector2 Gravity = new(0, 0.1f);
-        public Vector2 velocity = new(0,0);
+
+        public float Gravity = 0;
+        public Vector2 velocity = new(0, 0);
 
         public void apply_velocity(Entity entity)
         {
-            Vector2 vel = Vector2.Zero;
-            Vector2 gravity = new Vector2(0, 0.005f);
-
-            if (velocity.X > 0)
-            {
-                if (!entity.collisionBox.Right)
-                {
-                    vel.X = velocity.X / 5;
-                }
-
-                velocity.X -= velocity.X / 6f;
-            }
-            if (velocity.X < 0)
-            {
-                if (!entity.collisionBox.Left)
-                {
-                    vel.X = velocity.X / 5f;
-                }
-
-                velocity.X += velocity.X / 6;
-            }
-            if (velocity.Y > 0)
-            {
-                if (!entity.collisionBox.Bottom)
-                {
-                    vel.Y = velocity.Y / 5;
-                }
-
-                velocity.Y += velocity.Y / 6;
-            }
-            if (velocity.Y < 0)
-            {
-                if (!entity.collisionBox.Top)
-                {
-
-                    vel.Y = velocity.Y / 5;
-                }
-
-                velocity.Y -= velocity.Y/6;
-            }
-
-            if (Single.IsNaN(vel.X) || Single.IsNaN(vel.Y))
-            {
-                return;
-            }
+            Vector2 vel = Vector2.One;
             
-            if (!entity.collisionBox.Bottom)
+           
+
+            if(!entity.Grounded)
             {
-                Gravity += gravity;
+                Gravity = 0;
+                
             }
             else
             {
-                Gravity = new Vector2(0, 0);
-                
+                Gravity += 0.02f;
             }
-            //vel.Y += Gravity.Y;
-            
-            entity.position += vel /*+ Gravity*/;
+
+
+            if(float.Abs(velocity.X) < 0.4f)
+            {
+                velocity.X = 0;
+            }
+
+
+            if (entity.collisionBox.Bottom && velocity.Y > 0 || entity.collisionBox.Top && velocity.Y < 0)
+            {
+                vel.Y = 0;
+                velocity.Y = 0;
+            }
+            if (entity.collisionBox.Right && velocity.X > 0 || entity.collisionBox.Left && velocity.X < 0)
+            {
+                vel.X = 0;
+                velocity.X = 0;
+            }
+            vel *= velocity;
+            velocity -= vel / 5;
+            entity.position += vel/30;
+            velocity += new Vector2(0, Gravity*2.25f);
         }
 
-
-    }
-
-    public class Behaviour
-    {
-        public static void Jump(Entity entity)
+        public class Behaviour
         {
+            public static void Jump(Entity entity)
+            {
 
-            var vel = entity.velocity.velocity;
-            
-            
+                var vel = entity.velocity.velocity;
+
+
+            }
+
+
+            public Behaviour() { }
+
         }
-
-
-        public Behaviour() { }
-
-        
     }
 }
