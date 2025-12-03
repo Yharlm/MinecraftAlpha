@@ -433,19 +433,6 @@ namespace MinecraftAlpha
             velocity += new Vector2(0, Gravity*2.25f);
         }
 
-        public class Behaviour
-        {
-            public static void Jump(Entity entity)
-            {
-
-                var vel = entity.velocity.velocity;
-
-
-            }
-
-
-            public Behaviour() { }
-
-        }
+        
     }
 }

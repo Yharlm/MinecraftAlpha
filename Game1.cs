@@ -699,13 +699,11 @@ public class Game1 : Game
                 Generation.GenerateChunk(WorldMousePos, Chunks);
 
             }
+            
             if (key == Keys.LeftControl)
             {
 
-                //var Chunk = Chunks.Last();
-
-
-                Generation.GenerateChunk(WorldMousePos, Chunks);
+                _entityManager.Attract(12,WorldMousePos);
 
             }
         }

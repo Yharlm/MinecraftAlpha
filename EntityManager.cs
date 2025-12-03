@@ -24,6 +24,21 @@ namespace MinecraftAlpha
         //    Workspace.Add(mobClone);
 
         //}
+
+
+        public void Attract(float r,Vector2 position)
+        {
+            foreach (var entity in Workspace)
+            {
+                if (entity == game.Player.Plr) continue;
+                if (Vector2.Distance(entity.position, position) < r)
+                {
+                    Vector2 direction = position - entity.position;
+                    entity.velocity.velocity += direction*3; // Adjust the multiplier for speed
+                }
+            }
+        }
+
         public void AI(Entity mob)
         {
 
