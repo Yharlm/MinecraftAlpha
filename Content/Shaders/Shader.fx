@@ -23,19 +23,22 @@ struct VertexShaderOutput
 	float2 TextureCoordinates : TEXCOORD0;
 };
 
-float F(float x)
+float F(float x,float y)
 {
-	return x;
+	return (x*x*x*x+y*y*y*y);
+}
+
+float Sin(float x)
+{
+	return sin(x);
 }
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 Color = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
     
-	if (F(input.TextureCoordinates.x) < input.TextureCoordinates.y )
-	{
-		Color.rgb = float3(1.0, 0.0, 0.0);
-	}
+	
+	
 
 
     return Color;

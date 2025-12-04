@@ -34,7 +34,8 @@ namespace MinecraftAlpha
                 if (Vector2.Distance(entity.position, position) < r)
                 {
                     Vector2 direction = position - entity.position;
-                    entity.velocity.velocity += direction*3; // Adjust the multiplier for speed
+                    entity.velocity.velocity += direction; // Adjust the multiplier for speed
+                    entity.velocity.Gravity = 0;
                 }
             }
         }

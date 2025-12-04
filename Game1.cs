@@ -26,6 +26,11 @@ public class Game1 : Game
     public RecipeManager _RecipeManager = new();
 
 
+    public Effect Shader;
+
+
+
+
     public Texture2D BreakTexture;
 
     public Player Player;
@@ -270,7 +275,7 @@ public class Game1 : Game
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
 
-
+        Shader = Content.Load<Effect>("Shaders/Shader");
 
 
         //_userInterfaceManager.ItemSlots = UserInterfaceManager.LoadItemSlots(_blockManager.Blocks);
@@ -536,9 +541,9 @@ public class Game1 : Game
 
 
             entity.Grounded = true;
-            if (entity.velocity.velocity.Y > 60f)
+            if (entity.velocity.velocity.Y > 6f)
             {
-                entity.Fall_damage = (int)(entity.velocity.velocity.Y - 40);
+                entity.Fall_damage = (int)(entity.velocity.velocity.Y)-7;
             }
 
             if (entity.collisionBox.Bottom)
@@ -926,14 +931,14 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         //SunImage
-        
+
         //_spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         //_spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Daytime.ToString("0.00"), new Vector2(700, (float)Math.Sin(Daytime/12)), Color.Wheat);
         //_spriteBatch.End();
-
+        //Shader.Parameters["Time"].SetValue((float)gameTime.ElapsedGameTime.Milliseconds/10);
         if (GameStarted)
         {
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack, effect: Shader);
             foreach (var Mob in Entities)
             {
 

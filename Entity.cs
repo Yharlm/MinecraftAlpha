@@ -380,7 +380,8 @@ namespace MinecraftAlpha
         {
             if (Grounded) return;
 
-            velocity.velocity += new Vector2(0, -4f);
+            velocity.velocity += new Vector2(0, -2f);
+            Grounded = true;
             //position += new Vector2(0, -0.2f);
 
         }
