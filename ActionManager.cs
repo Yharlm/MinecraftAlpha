@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -164,7 +165,7 @@ namespace MinecraftAlpha
                     {
                         Position = (new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height)),
                         TextureName = "BlockMineEffect",
-                        Texture = block.Texture,
+                        Texture = Game.Content.Load<Text>,
                         lifeTime = 0.2f,
                         size = 0.4f,
                         Color = block.Color,

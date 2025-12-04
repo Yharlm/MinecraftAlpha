@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace MinecraftAlpha
@@ -28,13 +29,14 @@ namespace MinecraftAlpha
 
         public void Attract(float r,Vector2 position)
         {
+            Random random = new Random(0);
             foreach (var entity in Workspace)
             {
                 if (entity == game.Player.Plr) continue;
                 if (Vector2.Distance(entity.position, position) < r)
                 {
                     Vector2 direction = position - entity.position;
-                    entity.velocity.velocity += direction; // Adjust the multiplier for speed
+                    entity.velocity.velocity +=Vector2.Normalize(direction+ Vector2.UnitY)*5; // Adjust the multiplier for speed
                     entity.velocity.Gravity = 0;
                 }
             }
@@ -99,6 +101,29 @@ namespace MinecraftAlpha
 
             }
         }
+
+        public void Die(Entity entity)
+        {
+            Random random = new Random();
+            for (int i = 0; i < 20; i++)
+            {
+                var part = new Particle()
+                {
+                    Position = entity.position,
+                    TextureName = "Dust",
+                    Texture = game._particleSystem.Particles[0].Texture,
+                    lifeTime = 1f,
+                    size = 0.4f,
+                    Color = Color.White,
+                    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
+                    Acceleration = new Vector2(0, -1f),
+                    gravity = 0f
+
+                };
+
+                game._particleSystem.Particles.Add(part);
+            }
+        }
         public void RenderAll(SpriteBatch SB, float Size, Vector2 Pos)
         {
             foreach (var entity in Workspace)
@@ -114,7 +139,7 @@ namespace MinecraftAlpha
 
 
 
-            var Plr = new Entity(id++, "Player", "steve", 20)
+            var Plr = new Entity(id++, "Player", "steve", 120)
             {
 
                 Ractangles = new List<Vector4>() // LimbShapes

@@ -338,6 +338,8 @@ namespace MinecraftAlpha
 
 
         }
+
+        
         public void Punch(Entity Target, Game1 game)
         {
             Target.TakeDamage(this, 1);
@@ -394,11 +396,13 @@ namespace MinecraftAlpha
 
         public float Gravity = 0;
         public Vector2 velocity = new(0, 0);
+        public float Drag = 7f;
+
 
         public void apply_velocity(Entity entity)
         {
             Vector2 vel = Vector2.One;
-            
+            float Drag = this.Drag;
            
 
             if(!entity.Grounded)
@@ -428,9 +432,14 @@ namespace MinecraftAlpha
                 vel.X = 0;
                 velocity.X = 0;
             }
+            if(vel.Length() > 30)
+            {
+                Drag = 20f;
+            }
             vel *= velocity;
-            velocity -= vel / 5;
-            entity.position += vel/30;
+            velocity -= vel / Drag;
+            
+            entity.position += vel/ 30;
             velocity += new Vector2(0, Gravity*2.25f);
         }
 

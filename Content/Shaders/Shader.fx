@@ -25,18 +25,16 @@ struct VertexShaderOutput
 
 float F(float x,float y)
 {
-	return (x*x*x*x+y*y*y*y);
+	return (x*x+y*y);
 }
 
-float Sin(float x)
-{
-	return sin(x);
-}
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 Color = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
     
+	
+	
 	
 	
 

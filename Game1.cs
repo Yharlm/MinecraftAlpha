@@ -593,7 +593,10 @@ public class Game1 : Game
 
 
 
-
+            if(entity.Health < 0)
+            {
+                _entityManager.Die(entity);
+            }
             
 
             // Example gravity, can be replaced with actual logic
@@ -708,7 +711,7 @@ public class Game1 : Game
             if (key == Keys.LeftControl)
             {
 
-                _entityManager.Attract(12,WorldMousePos);
+                _entityManager.Attract(30,WorldMousePos);
 
             }
         }
