@@ -84,16 +84,21 @@ namespace MinecraftAlpha
             }
 
         }
-        public void SpawnItem(Vector2 position,int Z, Block item)
+        public Entity SpawnItem(Vector2 position,int Z, Block item)
         {
-            game._entityManager.Workspace.Add(Entity.CloneEntity(game._entityManager.entities[1], Vector2.Floor(position) + Vector2.One * 0.5f));
-            game._entityManager.Workspace.Last().TextureName = "null";
+            var Drop = Entity.CloneEntity(game._entityManager.entities[1], Vector2.Floor(position) + Vector2.One * 0.5f);
+            Drop.TextureName = "null";
+            
+            
 
             var drop = item;
-            
-            game._entityManager.Workspace.Last().Data = game._blockManager.GetBlockID(drop).ToString();
-            game._entityManager.Workspace.Last().Layer = Z;
-            game._entityManager.Workspace.Last().Model3D = new Sprite3D(drop.Texture, drop.Texture, drop.Texture, drop.Texture);
+            Drop.Data = game._blockManager.GetBlockID(drop).ToString();
+
+
+            Drop.Data = game._blockManager.GetBlockID(drop).ToString();
+            Drop.Layer = Z;
+            Drop.Model3D = new Sprite3D(drop.Texture, drop.Texture, drop.Texture, drop.Texture);
+            return Drop;
         }
         public void UpdateAll()
         {
@@ -103,7 +108,7 @@ namespace MinecraftAlpha
             }
         }
 
-        public void Die(Entity entity)
+        public void Die(Entity entity,List<Entity> list)
         {
             Random random = new Random();
             for (int i = 0; i < 7; i++)
@@ -124,7 +129,7 @@ namespace MinecraftAlpha
 
                 game._particleSystem.Particles.Add(part);
             }
-            SpawnItem(entity.position, (int)entity.Layer, game._blockManager.Blocks[2]);
+            list.Add(SpawnItem(entity.position, (int)entity.Layer, game._blockManager.Blocks[2]));
         }
         public void RenderAll(SpriteBatch SB, float Size, Vector2 Pos)
         {

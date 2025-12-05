@@ -530,6 +530,8 @@ public class Game1 : Game
 
 
         _entityAnimationService.entityAnimations.RemoveAll(x => x.parent.Animations[x.id].Paused);
+
+        var ItemList = new List<Entity>();
         foreach (var entity in _entityManager.Workspace)
         {
             //entity.collisionBox.CheckCollision(entity,World);
@@ -595,7 +597,7 @@ public class Game1 : Game
 
             if(entity.Health < 0)
             {
-                _entityManager.Die(entity);
+                _entityManager.Die(entity, ItemList);
             }
             
 
