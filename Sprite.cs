@@ -257,7 +257,7 @@ namespace MinecraftAlpha
 
             if(Iframe)
             {
-                Layer = Color.Red;
+                Layer = Color.PaleVioletRed;
             }
             
             spriteBatch.Draw(

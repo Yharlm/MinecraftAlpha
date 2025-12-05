@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace MinecraftAlpha
 {
@@ -82,17 +84,16 @@ namespace MinecraftAlpha
             }
 
         }
-        public void ItemDrop(Vector2 position, Block item)
+        public void SpawnItem(Vector2 position,int Z, Block item)
         {
-            Entity entity = new Entity(-1, item.Name, item.TexturePath, 1000)
-            {
+            game._entityManager.Workspace.Add(Entity.CloneEntity(game._entityManager.entities[1], Vector2.Floor(position) + Vector2.One * 0.5f));
+            game._entityManager.Workspace.Last().TextureName = "null";
 
-                position = position,
-                collisionBox = new CollisionBox(),
-
-
-
-            };
+            var drop = item;
+            
+            game._entityManager.Workspace.Last().Data = game._blockManager.GetBlockID(drop).ToString();
+            game._entityManager.Workspace.Last().Layer = Z;
+            game._entityManager.Workspace.Last().Model3D = new Sprite3D(drop.Texture, drop.Texture, drop.Texture, drop.Texture);
         }
         public void UpdateAll()
         {
@@ -105,24 +106,25 @@ namespace MinecraftAlpha
         public void Die(Entity entity)
         {
             Random random = new Random();
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 7; i++)
             {
                 var part = new Particle()
                 {
-                    Position = entity.position,
+                    Position = entity.position+ new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f) ,
                     TextureName = "Dust",
-                    Texture = game._particleSystem.Particles[0].Texture,
+                    Texture = game.Content.Load<Texture2D>("ParticleSmokeEffect"),
                     lifeTime = 1f,
-                    size = 0.4f,
-                    Color = Color.White,
-                    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
-                    Acceleration = new Vector2(0, -1f),
-                    gravity = 0f
+                    size = 0.7f,
+                    Color = Color.LightGray,
+                    Velocity = new Vector2((float)random.NextDouble()-0.5f, (float)random.NextDouble()-0.5f)*0.3f,
+                    Acceleration = Vector2.Zero,
+                    gravity = -0.02f
 
                 };
 
                 game._particleSystem.Particles.Add(part);
             }
+            SpawnItem(entity.position, (int)entity.Layer, game._blockManager.Blocks[2]);
         }
         public void RenderAll(SpriteBatch SB, float Size, Vector2 Pos)
         {

@@ -145,27 +145,28 @@ namespace MinecraftAlpha
             var Tile = BlockManager.GetBlockAtPos(Pos, Zindex, Game.Chunks);
             if (Tile == null) { return; }
             var block = Game._blockManager.Blocks[Tile.ID];
-
+            int x = random.Next(0, block.Texture.Width);
+            int y = random.Next(0, block.Texture.Height);
+            var pos = (new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height));
             if (Tile.ID != 0)
             {
                 if (block.Health > Tile.MinedHealth)
                 {
 
-                    int x = random.Next(0, block.Texture.Width);
-                    int y = random.Next(0, block.Texture.Height);
+                    
                     if(Game.creativeMode) { Tile.MinedHealth += 0.5f; }
                     Tile.MinedHealth += 0.5f;
 
 
                     if (block.Health % 0.2f == 0 ) return;
 
-
+                    
 
                     var part = new Particle()
                     {
-                        Position = (new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height)),
+                        Position = pos,
                         TextureName = "BlockMineEffect",
-                        Texture = Game.Content.Load<Text>,
+                        Texture = block.Texture,
                         lifeTime = 0.2f,
                         size = 0.4f,
                         Color = block.Color,
@@ -226,14 +227,10 @@ namespace MinecraftAlpha
 
 
                 Tile.ID = 0;
-                Game._entityManager.Workspace.Add(Entity.CloneEntity(Game._entityManager.entities[1], Vector2.Floor(Pos) + Vector2.One * 0.5f));
-                Game._entityManager.Workspace.Last().TextureName = "null";
+                
+                if (block.ItemDrop != null) Game._entityManager.SpawnItem(pos,Zindex,block.ItemDrop);
 
-                var drop = block;
-                if (block.ItemDrop != null) drop = block.ItemDrop;
-                Game._entityManager.Workspace.Last().Data = Game._blockManager.GetBlockID(drop).ToString();
-                Game._entityManager.Workspace.Last().Layer = Zindex;
-                Game._entityManager.Workspace.Last().Model3D = new Sprite3D(drop.Texture, drop.Texture, drop.Texture, drop.Texture);
+               
 
             }
 
