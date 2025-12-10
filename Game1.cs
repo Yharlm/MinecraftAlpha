@@ -17,7 +17,7 @@ namespace MinecraftAlpha;
 
 public class Game1 : Game
 {
-    public UserInterfaceManager _userInterfaceManager = new();
+    public UserInterfaceManager _userInterfaceManager;
     public EntityManager _entityManager = new();
     public BlockManager _blockManager;
     public ActionManager _actionManager = new();
@@ -87,8 +87,8 @@ public class Game1 : Game
     public TileGrid[,] World { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
 
 
-
-
+    public int windowWidth;
+    public int windowHeight;
 
 
     private GraphicsDeviceManager _graphics;
@@ -97,11 +97,25 @@ public class Game1 : Game
     public Game1()
     {
 
+
+
+
+        _userInterfaceManager = new UserInterfaceManager(this);
         _blockManager = new BlockManager(this);
 
         _actionManager.Game = this;
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
+
+        // In Game1 constructor, after 'graphics = new GraphicsDeviceManager(this);'
+        _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; // Your desired width
+        _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; // Your desired height
+        _graphics.ApplyChanges(); // Crucial step to apply settings
+
+
+
+
+
 
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -110,10 +124,17 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
+        windowWidth = GraphicsDevice.Viewport.Width;
+        windowHeight = GraphicsDevice.Viewport.Height;
         _entityManager.game = this;
         Player = new Player() { game = this};
         Random random = new Random();
         _particleSystem.Content = Content;
+
+
+
+
+       
 
         foreach (Chunk c in Chunks)
         {
@@ -507,7 +528,7 @@ public class Game1 : Game
 
 
 
-        Player.cam.position = -Player.Plr.position * BlockSize + new Vector2(400, 202);
+        Player.cam.position = -Player.Plr.position * BlockSize + new Vector2(windowWidth,windowHeight)/2;
         base.Update(gameTime);
         
 
@@ -810,7 +831,7 @@ public class Game1 : Game
             }
         }
 
-        
+
 
         //PLR.Animations[1].Paused = true;
 
@@ -832,7 +853,7 @@ public class Game1 : Game
 
         // Get the center of the screen in screen coordinates
 
-        Vector2 screenCenter = Player.cam.size / 2f;
+        Vector2 screenCenter =Vector2.Zero;
 
         Player.Plr.WalkTo(plrVel); // Adjust speed as needed
         if (jump)
@@ -932,7 +953,8 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
 
-
+        // In your Draw() method, after setting up spriteBatch.Begin()
+        
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         //SunImage
@@ -941,6 +963,13 @@ public class Game1 : Game
         //_spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Daytime.ToString("0.00"), new Vector2(700, (float)Math.Sin(Daytime/12)), Color.Wheat);
         //_spriteBatch.End();
         //Shader.Parameters["Time"].SetValue((float)gameTime.ElapsedGameTime.Milliseconds/10);
+
+        //float scaleX = (float)GraphicsDevice.Viewport.Width / windowWidth;
+        //float scaleY = (float)GraphicsDevice.Viewport.Height / windowHeight;
+        //Matrix transformMatrix = Matrix.CreateScale(scaleX, scaleY, 1.0f);
+
+
+
         if (GameStarted)
         {
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack, effect: Shader);

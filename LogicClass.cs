@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,11 @@ namespace MinecraftAlpha
         public static void DrawBlockLayout(TileGrid Tile,int Position)
         {
 
+        }
+
+        public static void DebugPos(SpriteBatch sb, Vector2 pos, Game1 game)
+        {
+            sb.Draw(game._blockManager.Blocks[2].Texture,new Rectangle((int)pos.X, (int)pos.X,5,5),Color.Red);
         }
     }
 

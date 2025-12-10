@@ -23,7 +23,7 @@ struct VertexShaderOutput
 	float2 TextureCoordinates : TEXCOORD0;
 };
 
-float F(float x,float y)
+float f(float x,float y)
 {
 	return (x*x+y*y);
 }
@@ -33,10 +33,6 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 Color = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
     
-	if(F(input.TextureCoordinates.x-0.5,input.TextureCoordinates.y-0.5)>0.2)
-	{
-	Color.a=0;
-	}
 	
 	
 	
