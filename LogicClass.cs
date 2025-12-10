@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +21,14 @@ namespace MinecraftAlpha
 
         public static void DebugPos(SpriteBatch sb, Vector2 pos, Game1 game)
         {
-            sb.Draw(game._blockManager.Blocks[2].Texture,new Rectangle((int)pos.X, (int)pos.X,5,5),Color.Red);
+            sb.Draw(game._blockManager.Blocks[2].Texture,new Rectangle((int)pos.X, (int)pos.Y,5,5),Color.Red);
         }
     }
 
+
     internal class LogicsClass
     {
+        
         public static bool BlockCollide(Vector2 point,Vector2 Position,Vector2 size)
         {
             Vector2 disfc = Position - point;
@@ -44,5 +47,7 @@ namespace MinecraftAlpha
                 }
             return false;
         }
+
+
     }
 }

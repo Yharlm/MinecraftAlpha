@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector4 = Microsoft.Xna.Framework.Vector4;
@@ -103,5 +105,75 @@ namespace MinecraftAlpha
 
         
 
+    }
+
+    public class InputManager
+    {
+        public List<Keys> KeyHistory = new List<Keys>();
+        public float TimeSinceLastKeyPress = 0f;
+        
+        // to stop key repeat
+        public bool IsKeyUp_Now(Keys key)
+        {
+            foreach (var k in KeyHistory)
+            {
+                if (k == key)
+                {
+                    
+                    return false;
+
+                }
+            }
+            
+            return true;
+        }
+
+        public bool IsKeyDown_Now(Keys key)
+        {
+            foreach (var k in KeyHistory)
+            {
+                if (k == key)
+                {
+                    TimeSinceLastKeyPress = 0f;
+                    return true;
+
+                }
+            }
+            return false;
+        }
+
+        public void UpdateKeyHistory(KeyboardState keyboardState) 
+        {
+            KeyHistory.Clear();
+            foreach (var key in keyboardState.GetPressedKeys())
+            {
+                KeyHistory.Add(key);
+            }
+        }
+
+        public bool KeyCombo(Keys key1, Keys key2,bool Order)
+        {
+            bool succes = false;
+
+            if (Order)
+            {
+                if (KeyHistory.Count >= 2)
+                {
+                    if (KeyHistory[KeyHistory.Count - 2] == key1 && KeyHistory[KeyHistory.Count - 1] == key2)
+                    {
+                        succes = true;
+                    }
+                }
+            }
+            else
+            {
+                if (KeyHistory.Contains(key1) && KeyHistory.Contains(key2))
+                {
+                    succes = true;
+                }
+            }
+
+            return succes;
+        }
     }
 }

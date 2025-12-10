@@ -473,7 +473,7 @@ namespace MinecraftAlpha
         public Texture2D Texture;
         public bool IsInBounds(Vector2 Pos)
         {
-            Vector2 PO = this.Position + this.ItemPosition + Scale / 4;
+            Vector2 PO = this.Position + this.ItemPosition - Scale / 4;
             if (Pos.X >= PO.X && Pos.X <= PO.X + Scale.X)
                 if (Pos.Y > PO.Y && Pos.Y <= PO.Y + Scale.Y)
                 {
@@ -540,19 +540,19 @@ namespace MinecraftAlpha
 
         public void Render(SpriteBatch Spritebatch, ContentManager Content)
         {
-            Vector2 SlotPos = ItemPosition;
+            Vector2 SlotPos = Position + ItemPosition - Vector2.One * 16;
             string AmmountInSlot = "";
-            Spritebatch.Draw(Texture, new Rectangle((int)SlotPos.X +16, (int)SlotPos.Y+16, 32, 32), Color.White);
+            Spritebatch.Draw(Texture, new Rectangle((int)SlotPos.X, (int)SlotPos.Y, 32, 32), Color.White);
             if (Item != null)
             {
-                Spritebatch.Draw(Item.Texture, SlotPos+19*Vector2.One, null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+                Spritebatch.Draw(Item.Texture, SlotPos+Vector2.One * 4, null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
 
             }
             if (Count > 1)
             {
                 AmmountInSlot = Count.ToString();
             }
-            Spritebatch.DrawString(Content.Load<SpriteFont>("Font"), AmmountInSlot, SlotPos + new Vector2(32, 32), Color.White);
+            Spritebatch.DrawString(Content.Load<SpriteFont>("Font"), AmmountInSlot, SlotPos + Vector2.One * 16, Color.White);
 
         }
     }

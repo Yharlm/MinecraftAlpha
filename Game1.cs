@@ -24,6 +24,7 @@ public class Game1 : Game
     public EntityAnimationService _entityAnimationService = new();
     public ParticleSystem _particleSystem = new();
     public RecipeManager _RecipeManager = new();
+    public InputManager _inputManager = new();
 
 
     public Effect Shader;
@@ -491,11 +492,11 @@ public class Game1 : Game
             Player.Respawn();
         }
 
-        if (Keyboard.GetState().IsKeyDown(Keys.F11))
-        {
+        //if (Keyboard.GetState().IsKeyDown(Keys.F11))
+        //{
 
-            _graphics.ToggleFullScreen();
-        }
+        //    _graphics.ToggleFullScreen();
+        //}
 
         foreach (var Window in _userInterfaceManager.windows)
         {
@@ -663,7 +664,7 @@ public class Game1 : Game
         {
 
             
-
+            
             
             if (key == Keys.S)
             {
@@ -739,7 +740,7 @@ public class Game1 : Game
             }
         }
 
-
+        
 
 
 
@@ -936,6 +937,20 @@ public class Game1 : Game
             //_entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[1], WorldMousePos));
 
         }
+
+
+
+        //New input
+        if(keyboardState.IsKeyDown(Keys.F11))
+        {
+            
+        }
+
+
+
+        
+
+        _inputManager.UpdateKeyHistory(keyboardState);
 
 
 

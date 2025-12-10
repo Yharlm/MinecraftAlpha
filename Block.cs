@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace MinecraftAlpha
@@ -47,27 +46,27 @@ namespace MinecraftAlpha
             //Create Blocks here
             var list = new List<Block>()
             {
-               
-               new Block { Name = "Air", TexturePath = "air" ,Health = 1000},
-               new Block { Name = "Dirt", TexturePath = "dirt",Health = 30 },
-               new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
-               new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
-               new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
-               new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
-               new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true},
-               new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
-               new Block { Name = "Log", TexturePath = "oak_log", Health = 60},
-               new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
-               new Block { Name = "Glass block", TexturePath = "glass", Health = 4,Transparent = true},
-               
+
+                new Block { Name = "Air", TexturePath = "air" ,Health = 1000},
+                new Block { Name = "Dirt", TexturePath = "dirt",Health = 30 },
+                new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
+                new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
+                new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
+                new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
+                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true},
+                new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
+                new Block { Name = "Log", TexturePath = "oak_log", Health = 60},
+                new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
+                new Block { Name = "Glass block", TexturePath = "glass", Health = 4,Transparent = true},
+
 
             };
 
-            for (int i = 0;i< list.Count;i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 list[i].ID = i;
             }
-            
+
 
 
             return list;
@@ -85,7 +84,7 @@ namespace MinecraftAlpha
         }
         public void LoadActions()
         {
-            
+
             getBlock("Stone").ItemDrop = getBlock("Cobblestone");
             getBlock("Leaves").ItemDrop = getBlock("Air");
             getBlock("Grass").ItemDrop = getBlock("Dirt");
@@ -204,8 +203,8 @@ namespace MinecraftAlpha
         public static void Makechunk(Vector2 pos, List<Chunk> Chunks)
         {
 
-            
-            
+
+
             TileGrid Tile = BlockManager.GetBlockAtPos(pos, Chunks);
             if (Tile == null)
             {
@@ -219,7 +218,7 @@ namespace MinecraftAlpha
         {
             return GetBlockAtPos(pos, 9, Chunks);
         }
-        public static TileGrid GetBlockAtPos(Vector2 pos,int z, List<Chunk> Chunks)
+        public static TileGrid GetBlockAtPos(Vector2 pos, int z, List<Chunk> Chunks)
         {
             if (z < 0 || z > 9) return null;
             TileGrid Tile = null;
@@ -230,7 +229,7 @@ namespace MinecraftAlpha
             int ChunkY = (int)Math.Ceiling((pos.Y / size));
 
 
-            
+
 
 
             foreach (Chunk C in Chunks)
@@ -242,33 +241,33 @@ namespace MinecraftAlpha
 
                     if (pos.X < 0)
                     {
-                        x = size-1 - Math.Abs(x);
+                        x = size - 1 - Math.Abs(x);
                     }
                     if (pos.Y < 0)
                     {
-                        y = size-1 - Math.Abs(y);
+                        y = size - 1 - Math.Abs(y);
                     }
 
-                    Tile = C.Tiles[z,y, x];
+                    Tile = C.Tiles[z, y, x];
                 }
 
             }
-            
+
 
             return Tile;
         }
 
         public static TileGrid GetLastBlockAtPos(Vector2 pos, List<Chunk> Chunks)
         {
-            
-            TileGrid Tile = GetBlockAtPos(pos,Chunks);
+
+            TileGrid Tile = GetBlockAtPos(pos, Chunks);
             if (Tile == null) return null;
-            for (int i = 0;i < 10;i++)
+            for (int i = 0; i < 10; i++)
             {
 
                 if (GetBlockAtPos(pos, i, Chunks).ID != 0)
                 {
-                    Tile = GetBlockAtPos(pos,i, Chunks);
+                    Tile = GetBlockAtPos(pos, i, Chunks);
                 }
             }
 

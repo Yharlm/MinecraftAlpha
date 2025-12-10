@@ -49,6 +49,8 @@ namespace MinecraftAlpha
         public bool Top { get; set; } = false;
         public bool Bottom { get; set; } = false;
 
+        public bool center { get; set; } = false;
+
         public void UpdateCollision(Entity entity, List<Chunk> World)
         {
             //if (entity.position.X < 0 || entity.position.X >= World.GetLength(1) || entity.position.Y < 0 || entity.position.Y >= World.GetLength(0))
@@ -79,6 +81,7 @@ namespace MinecraftAlpha
             Vector2 Left = entity.position + new Vector2(0, entity.collisionBox.Size.Y / 2f);
             Vector2 Right = entity.position + new Vector2(entity.collisionBox.Size.X, entity.collisionBox.Size.Y / 2f);
             Vector2 Top = entity.position + new Vector2(entity.collisionBox.Size.X / 2, 0);
+            Vector2 Center = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y / 2f);
             int z = (int)entity.Layer;
 
             if (BlockManager.GetBlockAtPos(Bottom, z, World) != null && BlockManager.GetBlockAtPos(Bottom, z, World).ID != 0)
@@ -97,7 +100,10 @@ namespace MinecraftAlpha
             {
                 entity.collisionBox.Top = true;
             }
-
+            if (BlockManager.GetBlockAtPos(Center, z, World) != null)
+            {
+                entity.collisionBox.center = true;
+            }
 
 
         }
