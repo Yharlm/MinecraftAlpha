@@ -1164,7 +1164,7 @@ public class Game1 : Game
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
         _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer+0.01f);
-
+        Player.DrawStats(_spriteBatch, Content.Load<Texture2D>("UIelements/Stats"), "heart.5", MousePosition);
     }
     // UI:
     // - SingleClick get stack

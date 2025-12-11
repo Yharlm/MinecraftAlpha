@@ -45,8 +45,30 @@ namespace MinecraftAlpha
             }
         }
 
+        public static void DrawStats(SpriteBatch SB,Texture2D Main,string name,Vector2 pos)
+        {
+            
+
+            if(name == "heart")
+            {
+                
+                SB.Draw(Main, pos, new Rectangle(0, 0, 9, 9), Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+                
+            }
+            if (name == "heart.5")
+            {
+                SB.Draw(Main, pos, new Rectangle(8, 0, 9, 9), Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+                SB.Draw(Main, pos, new Rectangle(0, 0, 5, 9), Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+                
+            }
+
+
+            
+
+        }
     }
 
+    
     public class Cammera
     {
         
