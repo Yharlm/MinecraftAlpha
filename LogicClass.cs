@@ -21,7 +21,12 @@ namespace MinecraftAlpha
 
         public static void DebugPos(SpriteBatch sb, Vector2 pos, Game1 game)
         {
-            sb.Draw(game._blockManager.Blocks[2].Texture,new Rectangle((int)pos.X, (int)pos.Y,5,5),Color.Red);
+            sb.Draw(game._blockManager.Blocks[2].Texture,new Rectangle((int)pos.X, (int)pos.Y,10,10),Color.Red);
+        }
+        public static void DebugPos(SpriteBatch sb, Vector2 pos, Game1 game,Vector2 World)
+        {
+            float blockSize = game.BlockSize;
+            sb.Draw(game._blockManager.Blocks[2].Texture, new Rectangle((int)(blockSize * pos.X + World.X), (int)(blockSize * pos.Y + World.Y), 10, 10), Color.Red);
         }
     }
 

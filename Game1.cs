@@ -93,7 +93,7 @@ public class Game1 : Game
 
 
     private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+    public SpriteBatch _spriteBatch;
 
     public Game1()
     {
@@ -584,13 +584,19 @@ public class Game1 : Game
                     Entity.CollisionEventCollision(entity1, entity, this);
                 }
             }
-            entity.collisionBox.UpdateCollision(entity, Chunks);
+
+            _entityManager.AI(entity);
+
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
+            entity.collisionBox.UpdateCollision(entity, Chunks, this);
+            var EntVal = entity.velocity.velocity;
+
             if (entity.ID == -1)
             {
                 entity.Model3D.Update();
                 continue;
             }
+
             //entity.UpdateAnimation();
 
             bool Running = false;
@@ -607,17 +613,12 @@ public class Game1 : Game
             }
             entity.ResetIframes();
 
-            _entityManager.AI(entity);
-
-
-            var EntVal = entity.velocity.velocity;
+            
 
 
 
 
-
-
-            if(entity.Health < 0)
+            if (entity.Health <= 0)
             {
                 _entityManager.Die(entity, ItemList);
             }
@@ -632,7 +633,7 @@ public class Game1 : Game
         {
             entity.Update();
         }
-        _particleSystem.Particles.RemoveAll(x => x.lifeTime <= 0);
+        _particleSystem.Particles.RemoveAll(x => x.timeElapsed >= x.lifeTime);
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
         }
@@ -856,7 +857,7 @@ public class Game1 : Game
 
         Vector2 screenCenter =Vector2.Zero;
 
-        Player.Plr.WalkTo(plrVel); // Adjust speed as needed
+        Player.Plr.WalkTo(plrVel,false); // Adjust speed as needed
         if (jump)
         {
             PLR.Jump();
@@ -1125,7 +1126,24 @@ public class Game1 : Game
 
         //test.Draw(_spriteBatch);
 
+        _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
+        for (int h = 0; h < Player.Plr.MaxHealth; h += 2)
+        {
+            
+            Player.DrawStats(_spriteBatch, Content.Load<Texture2D>("UIelements/Stats"), "heart.0", new Vector2(h * 20 + windowWidth / 2, windowHeight * 0.8f));
+        }
 
+        for (int h = 0; h < Player.Plr.Health; h += 2)
+        {
+            string heartType = "heart";
+            if (h + 1 == Player.Plr.Health)
+            {
+                heartType = "heart.5";
+            }
+            
+            Player.DrawStats(_spriteBatch, Content.Load<Texture2D>("UIelements/Stats"), heartType, new Vector2(h * 20 + windowWidth / 2, windowHeight * 0.8f));
+        }
+        _spriteBatch.End();
 
     }
     void DrawBlock(TileGrid Tile, Chunk chunk, int i, int j, float Z, float layer)
@@ -1164,7 +1182,7 @@ public class Game1 : Game
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
         _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer+0.01f);
-        Player.DrawStats(_spriteBatch, Content.Load<Texture2D>("UIelements/Stats"), "heart.5", MousePosition);
+        
     }
     // UI:
     // - SingleClick get stack

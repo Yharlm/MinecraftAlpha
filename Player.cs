@@ -16,15 +16,22 @@ namespace MinecraftAlpha
         public Entity Plr;
         public Cammera cam = new();
         public bool Jumping = false;
+        public float respawnTimer = 60f;
 
 
         
         public void Respawn()
         {
+            if(respawnTimer > 0)
+            {
+                respawnTimer -= 0.4f;
+                return;
+            }
             var plr = Entity.CloneEntity(game._entityManager.entities[0], SpawnPoint);
             Plr = plr;
 
             game._entityManager.Workspace.Add(Plr);
+            respawnTimer = 60f;
         }
         public void PickupItem(Block item,int amount,WindowFrame inventory)
         {
@@ -52,18 +59,22 @@ namespace MinecraftAlpha
             if(name == "heart")
             {
                 
-                SB.Draw(Main, pos, new Rectangle(0, 0, 9, 9), Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+                SB.Draw(Main, pos, new Rectangle(0, 0, 9, 9), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f);
                 
             }
             if (name == "heart.5")
             {
-                SB.Draw(Main, pos, new Rectangle(8, 0, 9, 9), Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
-                SB.Draw(Main, pos, new Rectangle(0, 0, 5, 9), Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+                SB.Draw(Main, pos, new Rectangle(0, 0, 5, 9), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f);
                 
+            }
+            if (name == "heart.0")
+            {
+                SB.Draw(Main, pos, new Rectangle(9, 0, 9, 9), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f);
+
             }
 
 
-            
+
 
         }
     }

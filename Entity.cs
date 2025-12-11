@@ -51,7 +51,7 @@ namespace MinecraftAlpha
 
         public bool center { get; set; } = false;
 
-        public void UpdateCollision(Entity entity, List<Chunk> World)
+        public void UpdateCollision(Entity entity, List<Chunk> World,Game1 game1)
         {
             //if (entity.position.X < 0 || entity.position.X >= World.GetLength(1) || entity.position.Y < 0 || entity.position.Y >= World.GetLength(0))
             //{
@@ -83,7 +83,13 @@ namespace MinecraftAlpha
             Vector2 Top = entity.position + new Vector2(entity.collisionBox.Size.X / 2, 0);
             Vector2 Center = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y / 2f);
             int z = (int)entity.Layer;
-
+            game1._spriteBatch.Begin();
+            Debuging.DebugPos(game1._spriteBatch,Bottom,game1,game1.Player.cam.position);
+            Debuging.DebugPos(game1._spriteBatch, Left, game1, game1.Player.cam.position);
+            Debuging.DebugPos(game1._spriteBatch, Right, game1, game1.Player.cam.position);
+            Debuging.DebugPos(game1._spriteBatch, Top, game1, game1.Player.cam.position);
+            Debuging.DebugPos(game1._spriteBatch, Center, game1, game1.Player.cam.position);
+            game1._spriteBatch.End();
             if (BlockManager.GetBlockAtPos(Bottom, z, World) != null && BlockManager.GetBlockAtPos(Bottom, z, World).ID != 0)
             {
                 entity.collisionBox.Bottom = true;
@@ -217,7 +223,7 @@ namespace MinecraftAlpha
         public Velocity velocity = new Velocity();
         public int Fall_damage = 0;
         public float Mass = 1f;
-        public float IFrame = 3f; // Invincibility Frames
+        public float IFrame = 20f; // Invincibility Frames
         public bool CanDamage = true;
         public float Layer = 8;
 
@@ -372,12 +378,16 @@ namespace MinecraftAlpha
             Iframes();
         }
 
-        public void WalkTo(Vector2 pos)
+        public void WalkTo(Vector2 pos,bool can_jump)
         {
-            if(collisionBox.Left || collisionBox.Right)
-            {
-                Jump();
+            
+            if(can_jump) {
+                if (!collisionBox.Bottom || collisionBox.Left || collisionBox.Right)
+                {
+                    Jump();
+                }
             }
+            
             velocity.velocity += pos * Vector2.UnitX * Speed;
 
         }
@@ -388,7 +398,7 @@ namespace MinecraftAlpha
         {
             if (Grounded) return;
 
-            velocity.velocity += new Vector2(0, -2f);
+            velocity.velocity += new Vector2(0, -3f);
             Grounded = true;
             //position += new Vector2(0, -0.2f);
 

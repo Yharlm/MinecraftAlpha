@@ -17,6 +17,8 @@ namespace MinecraftAlpha
 
         public Microsoft.Xna.Framework.Rectangle Rectangle = new Microsoft.Xna.Framework.Rectangle(0,0,0,0);
         public float lifeTime { get; set; }
+
+        public float timeElapsed { get; set; }
         public float Changespeed { get; set; }
 
         public float size = 1f;
@@ -56,9 +58,9 @@ namespace MinecraftAlpha
 
         public void Update()
         {
-            
-            lifeTime -= 0.01f;
-            Index = (int)lifeTime;
+
+            timeElapsed += 0.01f;
+            Index = (int)(timeElapsed /lifeTime);
             Position += (Acceleration+ Velocity) / /*lifeTime/*/20 + gravity * Vector2.UnitY;
             
         }

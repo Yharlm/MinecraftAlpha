@@ -75,7 +75,7 @@ namespace MinecraftAlpha
             
             if (mob.Target != null)
             {
-                mob.WalkTo(Vector2.Normalize(Pos - mob.position));
+                mob.WalkTo(Vector2.Normalize(Pos - mob.position),true);
                 var Targ = mob.Target;
                 if (Vector2.Distance(mob.position, Targ.position) < 1.5f)
                 {
@@ -118,8 +118,8 @@ namespace MinecraftAlpha
                     Position = entity.position+ new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f) ,
                     TextureName = "Dust",
                     Texture = game.Content.Load<Texture2D>("ParticleSmokeEffect"),
-                    lifeTime = 1f,
-                    size = 0.7f,
+                    lifeTime = (float)random.NextDouble()*2,
+                    size = (float)random.NextDouble() * 2f,
                     Color = Color.LightGray,
                     Velocity = new Vector2((float)random.NextDouble()-0.5f, (float)random.NextDouble()-0.5f)*0.3f,
                     Acceleration = Vector2.Zero,
@@ -146,7 +146,7 @@ namespace MinecraftAlpha
 
 
 
-            var Plr = new Entity(id++, "Player", "steve", 120)
+            var Plr = new Entity(id++, "Player", "steve", 20)
             {
 
                 Ractangles = new List<Vector4>() // LimbShapes
