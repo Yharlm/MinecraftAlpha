@@ -35,7 +35,7 @@ public class Game1 : Game
     public Texture2D BreakTexture;
 
     public Player Player;
-
+    public bool DebugMode = false;
 
     public bool GameStarted = false;
 
@@ -647,6 +647,7 @@ public class Game1 : Game
     public int MouseClick = 0;
     public void Input(GameTime time)
     {
+
         bool jump = false;
         var PLR = Player.Plr;
 
@@ -657,8 +658,8 @@ public class Game1 : Game
         
         float zoomScale = 0.3f;
         var keyboardState = Keyboard.GetState();
-
         
+
         bool Front = false;
         bool Back = false;
         var keyboard = Keyboard.GetState().GetPressedKeys();
@@ -742,16 +743,28 @@ public class Game1 : Game
             }
         }
 
-        
+        if(_inputManager.IsKeyDown_Now(Keys.F5))
+        {
+
+            DebugMode = !DebugMode;
 
 
+        };
+        if (_inputManager.IsKeyDown_Now(Keys.F6))
+        {
 
+            creativeMode = !creativeMode;
+
+
+        };
+
+        _inputManager.UpdateKeyHistory(keyboardState);
 
 
         //_particleSystem.Particles[0].Position = PLR.position;
 
-        
-        
+
+
 
         if (int.Abs(MouseClick) == 1)
         {
@@ -952,7 +965,7 @@ public class Game1 : Game
 
         
 
-        _inputManager.UpdateKeyHistory(keyboardState);
+        
 
 
 

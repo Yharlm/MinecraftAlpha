@@ -22,21 +22,23 @@ namespace MinecraftAlpha
 
         public static void DebugPos(SpriteBatch sb, Vector2 pos, Game1 game)
         {
+            if (!game.DebugMode) return;
             sb.Draw(game._blockManager.Blocks[2].Texture,new Rectangle((int)pos.X, (int)pos.Y,10,10),Color.Red);
         }
         public static void DebugPosWOrld(SpriteBatch sb, Vector2 pos, Game1 game)
         {
+            if (!game.DebugMode) return;
             var part = new Particle()
             {
                 Position = pos,
                 TextureName = "BlockMineEffect",
                 Texture = game._particleSystem.sprites[0],
                 lifeTime = 0.2f,
-                size = 0.4f,
+                size = 0.1f,
                 Color = Color.Red,
                 
                 
-                Acceleration = new Vector2(0, -1f),
+                
                 
 
             };

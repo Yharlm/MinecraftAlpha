@@ -188,7 +188,7 @@ public class Generation
         var random = new Random(seed);
 
 
-        int width = 1000;
+        int width = 5000;
 
         var PerlinMap = GenerateWhiteNoise(width, 40, seed, 0);
 

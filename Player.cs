@@ -163,14 +163,19 @@ namespace MinecraftAlpha
 
         public bool IsKeyDown_Now(Keys key)
         {
+            
             foreach (var k in KeyHistory)
             {
                 if (k == key)
                 {
                     TimeSinceLastKeyPress = 0f;
-                    return true;
+                    return false;
 
                 }
+            }
+            if(Keyboard.GetState().IsKeyDown(key))
+            {
+                return true;
             }
             return false;
         }

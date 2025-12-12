@@ -84,13 +84,18 @@ namespace MinecraftAlpha
             Vector2 Top = entity.position + new Vector2(entity.collisionBox.Size.X / 2, 0) - Offset;
             Vector2 Center = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y / 2f) - Offset;
             int z = (int)entity.Layer;
-            game1._spriteBatch.Begin();
-            Debuging.DebugPosWOrld(game1._spriteBatch,Bottom,game1);
-            Debuging.DebugPosWOrld(game1._spriteBatch, Left, game1);
-            Debuging.DebugPosWOrld(game1._spriteBatch, Right, game1);
-            Debuging.DebugPosWOrld(game1._spriteBatch, Top, game1);
-            Debuging.DebugPosWOrld(game1._spriteBatch, Center, game1);
-            game1._spriteBatch.End();
+            
+            
+                game1._spriteBatch.Begin();
+                Debuging.DebugPosWOrld(game1._spriteBatch, Bottom, game1);
+                Debuging.DebugPosWOrld(game1._spriteBatch, Left, game1);
+                Debuging.DebugPosWOrld(game1._spriteBatch, Right, game1);
+                Debuging.DebugPosWOrld(game1._spriteBatch, Top, game1);
+                Debuging.DebugPosWOrld(game1._spriteBatch, Center, game1);
+                game1._spriteBatch.End();
+            
+
+
             if (BlockManager.GetBlockAtPos(Bottom, z, World) != null && BlockManager.GetBlockAtPos(Bottom, z, World).ID != 0)
             {
                 entity.collisionBox.Bottom = true;
