@@ -113,20 +113,18 @@ namespace MinecraftAlpha
     {
         public ContentManager Content;
         public ParticleSystem() { }
+        public List<Texture2D> sprites = new List<Texture2D>();
+        
 
         public List<Particle> Particles = new List<Particle>()
-        {   new Particle
-            {
-                TextureName = "ParticleSmokeEffect"
-            }
+        {   
 
         };
         public void Load()
         {
-            foreach (var item in Particles)
-            {
-                item.Texture = Content.Load<Texture2D>(item.TextureName);
-            }
+            
+            sprites.Add(Content.Load<Texture2D>("ParticleSmokeEffect"));
+            
 
         }
 

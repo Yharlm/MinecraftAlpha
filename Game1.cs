@@ -585,10 +585,11 @@ public class Game1 : Game
                 }
             }
 
-            _entityManager.AI(entity);
+            
 
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             entity.collisionBox.UpdateCollision(entity, Chunks, this);
+            _entityManager.AI(entity);
             var EntVal = entity.velocity.velocity;
 
             if (entity.ID == -1)

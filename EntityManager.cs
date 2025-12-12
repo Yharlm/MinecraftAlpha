@@ -117,7 +117,7 @@ namespace MinecraftAlpha
                 {
                     Position = entity.position+ new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f) ,
                     TextureName = "Dust",
-                    Texture = game.Content.Load<Texture2D>("ParticleSmokeEffect"),
+                    Texture = game._particleSystem.sprites[0],
                     lifeTime = (float)random.NextDouble()*2,
                     size = (float)random.NextDouble() * 2f,
                     Color = Color.LightGray,

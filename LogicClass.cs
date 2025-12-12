@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -23,14 +24,28 @@ namespace MinecraftAlpha
         {
             sb.Draw(game._blockManager.Blocks[2].Texture,new Rectangle((int)pos.X, (int)pos.Y,10,10),Color.Red);
         }
-        public static void DebugPos(SpriteBatch sb, Vector2 pos, Game1 game,Vector2 World)
+        public static void DebugPosWOrld(SpriteBatch sb, Vector2 pos, Game1 game)
         {
-            float blockSize = game.BlockSize;
-            sb.Draw(game._blockManager.Blocks[2].Texture, new Rectangle((int)(blockSize * pos.X + World.X), (int)(blockSize * pos.Y + World.Y), 10, 10), Color.Red);
+            var part = new Particle()
+            {
+                Position = pos,
+                TextureName = "BlockMineEffect",
+                Texture = game._particleSystem.sprites[0],
+                lifeTime = 0.2f,
+                size = 0.4f,
+                Color = Color.Red,
+                
+                
+                Acceleration = new Vector2(0, -1f),
+                
+
+            };
+
+
+
+           game._particleSystem.Particles.Add(part);
         }
     }
-
-
     internal class LogicsClass
     {
         

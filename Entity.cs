@@ -42,7 +42,7 @@ namespace MinecraftAlpha
     }
     public class CollisionBox
     {
-        public Vector2 Size = new Vector2(0.4f, 1);
+        public Vector2 Size = new Vector2(1f, 1);
 
         public bool Left { get; set; } = false;
         public bool Right { get; set; } = false;
@@ -77,18 +77,19 @@ namespace MinecraftAlpha
             //{
             //    entity.collisionBox.Right = true;
             //}
-            Vector2 Bottom = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y);
-            Vector2 Left = entity.position + new Vector2(0, entity.collisionBox.Size.Y / 2f);
-            Vector2 Right = entity.position + new Vector2(entity.collisionBox.Size.X, entity.collisionBox.Size.Y / 2f);
-            Vector2 Top = entity.position + new Vector2(entity.collisionBox.Size.X / 2, 0);
-            Vector2 Center = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y / 2f);
+            Vector2 Offset = new Vector2(Size.X/2, 0);
+            Vector2 Bottom = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y) - Offset;
+            Vector2 Left = entity.position + new Vector2(0, entity.collisionBox.Size.Y / 2f) - Offset;
+            Vector2 Right = entity.position + new Vector2(entity.collisionBox.Size.X, entity.collisionBox.Size.Y / 2f) - Offset;
+            Vector2 Top = entity.position + new Vector2(entity.collisionBox.Size.X / 2, 0) - Offset;
+            Vector2 Center = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y / 2f) - Offset;
             int z = (int)entity.Layer;
             game1._spriteBatch.Begin();
-            Debuging.DebugPos(game1._spriteBatch,Bottom,game1,game1.Player.cam.position);
-            Debuging.DebugPos(game1._spriteBatch, Left, game1, game1.Player.cam.position);
-            Debuging.DebugPos(game1._spriteBatch, Right, game1, game1.Player.cam.position);
-            Debuging.DebugPos(game1._spriteBatch, Top, game1, game1.Player.cam.position);
-            Debuging.DebugPos(game1._spriteBatch, Center, game1, game1.Player.cam.position);
+            Debuging.DebugPosWOrld(game1._spriteBatch,Bottom,game1);
+            Debuging.DebugPosWOrld(game1._spriteBatch, Left, game1);
+            Debuging.DebugPosWOrld(game1._spriteBatch, Right, game1);
+            Debuging.DebugPosWOrld(game1._spriteBatch, Top, game1);
+            Debuging.DebugPosWOrld(game1._spriteBatch, Center, game1);
             game1._spriteBatch.End();
             if (BlockManager.GetBlockAtPos(Bottom, z, World) != null && BlockManager.GetBlockAtPos(Bottom, z, World).ID != 0)
             {
