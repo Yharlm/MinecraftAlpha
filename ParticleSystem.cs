@@ -62,7 +62,7 @@ namespace MinecraftAlpha
         {
 
             timeElapsed += 0.01f;
-            Index = (int)(timeElapsed /lifeTime);
+            Index = (int)(timeElapsed /lifeTime*4);
             Position += (Acceleration+ Velocity) / /*lifeTime/*/20 + gravity * Vector2.UnitY;
             //Color = Color.FromNonPremultiplied(new(Color.R + Shift.X, Color.B+ Shift.Y, Color.G+ Shift.Z, Color.A + Shift.W));
             Color = Color.FromNonPremultiplied(Color.ToVector4() + Shift);

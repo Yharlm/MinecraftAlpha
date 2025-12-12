@@ -766,8 +766,33 @@ public class Game1 : Game
                 _particleSystem.Particles.Add(part);
             }
         }
+        
+        if(_inputManager.IsKeyDown_Now(Keys.E))
+        {
+            _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
+            _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
+        }
+        if(_inputManager.IsKeyDown_Now(Keys.F))
+        {
+            var list = Generation.CaveGenerate(WorldMousePos, (int)WorldMousePos.X + 0, 10);
+            foreach (var pos in list)
+            {
+                for (int x = -1; x <= 1; x += 1)
+                {
+                    for (int y = -1; y <= 1; y += 1)
+                    {
+                        var tile = BlockManager.GetLastBlockAtPos(pos + new Vector2(x, y), Chunks);
+                        if (tile != null)
+                        {
+                            tile.ID = 0;
+                        }
+                    }
 
-        if(_inputManager.IsKeyDown_Now(Keys.F5))
+                }
+            }
+
+        }
+        if (_inputManager.IsKeyDown_Now(Keys.F5))
         {
 
             DebugMode = !DebugMode;
@@ -920,37 +945,8 @@ public class Game1 : Game
             BlockSize = oldBlockSize - zoomScale;
             Player.cam.position = screenCenter - worldPos * (oldBlockSize - zoomScale);
         }
-        if (keyboardState.IsKeyDown(Keys.E))
-        {
-            //InventoryOpen = !InventoryOpen;
-            _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
-            _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
-
-
-        }
-        if (keyboardState.IsKeyDown(Keys.F))
-        {
-            //InventoryOpen = !InventoryOpen;
-            //Structure.LoadStructures()[0].GenerateStructure(Chunks, WorldMousePos, true);
-            var list = Generation.CaveGenerate(WorldMousePos, (int)WorldMousePos.X + 0, 10);
-            foreach (var pos in list)
-            {
-                for(int x = -1; x <= 1; x += 1)
-                {
-                    for(int y = -1; y <= 1; y += 1)
-                    {
-                        var tile = BlockManager.GetLastBlockAtPos(pos + new Vector2(x,y), Chunks);
-                        if (tile != null)
-                        {
-                            tile.ID = 0;
-                        }
-                    }
-                    
-                }
-            }
-
-
-        }
+        
+        
         if (keyboardState.IsKeyDown(Keys.T))
         {
             //InventoryOpen = !InventoryOpen;
