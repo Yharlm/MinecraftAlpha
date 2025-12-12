@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Color = Microsoft.Xna.Framework.Color;
+using Microsoft.Xna.Framework;
 
 namespace MinecraftAlpha
 {
@@ -43,6 +44,7 @@ namespace MinecraftAlpha
         //}
         public Microsoft.Xna.Framework.Color Color { get; set; }
 
+        public Vector4 Shift = new Vector4(0,0,0,0);
         public string TextureName = "ParticleSmokeEffect";
 
         public Texture2D Texture = null;
@@ -62,7 +64,8 @@ namespace MinecraftAlpha
             timeElapsed += 0.01f;
             Index = (int)(timeElapsed /lifeTime);
             Position += (Acceleration+ Velocity) / /*lifeTime/*/20 + gravity * Vector2.UnitY;
-            
+            //Color = Color.FromNonPremultiplied(new(Color.R + Shift.X, Color.B+ Shift.Y, Color.G+ Shift.Z, Color.A + Shift.W));
+            Color = Color.FromNonPremultiplied(Color.ToVector4() + Shift);
         }
         Random rnd = new Random();
         public void DrawParticles(SpriteBatch spriteBatch, Vector2 Camera, float Size, Texture2D Preset)

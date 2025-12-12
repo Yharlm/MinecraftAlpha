@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using static System.Net.Mime.MediaTypeNames;
@@ -740,6 +741,29 @@ public class Game1 : Game
 
                 _entityManager.Attract(30,WorldMousePos);
 
+            }
+            if (key == Keys.NumPad1)
+            {
+                Random random = new Random();
+                var part = new Particle()
+                {
+                    Position = WorldMousePos,
+                    TextureName = "BlockMineEffect",
+                    Texture = _particleSystem.sprites[0],
+                    lifeTime = 0.5f,
+                    size = 1+(float)random.NextDouble(),
+                    Color = Color.Red,
+                    Shift= new Vector4(-0.05f, 0.02f, 0.1f, 0f),
+                    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f)*2f,
+
+
+
+
+                };
+
+
+
+                _particleSystem.Particles.Add(part);
             }
         }
 
