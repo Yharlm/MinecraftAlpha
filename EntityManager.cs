@@ -31,14 +31,14 @@ namespace MinecraftAlpha
 
         public void Attract(float r,Vector2 position)
         {
-            Random random = new Random(0);
+            Random random = new Random();
             foreach (var entity in Workspace)
             {
                 if (entity == game.Player.Plr) continue;
                 if (Vector2.Distance(entity.position, position) < r)
                 {
                     Vector2 direction = position - entity.position;
-                    entity.velocity.velocity +=Vector2.Normalize(direction+ Vector2.UnitY)*5; // Adjust the multiplier for speed
+                    entity.velocity.velocity +=(direction+ Vector2.UnitY)*1 + new Vector2((float)random.NextDouble()-0.5f, (float)random.NextDouble() - 0.5f) *3; // Adjust the multiplier for speed
                     entity.velocity.Gravity = 0;
                 }
             }

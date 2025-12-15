@@ -817,10 +817,16 @@ public class Game1 : Game
 
         if (int.Abs(MouseClick) == 1)
         {
-            
 
-                _entityAnimationService.Play(2, PLR);
-                //add a attack part here instead
+            var ent = Entity.GetentityAtPosition(WorldMousePos, _entityManager.Workspace);
+            if (ent != null)
+            {
+                PLR.Punch(ent, this);
+                return;
+            }
+
+            _entityAnimationService.Play(2, PLR);
+            //add a attack part here instead
 
                 float TempLayer = PLR.Layer;
 
@@ -953,11 +959,7 @@ public class Game1 : Game
 
 
 
-            var ent = Entity.GetentityAtPosition(WorldMousePos, _entityManager.Workspace);
-            if (ent != null)
-            {
-                PLR.Punch(ent, this);
-            }
+            
         }
         if (keyboardState.IsKeyDown(Keys.H))
         {

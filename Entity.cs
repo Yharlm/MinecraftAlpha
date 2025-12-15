@@ -205,7 +205,7 @@ namespace MinecraftAlpha
         public int Health;
         public int MaxHealth;
         public int ID = 0;
-        public float Speed = 1;
+        public float Speed =0.7f;
 
 
         public string name { get; set; } = "nullEntity";
@@ -296,7 +296,6 @@ namespace MinecraftAlpha
 
             //SB.Begin();
             //SB.Draw(Texture, BlockSize * position + Cam, null, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize SpriteEffects.None, 0f);
-
             //SB.End();
             if (this.Model3D != null)
             {
@@ -360,6 +359,31 @@ namespace MinecraftAlpha
         
         public void Punch(Entity Target, Game1 game)
         {
+            
+            if (velocity.velocity.Y < -3)
+            {
+                Random random = new Random();
+                Target.TakeDamage(this, 4);
+                var part = new Particle()
+                {
+                    
+                    Position = Target.position + new Vector2(random.Next(1,30), random.Next(1, 30)),
+                    TextureName = "BlockMineEffect",
+                    Texture = game._particleSystem.sprites[0],
+                    lifeTime = 1f,
+                    size = 1f,
+                    Color = Color.Beige,
+                    
+                    Velocity = new Vector2(0,0),
+                    
+
+                };
+                
+
+
+                game._particleSystem.Particles.Add(part);
+
+            }
             Target.TakeDamage(this, 1);
             Target.Target = this;
             game._entityAnimationService.Play(2, this);

@@ -192,13 +192,13 @@ public class Generation
 
         var PerlinMap = GenerateWhiteNoise(width, 40, seed, 0);
 
-        PerlinMap = GenerateSmoothNoise(PerlinMap, 3);
+        PerlinMap = GenerateSmoothNoise(PerlinMap, 4);
         PerlinMap = GeneratePerlinNoise(PerlinMap, 3, 0.6f);
 
         var Mountain = GenerateWhiteNoise(width, 40, seed + 1, 1);
         Mountain = GeneratePerlinNoise(Mountain, 4, 0.6f);
         SubMaps(PerlinMap, Mountain, 0.2f);
-        PerlinMap = GenerateSmoothNoise(PerlinMap, 3);
+        PerlinMap = GenerateSmoothNoise(PerlinMap, 1);
 
 
 
