@@ -58,7 +58,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Log", TexturePath = "oak_log", Health = 60},
                 new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
                 new Block { Name = "Glass block", TexturePath = "glass", Health = 4,Transparent = true},
-
+                new Block { Name = "Tnt block", TexturePath = "tnt_side", Health = 2,Transparent = false},
 
             };
 
@@ -89,7 +89,11 @@ namespace MinecraftAlpha
             getBlock("Leaves").ItemDrop = getBlock("Air");
             getBlock("Grass").ItemDrop = getBlock("Dirt");
 
+            getBlock("Tnt block").Interaction = (Pos) =>
+            {
 
+                
+            };
             getBlock("Chest").Interaction = (Pos) =>
             {
 

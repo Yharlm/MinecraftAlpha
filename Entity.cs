@@ -270,8 +270,8 @@ namespace MinecraftAlpha
         {
             foreach (var entity in Entities)
             {
-                Rectangle A = new Rectangle((int)(entity.position.X * 32), (int)(entity.position.Y * 32), (int)(entity.collisionBox.Size.X * 32), (int)(entity.collisionBox.Size.Y * 32));
-                if (A.Contains((int)(Pos.X * 32), (int)(Pos.Y * 32)))
+                
+                if (LogicsClass.IsInBounds(Pos,entity.position,entity.collisionBox.Size))
                 {
                     return entity;
                 }
@@ -291,9 +291,10 @@ namespace MinecraftAlpha
 
         }
 
-        public void DrawEntity(SpriteBatch SB, float BlockSize, Vector2 Cam)
+        public void DrawEntity(SpriteBatch SB, float BlockSize, Vector2 Cam, Game1 game1)
         {
 
+            
             //SB.Begin();
             //SB.Draw(Texture, BlockSize * position + Cam, null, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize SpriteEffects.None, 0f);
             //SB.End();
@@ -318,6 +319,8 @@ namespace MinecraftAlpha
                 s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, float.Floor(Layer), (IFrame > 0));
 
             }
+            if(game1.DebugMode) SB.DrawString(game1.Content.Load<SpriteFont>("Font"), $"{Health}/{MaxHealth}", BlockSize * position + Cam - new Vector2(4, 80), Color.Red);
+
         }
 
         public bool CheckCollisionEntity(Entity entity)
@@ -359,18 +362,19 @@ namespace MinecraftAlpha
         
         public void Punch(Entity Target, Game1 game)
         {
-            
-            if (velocity.velocity.Y < -3)
+
+            if ("Item" == Target.name) return;
+            if (!collisionBox.Bottom && IFrame <= 0f)
             {
                 Random random = new Random();
-                Target.TakeDamage(this, 4);
+                Target.TakeDamage(this, 3, 17);
                 var part = new Particle()
                 {
                     
-                    Position = Target.position + new Vector2(random.Next(1,30), random.Next(1, 30)),
+                    Position = Target.position + new Vector2((float)random.NextDouble()-0.5f, -(float)random.NextDouble()/2)*2,
                     TextureName = "BlockMineEffect",
                     Texture = game._particleSystem.sprites[0],
-                    lifeTime = 1f,
+                    lifeTime = 3f,
                     size = 1f,
                     Color = Color.Beige,
                     
@@ -378,18 +382,22 @@ namespace MinecraftAlpha
                     
 
                 };
-                
 
+                IFrame = 2f;
 
                 game._particleSystem.Particles.Add(part);
 
             }
-            Target.TakeDamage(this, 1);
+            else
+            {
+                Target.TakeDamage(this, 1,10);
+            }
+            
             Target.Target = this;
             game._entityAnimationService.Play(2, this);
 
         }
-        public void TakeDamage(Entity source, int DMG)
+        public void TakeDamage(Entity source, int DMG,float knockback)
         {
             if (DMG < 1) return;
             //velocity.velocity += new Vector2(0, -1f);
@@ -402,7 +410,7 @@ namespace MinecraftAlpha
                 Knockback = new Vector2(0, 1);
             }
 
-            velocity.velocity += Vector2.Normalize(Knockback) * 3;
+            velocity.velocity += Vector2.Normalize(Knockback) * knockback;
             Jump();
             Health -= DMG;
             Iframes();
@@ -410,15 +418,23 @@ namespace MinecraftAlpha
 
         public void WalkTo(Vector2 pos,bool can_jump)
         {
-            
-            if(can_jump) {
+            float lspeed = Speed;
+            if (can_jump) {
                 if (!collisionBox.Bottom || collisionBox.Left || collisionBox.Right)
                 {
                     Jump();
                 }
             }
-            
-            velocity.velocity += pos * Vector2.UnitX * Speed;
+            if(IFrame >1)
+            {
+                lspeed = Speed*0.6f;
+            }
+            //if (!collisionBox.Bottom)
+            //{
+            //    lspeed = Speed * 0.5f;
+            //}
+
+            velocity.velocity += pos * Vector2.UnitX * lspeed;
 
         }
 
@@ -484,6 +500,11 @@ namespace MinecraftAlpha
             }
             vel *= velocity;
             velocity -= vel / Drag;
+
+            if (flying)
+            {
+                Gravity = 0;
+            }
             
             entity.position += vel/ 30;
             velocity += new Vector2(0, Gravity*2.25f);

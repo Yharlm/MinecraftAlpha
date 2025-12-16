@@ -136,7 +136,7 @@ namespace MinecraftAlpha
             foreach (var entity in Workspace)
             {
 
-                entity.DrawEntity(SB, Size, Pos);
+                entity.DrawEntity(SB, Size, Pos,game);
             }
         }
         public static List<Entity> LoadEntites(Game1 game1)

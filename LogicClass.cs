@@ -58,15 +58,14 @@ namespace MinecraftAlpha
             { return true; }
             return false;   
         }
-        public static bool IsInBounds(Vector2 Pos, Vector2 size)
+        public static bool IsInBounds(Vector2 Pos,Vector2 Origin, Vector2 size)
         {
 
-            if (Pos.X >= size.X && Pos.X <= size.X + size.X)
-                if (Pos.Y > size.Y && Pos.Y <= size.Y + size.Y)
-                {
-                    return true;
-                    //Place Design shit here
-                }
+            if (Pos.X > Origin.X - size.X / 2 && Pos.X < Origin.X + size.X / 2 &&
+                Pos.Y > Origin.Y - size.Y / 2 && Pos.Y < Origin.Y + size.Y / 2)
+            {
+                return true;
+            }
             return false;
         }
 

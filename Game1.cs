@@ -561,7 +561,7 @@ public class Game1 : Game
 
             if (entity.position.Y > 600)
             {
-                entity.TakeDamage(null, 5);
+                entity.TakeDamage(null, 5,0);
             }
 
 
@@ -571,9 +571,9 @@ public class Game1 : Game
                 entity.Fall_damage = (int)(entity.velocity.velocity.Y)-7;
             }
 
-            if (entity.collisionBox.Bottom)
+            if (entity.collisionBox.Bottom && !entity.velocity.flying)
             {
-                entity.TakeDamage(null, entity.Fall_damage);
+                entity.TakeDamage(null, entity.Fall_damage,0);
                 entity.Fall_damage = 0;
                 entity.Grounded = false;
             }
@@ -698,8 +698,8 @@ public class Game1 : Game
             }
             if (key == Keys.LeftShift)
             {
-
-                plrVel += new Vector2(0, +12);
+                
+                PLR.velocity.velocity += new Vector2(0, +2);
             }
             if (key == Keys.A)
             {
@@ -718,7 +718,11 @@ public class Game1 : Game
             if (key == Keys.Space)
             {
                 //PLR.Jumping = true;
-                jump = true;
+                if (PLR.velocity.flying)
+                {
+                    PLR.velocity.velocity += new Vector2(0, -2);
+                }
+                    jump = true;
             }
 
             if (key == Keys.X)
@@ -741,6 +745,10 @@ public class Game1 : Game
 
                 _entityManager.Attract(30,WorldMousePos);
 
+            }
+            if (key == Keys.Q)
+            {
+                _actionManager.DeleteBlocksSphere(WorldMousePos, Player.Plr.Layer, 4);
             }
             if (key == Keys.NumPad1)
             {
@@ -772,7 +780,12 @@ public class Game1 : Game
             _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
             _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
         }
-        if(_inputManager.IsKeyDown_Now(Keys.F))
+        if (_inputManager.IsKeyDown_Now(Keys.NumPad2))
+        {
+            Player.Plr.velocity.flying = !Player.Plr.velocity.flying;
+        }
+
+        if (_inputManager.IsKeyDown_Now(Keys.F))
         {
             var list = Generation.CaveGenerate(WorldMousePos, (int)WorldMousePos.X + 0, 10);
             foreach (var pos in list)
@@ -838,7 +851,7 @@ public class Game1 : Game
                 {
                     PLR.Layer -= 1;
                 }
-                _actionManager.BreakBlock(WorldMousePos);
+                _actionManager.BreakBlock(WorldMousePos,Player.Plr.Layer,0.5f); // When tools get added this will change
                 PLR.Layer = TempLayer;
             
 

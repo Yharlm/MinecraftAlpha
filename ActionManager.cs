@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
@@ -117,8 +118,10 @@ namespace MinecraftAlpha
         {
             foreach (Entity entity in Game._entityManager.Workspace)
             {
-                if (LogicsClass.IsInBounds(Pos, entity.collisionBox.Size))
+                if (entity.Interaction == null) continue;
+                if (LogicsClass.IsInBounds(Pos, entity.position,entity.collisionBox.Size))
                 {
+                    
                     entity.Interaction.Action.Invoke();
                 }
             }
@@ -138,24 +141,63 @@ namespace MinecraftAlpha
 
         }
 
-
-        public void BreakBlock(Vector2 Pos)
+        public void DeleteBlocksSphere(Vector2 Pos,float Z, float radius)
         {
-            int Zindex = (int)Game.Player.Plr.Layer;
+            Vector3 center = new Vector3(Pos.X, Pos.Y, Z);
+
+            var rand = new Random();
+            var chunks = Game.Chunks;
+
+            int minX = (int)Math.Ceiling(center.X - radius);
+            int maxX = (int)Math.Ceiling(center.X + radius);
+            int minY = (int)Math.Ceiling(center.Y - radius);
+            int maxY = (int)Math.Ceiling(center.Y + radius);
+            int minZ = (int)Math.Ceiling(center.Z - radius);
+            int maxZ = (int)Math.Ceiling(center.Z + radius);
+
+            for (int z = minZ; z <= maxZ; z++)
+            {
+                if (z < 0 || z >= 10) continue; // Assuming 10 layers
+
+                for (int y = minY; y <= maxY; y++)
+                {
+                    for (int x = minX; x <= maxX; x++)
+                    {
+                        var pos3 = new Vector3(x, y, z);
+                        float dist = Vector3.Distance(center, pos3);
+
+                        if (dist > radius) continue;
+
+                        // Probability decreases with distance (linear falloff)
+                        float chance = 1f - (dist / radius);
+
+                        if (rand.NextDouble() < chance)
+                        {
+                            var pos2 = new Vector2(x, y);
+                            BreakBlock(pos2,z,13);
+                        }
+                    }
+                }
+            }
+        }
+        public void BreakBlock(Vector2 Pos,float Z,float Dmg)
+        {
+            int Zindex = (int)Z;
             var Tile = BlockManager.GetBlockAtPos(Pos, Zindex, Game.Chunks);
             if (Tile == null) { return; }
             var block = Game._blockManager.Blocks[Tile.ID];
             int x = random.Next(0, block.Texture.Width);
             int y = random.Next(0, block.Texture.Height);
-            var pos = (new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height));
+             var pos = (new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height));
             if (Tile.ID != 0)
             {
                 if (block.Health > Tile.MinedHealth)
                 {
 
                     
-                    if(Game.creativeMode) { Tile.MinedHealth += 0.5f; }
-                    Tile.MinedHealth += 0.5f;
+                    if(Game.creativeMode) { Tile.MinedHealth += 2f; } // Fix this later when you want Creative to not matter for explosives
+                    
+                        Tile.MinedHealth += Dmg;
 
 
                     if (block.Health % 0.2f == 0 ) return;
