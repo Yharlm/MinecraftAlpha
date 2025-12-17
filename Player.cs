@@ -56,6 +56,8 @@ namespace MinecraftAlpha
         public void DropItem(Block item,Vector3 origin,Vector2 Dir, int amount)
         {
             Entity drop;
+            if(item == null) return;
+
             drop = game._entityManager.SpawnItem(new Vector2(origin.X,origin.Y) +Vector2.Normalize(Dir - new Vector2(origin.X, origin.Y)), (int)origin.Z, item);
             drop.IFrame = 5f;
             drop.velocity.velocity = Dir- new Vector2(origin.X, origin.Y);

@@ -86,6 +86,7 @@ namespace MinecraftAlpha
         }
         public Entity SpawnItem(Vector2 position,int Z, Block item)
         {
+            
             var Drop = Entity.CloneEntity(game._entityManager.entities[1], Vector2.Floor(position) + Vector2.One * 0.5f);
             Drop.TextureName = "null";
             

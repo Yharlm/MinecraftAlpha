@@ -276,8 +276,8 @@ namespace MinecraftAlpha
                 int amount = int.Parse(data[1]);
                 if(amount <=0) return;
                 if (id != int.Parse(B.Data.Split(";")[0])) return;
+                if (amount >=64 ) return;
 
-                
                 A.Data = $"{id};{amount + int.Parse(B.Data.Split(";")[1])}";
                 B.Data = $"{id};{0}";
                 B.Health = 0;

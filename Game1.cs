@@ -766,6 +766,14 @@ public class Game1 : Game
             if (key == Keys.Q)
             {
                 Player.DropItem(_userInterfaceManager.selectedItem, (new Vector3(Player.Plr.position, Player.Plr.Layer)), WorldMousePos, 1);
+                if(!creativeMode)
+                {
+                    _userInterfaceManager.amount -= 1;
+                    if (_userInterfaceManager.amount <= 0)
+                    {
+                        _userInterfaceManager.selectedItem = null;
+                    }
+                }
             }
             if (key == Keys.R)
             {
