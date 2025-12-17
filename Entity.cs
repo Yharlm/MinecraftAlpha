@@ -51,7 +51,7 @@ namespace MinecraftAlpha
 
         public bool center { get; set; } = false;
 
-        public void UpdateCollision(Entity entity, List<Chunk> World,Game1 game1)
+        public void UpdateCollision(Entity entity, List<Chunk> World, Game1 game1)
         {
             //if (entity.position.X < 0 || entity.position.X >= World.GetLength(1) || entity.position.Y < 0 || entity.position.Y >= World.GetLength(0))
             //{
@@ -77,23 +77,23 @@ namespace MinecraftAlpha
             //{
             //    entity.collisionBox.Right = true;
             //}
-            Vector2 Offset = new Vector2(Size.X/2, 0);
+            Vector2 Offset = new Vector2(Size.X / 2, 0);
             Vector2 Bottom = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y) - Offset;
             Vector2 Left = entity.position + new Vector2(0, entity.collisionBox.Size.Y / 2f) - Offset;
             Vector2 Right = entity.position + new Vector2(entity.collisionBox.Size.X, entity.collisionBox.Size.Y / 2f) - Offset;
             Vector2 Top = entity.position + new Vector2(entity.collisionBox.Size.X / 2, 0) - Offset;
             Vector2 Center = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y / 2f) - Offset;
             int z = (int)entity.Layer;
-            
-            
-                game1._spriteBatch.Begin();
-                Debuging.DebugPosWOrld(game1._spriteBatch, Bottom, game1);
-                Debuging.DebugPosWOrld(game1._spriteBatch, Left, game1);
-                Debuging.DebugPosWOrld(game1._spriteBatch, Right, game1);
-                Debuging.DebugPosWOrld(game1._spriteBatch, Top, game1);
-                Debuging.DebugPosWOrld(game1._spriteBatch, Center, game1);
-                game1._spriteBatch.End();
-            
+
+
+            game1._spriteBatch.Begin();
+            Debuging.DebugPosWOrld(game1._spriteBatch, Bottom, game1);
+            Debuging.DebugPosWOrld(game1._spriteBatch, Left, game1);
+            Debuging.DebugPosWOrld(game1._spriteBatch, Right, game1);
+            Debuging.DebugPosWOrld(game1._spriteBatch, Top, game1);
+            Debuging.DebugPosWOrld(game1._spriteBatch, Center, game1);
+            game1._spriteBatch.End();
+
 
 
             if (BlockManager.GetBlockAtPos(Bottom, z, World) != null && BlockManager.GetBlockAtPos(Bottom, z, World).ID != 0)
@@ -205,7 +205,8 @@ namespace MinecraftAlpha
         public int Health;
         public int MaxHealth;
         public int ID = 0;
-        public float Speed =0.7f;
+        public float Speed = 0.7f;
+        public float Lifetime = 0f;
 
 
         public string name { get; set; } = "nullEntity";
@@ -264,6 +265,9 @@ namespace MinecraftAlpha
                 int id = int.Parse(data[0]);
                 int amount = int.Parse(data[1]);
 
+                
+
+
                 game1.Player.PickupItem(game1._blockManager.Blocks[id], amount, game1._userInterfaceManager.windows[0]);
                 A.Health = 0;
             }
@@ -274,14 +278,14 @@ namespace MinecraftAlpha
                 var data = A.Data.Split(";");
                 int id = int.Parse(data[0]);
                 int amount = int.Parse(data[1]);
-                if(amount <=0) return;
+                if (amount <= 0) return;
                 if (id != int.Parse(B.Data.Split(";")[0])) return;
-                if (amount >=64 ) return;
+                if (amount >= 64) return;
 
                 A.Data = $"{id};{amount + int.Parse(B.Data.Split(";")[1])}";
                 B.Data = $"{id};{0}";
                 B.Health = 0;
-                
+
             }
 
         }
@@ -290,8 +294,8 @@ namespace MinecraftAlpha
         {
             foreach (var entity in Entities)
             {
-                
-                if (LogicsClass.IsInBounds(Pos,entity.position,entity.collisionBox.Size))
+
+                if (LogicsClass.IsInBounds(Pos, entity.position, entity.collisionBox.Size))
                 {
                     return entity;
                 }
@@ -314,12 +318,20 @@ namespace MinecraftAlpha
         public void DrawEntity(SpriteBatch SB, float BlockSize, Vector2 Cam, Game1 game1)
         {
 
-            
+
             //SB.Begin();
             //SB.Draw(Texture, BlockSize * position + Cam, null, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize SpriteEffects.None, 0f);
             //SB.End();
-            if (this.Model3D != null)
+
+            if (this.Model3D != null || name == "item")
             {
+                if (name == "item")
+                {
+                    SB.Draw(game1.items.Atlas, BlockSize * position + Cam - new Vector2(0, float.Cos(Lifetime*MathF.PI / 180) * 10), game1.items.GetRactangle(game1._blockManager.Blocks[int.Parse(Data.Split(";")[0])].ItemID), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, 1, SpriteEffects.None, 0f);
+                    return;
+                }
+
+
                 this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, 0);
                 return;
             }
@@ -339,7 +351,7 @@ namespace MinecraftAlpha
                 s.DrawSprite(game1, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, float.Floor(Layer), (IFrame > 0));
 
             }
-            if(game1.DebugMode) SB.DrawString(game1.Content.Load<SpriteFont>("Font"), $"{Health}/{MaxHealth}", BlockSize * position + Cam - new Vector2(4, 80), Color.Red);
+            if (game1.DebugMode) SB.DrawString(game1.Content.Load<SpriteFont>("Font"), $"{Health}/{MaxHealth}", BlockSize * position + Cam - new Vector2(4, 80), Color.Red);
 
         }
 
@@ -379,7 +391,7 @@ namespace MinecraftAlpha
 
         }
 
-        
+
         public void Punch(Entity Target, Game1 game)
         {
 
@@ -390,16 +402,16 @@ namespace MinecraftAlpha
                 Target.TakeDamage(this, 3, 17);
                 var part = new Particle()
                 {
-                    
-                    Position = Target.position + new Vector2((float)random.NextDouble()-0.5f, -(float)random.NextDouble()/2)*2,
+
+                    Position = Target.position + new Vector2((float)random.NextDouble() - 0.5f, -(float)random.NextDouble() / 2) * 2,
                     TextureName = "BlockMineEffect",
                     Texture = game._particleSystem.sprites[0],
                     lifeTime = 3f,
                     size = 1f,
                     Color = Color.Beige,
-                    
-                    Velocity = new Vector2(0,0),
-                    
+
+                    Velocity = new Vector2(0, 0),
+
 
                 };
 
@@ -410,22 +422,22 @@ namespace MinecraftAlpha
             }
             else
             {
-                Target.TakeDamage(this, 1,10);
+                Target.TakeDamage(this, 1, 10);
             }
-            
+
             Target.Target = this;
             game._entityAnimationService.Play(2, this);
 
         }
-        public void TakeDamage(Entity source, int DMG,float knockback)
+        public void TakeDamage(Entity source, int DMG, float knockback)
         {
             if (DMG < 1) return;
             //velocity.velocity += new Vector2(0, -1f);
-            Vector2 Knockback = new Vector2(0,1);
+            Vector2 Knockback = new Vector2(0, 1);
             if (IFrame > 0) return;
             if (source != null) Knockback = (position - source.position);
 
-            if(Knockback == Vector2.Zero)
+            if (Knockback == Vector2.Zero)
             {
                 Knockback = new Vector2(0, 1);
             }
@@ -436,18 +448,19 @@ namespace MinecraftAlpha
             Iframes();
         }
 
-        public void WalkTo(Vector2 pos,bool can_jump)
+        public void WalkTo(Vector2 pos, bool can_jump)
         {
             float lspeed = Speed;
-            if (can_jump) {
+            if (can_jump)
+            {
                 if (!collisionBox.Bottom || collisionBox.Left || collisionBox.Right)
                 {
                     Jump();
                 }
             }
-            if(IFrame >1)
+            if (IFrame > 1)
             {
-                lspeed = Speed*0.6f;
+                lspeed = Speed * 0.6f;
             }
             //if (!collisionBox.Bottom)
             //{
@@ -485,12 +498,12 @@ namespace MinecraftAlpha
         {
             Vector2 vel = Vector2.One;
             float Drag = this.Drag;
-           
 
-            if(!entity.Grounded)
+
+            if (!entity.Grounded)
             {
                 Gravity = 0;
-                
+
             }
             else
             {
@@ -498,7 +511,7 @@ namespace MinecraftAlpha
             }
 
 
-            if(float.Abs(velocity.X) < 0.4f)
+            if (float.Abs(velocity.X) < 0.4f)
             {
                 velocity.X = 0;
             }
@@ -514,7 +527,7 @@ namespace MinecraftAlpha
                 vel.X = 0;
                 velocity.X = 0;
             }
-            if(vel.Length() > 30)
+            if (vel.Length() > 30)
             {
                 Drag = 20f;
             }
@@ -525,11 +538,11 @@ namespace MinecraftAlpha
             {
                 Gravity = 0;
             }
-            
-            entity.position += vel/ 30;
-            velocity += new Vector2(0, Gravity*2.25f);
+
+            entity.position += vel / 30;
+            velocity += new Vector2(0, Gravity * 2.25f);
         }
 
-        
+
     }
 }
