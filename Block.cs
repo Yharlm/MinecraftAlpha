@@ -15,7 +15,12 @@ namespace MinecraftAlpha
 
         public bool Placable = true;
 
+        public bool Item = false; 
+        public float UseTime = 0.5f; // Time taken to use/interact with the block
+
         public Block ItemDrop = null;
+
+        public int ItemID = 0; // Id ot the item in atlas
 
         public bool Transparent = false;
 
@@ -59,6 +64,8 @@ namespace MinecraftAlpha
                 new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
                 new Block { Name = "Glass block", TexturePath = "glass", Health = 4,Transparent = true},
                 new Block { Name = "Tnt block", TexturePath = "tnt_side", Health = 2,Transparent = false},
+                new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTime = 5},
+                new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
 
             };
 
@@ -84,6 +91,19 @@ namespace MinecraftAlpha
         }
         public void LoadActions()
         {
+            
+            getBlock("Apple").Interaction = (Pos) =>
+            {
+                // Heal Player
+                Game.Player.Plr.Health += 3;
+                // Consume the apple
+                
+                if (Game.Player.Plr.Health > Game.Player.Plr.MaxHealth)
+                {
+                    Game.Player.Plr.Health = Game.Player.Plr.MaxHealth;
+                }
+
+            };
 
             getBlock("Stone").ItemDrop = getBlock("Cobblestone");
             getBlock("Leaves").ItemDrop = getBlock("Air");
@@ -91,7 +111,7 @@ namespace MinecraftAlpha
 
             getBlock("Tnt block").Interaction = (Pos) =>
             {
-
+                
                 
             };
             getBlock("Chest").Interaction = (Pos) =>
@@ -300,6 +320,38 @@ namespace MinecraftAlpha
         public float LightSource = 0;
         public float MinedHealth = 0; // How much health has been mined from this block
         public string Data { get; set; } = string.Empty;
+
+    }
+
+    public class Items
+    {
+        public Texture2D Atlas;
+        public int itemSize = 16; // Size of each item in the atlas
+        
+
+        public void DrawItem(SpriteBatch _spriteBatch, Vector2 position, int itemID, float scale)
+        {
+            int itemSize = this.itemSize;
+            int itemsPerRow = Atlas.Width / itemSize;
+
+            int row = itemID / itemsPerRow;
+            int column = itemID % itemsPerRow;
+
+            Rectangle sourceRectangle = new Rectangle(column * itemSize, row * itemSize, itemSize, itemSize);
+            _spriteBatch.Draw(Atlas, position, sourceRectangle, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+        }
+
+        public Rectangle GetRactangle(int itemID)
+        {
+            int itemSize = this.itemSize;
+            int itemsPerRow = Atlas.Width / itemSize;
+
+            int row = itemID / itemsPerRow;
+            int column = itemID % itemsPerRow;
+
+            return new Rectangle(column * itemSize, row * itemSize, itemSize, itemSize);
+           
+        }
 
     }
 

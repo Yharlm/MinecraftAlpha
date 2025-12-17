@@ -58,6 +58,23 @@ namespace MinecraftAlpha
         }
         public void PlaceBlock(Vector2 pos, Block block)
         {
+            if (block == null) return;
+            if(block.Item)
+            {
+                if (block.Interaction == null) return;
+                if(Game._userInterfaceManager.itemUsetimer < block.UseTime) {
+                    Game._userInterfaceManager.itemUsetimer += 0.1f;
+                    return; }
+                Game._userInterfaceManager.itemUsetimer = 0f;
+                block.Interaction.Invoke(null);
+                Game._userInterfaceManager.amount -= 1;
+                if (Game._userInterfaceManager.amount <= 0)
+                {
+                    Game._userInterfaceManager.selectedItem = null;
+
+                }
+                return;
+            }
             int Zindex = (int)Game.Player.Plr.Layer;
             var Chunks = Game.Chunks;
 
@@ -143,42 +160,36 @@ namespace MinecraftAlpha
 
         public void DeleteBlocksSphere(Vector2 Pos,float Z, float radius)
         {
-            Vector3 center = new Vector3(Pos.X, Pos.Y, Z);
+            float radiusSquared = radius * radius;
 
-            var rand = new Random();
-            var chunks = Game.Chunks;
+            // Determine the bounding box to minimize iterations
+            int minX = (int)Math.Floor(Pos.X - radius);
+            int maxX = (int)Math.Ceiling(Pos.X + radius);
+            int minY = (int)Math.Floor(Pos.Y- radius);
+            int maxY = (int)Math.Ceiling(Pos.Y + radius);
+            int minZ = (int)Math.Floor(Z - radius);
+            int maxZ = (int)Math.Ceiling(Z + radius);
 
-            int minX = (int)Math.Ceiling(center.X - radius);
-            int maxX = (int)Math.Ceiling(center.X + radius);
-            int minY = (int)Math.Ceiling(center.Y - radius);
-            int maxY = (int)Math.Ceiling(center.Y + radius);
-            int minZ = (int)Math.Ceiling(center.Z - radius);
-            int maxZ = (int)Math.Ceiling(center.Z + radius);
-
-            for (int z = minZ; z <= maxZ; z++)
+            for (int x = minX; x <= maxX; x++)
             {
-                if (z < 0 || z >= 10) continue; // Assuming 10 layers
-
                 for (int y = minY; y <= maxY; y++)
                 {
-                    for (int x = minX; x <= maxX; x++)
+                    for (int z = minZ; z <= maxZ; z++)
                     {
-                        var pos3 = new Vector3(x, y, z);
-                        float dist = Vector3.Distance(center, pos3);
+                        // Calculate distance from center to current point
+                        float dx = x - Pos.X;
+                        float dy = y - Pos.Y;
+                        float dz = z - Z;
 
-                        if (dist > radius) continue;
-
-                        // Probability decreases with distance (linear falloff)
-                        float chance = 1f - (dist / radius);
-
-                        if (rand.NextDouble() < chance)
+                        // If distance squared is <= radius squared, it's inside the sphere
+                        if (dx * dx + dy * dy + dz * dz <= radiusSquared)
                         {
-                            var pos2 = new Vector2(x, y);
-                            BreakBlock(pos2,z,13);
+                            BreakBlock(new Vector2(x, y) + Vector2.One/2, z, 3);
                         }
                     }
                 }
             }
+            
         }
         public void BreakBlock(Vector2 Pos,float Z,float Dmg)
         {

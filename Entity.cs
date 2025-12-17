@@ -198,7 +198,7 @@ namespace MinecraftAlpha
         public List<EntityAnimation> Animations = new List<EntityAnimation>();
         public bool paused = false;
         public bool Fliped = true;
-
+        public int gripIndex = 4;
 
         //public List<PotionEffects> = new List<PotionEffects>()
         public string Data = ""; // armor, items, if Itemdrop ammount, 
@@ -259,11 +259,30 @@ namespace MinecraftAlpha
                 {
                     A.velocity.velocity = (B.position - A.position) / 20;
                 }
-                int id = int.Parse(A.Data);
+                var data = A.Data.Split(";");
+                int id = int.Parse(data[0]);
+                int amount = int.Parse(data[1]);
 
-                game1.Player.PickupItem(game1._blockManager.Blocks[id], 1, game1._userInterfaceManager.windows[0]);
+                game1.Player.PickupItem(game1._blockManager.Blocks[id], amount, game1._userInterfaceManager.windows[0]);
                 A.Health = 0;
             }
+
+            if (B.ID == -1 && A.ID == -1) // ItemDrop
+            {
+                
+                var data = A.Data.Split(";");
+                int id = int.Parse(data[0]);
+                int amount = int.Parse(data[1]);
+                if(amount <=0) return;
+                if (id != int.Parse(B.Data.Split(";")[0])) return;
+
+                
+                A.Data = $"{id};{amount + int.Parse(B.Data.Split(";")[1])}";
+                B.Data = $"{id};{0}";
+                B.Health = 0;
+                
+            }
+
         }
 
         static public Entity GetentityAtPosition(Vector2 Pos, List<Entity> Entities)
@@ -316,7 +335,7 @@ namespace MinecraftAlpha
             foreach (Sprite s in Sprites)
             {
                 int i = Sprites.IndexOf(s);
-                s.DrawSprite(SB, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, float.Floor(Layer), (IFrame > 0));
+                s.DrawSprite(game1, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, float.Floor(Layer), (IFrame > 0));
 
             }
             if(game1.DebugMode) SB.DrawString(game1.Content.Load<SpriteFont>("Font"), $"{Health}/{MaxHealth}", BlockSize * position + Cam - new Vector2(4, 80), Color.Red);

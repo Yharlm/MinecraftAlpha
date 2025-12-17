@@ -26,7 +26,7 @@ public class Game1 : Game
     public ParticleSystem _particleSystem = new();
     public RecipeManager _RecipeManager = new();
     public InputManager _inputManager = new();
-
+    
 
     public Effect Shader;
 
@@ -34,7 +34,8 @@ public class Game1 : Game
 
 
     public Texture2D BreakTexture;
-
+    public SpriteFont font;
+    
     public Player Player;
     public bool DebugMode = false;
 
@@ -43,6 +44,7 @@ public class Game1 : Game
     public float Daytime = 0f;
     public List<Entity> Entities;
     public List<Block> BlockTypes;
+    public Items items = new();
 
     public bool creativeMode = true;
     //Chunks list
@@ -291,10 +293,25 @@ public class Game1 : Game
     {
         //BreakTexture = Content.Load<Texture2D>("break_animation");
 
+
+        items.Atlas = Content.Load<Texture2D>("Items");
+
+
+        // Items
+
+
+
+
+
+
+
+
+        font = Content.Load<SpriteFont>("Font");
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         foreach (var block in _blockManager.Blocks)
         {
+            if(block.TexturePath == "_item") continue;
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
 
@@ -1147,17 +1164,17 @@ public class Game1 : Game
 
 
 
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)Math.Ceiling((WorldMousePos.X / 32))).ToString(), Vector2.One * 40, Color.Chartreuse);
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
+            _spriteBatch.DrawString(font, ((int)Math.Ceiling((WorldMousePos.X / 32))).ToString(), Vector2.One * 40, Color.Chartreuse);
+            _spriteBatch.DrawString(font, (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
+            _spriteBatch.DrawString(font, Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
+            _spriteBatch.DrawString(font, Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
+            _spriteBatch.DrawString(font, ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
+            _spriteBatch.DrawString(font, ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
+            _spriteBatch.DrawString(font, (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
 
 
 
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), ((Player.Plr.velocity.velocity)).ToString(), new Vector2(500, 20), Color.WhiteSmoke);
+            _spriteBatch.DrawString(font, ((Player.Plr.velocity.velocity)).ToString(), new Vector2(500, 20), Color.WhiteSmoke);
 
 
 
@@ -1165,7 +1182,7 @@ public class Game1 : Game
             var Block = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);
             if (Block != null)
             {
-                _spriteBatch.DrawString(Content.Load<SpriteFont>("Font"), WorldMousePos.ToString(), Vector2.One * 40, Color.GhostWhite);
+                _spriteBatch.DrawString(font, WorldMousePos.ToString(), Vector2.One * 40, Color.GhostWhite);
 
             }
             _spriteBatch.End();
@@ -1202,7 +1219,7 @@ public class Game1 : Game
     void DrawBlock(TileGrid Tile,Chunk chunk,int i,int j, float Z,float layer,bool Opaque)
     {
         var block = _blockManager.Blocks[Tile.ID];
-
+        
         float Light = Tile.brightness;
         float Light01 = Light - 0.2f;
         float a = Z /2 + 0.4f;

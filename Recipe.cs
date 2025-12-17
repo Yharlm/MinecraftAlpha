@@ -36,7 +36,7 @@ public class CraftingRecipe
 {
     public ItemSlot item = null;
     public ItemSlot[,] RecipeGrid = new ItemSlot[2, 2];
-
+    public ItemSlot[,] CraftingGrid = new ItemSlot[3, 3];
     public bool Typebased = false;
 
     public CraftingRecipe(int[,] Grid, int Result, int count,BlockManager manager)

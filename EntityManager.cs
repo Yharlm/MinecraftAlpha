@@ -95,7 +95,8 @@ namespace MinecraftAlpha
             Drop.Data = game._blockManager.GetBlockID(drop).ToString();
 
 
-            Drop.Data = game._blockManager.GetBlockID(drop).ToString();
+            Drop.Data = game._blockManager.GetBlockID(drop).ToString() + ";1";
+            
             Drop.Layer = Z;
             Drop.Model3D = new Sprite3D(drop.Texture, drop.Texture, drop.Texture, drop.Texture);
             return Drop;
@@ -203,7 +204,8 @@ namespace MinecraftAlpha
                         B = new Vector2(0f, -4f),
                         A_Index = 1,
                         B_Index = 4
-                    }
+                    },
+                    
                 },
                 Animations = new()
                 {

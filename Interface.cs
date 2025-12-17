@@ -24,7 +24,7 @@ namespace MinecraftAlpha
 
         public TileGrid LastUsedBlock = null;
         //public bool Clicked = false;
-
+        public float itemUsetimer = 0f;
         public Block selectedItem = null;
         public int amount = 0;
 
@@ -99,7 +99,7 @@ namespace MinecraftAlpha
                 foreach (ItemSlot Slot in Window.ItemSlots)
                 {
                     Slot.Position = Window.Position;
-                    Slot.Render(spriteBatch, Contnet);
+                    Slot.Render(spriteBatch, Game);
                     Debuging.DebugPos(spriteBatch, Slot.ItemPosition + Slot.Position, Game);
                 }
                 foreach (Button button in Window.Buttons)
@@ -136,8 +136,15 @@ namespace MinecraftAlpha
             }
             Vector2 mouse = Mouse.GetState().Position.ToVector2();
 
-            spriteBatch.Draw(selectedItem.Texture, mouse - Vector2.One * selectedItem.Texture.Width, null, Color.White);
-            spriteBatch.DrawString(Text, Amounts, mouse, Color.White);
+            if(selectedItem.Item)
+            {
+                Game.items.DrawItem(spriteBatch, mouse - new Vector2(16, 16), selectedItem.ItemID, 2.5f);
+            }
+            else
+            {
+                spriteBatch.Draw(selectedItem.Texture, new Rectangle((int)mouse.X, (int)mouse.Y, 32, 32), Color.White);
+            }
+            spriteBatch.DrawString(Text, Amounts, mouse - new Vector2(16, 16), Color.White);
 
         }
 
@@ -538,21 +545,29 @@ namespace MinecraftAlpha
             Clicked.Invoke();
         }
 
-        public void Render(SpriteBatch Spritebatch, ContentManager Content)
+        public void Render(SpriteBatch Spritebatch, Game1 game)
         {
             Vector2 SlotPos = Position + ItemPosition - Vector2.One * 16;
             string AmmountInSlot = "";
             Spritebatch.Draw(Texture, new Rectangle((int)SlotPos.X, (int)SlotPos.Y, 32, 32), Color.White);
             if (Item != null)
             {
-                Spritebatch.Draw(Item.Texture, SlotPos+Vector2.One * 4, null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+                if(Item.Item)
+                {
+                    game.items.DrawItem(Spritebatch, SlotPos + Vector2.One * 4, Item.ItemID, 1.5f);
+                }
+                else
+                {
+                    Spritebatch.Draw(Item.Texture, SlotPos + Vector2.One * 4, null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+                }
+                
 
             }
             if (Count > 1)
             {
                 AmmountInSlot = Count.ToString();
             }
-            Spritebatch.DrawString(Content.Load<SpriteFont>("Font"), AmmountInSlot, SlotPos + Vector2.One * 16, Color.White);
+            Spritebatch.DrawString(game.font, AmmountInSlot, SlotPos + Vector2.One * 16, Color.White);
 
         }
     }

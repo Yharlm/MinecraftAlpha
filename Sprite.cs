@@ -207,6 +207,9 @@ namespace MinecraftAlpha
     {
         public float Layer = 0f;
 
+
+        public bool isGrip = false;
+        public Vector2 GripOffset = new Vector2(0, 0);
         //public List<Vector2> Joints = new List<Vector2>();
         public Rectangle Margin;
         public Texture2D texture;
@@ -232,9 +235,11 @@ namespace MinecraftAlpha
 
 
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
-        public void DrawSprite(SpriteBatch spriteBatch, Vector2 Pos, float size, float Rotation, bool Flip,float Z,float Shadow,bool Iframe) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
+        public void DrawSprite(Game1 game1, Vector2 Pos, float size, float Rotation, bool Flip,float Z,float Shadow,bool Iframe) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
 
         {
+
+            SpriteBatch spriteBatch = game1._spriteBatch;
             SpriteEffects spriteEffect = SpriteEffects.None;
             if (Flip)
             {
@@ -260,6 +265,22 @@ namespace MinecraftAlpha
                 Layer = Color.PaleVioletRed;
             }
             
+            if(isGrip)
+            {
+                var item = game1._userInterfaceManager.selectedItem;
+                spriteBatch.Draw(
+                texture,
+                Pos - ParentPos * size,
+                game1.items.GetRactangle(item.ItemID),
+                Layer,
+                Angle + JointOrientation, // Orientation
+                new Vector2(ract.Width, ract.Height) / 2 + Attachment, //
+                size,
+                spriteEffect,
+                Z
+                );
+            }
+
             spriteBatch.Draw(
                 texture,
                 Pos - ParentPos * size,
@@ -271,6 +292,7 @@ namespace MinecraftAlpha
                 spriteEffect,
                 Z
                 );
+            
             
         }
 
