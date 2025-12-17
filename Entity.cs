@@ -255,6 +255,7 @@ namespace MinecraftAlpha
         {
             if (A.ID == -1 && B.name == "Player") // ItemDrop
             {
+                if (A.IFrame >= 1f) return;
                 if ((A.position - B.position).Length() > 1f)
                 {
                     A.velocity.velocity = (B.position - A.position) / 20;
@@ -269,7 +270,7 @@ namespace MinecraftAlpha
 
             if (B.ID == -1 && A.ID == -1) // ItemDrop
             {
-                
+                if (A.IFrame >= 1f && B.IFrame >= 1f) return;
                 var data = A.Data.Split(";");
                 int id = int.Parse(data[0]);
                 int amount = int.Parse(data[1]);

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 using Vector4 = Microsoft.Xna.Framework.Vector4;
 
 namespace MinecraftAlpha
@@ -49,6 +50,18 @@ namespace MinecraftAlpha
                     break;
                 }
 
+            }
+        }
+
+        public void DropItem(Block item,Vector3 origin,Vector2 Dir, int amount)
+        {
+            Entity drop;
+            drop = game._entityManager.SpawnItem(new Vector2(origin.X,origin.Y) +Vector2.Normalize(Dir - new Vector2(origin.X, origin.Y)), (int)origin.Z, item);
+            drop.IFrame = 5f;
+            drop.velocity.velocity = Dir- new Vector2(origin.X, origin.Y);
+            if (drop != null)
+            {
+                game._entityManager.Workspace.Add(drop);
             }
         }
 

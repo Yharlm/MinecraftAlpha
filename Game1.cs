@@ -609,7 +609,7 @@ public class Game1 : Game
             entity.collisionBox.UpdateCollision(entity, Chunks, this);
             _entityManager.AI(entity);
             var EntVal = entity.velocity.velocity;
-
+            entity.ResetIframes();
             if (entity.ID == -1)
             {
                 entity.Model3D.Update();
@@ -630,7 +630,7 @@ public class Game1 : Game
             {
                 _entityAnimationService.Stop(1, entity);
             }
-            entity.ResetIframes();
+            
 
             
 
@@ -764,6 +764,10 @@ public class Game1 : Game
 
             }
             if (key == Keys.Q)
+            {
+                Player.DropItem(_userInterfaceManager.selectedItem, (new Vector3(Player.Plr.position, Player.Plr.Layer)), WorldMousePos, 1);
+            }
+            if (key == Keys.R)
             {
                 _actionManager.DeleteBlocksSphere(WorldMousePos, Player.Plr.Layer, 4);
             }

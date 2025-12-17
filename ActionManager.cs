@@ -180,9 +180,9 @@ namespace MinecraftAlpha
                         float dx = x - Pos.X;
                         float dy = y - Pos.Y;
                         float dz = z - Z;
-
+                        float distance= dx * dx + dy * dy + dz * dz;
                         // If distance squared is <= radius squared, it's inside the sphere
-                        if (dx * dx + dy * dy + dz * dz <= radiusSquared)
+                        if (distance <= radiusSquared)
                         {
                             BreakBlock(new Vector2(x, y) + Vector2.One/2, z, 3);
                         }
