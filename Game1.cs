@@ -575,7 +575,7 @@ public class Game1 : Game
         foreach (var entity in _entityManager.Workspace)
         {
             //entity.collisionBox.CheckCollision(entity,World);
-            entity.Lifetime += 0.001f;
+            entity.Lifetime += 0.1f;
             if (entity.position.Y > 600)
             {
                 entity.TakeDamage(null, 5,0);

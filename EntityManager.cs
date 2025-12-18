@@ -47,7 +47,7 @@ namespace MinecraftAlpha
         public void AI(Entity mob)
         {
             Vector2 Pos = mob.position;
-
+            if (mob.ID <= -1) return; // Lol no ur an object
             if (mob.Target != null)
             {
                 Pos = mob.Target.position;

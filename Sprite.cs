@@ -105,9 +105,10 @@ namespace MinecraftAlpha
 
         }
 
-        public void Draw(SpriteBatch spritebatch,Vector2 Pos,float size,float Z)
+        public void Draw(SpriteBatch spritebatch,Vector2 Pos,float size, Vector2 offset)
         {
             Sides2_3D Visible = null;
+            float Orientation = this.Orientation + offset.Y*180;
             for (int i = 0; i < Sides.Length; i++)
             {
                 float Angle = (i * 90);
@@ -116,7 +117,7 @@ namespace MinecraftAlpha
                     Visible = Sides[i];
                 }
             }
-
+            Pos += new Vector2(offset.X*2, 0);
 
 
             float sizeRatio = (Orientation % 90) / 90;

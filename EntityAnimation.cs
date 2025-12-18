@@ -37,7 +37,7 @@ namespace MinecraftAlpha
         }
         public void Play(int ID,Entity parent)
         {
-            
+            if(parent.ID <= -1) return; // Lol no ur an object
             var AnimEv = new AnimateEvent()
             {
                 parent = parent,

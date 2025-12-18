@@ -274,13 +274,14 @@ namespace MinecraftAlpha
 
             if (B.ID == -1 && A.ID == -1) // ItemDrop
             {
+
                 if (A.IFrame >= 1f && B.IFrame >= 1f) return;
                 var data = A.Data.Split(";");
                 int id = int.Parse(data[0]);
                 int amount = int.Parse(data[1]);
                 if (amount <= 0) return;
                 if (id != int.Parse(B.Data.Split(";")[0])) return;
-                if (amount >= 64) return;
+                if (amount >= 64 || 64 <= int.Parse(B.Data.Split(";")[1])) return;
 
                 A.Data = $"{id};{amount + int.Parse(B.Data.Split(";")[1])}";
                 B.Data = $"{id};{0}";
@@ -327,12 +328,24 @@ namespace MinecraftAlpha
             {
                 if (name == "item")
                 {
-                    SB.Draw(game1.items.Atlas, BlockSize * position + Cam - new Vector2(0, float.Cos(Lifetime*MathF.PI / 180) * 10), game1.items.GetRactangle(game1._blockManager.Blocks[int.Parse(Data.Split(";")[0])].ItemID), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, 1, SpriteEffects.None, 0f);
+                    if (int.Parse(Data.Split(";")[1]) >= 10)
+                    {
+                        SB.Draw(game1.items.Atlas, BlockSize * position + Cam - new Vector2(2, float.Cos(Lifetime + 1.2f / 2) * 2), game1.items.GetRactangle(game1._blockManager.Blocks[int.Parse(Data.Split(";")[0])].ItemID), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize / 18, SpriteEffects.None, 0f);
+                        SB.Draw(game1.items.Atlas, BlockSize * position + Cam - new Vector2(-1.4f, float.Cos(Lifetime + 1.3f / 2) * 2), game1.items.GetRactangle(game1._blockManager.Blocks[int.Parse(Data.Split(";")[0])].ItemID), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize / 18, SpriteEffects.None, 0f);
+
+                    }
+                    SB.Draw(game1.items.Atlas, BlockSize * position + Cam - new Vector2(0, float.Cos(Lifetime / 2) * 2), game1.items.GetRactangle(game1._blockManager.Blocks[int.Parse(Data.Split(";")[0])].ItemID), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize / 18, SpriteEffects.None, 0f);
                     return;
                 }
-
-
-                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, 0);
+                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, Vector2.Zero);
+                if (int.Parse(Data.Split(";")[1]) >= 10)
+                {
+                    this.Model3D.Draw(SB, BlockSize * position + Cam , BlockSize / 18, new Vector2(1.8f, -0.2f));
+                    this.Model3D.Draw(SB, BlockSize *position +  Cam , BlockSize / 18, new Vector2(1f, -0.3f));
+                    this.Model3D.Draw(SB, BlockSize *position  + Cam , BlockSize / 18, new Vector2(-1.2f, 0.6f));
+                    this.Model3D.Draw(SB, BlockSize *position + Cam , BlockSize / 18, new Vector2(0.4f, -0.2f));
+                }
+                
                 return;
             }
 

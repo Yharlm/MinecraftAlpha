@@ -5,7 +5,17 @@ public class RecipeManager
 {
     public List<CraftingRecipe> Recipes = new List<CraftingRecipe>();
     
-
+    public static int GetStartIndex(ItemSlot[,] grid)
+    {
+        foreach (var slot in grid)
+        {
+            if (slot.Item != null)
+            {
+                return slot.Item.ID;
+            }
+        }
+        return -1;
+    }
     public List<CraftingRecipe> LoadRecipes(BlockManager blocksManager)
     {
         int log = blocksManager.GetBlockByName("Log").ID;
@@ -41,9 +51,9 @@ public class CraftingRecipe
 
     public CraftingRecipe(int[,] Grid, int Result, int count,BlockManager manager)
     {
-        for (int x = 0; x < 2; x++)
+        for (int x = 0; x < Grid.GetLength(0); x++)
         {
-            for (int y = 0; y < 2; y++)
+            for (int y = 0; y < Grid.GetLength(1); y++)
             {
                 if (Grid[x, y] == 0)
                 {
