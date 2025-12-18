@@ -158,42 +158,8 @@ namespace MinecraftAlpha
                 var Window = Game._userInterfaceManager.windows[2];
                 Window.Visible = !Window.Visible;
 
-
-
-
-
-
             };
-            getBlock("Crafting Table").Update = (Pos) =>
-            {
-
-                var Window = Game._userInterfaceManager.windows[2];
-
-                if (!Window.Visible) return;
-                var item = Blocks[0];
-
-                var grid = Game._userInterfaceManager.windows[2].ItemSlots;
-
-                ItemSlot[,] Grid2x2 = new ItemSlot[2, 2]
-                {
-                    { grid[0], grid[1] },
-                    { grid[2], grid[3] }
-                };
-                foreach (var Recipe in Game._RecipeManager.Recipes)
-                {
-                    if (Recipe.CheckRecipe(Grid2x2))
-                    {
-
-                        Window.ItemSlots[4].Item = Recipe.item.Item;
-                        Window.ItemSlots[4].Count = Recipe.item.Count;
-                        return;
-                    }
-                    else
-                    {
-                        Window.ItemSlots[4].TakeItem(64);
-                    }
-                }
-            };
+            
 
         }
 

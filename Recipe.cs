@@ -19,6 +19,7 @@ public class RecipeManager
     public List<CraftingRecipe> LoadRecipes(BlockManager blocksManager)
     {
         int log = blocksManager.GetBlockByName("Log").ID;
+        int stick = blocksManager.GetBlockByName("Stick").ID;
         int wood = blocksManager.GetBlockByName("Wood").ID;
         int CraftT = blocksManager.GetBlockByName("Crafting Table").ID;
         var List = new List<CraftingRecipe>()
@@ -30,7 +31,11 @@ public class RecipeManager
             new CraftingRecipe(new int[,] {
                 { wood, wood },
                 { wood, wood }} ,CraftT,1,blocksManager),
-            
+            new CraftingRecipe(new int[,] {
+                { wood, wood,wood },
+                { 0, stick,0  },
+                { 0, stick,0  }} ,stick,1,blocksManager),
+
         };
 
 
@@ -45,12 +50,15 @@ public class RecipeManager
 public class CraftingRecipe
 {
     public ItemSlot item = null;
-    public ItemSlot[,] RecipeGrid = new ItemSlot[2, 2];
-    public ItemSlot[,] CraftingGrid = new ItemSlot[3, 3];
+    public ItemSlot[,] RecipeGrid;
+   
     public bool Typebased = false;
 
     public CraftingRecipe(int[,] Grid, int Result, int count,BlockManager manager)
     {
+
+        RecipeGrid = new ItemSlot[Grid.GetLength(0), Grid.GetLength(1)];
+
         for (int x = 0; x < Grid.GetLength(0); x++)
         {
             for (int y = 0; y < Grid.GetLength(1); y++)

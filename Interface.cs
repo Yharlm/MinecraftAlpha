@@ -243,6 +243,7 @@ namespace MinecraftAlpha
                 }
 
             }
+
             windows.Add(new WindowFrame()
             {
                 Name = "Chest",
@@ -285,6 +286,9 @@ namespace MinecraftAlpha
             ItemSlot result = new()
             { ItemPosition = new Vector2(32, 32) + new Vector2(140, 30), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = () => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
             windows.Last().ItemSlots.Add(result);
+
+            
+
             windows.Add(new WindowFrame()
             {
                 Position = new Vector2(Game.windowWidth/2, Game.windowHeight/2),
@@ -297,6 +301,28 @@ namespace MinecraftAlpha
             });
             
             windows.Last().Frames[0].button = windows.Last().Buttons[0];
+
+            windows.Add(new WindowFrame()
+            {
+                Name = "Crafting3x3",
+                Visible = true,
+                Frames = new() { },
+                Buttons = new() { },
+                ItemSlots = new() { },
+            });
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    ItemSlot slot = new()
+                    { ItemPosition = new Vector2(32 * i, 32 * j) + new Vector2(100, 60), Texture = ItemSlots[0].Texture };
+                    windows.Last().ItemSlots.Add(slot);
+                }
+
+            }
+            result = new()
+            { ItemPosition = new Vector2(32, 32) + new Vector2(140, 30), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = () => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
+            windows.Last().ItemSlots.Add(result);
 
 
         }
@@ -438,25 +464,34 @@ namespace MinecraftAlpha
             {
                 if (Name == "Crafting2x2")
                 {
+                    
                     foreach (CraftingRecipe Recipe in game._RecipeManager.Recipes)
                     {
-                        //if (ItemSlots[4].Item != null) break;
-                        if (Recipe.CheckRecipe(new ItemSlot[,]
+                        if (Recipe.RecipeGrid.GetLength(0) == 2)
+                        {
+                            if (Recipe.CheckRecipe(new ItemSlot[,]
                         {
                             { ItemSlots[0], ItemSlots[1] },
                             { ItemSlots[2], ItemSlots[3] },
                         }))
-                        {
-                            ItemSlots[4].Item = Recipe.item.Item;
-                            ItemSlots[4].Count = Recipe.item.Count;
-                            break;
+                            {
+                                ItemSlots[4].Item = Recipe.item.Item;
+                                ItemSlots[4].Count = Recipe.item.Count;
+                                break;
 
+                            }
+                            else
+                            {
+                                ItemSlots[4].Count = 0;
+                                ItemSlots[4].Item = null;
+                            }
                         }
                         else
                         {
-                            ItemSlots[4].Count = 0;
-                            ItemSlots[4].Item = null;
+
                         }
+                        //if (ItemSlots[4].Item != null) break;
+                        
 
                     }
                 }
