@@ -90,7 +90,7 @@ public class CraftingRecipe
                 if (RecipeGrid[i, j].Item != Grid[i, j].Item)
                 {
                     confirm = false;
-                    break;
+                    //break;
                 }
 
             }

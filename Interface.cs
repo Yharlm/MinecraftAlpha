@@ -316,7 +316,7 @@ namespace MinecraftAlpha
                 for (int j = 0; j < 3; j++)
                 {
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(32 * i, 32 * j) + new Vector2(100, 60), Texture = ItemSlots[0].Texture };
+                    { ItemPosition = new Vector2(32 * j, 32 * i) + new Vector2(100, 60), Texture = ItemSlots[0].Texture };
                     windows.Last().ItemSlots.Add(slot);
                 }
 
@@ -399,10 +399,24 @@ namespace MinecraftAlpha
                                 ItemSlot.TakeItem(-1, this);
 
                             }
-                            else if (selectedItem != null && ItemSlot.Count < 64)
+                            if (ItemSlot.canPlace)
                             {
-                                ItemSlot.AddItem(-1, this);
+                                
+                                if (selectedItem != null && (ItemSlot.Item == selectedItem || ItemSlot.Item == null) && ItemSlot.Count < 64)
+                                {
+                                    ItemSlot.AddItem(-1, this);
+                                }
                             }
+                            //else
+                            //{
+                            
+                            //    if (selectedItem != null)
+                            //    {
+                            //        ItemSlot.TakeItem(-1, this);
+                            //    }
+                                
+                            //}
+                            
                         }
                         else if (Mouse1 == 2)
                         {
@@ -559,7 +573,7 @@ namespace MinecraftAlpha
 
         public void TakeItem(int Amount, UserInterfaceManager UI)
         {
-            if (!canTake) return;
+            
             if (Amount == -1)
             {
                 Amount = Count;
@@ -587,11 +601,7 @@ namespace MinecraftAlpha
 
         public void AddItem(int Amount, UserInterfaceManager UI)
         {
-            if (!canPlace) return;
-            if (UI.selectedItem == null)
-            {
-                return;
-            }
+            
             if (Amount == -1)
             {
                 Amount = UI.amount;
