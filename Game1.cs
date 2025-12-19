@@ -768,6 +768,7 @@ public class Game1 : Game
                     _userInterfaceManager.amount -= 1;
                     if (_userInterfaceManager.amount <= 0)
                     {
+                        _userInterfaceManager.amount = 0;
                         _userInterfaceManager.selectedItem = null;
                     }
                 }
@@ -853,7 +854,7 @@ public class Game1 : Game
 
 
 
-        if (!_userInterfaceManager.In_interface || true)
+        if (!_userInterfaceManager.In_interface)
         {
 
 

@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -136,7 +136,7 @@ namespace MinecraftAlpha
             }
             Vector2 mouse = Mouse.GetState().Position.ToVector2();
 
-            if(selectedItem.Item)
+            if (selectedItem.Item)
             {
                 Game.items.DrawItem(spriteBatch, mouse - new Vector2(16, 16), selectedItem.ItemID, 2.5f);
             }
@@ -202,7 +202,7 @@ namespace MinecraftAlpha
         {
             foreach (var button in Buttons)
             {
-                
+
                 button.Background = Content.Load<Texture2D>("dirt");
             }
             foreach (var ItemSlot in ItemSlots)
@@ -218,7 +218,7 @@ namespace MinecraftAlpha
         public void LoadGUI()
         {
 
-            
+
 
             //Create Windows here
 
@@ -287,19 +287,19 @@ namespace MinecraftAlpha
             { ItemPosition = new Vector2(32, 32) + new Vector2(140, 30), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = () => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
             windows.Last().ItemSlots.Add(result);
 
-            
+
 
             windows.Add(new WindowFrame()
             {
-                Position = new Vector2(Game.windowWidth/2, Game.windowHeight/2),
+                Position = new Vector2(Game.windowWidth / 2, Game.windowHeight / 2),
                 Name = "Menu",
                 Visible = true,
-                Frames = new() { new() {Window = Frames[0].Window, position = new Vector2(0, 0) }  },
-                Buttons = new() { new() { Background = null, position = new Vector2(0, 0), Scale = new Vector2(340, 40) ,Click = (game) => { game.GameStarted = true; } } },
+                Frames = new() { new() { Window = Frames[0].Window, position = new Vector2(0, 0) } },
+                Buttons = new() { new() { Background = null, position = new Vector2(0, 0), Scale = new Vector2(340, 40), Click = (game) => { game.GameStarted = true; } } },
                 ItemSlots = new() { },
-                
+
             });
-            
+
             windows.Last().Frames[0].button = windows.Last().Buttons[0];
 
             windows.Add(new WindowFrame()
@@ -309,7 +309,7 @@ namespace MinecraftAlpha
                 Frames = new() { },
                 Buttons = new() { },
                 ItemSlots = new() { },
-                
+
             });
             for (int i = 0; i < 3; i++)
             {
@@ -357,13 +357,13 @@ namespace MinecraftAlpha
                     if (button.IsInBounds(Mouse))
                     {
                         In_interface = true;
-                        
+
                     }
-                    
+
                     button.Hovered = false;
                     if (button.IsInBounds(Mouse))
                     {
-                        if(Mouse1 == 0)
+                        if (Mouse1 == 0)
                         {
                             button.Hovered = true;
                         }
@@ -373,7 +373,7 @@ namespace MinecraftAlpha
                         }
 
                     }
-                    
+
 
 
 
@@ -394,51 +394,52 @@ namespace MinecraftAlpha
                         //Clicked = true;
                         if (Mouse1 == 1)
                         {
-                            if (selectedItem == null)
+                            if (!ItemSlot.canPlace)
                             {
-                                ItemSlot.TakeItem(-1, this);
+                                if (ItemSlot.Item != null)
+                                {
+                                    if (amount + ItemSlot.Count <= 64)
+                                    {
+                                        ItemSlot.TakeItem(-1, this);
+                                        break;
+                                    }
+
+                                }
+
 
                             }
-                            if (ItemSlot.canPlace)
+                            else
                             {
-                                
-                                if (selectedItem != null && (ItemSlot.Item == selectedItem || ItemSlot.Item == null) && ItemSlot.Count < 64)
+                                if (selectedItem == null)
+                                {
+                                    ItemSlot.TakeItem(-1, this);
+                                }
+                                else if (selectedItem != null && ItemSlot.Count + amount <= 64)
                                 {
                                     ItemSlot.AddItem(-1, this);
                                 }
+                                else if (selectedItem == ItemSlot.Item && ItemSlot.Item != null && amount < 64)
+                                {
+                                    ItemSlot.TakeItem(64 - amount, this);
+                                }
                             }
-                            //else
-                            //{
-                            
-                            //    if (selectedItem != null)
-                            //    {
-                            //        ItemSlot.TakeItem(-1, this);
-                            //    }
-                                
-                            //}
-                            
+
                         }
                         else if (Mouse1 == 2)
                         {
-                            if (selectedItem == null)
+                            if (ItemSlot.canPlace)
                             {
-                                ItemSlot.TakeItem(1, this);
+                                if (selectedItem == null)
+                                {
+                                    ItemSlot.TakeItem(1, this);
 
-                            }
-                            else if (selectedItem != null && ItemSlot.Count < 64)
-                            {
-                                ItemSlot.AddItem(1, this);
+                                }
+                                else if (selectedItem != null && 1 + ItemSlot.Count <= 64)
+                                {
+                                    ItemSlot.AddItem(1, this);
+                                }
                             }
                         }
-                        else if (Mouse1 == 0)
-                        {
-                            //Hover
-                        }
-                        //if (LastUsedBlock != null)
-                        //{
-
-                        //    AM.Game._blockManager.Blocks[LastUsedBlock.ID].Update.Invoke(LastUsedBlock);
-                        //}
                     }
 
                 }
@@ -446,7 +447,7 @@ namespace MinecraftAlpha
 
             }
 
-           
+
 
         }
 
@@ -475,7 +476,7 @@ namespace MinecraftAlpha
             {
                 if (Name == "Crafting2x2")
                 {
-                    
+
                     foreach (CraftingRecipe Recipe in game._RecipeManager.Recipes)
                     {
                         if (Recipe.RecipeGrid.GetLength(0) == 2)
@@ -502,7 +503,7 @@ namespace MinecraftAlpha
 
                         }
                         //if (ItemSlots[4].Item != null) break;
-                        
+
 
                     }
                 }
@@ -573,13 +574,16 @@ namespace MinecraftAlpha
 
         public void TakeItem(int Amount, UserInterfaceManager UI)
         {
-            
+
             if (Amount == -1)
             {
                 Amount = Count;
             }
+
+            if (Count < Amount) return;
+
             UI.selectedItem = Item;
-            UI.amount = Amount;
+            UI.amount += Amount;
             this.Count -= Amount;
             if (this.Count == 0)
             {
@@ -601,7 +605,7 @@ namespace MinecraftAlpha
 
         public void AddItem(int Amount, UserInterfaceManager UI)
         {
-            
+
             if (Amount == -1)
             {
                 Amount = UI.amount;
@@ -627,7 +631,7 @@ namespace MinecraftAlpha
             Spritebatch.Draw(Texture, new Rectangle((int)SlotPos.X, (int)SlotPos.Y, 32, 32), Color.White);
             if (Item != null)
             {
-                if(Item.Item)
+                if (Item.Item)
                 {
                     game.items.DrawItem(Spritebatch, SlotPos + Vector2.One * 4, Item.ItemID, 1.5f);
                 }
@@ -635,7 +639,7 @@ namespace MinecraftAlpha
                 {
                     Spritebatch.Draw(Item.Texture, SlotPos + Vector2.One * 4, null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
                 }
-                
+
 
             }
             if (Count > 1)
@@ -664,7 +668,7 @@ namespace MinecraftAlpha
 
         public bool IsInBounds(Vector2 Pos)
         {
-            Vector2 position = this.position + Position - Scale/2;
+            Vector2 position = this.position + Position - Scale / 2;
             if (Pos.X >= position.X && Pos.X <= position.X + Scale.X)
                 if (Pos.Y > position.Y && Pos.Y <= position.Y + Scale.Y)
                 {
@@ -677,7 +681,7 @@ namespace MinecraftAlpha
 
         public void Render(SpriteBatch Spritebatch)
         {
-            
+
             if (Background == null) return;
             var color = Color.White;
             if (Hovered) color = Color.CornflowerBlue;
@@ -698,8 +702,8 @@ namespace MinecraftAlpha
         public void Render(SpriteBatch sb)
         {
             int l = Text.Length;
-            Vector2 Position = this.position + this.Position - new Vector2(l/2*9,6);
-            sb.DrawString(font,Text, Position, Color);
+            Vector2 Position = this.position + this.Position - new Vector2(l / 2 * 9, 6);
+            sb.DrawString(font, Text, Position, Color);
         }
 
     }
@@ -737,12 +741,12 @@ namespace MinecraftAlpha
         }
         public void Render(SpriteBatch Spritebatch)
         {
-            
+
             Vector2 Size = this.Size;
             Color color = Color.White;
             if (button != null)
             {
-                Size = button.Scale/4;
+                Size = button.Scale / 4;
                 if (button.Hovered)
                 {
                     color = Color.Gray;
@@ -753,7 +757,7 @@ namespace MinecraftAlpha
             int Ty = Window.Height;
             int Cx = (int)CornerSize.X;
             int Cy = (int)CornerSize.Y;
-            
+
 
 
             Rectangle[] Corners = {
@@ -763,7 +767,7 @@ namespace MinecraftAlpha
                 new Rectangle(0,Ty-Cy,Cx,Cy),
                 new Rectangle(Tx-Cx,Ty-Cy,Cx,Cy),
             };
-            Vector2 position = this.position + this.Position - Size*2;
+            Vector2 position = this.position + this.Position - Size * 2;
 
 
             //Spritebatch.Draw(Window, Position, Background, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 1f);
@@ -773,7 +777,7 @@ namespace MinecraftAlpha
             Spritebatch.Draw(Window, position + new Vector2(0, Size.Y + CornerSize.Y), Corners[2], color, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
             Spritebatch.Draw(Window, position + new Vector2(Size.X + CornerSize.X, Size.Y + CornerSize.Y), Corners[3], color, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
 
-            
+
 
 
         }
