@@ -15,7 +15,7 @@ namespace MinecraftAlpha
 
         public bool Placable = true;
 
-        public bool Item = false; 
+        public bool Item = false;
         public float UseTime = 0.5f; // Time taken to use/interact with the block
 
         public Block ItemDrop = null;
@@ -91,13 +91,13 @@ namespace MinecraftAlpha
         }
         public void LoadActions()
         {
-            
+
             getBlock("Apple").Interaction = (Pos) =>
             {
                 // Heal Player
                 Game.Player.Plr.Health += 3;
                 // Consume the apple
-                
+
                 if (Game.Player.Plr.Health > Game.Player.Plr.MaxHealth)
                 {
                     Game.Player.Plr.Health = Game.Player.Plr.MaxHealth;
@@ -111,8 +111,8 @@ namespace MinecraftAlpha
 
             getBlock("Tnt block").Interaction = (Pos) =>
             {
-                
-                
+
+
             };
             getBlock("Chest").Interaction = (Pos) =>
             {
@@ -155,11 +155,50 @@ namespace MinecraftAlpha
             getBlock("Crafting Table").Interaction = (Pos) =>
             {
 
-                var Window = Game._userInterfaceManager.windows[2];
+                var Window = Game._userInterfaceManager.windows[4];
                 Window.Visible = !Window.Visible;
 
             };
-            
+            //getBlock("Crafting Table").Update = (Pos) =>
+            //{
+
+            //    var Window = Game._userInterfaceManager.windows[4];
+            //    var ItemSlots = Window.ItemSlots;
+            //    foreach (CraftingRecipe Recipe in Game._RecipeManager.Recipes)
+            //    {
+
+            //        if (Recipe.RecipeGrid.GetLength(0) == 3)
+            //        {
+            //            if (Recipe.CheckRecipe(new ItemSlot[,]
+            //        {
+            //                { ItemSlots[0], ItemSlots[1],ItemSlots[2] },
+            //                { ItemSlots[3], ItemSlots[4],ItemSlots[5] },
+            //                { ItemSlots[6], ItemSlots[7],ItemSlots[8] },
+            //        }))
+            //            {
+            //                ItemSlots[9].Item = Recipe.item.Item;
+            //                ItemSlots[9].Count = Recipe.item.Count;
+            //                break;
+
+            //            }
+            //            else
+            //            {
+            //                ItemSlots[9].Count = 0;
+            //                ItemSlots[9].Item = null;
+            //            }
+            //        }
+            //        else
+            //        {
+
+            //        }
+            //        //if (ItemSlots[4].Item != null) break;
+
+
+            //    }
+
+
+            //};
+
 
         }
 
@@ -293,7 +332,7 @@ namespace MinecraftAlpha
     {
         public Texture2D Atlas;
         public int itemSize = 16; // Size of each item in the atlas
-        
+
 
         public void DrawItem(SpriteBatch _spriteBatch, Vector2 position, int itemID, float scale)
         {
@@ -316,7 +355,7 @@ namespace MinecraftAlpha
             int column = itemID % itemsPerRow;
 
             return new Rectangle(column * itemSize, row * itemSize, itemSize, itemSize);
-           
+
         }
 
     }

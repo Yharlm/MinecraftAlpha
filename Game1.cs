@@ -4,10 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using static System.Net.Mime.MediaTypeNames;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -26,7 +23,7 @@ public class Game1 : Game
     public ParticleSystem _particleSystem = new();
     public RecipeManager _RecipeManager = new();
     public InputManager _inputManager = new();
-    
+
 
     public Effect Shader;
 
@@ -35,7 +32,7 @@ public class Game1 : Game
 
     public Texture2D BreakTexture;
     public SpriteFont font;
-    
+
     public Player Player;
     public bool DebugMode = false;
 
@@ -131,14 +128,14 @@ public class Game1 : Game
         windowWidth = GraphicsDevice.Viewport.Width;
         windowHeight = GraphicsDevice.Viewport.Height;
         _entityManager.game = this;
-        Player = new Player() { game = this};
+        Player = new Player() { game = this };
         Random random = new Random();
         _particleSystem.Content = Content;
 
 
 
 
-       
+
 
         foreach (Chunk c in Chunks)
         {
@@ -311,7 +308,7 @@ public class Game1 : Game
 
         foreach (var block in _blockManager.Blocks)
         {
-            if(block.TexturePath == "_item") continue;
+            if (block.TexturePath == "_item") continue;
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
 
@@ -362,8 +359,8 @@ public class Game1 : Game
 
         _userInterfaceManager.LoadGUI();
 
-        
-        for(int i = 1; i < _blockManager.Blocks.Count; i++)
+
+        for (int i = 1; i < _blockManager.Blocks.Count; i++)
         {
             _userInterfaceManager.windows[0].ItemSlots[i].Item = _blockManager.Blocks[i];
             _userInterfaceManager.windows[0].ItemSlots[i].Count = 64;
@@ -441,7 +438,7 @@ public class Game1 : Game
         }
     }
     public bool Clicked = false;
-    
+
     protected override void Update(GameTime gameTime)
     {
         // block drop testing remove later
@@ -461,7 +458,7 @@ public class Game1 : Game
         //}
 
 
-        
+
         MouseClick = 0;
         if (Mouse.GetState().LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Released && Clicked)
         {
@@ -487,7 +484,7 @@ public class Game1 : Game
             MouseClick = 2;
             Clicked = true;
         }
-        
+
 
 
 
@@ -495,8 +492,8 @@ public class Game1 : Game
 
         MousePosition = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
         _userInterfaceManager.MouseAction(MousePosition, _actionManager, MouseClick);
-        
-        
+
+
 
 
         if (!GameStarted)
@@ -505,7 +502,7 @@ public class Game1 : Game
         }
         _userInterfaceManager.windows[3].Visible = false;
 
-        if(Player.Plr.Health <= 0)
+        if (Player.Plr.Health <= 0)
         {
             Player.Respawn();
         }
@@ -524,10 +521,10 @@ public class Game1 : Game
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-        
 
-        
-        
+
+
+
         float Time = 1f;
         if (Daytime <= 12)
         {
@@ -547,9 +544,9 @@ public class Game1 : Game
 
 
 
-        Player.cam.position = -Player.Plr.position * BlockSize + new Vector2(windowWidth,windowHeight)/2;
+        Player.cam.position = -Player.Plr.position * BlockSize + new Vector2(windowWidth, windowHeight) / 2;
         base.Update(gameTime);
-        
+
 
         WorldMousePos = (MousePosition - Player.cam.position) / BlockSize;
 
@@ -578,19 +575,19 @@ public class Game1 : Game
             entity.Lifetime += 0.1f;
             if (entity.position.Y > 600)
             {
-                entity.TakeDamage(null, 5,0);
+                entity.TakeDamage(null, 5, 0);
             }
 
 
             entity.Grounded = true;
             if (entity.velocity.velocity.Y > 6f)
             {
-                entity.Fall_damage = (int)(entity.velocity.velocity.Y)-7;
+                entity.Fall_damage = (int)(entity.velocity.velocity.Y) - 7;
             }
 
             if (entity.collisionBox.Bottom && !entity.velocity.flying)
             {
-                entity.TakeDamage(null, entity.Fall_damage,0);
+                entity.TakeDamage(null, entity.Fall_damage, 0);
                 entity.Fall_damage = 0;
                 entity.Grounded = false;
             }
@@ -603,7 +600,7 @@ public class Game1 : Game
                 }
             }
 
-            
+
 
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             entity.collisionBox.UpdateCollision(entity, Chunks, this);
@@ -630,9 +627,9 @@ public class Game1 : Game
             {
                 _entityAnimationService.Stop(1, entity);
             }
-            
 
-            
+
+
 
 
 
@@ -641,7 +638,7 @@ public class Game1 : Game
             {
                 _entityManager.Die(entity, ItemList);
             }
-            
+
 
             // Example gravity, can be replaced with actual logic
 
@@ -660,7 +657,7 @@ public class Game1 : Game
 
     int HotbarIndex;
 
-    
+
 
     public int MouseClick = 0;
     public void Input(GameTime time)
@@ -673,10 +670,10 @@ public class Game1 : Game
 
 
         Vector2 plrVel = Vector2.Zero;
-        
+
         float zoomScale = 0.3f;
         var keyboardState = Keyboard.GetState();
-        
+
 
         bool Front = false;
         bool Back = false;
@@ -684,9 +681,9 @@ public class Game1 : Game
         foreach (var key in keyboard)
         {
 
-            
-            
-            
+
+
+
             if (key == Keys.S)
             {
                 Front = true;
@@ -715,7 +712,7 @@ public class Game1 : Game
             }
             if (key == Keys.LeftShift)
             {
-                
+
                 PLR.velocity.velocity += new Vector2(0, +2);
             }
             if (key == Keys.A)
@@ -739,7 +736,7 @@ public class Game1 : Game
                 {
                     PLR.velocity.velocity += new Vector2(0, -2);
                 }
-                    jump = true;
+                jump = true;
             }
 
             if (key == Keys.X)
@@ -756,17 +753,17 @@ public class Game1 : Game
                 Generation.GenerateChunk(WorldMousePos, Chunks);
 
             }
-            
+
             if (key == Keys.LeftControl)
             {
 
-                _entityManager.Attract(30,WorldMousePos);
+                _entityManager.Attract(30, WorldMousePos);
 
             }
             if (key == Keys.Q)
             {
                 Player.DropItem(_userInterfaceManager.selectedItem, (new Vector3(Player.Plr.position, Player.Plr.Layer)), WorldMousePos, 1);
-                if(!creativeMode)
+                if (!creativeMode)
                 {
                     _userInterfaceManager.amount -= 1;
                     if (_userInterfaceManager.amount <= 0)
@@ -788,10 +785,10 @@ public class Game1 : Game
                     TextureName = "BlockMineEffect",
                     Texture = _particleSystem.sprites[0],
                     lifeTime = 0.5f,
-                    size = 1+(float)random.NextDouble(),
+                    size = 1 + (float)random.NextDouble(),
                     Color = Color.Red,
-                    Shift= new Vector4(-0.05f, 0.02f, 0.1f, 0f),
-                    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f)*2f,
+                    Shift = new Vector4(-0.05f, 0.02f, 0.1f, 0f),
+                    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f) * 2f,
 
 
 
@@ -803,8 +800,8 @@ public class Game1 : Game
                 _particleSystem.Particles.Add(part);
             }
         }
-        
-        if(_inputManager.IsKeyDown_Now(Keys.E))
+
+        if (_inputManager.IsKeyDown_Now(Keys.E))
         {
             _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
             _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
@@ -856,19 +853,22 @@ public class Game1 : Game
 
 
 
-
-        if (int.Abs(MouseClick) == 1)
+        if (!_userInterfaceManager.In_interface || true)
         {
 
-            var ent = Entity.GetentityAtPosition(WorldMousePos, _entityManager.Workspace);
-            if (ent != null)
-            {
-                PLR.Punch(ent, this);
-                return;
-            }
 
-            _entityAnimationService.Play(2, PLR);
-            //add a attack part here instead
+            if (int.Abs(MouseClick) == 1)
+            {
+
+                var ent = Entity.GetentityAtPosition(WorldMousePos, _entityManager.Workspace);
+                if (ent != null)
+                {
+                    PLR.Punch(ent, this);
+                    return;
+                }
+
+                _entityAnimationService.Play(2, PLR);
+                //add a attack part here instead
 
                 float TempLayer = PLR.Layer;
 
@@ -880,39 +880,39 @@ public class Game1 : Game
                 {
                     PLR.Layer -= 1;
                 }
-                _actionManager.BreakBlock(WorldMousePos,Player.Plr.Layer,0.5f); // When tools get added this will change
+                _actionManager.BreakBlock(WorldMousePos, Player.Plr.Layer, 0.5f); // When tools get added this will change
                 PLR.Layer = TempLayer;
-            
-
-        }
-        
-
-        if (MouseClick == 2)
-        {
-           
-            _actionManager.Interact(WorldMousePos);
 
 
-        }
-        if (int.Abs(MouseClick) == 2)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                //var part = new Particle()
-                //{
-                //    Position = WorldMousePos,
-                //    TextureName = "ParticleSmokeEffect",
-                //    lifeTime = (float)random.NextDouble()*2,
-                //    Color = Microsoft.Xna.Framework.Color.FromNonPremultiplied(
-                //        new Vector4((float)random.NextDouble(),2f,0f, 1)
-                //        ),
-                //    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
-
-                //};
-
-                //_particleSystem.Particles.Add(part);
             }
-            
+
+
+            if (MouseClick == 2)
+            {
+
+                _actionManager.Interact(WorldMousePos);
+
+
+            }
+            if (int.Abs(MouseClick) == 2)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    //var part = new Particle()
+                    //{
+                    //    Position = WorldMousePos,
+                    //    TextureName = "ParticleSmokeEffect",
+                    //    lifeTime = (float)random.NextDouble()*2,
+                    //    Color = Microsoft.Xna.Framework.Color.FromNonPremultiplied(
+                    //        new Vector4((float)random.NextDouble(),2f,0f, 1)
+                    //        ),
+                    //    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
+
+                    //};
+
+                    //_particleSystem.Particles.Add(part);
+                }
+
 
                 float TempLayer = PLR.Layer;
 
@@ -928,28 +928,28 @@ public class Game1 : Game
                 PLR.Layer = TempLayer;
 
 
-            
-        }
-        
 
-
-
-
-        if (TouchPanel.GetState().Count > 0)
-        {
-            var touch = TouchPanel.GetState()[0];
-            if (touch.State == TouchLocationState.Pressed || touch.State == TouchLocationState.Moved)
-            {
-                MousePosition = touch.Position.ToNumerics();
             }
+
+
+
+
+
+            if (TouchPanel.GetState().Count > 0)
+            {
+                var touch = TouchPanel.GetState()[0];
+                if (touch.State == TouchLocationState.Pressed || touch.State == TouchLocationState.Moved)
+                {
+                    MousePosition = touch.Position.ToNumerics();
+                }
+            }
+
+
+
+            //PLR.Animations[1].Paused = true;
+
+
         }
-
-
-
-        //PLR.Animations[1].Paused = true;
-
-
-
 
 
 
@@ -966,9 +966,9 @@ public class Game1 : Game
 
         // Get the center of the screen in screen coordinates
 
-        Vector2 screenCenter =Vector2.Zero;
+        Vector2 screenCenter = Vector2.Zero;
 
-        Player.Plr.WalkTo(plrVel,false); // Adjust speed as needed
+        Player.Plr.WalkTo(plrVel, false); // Adjust speed as needed
         if (jump)
         {
             PLR.Jump();
@@ -993,15 +993,15 @@ public class Game1 : Game
             BlockSize = oldBlockSize - zoomScale;
             Player.cam.position = screenCenter - worldPos * (oldBlockSize - zoomScale);
         }
-        
-        
+
+
         if (keyboardState.IsKeyDown(Keys.T))
         {
             //InventoryOpen = !InventoryOpen;
 
 
 
-            
+
         }
         if (keyboardState.IsKeyDown(Keys.H))
         {
@@ -1020,16 +1020,16 @@ public class Game1 : Game
 
 
         //New input
-        if(keyboardState.IsKeyDown(Keys.F11))
+        if (keyboardState.IsKeyDown(Keys.F11))
         {
-            
+
         }
 
 
 
-        
 
-        
+
+
 
 
 
@@ -1048,7 +1048,7 @@ public class Game1 : Game
     {
 
         // In your Draw() method, after setting up spriteBatch.Begin()
-        
+
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         //SunImage
@@ -1172,7 +1172,7 @@ public class Game1 : Game
             base.Draw(gameTime);
 
 
-            
+
 
 
 
@@ -1204,10 +1204,10 @@ public class Game1 : Game
 
         //test.Draw(_spriteBatch);
 
-        _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         for (int h = 0; h < Player.Plr.MaxHealth; h += 2)
         {
-            
+
             Player.DrawStats(_spriteBatch, Content.Load<Texture2D>("UIelements/Stats"), "heart.0", new Vector2(h * 20 + windowWidth / 2, windowHeight * 0.8f));
         }
 
@@ -1218,7 +1218,7 @@ public class Game1 : Game
             {
                 heartType = "heart.5";
             }
-            
+
             Player.DrawStats(_spriteBatch, Content.Load<Texture2D>("UIelements/Stats"), heartType, new Vector2(h * 20 + windowWidth / 2, windowHeight * 0.8f));
         }
         _spriteBatch.End();
@@ -1228,13 +1228,13 @@ public class Game1 : Game
     {
         DrawBlock(Tile, chunk, i, j, Z, layer, false);
     }
-    void DrawBlock(TileGrid Tile,Chunk chunk,int i,int j, float Z,float layer,bool Opaque)
+    void DrawBlock(TileGrid Tile, Chunk chunk, int i, int j, float Z, float layer, bool Opaque)
     {
         var block = _blockManager.Blocks[Tile.ID];
-        
+
         float Light = Tile.brightness;
         float Light01 = Light - 0.2f;
-        float a = Z /2 + 0.4f;
+        float a = Z / 2 + 0.4f;
         //var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) ;
         var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
 
@@ -1254,13 +1254,13 @@ public class Game1 : Game
 
         if (Opaque)
         {
-             Layer = Color.White * 0.2f;
+            Layer = Color.White * 0.2f;
         }
         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
-        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer+0.01f);
-        
+        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer + 0.01f);
+
     }
     // UI:
     // - SingleClick get stack

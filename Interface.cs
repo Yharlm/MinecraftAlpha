@@ -19,7 +19,7 @@ namespace MinecraftAlpha
         public List<Button> Buttons = new List<Button>();
         public List<ItemSlot> ItemSlots = new List<ItemSlot>();
         public List<UIFrame> Frames = new List<UIFrame>();
-
+        public bool In_interface = false;
 
 
         public TileGrid LastUsedBlock = null;
@@ -309,6 +309,7 @@ namespace MinecraftAlpha
                 Frames = new() { },
                 Buttons = new() { },
                 ItemSlots = new() { },
+                
             });
             for (int i = 0; i < 3; i++)
             {
@@ -321,7 +322,7 @@ namespace MinecraftAlpha
 
             }
             result = new()
-            { ItemPosition = new Vector2(32, 32) + new Vector2(140, 30), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = () => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
+            { ItemPosition = new Vector2(32, 32) + new Vector2(200, 60), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = () => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
             windows.Last().ItemSlots.Add(result);
 
 
@@ -345,8 +346,9 @@ namespace MinecraftAlpha
         }
         public void MouseAction(Vector2 Mouse, ActionManager AM, int Mouse1) // Mouse1 = 0 none, 1 left, 2 right
         {
-            bool In_interface = false;
-            
+            In_interface = false;
+
+
             foreach (var win in this.windows)
             {
 
@@ -430,12 +432,7 @@ namespace MinecraftAlpha
 
             }
 
-            if (!In_interface)
-            {
-                //windows.Find(x => x.Name == "Crafting").Visible = false;
-                //windows.Find(x => x.Name == "Chest").Visible = false;
-
-            }
+           
 
         }
 
@@ -493,6 +490,39 @@ namespace MinecraftAlpha
                         //if (ItemSlots[4].Item != null) break;
                         
 
+                    }
+                }
+                if (Name == "Crafting3x3")
+                {
+
+                    var ItemSlots = this.ItemSlots;
+                    foreach (CraftingRecipe Recipe in game._RecipeManager.Recipes)
+                    {
+
+                        if (Recipe.RecipeGrid.GetLength(0) == 3)
+                        {
+                            if (Recipe.CheckRecipe(new ItemSlot[,]
+                        {
+                            { ItemSlots[0], ItemSlots[1],ItemSlots[2] },
+                            { ItemSlots[3], ItemSlots[4],ItemSlots[5] },
+                            { ItemSlots[6], ItemSlots[7],ItemSlots[8] },
+                        }))
+                            {
+                                ItemSlots[9].Item = Recipe.item.Item;
+                                ItemSlots[9].Count = Recipe.item.Count;
+                                break;
+
+                            }
+                            else
+                            {
+                                ItemSlots[9].Count = 0;
+                                ItemSlots[9].Item = null;
+                            }
+                        }
+                        else
+                        {
+
+                        }
                     }
                 }
             }
