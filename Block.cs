@@ -13,18 +13,22 @@ namespace MinecraftAlpha
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public bool Placable = true;
-
-        public bool Item = false;
-        public float UseTime = 0.5f; // Time taken to use/interact with the block
-
         public Block ItemDrop = null;
-
-        public int ItemID = 0; // Id ot the item in atlas
 
         public bool Transparent = false;
 
         public int DefaultState = 0; // Default state of the block
+
+
+        //Tool stuff
+        public float Durrability = -1; // How much damage the block can take before breaking
+        public int ItemID = 0; // Id ot the item in atlas
+        public bool Placable = true;
+        public bool Item = false;
+        public int MineLevel = 0; // How fast the block can be mined
+        public int Damage = 2; // How fast the block can be mined
+        public float UseTime = 0.5f; // Time taken to use/interact with the block
+
 
         public Color Color = Color.White;
         public Texture2D Texture { get; set; }
@@ -66,6 +70,8 @@ namespace MinecraftAlpha
                 new Block { Name = "Tnt block", TexturePath = "tnt_side", Health = 2,Transparent = false},
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTime = 5},
                 new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
+                new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210},
+                new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202},
 
             };
 

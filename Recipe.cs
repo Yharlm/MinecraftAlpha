@@ -29,6 +29,9 @@ public class RecipeManager
                 { log, 0 },
                 { 0, 0 }} ,wood,4,blocksManager),
             new CraftingRecipe(new int[,] {
+                { wood, 0 },
+                { wood, 0 }} ,stick,4,blocksManager),
+            new CraftingRecipe(new int[,] {
                 { wood, wood },
                 { wood, wood }} ,CraftT,1,blocksManager),
             new CraftingRecipe(new int[,] {
