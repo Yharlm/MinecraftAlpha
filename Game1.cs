@@ -1165,10 +1165,13 @@ public class Game1 : Game
 
             //Player.cam.RenderLayer(_blockManager, _spriteBatch, Foreground, 0f, Player.Plr.position, BreakTexture);
             //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
-            foreach (var P in _particleSystem.Particles)
+            if(_particleSystem.Particles.Count> 400)
             {
+                foreach (var P in _particleSystem.Particles)
+                {
 
-                P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
+                    P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
+                }
             }
             base.Draw(gameTime);
 

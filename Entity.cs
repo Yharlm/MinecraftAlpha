@@ -198,7 +198,9 @@ namespace MinecraftAlpha
         public List<EntityAnimation> Animations = new List<EntityAnimation>();
         public bool paused = false;
         public bool Fliped = true;
-        public int gripIndex = 4;
+        public int gripIndex = -1;
+        public Vector2 GripOffset = Vector2.Zero;
+        public Block Item = null;
 
         //public List<PotionEffects> = new List<PotionEffects>()
         public string Data = ""; // armor, items, if Itemdrop ammount, 
@@ -275,7 +277,7 @@ namespace MinecraftAlpha
             if (B.ID == -1 && A.ID == -1) // ItemDrop
             {
 
-                if (A.IFrame >= 1f && B.IFrame >= 1f) return;
+                
                 var data = A.Data.Split(";");
                 int id = int.Parse(data[0]);
                 int amount = int.Parse(data[1]);

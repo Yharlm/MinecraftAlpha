@@ -134,6 +134,10 @@ namespace MinecraftAlpha
         {
             foreach (var entity in Workspace)
             {
+                //if (Workspace.Count > 200)
+                //{
+                //    continue;
+                //}
                 entity.DrawEntity(SB, Size, Pos, game);
             }
         }
@@ -143,8 +147,10 @@ namespace MinecraftAlpha
             int id = 0;
             List<Entity> Entities = new List<Entity>();
 
-            var Plr = new Entity(id++, "Player", "steve", 20)
+            var Plr = new Entity(id++, "Player", "Mobs/Skeleton", 20)
             {
+                gripIndex = 3,
+                GripOffset = new Vector2(4, 12f),
                 Ractangles = new List<Vector4>() // LimbShapes
                 {
                         // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
@@ -232,7 +238,9 @@ namespace MinecraftAlpha
             foreach (var entity in entities)
             {
                 entity.Sprites = Sprite.LoadSprites(entity);
+                
             }
+            
         }
 
         public void LoadJoints()

@@ -3,12 +3,17 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
 using System.Reflection.Emit;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using static System.Formats.Asn1.AsnWriter;
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace MinecraftAlpha
 {
@@ -23,7 +28,18 @@ namespace MinecraftAlpha
         public static void DebugPos(SpriteBatch sb, Vector2 pos, Game1 game)
         {
             if (!game.DebugMode) return;
-            sb.Draw(game._blockManager.Blocks[2].Texture,new Rectangle((int)pos.X, (int)pos.Y,10,10),Color.Red);
+            
+            sb.Draw(
+                game._blockManager.Blocks[2].Texture,
+                pos,
+                null,
+                Color.Red,
+                0f, // Orientation
+                Vector2.Zero, //
+                0.2f,
+                SpriteEffects.None,
+                1
+                );
         }
         public static void DebugPosWOrld(SpriteBatch sb, Vector2 pos, Game1 game)
         {
