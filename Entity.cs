@@ -277,7 +277,7 @@ namespace MinecraftAlpha
             if (B.ID == -1 && A.ID == -1) // ItemDrop
             {
 
-                
+                if (A.IFrame >= 1f) return;
                 var data = A.Data.Split(";");
                 int id = int.Parse(data[0]);
                 int amount = int.Parse(data[1]);
@@ -363,7 +363,7 @@ namespace MinecraftAlpha
             foreach (Sprite s in Sprites)
             {
                 int i = Sprites.IndexOf(s);
-                s.DrawSprite(game1, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, float.Floor(Layer), (IFrame > 0));
+                s.DrawSprite(game1, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, float.Floor(Layer), (IFrame > 0),this);
 
             }
             if (game1.DebugMode) SB.DrawString(game1.Content.Load<SpriteFont>("Font"), $"{Health}/{MaxHealth}", BlockSize * position + Cam - new Vector2(4, 80), Color.Red);

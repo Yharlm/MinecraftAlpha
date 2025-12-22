@@ -653,6 +653,7 @@ public class Game1 : Game
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
         }
+        Player.Update();
     }
 
     int HotbarIndex;
@@ -881,7 +882,23 @@ public class Game1 : Game
                 {
                     PLR.Layer -= 1;
                 }
-                _actionManager.BreakBlock(WorldMousePos, Player.Plr.Layer, 0.5f); // When tools get added this will change
+
+                float Damage = 0.3f;
+                if(PLR.Item != null)
+                {
+                    if (PLR.Item.Item)
+                    {
+                        Damage = PLR.Item.Damage;
+                    }
+                }
+                
+                
+
+
+
+
+
+                _actionManager.BreakBlock(WorldMousePos, Player.Plr.Layer, Damage); // When tools get added this will change
                 PLR.Layer = TempLayer;
 
 
@@ -925,7 +942,7 @@ public class Game1 : Game
                 {
                     PLR.Layer -= 1;
                 }
-                _actionManager.PlaceBlock(WorldMousePos, _userInterfaceManager.selectedItem);
+                _actionManager.PlaceBlock(WorldMousePos, PLR.Item);
                 PLR.Layer = TempLayer;
 
 
@@ -1165,14 +1182,13 @@ public class Game1 : Game
 
             //Player.cam.RenderLayer(_blockManager, _spriteBatch, Foreground, 0f, Player.Plr.position, BreakTexture);
             //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
-            if(_particleSystem.Particles.Count> 400)
-            {
+            
                 foreach (var P in _particleSystem.Particles)
                 {
 
                     P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
                 }
-            }
+            
             base.Draw(gameTime);
 
 

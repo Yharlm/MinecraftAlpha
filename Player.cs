@@ -92,6 +92,11 @@ namespace MinecraftAlpha
 
 
         }
+
+        public void Update()
+        {
+            Plr.Item = game._userInterfaceManager.selectedItem;
+        }
     }
 
     

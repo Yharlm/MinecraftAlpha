@@ -144,6 +144,8 @@ namespace MinecraftAlpha
             }
 
 
+
+
             //Game.World[(int)WorldPos.Y,(int)WorldPos.X].ID = 0;
             TileGrid Tile = BlockManager.GetLastBlockAtPos(Pos, Game.Chunks);
             if (Tile == null) return;
@@ -160,6 +162,11 @@ namespace MinecraftAlpha
 
         public void DeleteBlocksSphere(Vector2 Pos,float Z, float radius)
         {
+
+
+
+
+
             float radiusSquared = radius * radius;
 
             // Determine the bounding box to minimize iterations
@@ -193,6 +200,13 @@ namespace MinecraftAlpha
         }
         public void BreakBlock(Vector2 Pos,float Z,float Dmg)
         {
+
+            
+
+
+
+
+
             int Zindex = (int)Z;
             var Tile = BlockManager.GetBlockAtPos(Pos, Zindex, Game.Chunks);
             if (Tile == null) { return; }
@@ -269,6 +283,7 @@ namespace MinecraftAlpha
                 else drop =Game._entityManager.SpawnItem(pos,Zindex,block);
                 if(drop != null)
                 {
+                    drop.IFrame = 0.1f;
                     Game._entityManager.Workspace.Add(drop);
                 }
                

@@ -234,7 +234,7 @@ namespace MinecraftAlpha
 
 
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
-        public void DrawSprite(Game1 game1, Vector2 Pos, float size, float Rotation, bool Flip, float Z, float Shadow, bool Iframe) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
+        public void DrawSprite(Game1 game1, Vector2 Pos, float size, float Rotation, bool Flip, float Z, float Shadow, bool Iframe,Entity mob) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
 
         {
 
@@ -275,7 +275,7 @@ namespace MinecraftAlpha
                 Z - 0.01f
                 );
 
-            if (isGrip && game1._userInterfaceManager.selectedItem != null)
+            if (isGrip && mob.Item != null)
             {
 
 
@@ -288,7 +288,7 @@ namespace MinecraftAlpha
                 }
 
                 attachmentPos = Vector2.Transform(Offset, AnglePos);
-                var item = game1._userInterfaceManager.selectedItem;
+                var item = mob.Item;
                 if (item.Item)
                 {
                     spriteBatch.Draw(

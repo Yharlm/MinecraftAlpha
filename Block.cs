@@ -10,6 +10,7 @@ namespace MinecraftAlpha
     {
         public int ID = 0;
         public float Health = 30;
+        public string Tag = "";
         public string Name { get; set; }
         public string Description { get; set; }
 
@@ -26,7 +27,7 @@ namespace MinecraftAlpha
         public bool Placable = true;
         public bool Item = false;
         public int MineLevel = 0; // How fast the block can be mined
-        public int Damage = 2; // How fast the block can be mined
+        public float Damage = 2; // How fast the block can be mined
         public float UseTime = 0.5f; // Time taken to use/interact with the block
 
 
@@ -57,7 +58,7 @@ namespace MinecraftAlpha
             {
 
                 new Block { Name = "Air", TexturePath = "air" ,Health = 1000},
-                new Block { Name = "Dirt", TexturePath = "dirt",Health = 30 },
+                new Block { Name = "Dirt", TexturePath = "dirt",Health = 30, Tag="dirt"},
                 new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
                 new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
@@ -70,8 +71,11 @@ namespace MinecraftAlpha
                 new Block { Name = "Tnt block", TexturePath = "tnt_side", Health = 2,Transparent = false},
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTime = 5},
                 new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
-                new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210},
-                new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202},
+                new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.4f,Tag="Pickaxe",MineLevel = 1},
+                new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 0.6f,Tag="Pickaxe",MineLevel = 2},
+                new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
+                new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.8f,Tag="Pickaxe",MineLevel = 4},
+                new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 3f,Tag="Bow"},
 
             };
 
@@ -97,6 +101,13 @@ namespace MinecraftAlpha
         }
         public void LoadActions()
         {
+
+            getBlock("Bow").Interaction = (Pos) =>
+            {
+                
+               
+
+            };
 
             getBlock("Apple").Interaction = (Pos) =>
             {
