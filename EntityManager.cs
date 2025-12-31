@@ -34,12 +34,17 @@ namespace MinecraftAlpha
             Random random = new Random();
             foreach (var entity in Workspace)
             {
-                if (entity == game.Player.Plr) continue;
-                if (Vector2.Distance(entity.position, position) < r)
+                if (entity.ID <= -1)
                 {
-                    Vector2 direction = position - entity.position;
-                    entity.velocity.velocity += (direction + Vector2.UnitY) * 1 + new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f) * 3; // Adjust the multiplier for speed
-                    entity.velocity.Gravity = 0;
+
+
+                    if (entity == game.Player.Plr) continue;
+                    if (Vector2.Distance(entity.position, position) < r)
+                    {
+                        Vector2 direction = position - entity.position;
+                        entity.velocity.velocity += (direction + Vector2.UnitY) * 1 + new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f) * 3; // Adjust the multiplier for speed
+                        entity.velocity.Gravity = 0;
+                    }
                 }
             }
         }
@@ -110,6 +115,7 @@ namespace MinecraftAlpha
         public void Die(Entity entity, List<Entity> list)
         {
             Random random = new Random();
+            if (entity.ID <= -1) return; // Lol no ur an object
             for (int i = 0; i < 7; i++)
             {
                 var part = new Particle()
@@ -147,7 +153,7 @@ namespace MinecraftAlpha
             int id = 0;
             List<Entity> Entities = new List<Entity>();
 
-            var Plr = new Entity(id++, "Player", "Mobs/Skeleton", 20)
+            var Plr = new Entity(id++, "Player", "Mobs/Steve", 20)
             {
                 gripIndex = 3,
                 GripOffset = new Vector2(4, 12f),
@@ -213,6 +219,7 @@ namespace MinecraftAlpha
                     EntityAnimationService.LoadAnimations()[2],
                 }
             };
+            Plr.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1.8f) };
             Plr.Texture = game1.Content.Load<Texture2D>(Plr.TextureName);
             Entities.Add(Plr);
 
@@ -222,6 +229,142 @@ namespace MinecraftAlpha
                 collisionBox = new CollisionBox() { Size = new Vector2(2f, 2f) },
             };
             Entities.Add(item);
+
+            var Zombie = new Entity(id++, "Player", "Mobs/Zombie", 20)
+            {
+                gripIndex = 3,
+                GripOffset = new Vector2(4, 12f),
+                Ractangles = new List<Vector4>() // LimbShapes
+                {
+                        // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
+
+                        new Vector4(12,8,4,12), // Right Arm
+                        new Vector4(24,8,4,12),// Body
+                        new Vector4(8,0,8,8), // Head
+                        new Vector4(12,12,4,12), // Left Arm
+                        new Vector4(12,44,4,12), // Right Leg
+                        new Vector4(12,32,4,12) // Left Leg
+                },
+                Joints = new List<Joint>()
+                {
+                    new Joint() //Head
+                    {
+                        A = new Vector2(0, 8f),
+                        B = new Vector2(0f, 2f),
+                        A_Index = 1,
+                        B_Index = 2,
+                    },
+
+                    new Joint()
+                    {
+                        orientation = 180f,
+                        A = new Vector2(0, 4f),
+                        B = new Vector2(0f, 4f),
+                        A_Index = 1,
+                        B_Index = 3
+                    },
+
+                    new Joint()
+                    {
+                        A = new Vector2(0, -8f),
+                        B = new Vector2(0f, -4f),
+                        A_Index = 1,
+                        B_Index = 5
+                    },
+
+                    new Joint()
+                    {
+                        orientation = 0,
+                        A = new Vector2(0, 4f),
+                        B = new Vector2(0f, -4f),
+                        A_Index = 1,
+                        B_Index = 0
+                    },
+
+                    new Joint()
+                    {
+                        A = new Vector2(0, -8f),
+                        B = new Vector2(0f, -4f),
+                        A_Index = 1,
+                        B_Index = 4
+                    },
+                },
+                Animations = new()
+                {
+                    EntityAnimationService.LoadAnimations()[0],
+                    EntityAnimationService.LoadAnimations()[1],
+                    EntityAnimationService.LoadAnimations()[2],
+                }
+            };
+            Zombie.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1.8f) };
+            Zombie.Texture = game1.Content.Load<Texture2D>(Zombie.TextureName);
+            Entities.Add(Zombie);
+            var Pig = new Entity(id++, "Player", "Mobs/Pig", 10)
+            {
+                gripIndex = 3,
+                GripOffset = new Vector2(4, 12f),
+                Ractangles = new List<Vector4>() // LimbShapes
+                {
+                        // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
+
+                        new Vector4(0,8,9,8), // Right Arm
+                },
+                Joints = new List<Joint>()
+                {
+                    new Joint() //Head
+                    {
+                        A = new Vector2(0, 8f),
+                        B = new Vector2(0f, 2f),
+                        A_Index = 1,
+                        B_Index = 2,
+                    },
+
+                    new Joint()
+                    {
+                        orientation = 180f,
+                        A = new Vector2(0, 4f),
+                        B = new Vector2(0f, 4f),
+                        A_Index = 1,
+                        B_Index = 3
+                    },
+
+                    new Joint()
+                    {
+                        A = new Vector2(0, -8f),
+                        B = new Vector2(0f, -4f),
+                        A_Index = 1,
+                        B_Index = 5
+                    },
+
+                    new Joint()
+                    {
+                        orientation = 0,
+                        A = new Vector2(0, 4f),
+                        B = new Vector2(0f, -4f),
+                        A_Index = 1,
+                        B_Index = 0
+                    },
+
+                    new Joint()
+                    {
+                        A = new Vector2(0, -8f),
+                        B = new Vector2(0f, -4f),
+                        A_Index = 1,
+                        B_Index = 4
+                    },
+                },
+                Animations = new()
+                {
+                    EntityAnimationService.LoadAnimations()[0],
+                    EntityAnimationService.LoadAnimations()[1],
+                    EntityAnimationService.LoadAnimations()[2],
+                }
+            };
+            Zombie.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1.8f) };
+            Zombie.Texture = game1.Content.Load<Texture2D>(Zombie.TextureName);
+            Entities.Add(Zombie);
+
+
 
             return Entities;
         }
@@ -238,9 +381,9 @@ namespace MinecraftAlpha
             foreach (var entity in entities)
             {
                 entity.Sprites = Sprite.LoadSprites(entity);
-                
+
             }
-            
+
         }
 
         public void LoadJoints()

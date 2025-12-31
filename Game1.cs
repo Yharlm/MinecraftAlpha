@@ -441,22 +441,7 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
-        // block drop testing remove later
-        //test.Update();
-
-        //for (int i = 0; i < World.GetLength(0); i++)
-        //{
-        //    for (int j = 0; j < World.GetLength(1); j++)
-        //    {
-        //        var grid = World[i, j];
-        //        Block block = BlockTypes[grid.ID];
-
-        //        block.Update(grid);
-
-
-        //    }
-        //}
-
+        
 
 
         MouseClick = 0;
@@ -571,6 +556,7 @@ public class Game1 : Game
         var ItemList = new List<Entity>();
         foreach (var entity in _entityManager.Workspace)
         {
+            if (entity.Health <= 0) continue;
             //entity.collisionBox.CheckCollision(entity,World);
             entity.Lifetime += 0.1f;
             if (entity.position.Y > 600)
@@ -593,6 +579,7 @@ public class Game1 : Game
             }
             foreach (Entity entity1 in _entityManager.Workspace)
             {
+                if (entity1.Health <= 0) continue;
                 if (entity == entity1) continue;
                 if (entity1.CheckCollisionEntity(entity))
                 {
@@ -1023,7 +1010,7 @@ public class Game1 : Game
         }
         if (keyboardState.IsKeyDown(Keys.H))
         {
-            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[0], WorldMousePos));
+            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[3], WorldMousePos));
             _entityManager.Workspace.Last().Speed = 0.6f;
         }
         if (keyboardState.IsKeyDown(Keys.B))

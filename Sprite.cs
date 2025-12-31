@@ -278,7 +278,7 @@ namespace MinecraftAlpha
             if (isGrip && mob.Item != null)
             {
 
-
+                var item = mob.Item;
                 float rotation = MathF.PI * (-45 + 90 * 3) / 180;
                 Vector2 Offset = new Vector2(-13, -2);
                 if (Flip)
@@ -288,7 +288,7 @@ namespace MinecraftAlpha
                 }
 
                 attachmentPos = Vector2.Transform(Offset, AnglePos);
-                var item = mob.Item;
+                
                 if (item.Item)
                 {
                     spriteBatch.Draw(

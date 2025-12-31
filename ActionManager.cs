@@ -66,8 +66,11 @@ namespace MinecraftAlpha
                     Game._userInterfaceManager.itemUsetimer += 0.1f;
                     return; }
                 Game._userInterfaceManager.itemUsetimer = 0f;
-                block.Interaction.Invoke(null);
-                Game._userInterfaceManager.amount -= 1;
+                block.Interaction.Invoke(null,Game.Player.Plr);
+                if (!Game.creativeMode)
+                {
+                    Game._userInterfaceManager.amount -= 1;
+                }
                 if (Game._userInterfaceManager.amount <= 0)
                 {
                     Game._userInterfaceManager.selectedItem = null;
@@ -153,7 +156,7 @@ namespace MinecraftAlpha
             if (block.Interaction != null)
             {
 
-                block.Interaction.Invoke(Tile);
+                block.Interaction.Invoke(Tile, Game.Player.Plr);
                 Game._userInterfaceManager.LastUsedBlock = Tile;
 
             }

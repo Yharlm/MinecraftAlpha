@@ -29,13 +29,14 @@ namespace MinecraftAlpha
         public int MineLevel = 0; // How fast the block can be mined
         public float Damage = 2; // How fast the block can be mined
         public float UseTime = 0.5f; // Time taken to use/interact with the block
+        public float Grip = 0f;
 
 
         public Color Color = Color.White;
         public Texture2D Texture { get; set; }
         public string TexturePath { get; set; }
 
-        public Action<TileGrid> Interaction = null;
+        public Action<TileGrid,Entity> Interaction = null;
         public Action<TileGrid> Update = (Grid) => { };
         public Action<TileGrid> OnCollide = (Grid) => { };
     }
@@ -75,7 +76,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 0.6f,Tag="Pickaxe",MineLevel = 2},
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
                 new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.8f,Tag="Pickaxe",MineLevel = 4},
-                new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 3f,Tag="Bow"},
+                new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 36,Damage = 3f,Tag="Bow",Grip = 90f},
 
             };
 
@@ -102,14 +103,20 @@ namespace MinecraftAlpha
         public void LoadActions()
         {
 
-            getBlock("Bow").Interaction = (Pos) =>
+            getBlock("Bow").Interaction = (Pos, ent) =>
             {
-                
+                Entity Arrow = new Entity(-3,"Arrow", "_projectile", 3) { Texture = Game.Content.Load<Texture2D>("Projectiles/Arrow"), };
+                Arrow.collisionBox = new CollisionBox() { Size = new Vector2(0.5f) };
+                Arrow.position = Game.Player.Plr.position;
+                Arrow.Mass = 0.4f;
+                Arrow.velocity.velocity = Vector2.Normalize(Game.WorldMousePos - Game.Player.Plr.position)*46;
+                Arrow.Target = ent;
+                Game._entityManager.Workspace.Add(Arrow);
                
 
             };
 
-            getBlock("Apple").Interaction = (Pos) =>
+            getBlock("Apple").Interaction = (Pos,ent) =>
             {
                 // Heal Player
                 Game.Player.Plr.Health += 3;
@@ -126,12 +133,12 @@ namespace MinecraftAlpha
             getBlock("Leaves").ItemDrop = getBlock("Air");
             getBlock("Grass").ItemDrop = getBlock("Dirt");
 
-            getBlock("Tnt block").Interaction = (Pos) =>
+            getBlock("Tnt block").Interaction = (Pos, user) =>
             {
 
 
             };
-            getBlock("Chest").Interaction = (Pos) =>
+            getBlock("Chest").Interaction = (Pos, user) =>
             {
 
                 string Items = Pos.Data;
@@ -169,7 +176,7 @@ namespace MinecraftAlpha
 
 
             };
-            getBlock("Crafting Table").Interaction = (Pos) =>
+            getBlock("Crafting Table").Interaction = (Pos, user) =>
             {
 
                 var Window = Game._userInterfaceManager.windows[4];

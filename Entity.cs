@@ -57,7 +57,7 @@ namespace MinecraftAlpha
             //{
             //    return; // Skip if the entity is out of bounds
             //}
-            entity.collisionBox = new CollisionBox(); // Reset collision box for each update
+            entity.collisionBox = new CollisionBox() { Size = Size}; // Reset collision box for each update
             //float Collision_quality = 0.5f;
             //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
 
@@ -232,7 +232,7 @@ namespace MinecraftAlpha
         public Velocity velocity = new Velocity();
         public int Fall_damage = 0;
         public float Mass = 1f;
-        public float IFrame = 20f; // Invincibility Frames
+        public float IFrame = 4f; // Invincibility Frames
         public bool CanDamage = true;
         public float Layer = 8;
 
@@ -267,7 +267,7 @@ namespace MinecraftAlpha
                 int id = int.Parse(data[0]);
                 int amount = int.Parse(data[1]);
 
-                
+
 
 
                 game1.Player.PickupItem(game1._blockManager.Blocks[id], amount, game1._userInterfaceManager.windows[0]);
@@ -288,6 +288,15 @@ namespace MinecraftAlpha
                 A.Data = $"{id};{amount + int.Parse(B.Data.Split(";")[1])}";
                 B.Data = $"{id};{0}";
                 B.Health = 0;
+
+            }
+
+            if (A.ID == -3 && B.ID != -3 && A.Target != B)
+            {
+
+                if (A.IFrame >= 0f) return;
+                B.TakeDamage(A, (int)(A.velocity.velocity.X+ A.velocity.velocity.Y)/3, 2);
+                A.Health = 0;
 
             }
 
@@ -326,6 +335,25 @@ namespace MinecraftAlpha
             //SB.Draw(Texture, BlockSize * position + Cam, null, Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize SpriteEffects.None, 0f);
             //SB.End();
 
+            if (this.TextureName == "_projectile")
+            {
+                float angle = MathF.Atan2(velocity.velocity.Y, velocity.velocity.X);
+
+
+                SB.Draw(
+                               Texture,
+                               BlockSize * position + Cam,
+                               null,
+                               Color.White,
+                               angle, // Orientation
+                               Vector2.Zero, //
+                               BlockSize / 18,
+                               SpriteEffects.FlipHorizontally,
+                               1f
+                               );
+            }
+
+
             if (this.Model3D != null || name == "item")
             {
                 if (name == "item")
@@ -342,12 +370,12 @@ namespace MinecraftAlpha
                 this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, Vector2.Zero);
                 if (int.Parse(Data.Split(";")[1]) >= 10)
                 {
-                    this.Model3D.Draw(SB, BlockSize * position + Cam , BlockSize / 18, new Vector2(1.8f, -0.2f));
-                    this.Model3D.Draw(SB, BlockSize *position +  Cam , BlockSize / 18, new Vector2(1f, -0.3f));
-                    this.Model3D.Draw(SB, BlockSize *position  + Cam , BlockSize / 18, new Vector2(-1.2f, 0.6f));
-                    this.Model3D.Draw(SB, BlockSize *position + Cam , BlockSize / 18, new Vector2(0.4f, -0.2f));
+                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(1.8f, -0.2f));
+                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(1f, -0.3f));
+                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(-1.2f, 0.6f));
+                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(0.4f, -0.2f));
                 }
-                
+
                 return;
             }
 
@@ -363,7 +391,7 @@ namespace MinecraftAlpha
             foreach (Sprite s in Sprites)
             {
                 int i = Sprites.IndexOf(s);
-                s.DrawSprite(game1, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, float.Floor(Layer), (IFrame > 0),this);
+                s.DrawSprite(game1, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, float.Floor(Layer), (IFrame > 0), this);
 
             }
             if (game1.DebugMode) SB.DrawString(game1.Content.Load<SpriteFont>("Font"), $"{Health}/{MaxHealth}", BlockSize * position + Cam - new Vector2(4, 80), Color.Red);
@@ -505,6 +533,7 @@ namespace MinecraftAlpha
         public bool flying = false;
 
         public float Gravity = 0;
+        
         public Vector2 velocity = new(0, 0);
         public float Drag = 7f;
 
@@ -555,7 +584,7 @@ namespace MinecraftAlpha
             }
 
             entity.position += vel / 30;
-            velocity += new Vector2(0, Gravity * 2.25f);
+            velocity += new Vector2(0, Gravity * 2.25f) * entity.Mass;
         }
 
 
