@@ -37,7 +37,7 @@ namespace MinecraftAlpha
         }
         public void Play(int ID,Entity parent)
         {
-            if(parent.ID <= -1) return; // Lol no ur an object
+            if(parent.ID <= -1 || parent.Animations.Count <= ID) return; // Lol no ur an object
             var AnimEv = new AnimateEvent()
             {
                 parent = parent,
@@ -54,6 +54,17 @@ namespace MinecraftAlpha
             
 
 
+        }
+        public static EntityAnimation GetAnimation(string name)
+        {
+            foreach (var anim in LoadAnimations())
+            {
+                if (anim.name == name)
+                {
+                    return anim;
+                }
+            }
+            return null;
         }
         public static List<EntityAnimation> LoadAnimations()
         {
@@ -105,7 +116,18 @@ namespace MinecraftAlpha
                 {   duration =3f,
                     Looped = false,
                 },
+                new EntityAnimation(0,"pig_walk",new List<Frame>()
+                {
 
+                    new Frame(0,0f,2,180+60),
+                    new Frame(0,0f,2,180-60),
+
+
+
+                })
+                {   duration =0.2f,
+                    Looped = false,
+                },
 
 
             };

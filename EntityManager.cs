@@ -296,73 +296,77 @@ namespace MinecraftAlpha
                     EntityAnimationService.LoadAnimations()[2],
                 }
             };
-            Zombie.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1.8f) };
+            Zombie.collisionBox = new CollisionBox() { Size = new Vector2(1.6f, 0.2f) };
             Zombie.Texture = game1.Content.Load<Texture2D>(Zombie.TextureName);
             Entities.Add(Zombie);
-            var Pig = new Entity(id++, "Player", "Mobs/Pig", 10)
+            var Pig = new Entity(id++, "Pig", "Mobs/Pig", 10)
             {
-                gripIndex = 3,
+                gripIndex = -1,
                 GripOffset = new Vector2(4, 12f),
                 Ractangles = new List<Vector4>() // LimbShapes
                 {
                         // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
+                          
+                        /* 1,2
+                           3,4*/
 
-                        new Vector4(0,8,9,8), // Right Arm
+
+                        new Vector4(0,16,4,6), // Leg1
+                        new Vector4(0,16,4,6), // Leg2
+                        new Vector4(0,16,4,6), // Leg3
+                        new Vector4(0,16,4,6), // Leg4
+                        new Vector4(0,8,16,8), // Torso
+                        new Vector4(17,0,9,8), // Head
                 },
                 Joints = new List<Joint>()
                 {
-                    new Joint() //Head
+                    new Joint() //1
                     {
-                        A = new Vector2(0, 8f),
-                        B = new Vector2(0f, 2f),
-                        A_Index = 1,
+                        A = new Vector2(6f, -7f),
+                        B = new Vector2(0, 0),
+                        A_Index = 4,
+                        B_Index = 0,
+                    },
+                    new Joint() //2
+                    {
+                        A = new Vector2(6f, -7f),
+                        B = new Vector2(0, 0),
+                        A_Index = 4,
+                        B_Index = 1,
+                    },
+                    new Joint() //3
+                    {
+                        A = new Vector2(-6f, -7f),
+                        B = new Vector2(0, 0),
+                        A_Index = 4,
                         B_Index = 2,
                     },
-
-                    new Joint()
+                    new Joint() //4
                     {
-                        orientation = 180f,
-                        A = new Vector2(0, 4f),
-                        B = new Vector2(0f, 4f),
-                        A_Index = 1,
-                        B_Index = 3
+                        A = new Vector2(-6f, -7f),
+                        B = new Vector2(0, 0),
+                        A_Index = 4,
+                        B_Index = 3,
+                    },
+                    new Joint() //Head
+                    {
+                        A = new Vector2(-10, 2f),
+                        B = new Vector2(0f, 0f),
+                        A_Index = 4,
+                        B_Index = 5,
                     },
 
-                    new Joint()
-                    {
-                        A = new Vector2(0, -8f),
-                        B = new Vector2(0f, -4f),
-                        A_Index = 1,
-                        B_Index = 5
-                    },
-
-                    new Joint()
-                    {
-                        orientation = 0,
-                        A = new Vector2(0, 4f),
-                        B = new Vector2(0f, -4f),
-                        A_Index = 1,
-                        B_Index = 0
-                    },
-
-                    new Joint()
-                    {
-                        A = new Vector2(0, -8f),
-                        B = new Vector2(0f, -4f),
-                        A_Index = 1,
-                        B_Index = 4
-                    },
+                    
                 },
                 Animations = new()
                 {
-                    EntityAnimationService.LoadAnimations()[0],
-                    EntityAnimationService.LoadAnimations()[1],
-                    EntityAnimationService.LoadAnimations()[2],
+                    EntityAnimationService.GetAnimation("pig_walk"),
+                    EntityAnimationService.GetAnimation("pig_walk"),
                 }
             };
-            Zombie.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1.8f) };
-            Zombie.Texture = game1.Content.Load<Texture2D>(Zombie.TextureName);
-            Entities.Add(Zombie);
+            Pig.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1f) };
+            Pig.Texture = game1.Content.Load<Texture2D>(Pig.TextureName);
+            Entities.Add(Pig);
 
 
 

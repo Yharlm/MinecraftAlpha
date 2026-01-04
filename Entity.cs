@@ -57,7 +57,8 @@ namespace MinecraftAlpha
             //{
             //    return; // Skip if the entity is out of bounds
             //}
-            entity.collisionBox = new CollisionBox() { Size = Size}; // Reset collision box for each update
+            var old = Size;
+            entity.collisionBox = new CollisionBox() { Size = old }; // Reset collision box for each update
             //float Collision_quality = 0.5f;
             //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
 
@@ -77,7 +78,7 @@ namespace MinecraftAlpha
             //{
             //    entity.collisionBox.Right = true;
             //}
-            Vector2 Offset = new Vector2(Size.X / 2, 0);
+            Vector2 Offset = new Vector2(Size.X / 2, Size.Y / 2);
             Vector2 Bottom = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y) - Offset;
             Vector2 Left = entity.position + new Vector2(0, entity.collisionBox.Size.Y / 2f) - Offset;
             Vector2 Right = entity.position + new Vector2(entity.collisionBox.Size.X, entity.collisionBox.Size.Y / 2f) - Offset;
@@ -146,7 +147,7 @@ namespace MinecraftAlpha
                 Clone.Ractangles = Example.Ractangles;
                 Clone.position = Position;
                 //Clone.Joints = Example.Joints;
-                Clone.collisionBox = new CollisionBox();
+                Clone.collisionBox = new CollisionBox() { Size = Example.collisionBox.Size };
                 Clone.Animations = EntityAnimation.LoadAnimation(Clone, Example.Animations);
                 Clone.velocity = new Velocity();
                 Clone.Texture = Example.Texture;
@@ -218,7 +219,7 @@ namespace MinecraftAlpha
         public List<Vector4> Ractangles = new List<Vector4>();
         public List<Sprite> Sprites = new List<Sprite>();
         public Sprite3D Model3D = null;
-        public CollisionBox collisionBox = new CollisionBox();
+        public CollisionBox collisionBox;
 
 
         //public List<EntityAnimation> CurrentAnimations = new List<EntityAnimation>();
@@ -232,7 +233,7 @@ namespace MinecraftAlpha
         public Velocity velocity = new Velocity();
         public int Fall_damage = 0;
         public float Mass = 1f;
-        public float IFrame = 4f; // Invincibility Frames
+        public float IFrame = 0.1f; // Invincibility Frames
         public bool CanDamage = true;
         public float Layer = 8;
 
@@ -291,11 +292,11 @@ namespace MinecraftAlpha
 
             }
 
-            if (A.ID == -3 && B.ID != -3 && A.Target != B)
+            if (A.ID == -3 && B.ID != -3 && A.Target != B) //Arrow
             {
 
-                if (A.IFrame >= 0f) return;
-                B.TakeDamage(A, (int)(A.velocity.velocity.X+ A.velocity.velocity.Y)/3, 2);
+                //if (A.IFrame >= 0f) return;
+                B.TakeDamage(A, (int)(float.Abs(A.velocity.velocity.X)+ float.Abs(A.velocity.velocity.Y)) , 2);
                 A.Health = 0;
 
             }

@@ -166,10 +166,6 @@ namespace MinecraftAlpha
         public void DeleteBlocksSphere(Vector2 Pos,float Z, float radius)
         {
 
-
-
-
-
             float radiusSquared = radius * radius;
 
             // Determine the bounding box to minimize iterations
