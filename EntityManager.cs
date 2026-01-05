@@ -360,8 +360,8 @@ namespace MinecraftAlpha
                 },
                 Animations = new()
                 {
-                    EntityAnimationService.GetAnimation("pig_walk"),
-                    EntityAnimationService.GetAnimation("pig_walk"),
+                    EntityAnimationService.GetAnimation("idle",2),
+                    EntityAnimationService.GetAnimation("pig_walk",2),
                 }
             };
             Pig.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1f) };

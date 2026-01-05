@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using MinecraftAlpha;
-using System;
+﻿using MinecraftAlpha;
 using System.Collections.Generic;
 
 namespace MinecraftAlpha
@@ -9,7 +7,7 @@ namespace MinecraftAlpha
     {
         public Entity parent;
         public int id;
-        
+
     }
 
     public class EntityAnimationService()
@@ -25,7 +23,7 @@ namespace MinecraftAlpha
                 id = ID
 
             };
-            
+
             if (!entityAnimations.Contains(AnimEv))
             {
                 entityAnimations.Remove(AnimEv);
@@ -35,9 +33,9 @@ namespace MinecraftAlpha
 
 
         }
-        public void Play(int ID,Entity parent)
+        public void Play(int ID, Entity parent)
         {
-            if(parent.ID <= -1 || parent.Animations.Count <= ID) return; // Lol no ur an object
+            if (parent.ID <= -1 || ID > parent.Animations.Count - 1) return; // Lol no ur an object
             var AnimEv = new AnimateEvent()
             {
                 parent = parent,
@@ -50,16 +48,16 @@ namespace MinecraftAlpha
             {
                 entityAnimations.Add(AnimEv);
             }
-                
-            
+
+
 
 
         }
-        public static EntityAnimation GetAnimation(string name)
+        public static EntityAnimation GetAnimation(string name, int ID)
         {
             foreach (var anim in LoadAnimations())
             {
-                if (anim.name == name)
+                if (anim.name == name && ID == anim.ID)
                 {
                     return anim;
                 }
@@ -85,7 +83,7 @@ namespace MinecraftAlpha
                 {   duration =0.2f,
                     Looped = false,
                 },
-                
+
                 new EntityAnimation(0,"Running",new List<Frame>()
                 {
 
@@ -116,11 +114,11 @@ namespace MinecraftAlpha
                 {   duration =3f,
                     Looped = false,
                 },
-                new EntityAnimation(0,"pig_walk",new List<Frame>()
+                new EntityAnimation(2,"idle",new List<Frame>()
                 {
 
-                    new Frame(0,0f,2,180+60),
-                    new Frame(0,0f,2,180-60),
+                    new Frame(0,0f,2,180),
+
 
 
 
@@ -129,9 +127,23 @@ namespace MinecraftAlpha
                     Looped = false,
                 },
 
+                new EntityAnimation(2,"pig_walk",new List<Frame>()
+                {
+                    new Frame(1,0f,2,60),
+                    new Frame(1,0.5f,2,-60),
+                    
+                    
+
+
+
+                })
+                {   duration =1f,
+                    Looped = false,
+                },
+
 
             };
-            
+
 
 
             return entityAnimations;
@@ -139,9 +151,9 @@ namespace MinecraftAlpha
 
 
         }
-        
+
     }
-    
+
 }
 public class Frame
 {
@@ -153,7 +165,7 @@ public class Frame
         Angle = DesiredAngle;
 
     }
-    public Frame(int JointID, float StartPos, float Durration, float DesiredAngle,bool Flip)
+    public Frame(int JointID, float StartPos, float Durration, float DesiredAngle, bool Flip)
     {
         Joint = JointID;
         start = StartPos;
@@ -173,7 +185,7 @@ public class Frame
 }
 public class EntityAnimation
 {
-    
+
     public bool Playing = false;
     public bool Fliped = false;
     public Entity parent;
@@ -200,17 +212,17 @@ public class EntityAnimation
         Time += 0.1f;
         foreach (var frame in frames)
         {
-            
+
             var Parent = parent.Joints[frame.Joint];
 
             float Angle = frame.Angle;
-            if(parent.Fliped)
+            if (parent.Fliped)
             {
                 if (frame.Flip)
                 {
                     Angle = frame.Angle + 180;
                 }
-                
+
             }
 
             float Distance = GetDistanceBetweenAngles(Parent.orientation, Angle);
@@ -222,21 +234,21 @@ public class EntityAnimation
             if (Time >= duration)
             {
                 ResetAnim();
-                Paused = true ;
+                Paused = true;
                 return;
 
             }
-            
+
 
 
 
             if (frame.Durration + frame.start >= Time && frame.start <= Time)
             {
 
-                Parent.orientation += Distance / frame.Durration/5;
+                Parent.orientation += Distance / frame.Durration / 5;
             }
 
-            
+
         }
     }
 
@@ -249,8 +261,8 @@ public class EntityAnimation
             joint.orientation = frame.Angle;
         }
     }
-    
-    
+
+
 
     public float GetDistanceBetweenAngles(float start, float end)
     {
@@ -259,7 +271,7 @@ public class EntityAnimation
         {
             Distance = -360;
         }
-        return Distance%360;
+        return Distance % 360;
 
     }
 
@@ -270,7 +282,7 @@ public class EntityAnimation
 
         foreach (var anim in Newlist)
         {
-            if(anim.ID == id)
+            if (anim.ID == id)
             {
                 var newAnim = new EntityAnimation(anim.ID, anim.name, anim.frames);
                 newAnim.parent = parent;

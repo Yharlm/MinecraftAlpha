@@ -543,6 +543,12 @@ public class Game1 : Game
 
             var anim = Entity.Animations[Animation.id];
             anim.parent = Entity;
+
+            if(Entity.name == "Pig")
+            {
+
+            }
+
             anim.Update();
             //Entity.Joints[1].orientation += 10;
 
@@ -609,7 +615,8 @@ public class Game1 : Game
                 Running = true;
             }
 
-            if (Running) _entityAnimationService.Play(1, entity);
+            if (Running) 
+                _entityAnimationService.Play(1, entity);
             else
             {
                 _entityAnimationService.Stop(1, entity);
