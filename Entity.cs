@@ -558,7 +558,7 @@ namespace MinecraftAlpha
             }
             
 
-            if (float.Abs(velocity.X) < 0.4f && entity.ID > 0)
+            if (float.Abs(velocity.X) < 0.4f && entity.ID >= 0)
             {
                 velocity.X = 0;
             }

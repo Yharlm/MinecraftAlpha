@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -59,16 +60,46 @@ namespace MinecraftAlpha
         public void PlaceBlock(Vector2 pos, Block block)
         {
             if (block == null) return;
-            
+            if (block.Item)
+            {
+                if (block.Interaction == null) return;
+                
+                if (Game._userInterfaceManager.itemUsetimer < block.UseTime && !block.WaitForUse)
+                {
+                    Game._userInterfaceManager.itemUsetimer += 0.1f;
+                    return;
+                }
+                if(!block.WaitForUse)
+                {
+                    if(!Game._inputManager.WasMouseDown(Mouse.GetState()))
+                    {
+                        
+                        return;
+                    }
+                    
+                }
+                Game._userInterfaceManager.itemUsetimer = 0f;
+                block.Interaction.Invoke(null, Game.Player.Plr,block);
+                if (Game.creativeMode)
+                {
+                    Game._userInterfaceManager.amount -= 1;
+                }
+                if (Game._userInterfaceManager.amount <= 0)
+                {
+                    Game._userInterfaceManager.selectedItem = null;
+
+                }
+                return;
+            }
             int Zindex = (int)Game.Player.Plr.Layer;
             var Chunks = Game.Chunks;
 
-            if(Zindex < 0 || Zindex > 9) { return; }
+            if (Zindex < 0 || Zindex > 9) { return; }
             if (block == null) return;
             TileGrid Tile = BlockManager.GetBlockAtPos(pos, Zindex, Chunks);
             if (Tile == null)
             {
-                
+
                 var ChunkNot = BlockManager.GetChunkAtPos(pos);
                 Chunks.Add(new(ChunkNot[0], ChunkNot[1]));
                 Tile = BlockManager.GetBlockAtPos(pos, Zindex, Chunks);
@@ -121,9 +152,9 @@ namespace MinecraftAlpha
             foreach (Entity entity in Game._entityManager.Workspace)
             {
                 if (entity.Interaction == null) continue;
-                if (LogicsClass.IsInBounds(Pos, entity.position,entity.collisionBox.Size))
+                if (LogicsClass.IsInBounds(Pos, entity.position, entity.collisionBox.Size))
                 {
-                    
+
                     entity.Interaction.Action.Invoke();
                 }
             }
@@ -145,15 +176,19 @@ namespace MinecraftAlpha
 
         }
 
-        public void DeleteBlocksSphere(Vector2 Pos,float Z, float radius)
+        public void DeleteBlocksSphere(Vector2 Pos, float Z, float radius)
         {
+
+
+
+
 
             float radiusSquared = radius * radius;
 
             // Determine the bounding box to minimize iterations
             int minX = (int)Math.Floor(Pos.X - radius);
             int maxX = (int)Math.Ceiling(Pos.X + radius);
-            int minY = (int)Math.Floor(Pos.Y- radius);
+            int minY = (int)Math.Floor(Pos.Y - radius);
             int maxY = (int)Math.Ceiling(Pos.Y + radius);
             int minZ = (int)Math.Floor(Z - radius);
             int maxZ = (int)Math.Ceiling(Z + radius);
@@ -168,21 +203,21 @@ namespace MinecraftAlpha
                         float dx = x - Pos.X;
                         float dy = y - Pos.Y;
                         float dz = z - Z;
-                        float distance= dx * dx + dy * dy + dz * dz;
+                        float distance = dx * dx + dy * dy + dz * dz;
                         // If distance squared is <= radius squared, it's inside the sphere
                         if (distance <= radiusSquared)
                         {
-                            BreakBlock(new Vector2(x, y) + Vector2.One/2, z, 3);
+                            BreakBlock(new Vector2(x, y) + Vector2.One / 2, z, 3);
                         }
                     }
                 }
             }
-            
+
         }
-        public void BreakBlock(Vector2 Pos,float Z,float Dmg)
+        public void BreakBlock(Vector2 Pos, float Z, float Dmg)
         {
 
-            
+
 
 
 
@@ -194,21 +229,21 @@ namespace MinecraftAlpha
             var block = Game._blockManager.Blocks[Tile.ID];
             int x = random.Next(0, block.Texture.Width);
             int y = random.Next(0, block.Texture.Height);
-             var pos = (new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height));
+            var pos = (new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height));
             if (Tile.ID != 0)
             {
                 if (block.Health > Tile.MinedHealth)
                 {
 
-                    
-                    if(Game.creativeMode) { Tile.MinedHealth += 2f; } // Fix this later when you want Creative to not matter for explosives
-                    
-                        Tile.MinedHealth += Dmg;
+
+                    if (Game.creativeMode) { Tile.MinedHealth += 2f; } // Fix this later when you want Creative to not matter for explosives
+
+                    Tile.MinedHealth += Dmg;
 
 
-                    if (block.Health % 0.2f == 0 ) return;
+                    if (block.Health % 0.2f == 0) return;
 
-                    
+
 
                     var part = new Particle()
                     {
@@ -231,7 +266,7 @@ namespace MinecraftAlpha
                     return;
                 }
 
-                for (int i = 0;i< 15;i++)
+                for (int i = 0; i < 15; i++)
                 {
                     x = random.Next(0, block.Texture.Width);
                     y = random.Next(0, block.Texture.Height);
@@ -244,7 +279,7 @@ namespace MinecraftAlpha
                         size = 0.4f,
                         Color = block.Color,
                         Rectangle = new Microsoft.Xna.Framework.Rectangle(x, y, 4, 4),
-                        Velocity = new Vector2((float)random.NextDouble() - 0.5f, -(float)random.NextDouble()-1),
+                        Velocity = new Vector2((float)random.NextDouble() - 0.5f, -(float)random.NextDouble() - 1),
                         Acceleration = new Vector2(0, 0.1f),
                         gravity = 0.1f
 
@@ -257,17 +292,17 @@ namespace MinecraftAlpha
 
 
                 Tile.MinedHealth = 0;
-                
+
                 Tile.ID = 0;
                 Entity drop = null;
-                if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos,Zindex,block.ItemDrop);
-                else drop =Game._entityManager.SpawnItem(pos,Zindex,block);
-                if(drop != null)
+                if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop);
+                else drop = Game._entityManager.SpawnItem(pos, Zindex, block);
+                if (drop != null)
                 {
                     drop.IFrame = 0.1f;
                     Game._entityManager.Workspace.Add(drop);
                 }
-               
+
 
             }
 

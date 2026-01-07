@@ -164,6 +164,7 @@ namespace MinecraftAlpha
     {
         public List<Keys> KeyHistory = new List<Keys>();
         public float TimeSinceLastKeyPress = 0f;
+        public MouseState LastMouseState;
         
         // to stop key repeat
         public bool IsKeyUp_Now(Keys key)
@@ -179,6 +180,15 @@ namespace MinecraftAlpha
             }
             
             return true;
+        }
+
+        public bool WasMouseDown(MouseState state) {
+
+            if(state.LeftButton == ButtonState.Released && LastMouseState.LeftButton == ButtonState.Pressed)
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool IsKeyDown_Now(Keys key)
@@ -207,6 +217,7 @@ namespace MinecraftAlpha
             {
                 KeyHistory.Add(key);
             }
+            LastMouseState = Mouse.GetState();
         }
 
         public bool KeyCombo(Keys key1, Keys key2,bool Order)

@@ -30,6 +30,7 @@ namespace MinecraftAlpha
         public float Damage = 2; // How fast the block can be mined
         public float UseTime = 0.5f; // Time taken to use/interact with the block
         public float Grip = 0f;
+        public bool WaitForUse = false; // Whether the item requires a use action (e.g., bow drawing)
 
 
         public Color Color = Color.White;
@@ -76,7 +77,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 0.6f,Tag="Pickaxe",MineLevel = 2},
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
                 new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.8f,Tag="Pickaxe",MineLevel = 4},
-                new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 36,Damage = 3f,Tag="Bow",Grip = 90f},
+                new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 36,Damage = 3f,Tag="Bow",Grip = 90f,UseTime = 4,WaitForUse = true},
 
             };
 
@@ -107,33 +108,12 @@ namespace MinecraftAlpha
             getBlock("Bow").Interaction = (Pos, ent,item) =>
             {
 
-                if (item.Item)
-                {
-                    if (item.Interaction == null) return;
-                    if (Game._userInterfaceManager.itemUsetimer < item.UseTime)
-                    {
-                        Game._userInterfaceManager.itemUsetimer += 0.1f;
-                        return;
-                    }
-                    Game._userInterfaceManager.itemUsetimer = 0f;
-                    item.Interaction.Invoke(null, Game.Player.Plr, item);
-                    if (!Game.creativeMode)
-                    {
-                        Game._userInterfaceManager.amount -= 1;
-                    }
-                    if (Game._userInterfaceManager.amount <= 0)
-                    {
-                        Game._userInterfaceManager.selectedItem = null;
-
-                    }
-                    return;
-                }
-
+                
                 Entity Arrow = new Entity(-3,"Arrow", "_projectile", 3) { Texture = Game.Content.Load<Texture2D>("Projectiles/Arrow"), };
                 Arrow.collisionBox = new CollisionBox() { Size = new Vector2(0.5f) };
                 Arrow.position = Game.Player.Plr.position;
                 Arrow.Mass = 0.4f;
-                Arrow.velocity.velocity = Vector2.Normalize(Game.WorldMousePos - Game.Player.Plr.position)*36;
+                Arrow.velocity.velocity = Vector2.Normalize(Game.WorldMousePos - Game.Player.Plr.position)*16;
                 Arrow.Target = ent;
                 Game._entityManager.Workspace.Add(Arrow);
 
