@@ -129,10 +129,17 @@ namespace MinecraftAlpha
 
                 new EntityAnimation(2,"pig_walk",new List<Frame>()
                 {
+                    new Frame(0,0f,2,-60),
+                    new Frame(0,0.5f,2,60),
                     new Frame(1,0f,2,60),
                     new Frame(1,0.5f,2,-60),
-                    
-                    
+                    new Frame(2,0f,2,-60),
+                    new Frame(2,0.5f,2,60),
+                    new Frame(3,0f,2,60),
+                    new Frame(3,0.5f,2,-60),
+
+
+
 
 
 
