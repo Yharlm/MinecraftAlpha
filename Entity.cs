@@ -210,6 +210,7 @@ namespace MinecraftAlpha
         public int ID = 0;
         public float Speed = 0.7f;
         public float Lifetime = 0f;
+        public Vector2 previousPosition = Vector2.Zero;
 
 
         public string name { get; set; } = "nullEntity";

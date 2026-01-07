@@ -591,7 +591,26 @@ public class Game1 : Game
                 {
                     Entity.CollisionEventCollision(entity1, entity, this);
                 }
+                
             }
+
+            //Raycast for projectiles
+            if (entity.ID < 0 && entity.velocity.velocity.Length() > 4)
+            {
+                Vector2 dist = entity.position - entity.previousPosition;
+                var Hit = LogicsClass.RaycastDir(entity.position, dist, this, new List<Entity>() { entity });
+                if (Hit != null)
+                {
+                    if (Hit.GetType() == typeof(Entity))
+                    {
+                        Entity.CollisionEventCollision(Hit, entity, this);
+                    }
+                }
+
+
+                entity.previousPosition = entity.position;
+            }
+
 
 
 

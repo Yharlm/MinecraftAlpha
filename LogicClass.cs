@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -142,12 +143,64 @@ namespace MinecraftAlpha
             }
 
         }
-        public static void RaycastDir(Vector2 origin, Vector2 direction, Game1 game)
+        public static object RaycastDir(Vector2 origin, Vector2 direction, Game1 game,List<Entity> ignore)
         {
-            //entity ray
+            object Instance = null;
+            for (float i = -30; i < 30; i++)
+            {
 
-            
+                
+                Vector2 v1 = origin;
+                Vector2 v3 = direction;
 
+
+
+                float X = origin.X + i;
+                float Y = F(X, v3, v1);
+
+
+                Debuging.DebugPosWOrld(game._spriteBatch, new Vector2(X, Y), game, Color.Blue);
+
+            }
+
+            foreach (var entity in game._entityManager.Workspace)
+            {
+                if (ignore.Contains(entity)) continue;
+                Vector2 v1 = origin;
+                Vector2 v3 = direction;
+
+
+
+                float X = entity.position.X;
+                float Y = F(X, v3, v1);
+
+                Vector2 Hit = new(entity.position.X, F(X, v3, v1));
+                if (float.Abs(entity.position.Y - Hit.Y) < entity.collisionBox.Size.Y)
+                {
+                    var part = new Particle()
+                    {
+                        Position = entity.position,
+                        TextureName = "BlockMineEffect",
+                        Texture = game._particleSystem.sprites[0],
+                        lifeTime = 2f,
+                        Velocity = Randomiser(-2, 2),
+                        size = 0.65f,
+                        Color = Color.Yellow,
+
+
+
+
+
+                    };
+
+                    Instance = entity;
+
+                    game._particleSystem.Particles.Add(part);
+                }
+
+            }
+
+            return Instance;
         }
 
     }
