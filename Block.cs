@@ -36,7 +36,7 @@ namespace MinecraftAlpha
         public Texture2D Texture { get; set; }
         public string TexturePath { get; set; }
 
-        public Action<TileGrid,Entity> Interaction = null;
+        public Action<TileGrid,Entity,Block> Interaction = null;
         public Action<TileGrid> Update = (Grid) => { };
         public Action<TileGrid> OnCollide = (Grid) => { };
     }
@@ -100,16 +100,40 @@ namespace MinecraftAlpha
             var blocks = LoadBlocks();
             return blocks.Find(x => x.Name == Name);
         }
+        
         public void LoadActions()
         {
 
-            getBlock("Bow").Interaction = (Pos, ent) =>
+            getBlock("Bow").Interaction = (Pos, ent,item) =>
             {
+
+                if (item.Item)
+                {
+                    if (item.Interaction == null) return;
+                    if (Game._userInterfaceManager.itemUsetimer < item.UseTime)
+                    {
+                        Game._userInterfaceManager.itemUsetimer += 0.1f;
+                        return;
+                    }
+                    Game._userInterfaceManager.itemUsetimer = 0f;
+                    item.Interaction.Invoke(null, Game.Player.Plr, item);
+                    if (!Game.creativeMode)
+                    {
+                        Game._userInterfaceManager.amount -= 1;
+                    }
+                    if (Game._userInterfaceManager.amount <= 0)
+                    {
+                        Game._userInterfaceManager.selectedItem = null;
+
+                    }
+                    return;
+                }
+
                 Entity Arrow = new Entity(-3,"Arrow", "_projectile", 3) { Texture = Game.Content.Load<Texture2D>("Projectiles/Arrow"), };
                 Arrow.collisionBox = new CollisionBox() { Size = new Vector2(0.5f) };
                 Arrow.position = Game.Player.Plr.position;
                 Arrow.Mass = 0.4f;
-                Arrow.velocity.velocity = Vector2.Normalize(Game.WorldMousePos - Game.Player.Plr.position)*46;
+                Arrow.velocity.velocity = Vector2.Normalize(Game.WorldMousePos - Game.Player.Plr.position)*36;
                 Arrow.Target = ent;
                 Game._entityManager.Workspace.Add(Arrow);
 
@@ -117,7 +141,7 @@ namespace MinecraftAlpha
 
             };
 
-            getBlock("Apple").Interaction = (Pos,ent) =>
+            getBlock("Apple").Interaction = (Pos,ent,item) =>
             {
                 // Heal Player
                 Game.Player.Plr.Health += 3;
@@ -134,12 +158,12 @@ namespace MinecraftAlpha
             getBlock("Leaves").ItemDrop = getBlock("Air");
             getBlock("Grass").ItemDrop = getBlock("Dirt");
 
-            getBlock("Tnt block").Interaction = (Pos, user) =>
+            getBlock("Tnt block").Interaction = (Pos, user,item) =>
             {
 
 
             };
-            getBlock("Chest").Interaction = (Pos, user) =>
+            getBlock("Chest").Interaction = (Pos, user,Item) =>
             {
 
                 string Items = Pos.Data;
@@ -177,7 +201,7 @@ namespace MinecraftAlpha
 
 
             };
-            getBlock("Crafting Table").Interaction = (Pos, user) =>
+            getBlock("Crafting Table").Interaction = (Pos, user,item) =>
             {
 
                 var Window = Game._userInterfaceManager.windows[4];

@@ -553,11 +553,12 @@ namespace MinecraftAlpha
             }
             else
             {
+                
                 Gravity += 0.02f;
             }
+            
 
-
-            if (float.Abs(velocity.X) < 0.4f)
+            if (float.Abs(velocity.X) < 0.4f && entity.ID > 0)
             {
                 velocity.X = 0;
             }
@@ -573,10 +574,16 @@ namespace MinecraftAlpha
                 vel.X = 0;
                 velocity.X = 0;
             }
-            if (vel.Length() > 30)
+            if (vel.Length() >20)
             {
                 Drag = 20f;
+                
             }
+            if (entity.ID < 0)
+            {
+                Drag = 160f;
+            }
+            
             vel *= velocity;
             velocity -= vel / Drag;
 

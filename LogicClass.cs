@@ -143,9 +143,9 @@ namespace MinecraftAlpha
             }
 
         }
-        public static object RaycastDir(Vector2 origin, Vector2 direction, Game1 game,List<Entity> ignore)
+        public static Entity RaycastDir(Vector2 origin, Vector2 direction, Game1 game,List<Entity> ignore)
         {
-            object Instance = null;
+            Entity Instance = null;
             for (float i = -30; i < 30; i++)
             {
 
@@ -177,25 +177,25 @@ namespace MinecraftAlpha
                 Vector2 Hit = new(entity.position.X, F(X, v3, v1));
                 if (float.Abs(entity.position.Y - Hit.Y) < entity.collisionBox.Size.Y)
                 {
-                    var part = new Particle()
+                    if(game.DebugMode)
                     {
-                        Position = entity.position,
-                        TextureName = "BlockMineEffect",
-                        Texture = game._particleSystem.sprites[0],
-                        lifeTime = 2f,
-                        Velocity = Randomiser(-2, 2),
-                        size = 0.65f,
-                        Color = Color.Yellow,
-
-
-
-
-
-                    };
+                        var part = new Particle()
+                        {
+                            Position = entity.position,
+                            TextureName = "BlockMineEffect",
+                            Texture = game._particleSystem.sprites[0],
+                            lifeTime = 1f,
+                            Velocity = Randomiser(-1, 1),
+                            size = 0.65f,
+                            Color = Color.Yellow,
+                        };
+                        game._particleSystem.Particles.Add(part);
+                    }
+                    
 
                     Instance = entity;
 
-                    game._particleSystem.Particles.Add(part);
+                    
                 }
 
             }

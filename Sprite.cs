@@ -277,15 +277,19 @@ namespace MinecraftAlpha
 
             if (isGrip && mob.Item != null)
             {
-
+                AnglePos = Matrix4x4.CreateRotationZ(ParentAngle - 45);
+                spriteEffect = SpriteEffects.FlipHorizontally;
                 var item = mob.Item;
-                float rotation = MathF.PI * (-45 + 90 * 3) / 180;
-                Vector2 Offset = new Vector2(-13, -2);
+                float rotation = MathF.PI * (45 - 90) / 180;
+                Vector2 Offset = new Vector2(-14, -2);
                 if (Flip)
                 {
                     Offset *= new Vector2(-1, 1);
-                    rotation = -MathF.PI * (-90 - 45) / 180;
+                    rotation = -MathF.PI * (45 - 90) / 180;
+                    spriteEffect = SpriteEffects.None;
+                    AnglePos = Matrix4x4.CreateRotationZ(ParentAngle - 45 + 90);
                 }
+                
 
                 attachmentPos = Vector2.Transform(Offset, AnglePos);
                 
