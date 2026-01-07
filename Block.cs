@@ -111,7 +111,8 @@ namespace MinecraftAlpha
                 Arrow.Mass = 0.4f;
                 Arrow.velocity.velocity = Vector2.Normalize(Game.WorldMousePos - Game.Player.Plr.position)*46;
                 Arrow.Target = ent;
-                Game._entityManager.Workspace.Add(Arrow);
+                //Game._entityManager.Workspace.Add(Arrow);
+                LogicsClass.RaycastPos(ent.position, Game.WorldMousePos , Game);
                
 
             };
