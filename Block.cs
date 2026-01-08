@@ -138,14 +138,14 @@ namespace MinecraftAlpha
             getBlock("Bow").Interaction = (Pos, ent,item) =>
             {
 
-                int[] sprites = { 36, 37, 38,100};
+                int[] sprites = { 36, 51, 4,20};
                 if (!item.CanFire && item.ChargeMax < item.Charge)
                 {
                     if(item.Charge > 6)
                     {
                         return;
                     }
-                    int I = (int)item.Charge-3;
+                    int I = (int)item.Charge-2;
                     item.Charge += 0.03f;
                     Game.Player.DisplayID = sprites[I];//make this change itemslot isntead
 
