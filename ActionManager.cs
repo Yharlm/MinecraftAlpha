@@ -63,32 +63,62 @@ namespace MinecraftAlpha
             if (block.Item)
             {
                 if (block.Interaction == null) return;
-                
-                if (Game._userInterfaceManager.itemUsetimer < block.UseTime && !block.WaitForUse)
+
+                if (block.ChargeMax > block.Charge && !Game._inputManager.WasMouseDown(Mouse.GetState()) && Mouse.GetState().RightButton == ButtonState.Pressed)
                 {
-                    Game._userInterfaceManager.itemUsetimer += 0.1f;
+                    block.Charge += 0.2f;
                     return;
                 }
-                if(!block.WaitForUse)
+                if (block.UseTimeMax > block.UseTime)
                 {
-                    if(!Game._inputManager.WasMouseDown(Mouse.GetState()))
+                    block.UseTime += 0.1f;
+                    return;
+                }
+                if (block.CooldownMax > block.Cooldown)
+                {
+                    return;
+                }
+
+
+
+
+                if (!Game.creativeMode) // Use cost
+                {
+                    
+
+
+
+                    if(block.ammo == null && block.ammoTag == "") // Doesn't use ammo
+                    {
+                        Game._userInterfaceManager.amount -= 1;
+                        if (Game._userInterfaceManager.amount <= 0)
+                        {
+                            Game._userInterfaceManager.selectedItem = null;
+
+                        }
+                    }
+                    else 
                     {
                         
-                        return;
+                        var ammo = Game.Player.FindItem(block.ammo.Name,block.ammoTag);
+
+                        if(ammo != null && ammo.Count > 0)
+                        {
+                            ammo.Count -= 1;
+                            if(ammo.Count <= 0)
+                            {
+                                ammo.Item = null;
+                            }
+                        }
+                        else
+                        {
+                            return; // no ammo found
+                        }
                     }
                     
                 }
-                Game._userInterfaceManager.itemUsetimer = 0f;
-                block.Interaction.Invoke(null, Game.Player.Plr,block);
-                if (Game.creativeMode)
-                {
-                    Game._userInterfaceManager.amount -= 1;
-                }
-                if (Game._userInterfaceManager.amount <= 0)
-                {
-                    Game._userInterfaceManager.selectedItem = null;
-
-                }
+                block.Interaction.Invoke(null, Game.Player.Plr, block);
+                
                 return;
             }
             int Zindex = (int)Game.Player.Plr.Layer;
@@ -295,7 +325,7 @@ namespace MinecraftAlpha
 
                 Tile.ID = 0;
                 Entity drop = null;
-                if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop);
+                if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop,1);
                 else drop = Game._entityManager.SpawnItem(pos, Zindex, block);
                 if (drop != null)
                 {

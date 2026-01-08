@@ -20,7 +20,11 @@ namespace MinecraftAlpha
         public float respawnTimer = 60f;
 
 
-        
+        public ItemSlot FindItem(string name,string tag)
+        {
+            var itemSlot = Inventory.ItemSlots.Find(s => s.Item != null && s.Item.Name == name);
+            return itemSlot;
+        }
         public void Respawn()
         {
             if(respawnTimer > 0)
@@ -28,6 +32,23 @@ namespace MinecraftAlpha
                 respawnTimer -= 0.4f;
                 return;
             }
+            Inventory = game._userInterfaceManager.windows.Find(w => w.Name == "Inventory");
+
+            if(!game.KeepInventory)
+            {
+                foreach (var slot in Inventory.ItemSlots)
+                {
+                    slot.Item = null;
+                    slot.Count = 0;
+                }
+            }
+            
+
+
+
+
+
+
             var plr = Entity.CloneEntity(game._entityManager.entities[0], SpawnPoint);
             Plr = plr;
 
@@ -58,8 +79,9 @@ namespace MinecraftAlpha
             Entity drop;
             if(item == null) return;
 
-            drop = game._entityManager.SpawnItem(new Vector2(origin.X,origin.Y) +Vector2.Normalize(Dir - new Vector2(origin.X, origin.Y)), (int)origin.Z, item);
+            drop = game._entityManager.SpawnItem(new Vector2(origin.X,origin.Y) +Vector2.Normalize(Dir - new Vector2(origin.X, origin.Y)), (int)origin.Z, item, amount);
             drop.IFrame = 5f;
+
             drop.velocity.velocity = Dir- new Vector2(origin.X, origin.Y);
             if (drop != null)
             {
@@ -96,6 +118,19 @@ namespace MinecraftAlpha
         public void Update()
         {
             Plr.Item = game._userInterfaceManager.selectedItem;
+            Inventory = game._userInterfaceManager.windows.Find(w => w.Name == "Inventory");
+            foreach (var slot in Inventory.ItemSlots)
+            {
+                if (slot.Item == null) continue;
+                if (slot.Item != null && slot.Count <= 0)
+                {
+                    slot.Item = null;
+                }
+                if (slot.Item.CooldownMax > 0 && slot.Item.Cooldown < slot.Item.CooldownMax)
+                {
+                    slot.Item.Cooldown += 1f;
+                }
+            }
         }
     }
 

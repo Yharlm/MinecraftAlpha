@@ -81,7 +81,7 @@ namespace MinecraftAlpha
             }
         }
 
-        public Entity SpawnItem(Vector2 position, int Z, Block item)
+        public Entity SpawnItem(Vector2 position, int Z, Block item,int c)
         {
             var Drop = Entity.CloneEntity(game._entityManager.entities[1], Vector2.Floor(position) + Vector2.One * 0.5f);
             Drop.TextureName = "null";
@@ -91,13 +91,13 @@ namespace MinecraftAlpha
 
             if (item.Item)
             {
-                Drop.Data = item.ID.ToString() + ";1";
+                Drop.Data = item.ID.ToString() + ";"+ c;
                 Drop.name = "item";
             }
             else
             {
                 Drop.name = "item3D";
-                Drop.Data = item.ID.ToString() + ";1";
+                Drop.Data = item.ID.ToString() + ";1"+ c;
             }
 
             Drop.Layer = Z;
@@ -133,7 +133,7 @@ namespace MinecraftAlpha
 
                 game._particleSystem.Particles.Add(part);
             }
-            list.Add(SpawnItem(entity.position, (int)entity.Layer, game._blockManager.Blocks[2]));
+            list.Add(SpawnItem(entity.position, (int)entity.Layer, game._blockManager.Blocks[2]),);
         }
 
         public void RenderAll(SpriteBatch SB, float Size, Vector2 Pos)

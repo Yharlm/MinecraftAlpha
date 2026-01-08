@@ -6,6 +6,8 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace MinecraftAlpha
 {
+    
+
     public class Block
     {
         public int ID = 0;
@@ -25,19 +27,44 @@ namespace MinecraftAlpha
         public float Durrability = -1; // How much damage the block can take before breaking
         public int ItemID = 0; // Id ot the item in atlas
         public bool Placable = true;
-        public bool Item = false;
-        public int MineLevel = 0; // How fast the block can be mined
-        public float Damage = 2; // How fast the block can be mined
-        public float UseTime = 0.5f; // Time taken to use/interact with the block
-        public float Grip = 0f;
-        public bool WaitForUse = false; // Whether the item requires a use action (e.g., bow drawing)
+        
+
+
+
+
+        
 
 
         public Color Color = Color.White;
         public Texture2D Texture { get; set; }
         public string TexturePath { get; set; }
 
+
+        public bool Item = false;
+        public int MineLevel = 0; // How fast the block can be mined
+        public float Damage = 2; // How fast the block can be mined
+        public float Grip = 0f;
+        
+        public bool consumable = true;
+        public Block ammo = null;
+        public string ammoTag = "";
+        //Constants for use types
+        public float ChargeMax = 0f; // Time taken to charge the item
+        public float CooldownMax = 0f;//cooldown after using the item
+        public float UseTimeMax = 0f; // Time taken to use/interact with the block
+        //Dynamic use variables
+        public float Charge = 0f;
+        public float Cooldown = 0f;
+        public float UseTime = 0f;
+
         public Action<TileGrid,Entity,Block> Interaction = null;
+        
+        
+
+
+
+
+
         public Action<TileGrid> Update = (Grid) => { };
         public Action<TileGrid> OnCollide = (Grid) => { };
     }
@@ -71,13 +98,13 @@ namespace MinecraftAlpha
                 new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
                 new Block { Name = "Glass block", TexturePath = "glass", Health = 4,Transparent = true},
                 new Block { Name = "Tnt block", TexturePath = "tnt_side", Health = 2,Transparent = false},
-                new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTime = 5},
+                new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
                 new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
                 new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.4f,Tag="Pickaxe",MineLevel = 1},
                 new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 0.6f,Tag="Pickaxe",MineLevel = 2},
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
                 new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.8f,Tag="Pickaxe",MineLevel = 4},
-                new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 36,Damage = 3f,Tag="Bow",Grip = 90f,UseTime = 4,WaitForUse = true},
+                new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 36,Damage = 3f,Tag="Bow",Grip = 90f,ChargeMax = 4},
 
             };
 

@@ -15,6 +15,23 @@ namespace MinecraftAlpha;
 
 public class Game1 : Game
 {
+
+    //Game Rules
+    
+    public bool KeepInventory = false;
+
+
+
+
+
+
+
+
+
+
+
+
+
     public UserInterfaceManager _userInterfaceManager;
     public EntityManager _entityManager = new();
     public BlockManager _blockManager;
@@ -331,6 +348,8 @@ public class Game1 : Game
 
         _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
         //Making player
+        //Player.Respawn();
+
         Player.Plr = Entity.CloneEntity(_entityManager.entities[0], new Vector2(0, 0));
 
 
@@ -489,7 +508,19 @@ public class Game1 : Game
 
         if (Player.Plr.Health <= 0)
         {
-            Player.Respawn();
+            if (!KeepInventory) // Drop all loot
+            {
+                foreach (var item in Player.Inventory.ItemSlots)
+                {
+                    if (item.Item != null)
+                    {
+                        Player.DropItem(item.Item, new Vector3(Player.Plr.position, Player.Plr.Layer), WorldMousePos, item.Count);
+                    }
+                }
+            }
+
+
+                Player.Respawn();
         }
 
         //if (Keyboard.GetState().IsKeyDown(Keys.F11))
@@ -962,7 +993,7 @@ public class Game1 : Game
 
             }
 
-
+            
 
 
 
