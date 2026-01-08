@@ -297,7 +297,7 @@ namespace MinecraftAlpha
             {
 
                 //if (A.IFrame >= 0f) return;
-                B.TakeDamage(A, (int)(float.Abs(A.velocity.velocity.X)+ float.Abs(A.velocity.velocity.Y)) , 2);
+                B.TakeDamage(A.Target, (int)(float.Abs(A.velocity.velocity.X)+ float.Abs(A.velocity.velocity.Y))/3 , 2);
                 A.Health = 0;
 
             }
@@ -582,6 +582,7 @@ namespace MinecraftAlpha
             if (entity.ID < 0)
             {
                 Drag = 160f;
+                if(entity.collisionBox.Bottom) { velocity *= 0f; }
             }
             
             vel *= velocity;

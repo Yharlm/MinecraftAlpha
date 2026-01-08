@@ -133,7 +133,7 @@ namespace MinecraftAlpha
 
                 game._particleSystem.Particles.Add(part);
             }
-            list.Add(SpawnItem(entity.position, (int)entity.Layer, game._blockManager.Blocks[2]),);
+            list.Add(SpawnItem(entity.position, (int)entity.Layer, game._blockManager.Blocks[2],1));
         }
 
         public void RenderAll(SpriteBatch SB, float Size, Vector2 Pos)

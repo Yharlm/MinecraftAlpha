@@ -64,9 +64,15 @@ namespace MinecraftAlpha
             {
                 if (block.Interaction == null) return;
 
-                if (block.ChargeMax > block.Charge && !Game._inputManager.WasMouseDown(Mouse.GetState()) && Mouse.GetState().RightButton == ButtonState.Pressed)
+                if (block.ChargeMax > block.Charge)
                 {
-                    block.Charge += 0.2f;
+                    block.Charge += 0.1f;
+                    
+                    return;
+                }
+                if (!block.CanFire && block.ChargeMax < block.Charge)
+                {
+                    block.Interaction.Invoke(null, Game.Player.Plr, block);
                     return;
                 }
                 if (block.UseTimeMax > block.UseTime)
@@ -78,8 +84,11 @@ namespace MinecraftAlpha
                 {
                     return;
                 }
-
-
+                //block.Charge = 0;
+                block.UseTime = 0;
+                block.Cooldown = 0;
+                //block.Charge = 0;
+                //block.CanFire = false;
 
 
                 if (!Game.creativeMode) // Use cost
@@ -326,7 +335,7 @@ namespace MinecraftAlpha
                 Tile.ID = 0;
                 Entity drop = null;
                 if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop,1);
-                else drop = Game._entityManager.SpawnItem(pos, Zindex, block);
+                else drop = Game._entityManager.SpawnItem(pos, Zindex, block,1);
                 if (drop != null)
                 {
                     drop.IFrame = 0.1f;

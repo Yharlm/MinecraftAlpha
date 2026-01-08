@@ -138,7 +138,12 @@ namespace MinecraftAlpha
 
             if (selectedItem.Item)
             {
-                Game.items.DrawItem(spriteBatch, mouse - new Vector2(16, 16), selectedItem.ItemID, 2.5f);
+                int id = selectedItem.ItemID;
+                if (Game.Player.DisplayID != -1)
+                {
+                    id = Game.Player.DisplayID;
+                }
+                Game.items.DrawItem(spriteBatch, mouse - new Vector2(16, 16), id, 2.5f);
             }
             else
             {

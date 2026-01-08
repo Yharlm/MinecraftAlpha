@@ -50,10 +50,13 @@ namespace MinecraftAlpha
         public string ammoTag = "";
         //Constants for use types
         public float ChargeMax = 0f; // Time taken to charge the item
+        //public float ChargeMin = 0f; // Time taken to charge the item
+
         public float CooldownMax = 0f;//cooldown after using the item
         public float UseTimeMax = 0f; // Time taken to use/interact with the block
         //Dynamic use variables
         public float Charge = 0f;
+        public bool CanFire = false;
         public float Cooldown = 0f;
         public float UseTime = 0f;
 
@@ -135,16 +138,31 @@ namespace MinecraftAlpha
             getBlock("Bow").Interaction = (Pos, ent,item) =>
             {
 
-                
+                int[] sprites = { 36, 37, 38,100};
+                if (!item.CanFire && item.ChargeMax < item.Charge)
+                {
+                    if(item.Charge > 6)
+                    {
+                        return;
+                    }
+                    int I = (int)item.Charge-3;
+                    item.Charge += 0.03f;
+                    Game.Player.DisplayID = sprites[I];//make this change itemslot isntead
+
+
+
+                    return;
+                }
                 Entity Arrow = new Entity(-3,"Arrow", "_projectile", 3) { Texture = Game.Content.Load<Texture2D>("Projectiles/Arrow"), };
                 Arrow.collisionBox = new CollisionBox() { Size = new Vector2(0.5f) };
                 Arrow.position = Game.Player.Plr.position;
                 Arrow.Mass = 0.4f;
-                Arrow.velocity.velocity = Vector2.Normalize(Game.WorldMousePos - Game.Player.Plr.position)*16;
+                Arrow.velocity.velocity = Vector2.Normalize(Game.WorldMousePos - Game.Player.Plr.position)*item.Charge* item.Charge/2;
                 Arrow.Target = ent;
                 Game._entityManager.Workspace.Add(Arrow);
-
-
+                Game.Player.DisplayID = -1;
+                item.Charge = 0f;
+                item.CanFire = false;
 
             };
 

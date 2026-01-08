@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
-using Vector4 = Microsoft.Xna.Framework.Vector4;
+//using Vector4 = Microsoft.Xna.Framework.Vector4;
 
 namespace MinecraftAlpha
 {
@@ -18,6 +18,7 @@ namespace MinecraftAlpha
         public Cammera cam = new();
         public bool Jumping = false;
         public float respawnTimer = 60f;
+        public int DisplayID = -1;
 
 
         public ItemSlot FindItem(string name,string tag)
@@ -118,6 +119,17 @@ namespace MinecraftAlpha
         public void Update()
         {
             Plr.Item = game._userInterfaceManager.selectedItem;
+            if(Plr.Item != null)
+            {
+                if (Plr.Item.ChargeMax < Plr.Item.Charge && game._inputManager.WasMouseDown(Mouse.GetState()))
+                {
+                    //
+                    Plr.Item.CanFire = true;
+                    game._actionManager.PlaceBlock(game.WorldMousePos, Plr.Item);
+                    //Plr.Item.Charge = 0;
+                    
+                }
+            }
             Inventory = game._userInterfaceManager.windows.Find(w => w.Name == "Inventory");
             foreach (var slot in Inventory.ItemSlots)
             {
@@ -131,6 +143,7 @@ namespace MinecraftAlpha
                     slot.Item.Cooldown += 1f;
                 }
             }
+            
         }
     }
 
@@ -219,7 +232,7 @@ namespace MinecraftAlpha
 
         public bool WasMouseDown(MouseState state) {
 
-            if(state.LeftButton == ButtonState.Released && LastMouseState.LeftButton == ButtonState.Pressed)
+            if(state.RightButton == ButtonState.Released && LastMouseState.RightButton == ButtonState.Pressed)
             {
                 return true;
             }

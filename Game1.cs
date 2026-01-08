@@ -697,7 +697,10 @@ public class Game1 : Game
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
         }
+
         Player.Update();
+        _inputManager.UpdateKeyHistory(Keyboard.GetState());
+        
     }
 
     int HotbarIndex;
@@ -892,7 +895,7 @@ public class Game1 : Game
 
         };
 
-        _inputManager.UpdateKeyHistory(keyboardState);
+        
 
 
         //_particleSystem.Particles[0].Position = PLR.position;
