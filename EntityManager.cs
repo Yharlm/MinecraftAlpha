@@ -180,7 +180,7 @@ namespace MinecraftAlpha
 
                     new Joint()
                     {
-                        orientation = 180f,
+                        
                         A = new Vector2(0, 4f),
                         B = new Vector2(0f, 4f),
                         A_Index = 1,
@@ -197,7 +197,7 @@ namespace MinecraftAlpha
 
                     new Joint()
                     {
-                        orientation = 0,
+                        
                         A = new Vector2(0, 4f),
                         B = new Vector2(0f, -4f),
                         A_Index = 1,
