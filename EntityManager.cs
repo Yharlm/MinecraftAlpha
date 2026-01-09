@@ -164,7 +164,7 @@ namespace MinecraftAlpha
                         new Vector4(12,8,4,12), // Right Arm
                         new Vector4(24,8,4,12),// Body
                         new Vector4(8,0,8,8), // Head
-                        new Vector4(12,12,4,12), // Left Arm
+                        new Vector4(12,20,4,12), // Left Arm
                         new Vector4(12,44,4,12), // Right Leg
                         new Vector4(12,32,4,12) // Left Leg
                 },
@@ -180,9 +180,9 @@ namespace MinecraftAlpha
 
                     new Joint()
                     {
-                        
+
                         A = new Vector2(0, 4f),
-                        B = new Vector2(0f, 4f),
+                        B = new Vector2(0f, -4f),
                         A_Index = 1,
                         B_Index = 3
                     },
@@ -257,9 +257,9 @@ namespace MinecraftAlpha
 
                     new Joint()
                     {
-                        orientation = 180f,
-                        A = new Vector2(0, 4f),
-                        B = new Vector2(0f, 4f),
+                        //orientation = 180f,
+                        A = new Vector2(0, 0f),
+                        B = new Vector2(0f, 0f),
                         A_Index = 1,
                         B_Index = 3
                     },

@@ -508,16 +508,7 @@ public class Game1 : Game
 
         if (Player.Plr.Health <= 0)
         {
-            if (!KeepInventory) // Drop all loot
-            {
-                foreach (var item in Player.Inventory.ItemSlots)
-                {
-                    if (item.Item != null)
-                    {
-                        Player.DropItem(item.Item, new Vector3(Player.Plr.position, Player.Plr.Layer), WorldMousePos, item.Count);
-                    }
-                }
-            }
+            
 
 
                 Player.Respawn();

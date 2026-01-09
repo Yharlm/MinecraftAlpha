@@ -72,7 +72,7 @@ namespace MinecraftAlpha
                 new EntityAnimation(0,"idle",new List<Frame>()
                 {
 
-                    new Frame(1,0,0f,180),
+                    new Frame(1,0,0f,0),
                     new Frame(2,0,0f,0),
                     new Frame(3,0,0f,0),
                     new Frame(4,0,0f,0),
@@ -87,8 +87,8 @@ namespace MinecraftAlpha
                 new EntityAnimation(0,"Running",new List<Frame>()
                 {
 
-                    new Frame(1,0f,2,180+60),
-                    new Frame(1,2,2,180-60),
+                    new Frame(1,0f,2,+60),
+                    new Frame(1,2,2,-60),
                     new Frame(3,0f,2,-60),
                     new Frame(3,2,2,60),
 
@@ -106,9 +106,9 @@ namespace MinecraftAlpha
                 new EntityAnimation(0,"Swing",new List<Frame>()
                 {
 
-                    new Frame(1,0,0.5f,140,true),
-                    new Frame(1,0.5f,0.7f,10,true),
-                    new Frame(1,1,1,180),
+                    new Frame(1,0,0.5f,-120,true),
+                    new Frame(1,0.5f,0.7f,-30,true),
+                    new Frame(1,1,1,0),
 
                 })
                 {   duration =3f,

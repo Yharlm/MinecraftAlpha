@@ -386,6 +386,10 @@ namespace MinecraftAlpha
             {
                 Joint.B_Sprite.ParentOrianetation = Joint.A_Sprite.Orientation;
                 //Joint.A_Sprite.Joints.Add(Joint.A);
+                if(Joint.B_Index == 3)
+                {
+                    //
+                }
                 Joint.B_Sprite.Attachment = Joint.B;
                 Joint.B_Sprite.Parent = Joint.A;
                 Joint.B_Sprite.JointOrientation = MathF.PI / 180 * Joint.orientation;

@@ -234,11 +234,18 @@ namespace MinecraftAlpha
 
 
         // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
-        public void DrawSprite(Game1 game1, Vector2 Pos, float size, float Rotation, bool Flip, float Z, float Shadow, bool Iframe,Entity mob) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
+        public void DrawSprite(Game1 game1, Vector2 Pos, float size, float Rotation, bool Flip, float Z, float Shadow, bool Iframe, Entity mob) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
 
         {
-
             SpriteBatch spriteBatch = game1._spriteBatch;
+            var ract = Margin;
+            var target = Color.White;
+
+            Vector2 A = Attachment;
+            Vector2 B = mob.Joints[3].B;
+
+
+            
             SpriteEffects spriteEffect = SpriteEffects.None;
             if (Flip)
             {
@@ -250,7 +257,7 @@ namespace MinecraftAlpha
 
             float Angle = (MathF.PI / 180 * (Orientation + ParentOrianetation));
             float ParentAngle = (MathF.PI / 180 * (ParentOrianetation));
-            var ract = Margin;
+            //var ract = Margin;
             Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle);
             float a = Z / 2 + 0.4f;
 
@@ -278,21 +285,21 @@ namespace MinecraftAlpha
             if (isGrip && mob.Item != null)
             {
                 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle - 45);
-                spriteEffect = SpriteEffects.FlipHorizontally;
+                
                 var item = mob.Item;
-                float rotation = MathF.PI * (45 - 90) / 180;
-                Vector2 Offset = new Vector2(-14, -2);
+                float rotation = MathF.PI * (45) / 180;
+                Vector2 Offset = new Vector2(2, -12);
                 if (Flip)
                 {
                     Offset *= new Vector2(-1, 1);
-                    rotation = -MathF.PI * (45 - 90) / 180;
-                    spriteEffect = SpriteEffects.None;
+                    rotation = -MathF.PI * (45) / 180;
+                    
                     AnglePos = Matrix4x4.CreateRotationZ(ParentAngle - 45 + 90);
                 }
-                
+
 
                 attachmentPos = Vector2.Transform(Offset, AnglePos);
-                
+
                 if (item.Item)
                 {
                     spriteBatch.Draw(
@@ -317,7 +324,7 @@ namespace MinecraftAlpha
                         Layer,
                         Angle + JointOrientation + rotation, // Orientation
                         new Vector2(item.Texture.Width, item.Texture.Height) / 2 + attachmentPos, //
-                        size *0.6f,
+                        size * 0.6f,
                         spriteEffect,
                         Z
                     );

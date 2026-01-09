@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 //using Vector4 = Microsoft.Xna.Framework.Vector4;
@@ -21,29 +20,38 @@ namespace MinecraftAlpha
         public int DisplayID = -1;
 
 
-        public ItemSlot FindItem(string name,string tag)
+        public ItemSlot FindItem(string name, string tag)
         {
             var itemSlot = Inventory.ItemSlots.Find(s => s.Item != null && s.Item.Name == name);
             return itemSlot;
         }
         public void Respawn()
         {
-            if(respawnTimer > 0)
+            if (respawnTimer > 0)
             {
                 respawnTimer -= 0.4f;
                 return;
             }
             Inventory = game._userInterfaceManager.windows.Find(w => w.Name == "Inventory");
 
-            if(!game.KeepInventory)
+            if (!game.KeepInventory)
             {
+                
+
+                foreach (var item in Inventory.ItemSlots)
+                {
+                    if (item.Item != null)
+                    {
+                        DropItem(item.Item, new Vector3(Plr.position, Plr.Layer), game.WorldMousePos, item.Count);
+                    }
+                }
                 foreach (var slot in Inventory.ItemSlots)
                 {
                     slot.Item = null;
                     slot.Count = 0;
                 }
             }
-            
+
 
 
 
@@ -56,7 +64,7 @@ namespace MinecraftAlpha
             game._entityManager.Workspace.Add(Plr);
             respawnTimer = 60f;
         }
-        public void PickupItem(Block item,int amount,WindowFrame inventory)
+        public void PickupItem(Block item, int amount, WindowFrame inventory)
         {
             foreach (var slot in inventory.ItemSlots)
             {
@@ -66,7 +74,7 @@ namespace MinecraftAlpha
                     slot.Count = amount;
                     break;
                 }
-                if (slot.Item.Name == item.Name && slot.Count <64)
+                if (slot.Item.Name == item.Name && slot.Count < 64)
                 {
                     slot.Count += amount;
                     break;
@@ -75,35 +83,35 @@ namespace MinecraftAlpha
             }
         }
 
-        public void DropItem(Block item,Vector3 origin,Vector2 Dir, int amount)
+        public void DropItem(Block item, Vector3 origin, Vector2 Dir, int amount)
         {
             Entity drop;
-            if(item == null) return;
+            if (item == null) return;
 
-            drop = game._entityManager.SpawnItem(new Vector2(origin.X,origin.Y) +Vector2.Normalize(Dir - new Vector2(origin.X, origin.Y)), (int)origin.Z, item, amount);
+            drop = game._entityManager.SpawnItem(new Vector2(origin.X, origin.Y) + Vector2.Normalize(Dir - new Vector2(origin.X, origin.Y)), (int)origin.Z, item, amount);
             drop.IFrame = 5f;
 
-            drop.velocity.velocity = Dir- new Vector2(origin.X, origin.Y);
+            drop.velocity.velocity = Dir - new Vector2(origin.X, origin.Y);
             if (drop != null)
             {
                 game._entityManager.Workspace.Add(drop);
             }
         }
 
-        public static void DrawStats(SpriteBatch SB,Texture2D Main,string name,Vector2 pos)
+        public static void DrawStats(SpriteBatch SB, Texture2D Main, string name, Vector2 pos)
         {
-            
 
-            if(name == "heart")
+
+            if (name == "heart")
             {
-                
+
                 SB.Draw(Main, pos, new Rectangle(0, 0, 9, 9), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f);
-                
+
             }
             if (name == "heart.5")
             {
                 SB.Draw(Main, pos, new Rectangle(0, 0, 5, 9), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f);
-                
+
             }
             if (name == "heart.0")
             {
@@ -119,7 +127,7 @@ namespace MinecraftAlpha
         public void Update()
         {
             Plr.Item = game._userInterfaceManager.selectedItem;
-            if(Plr.Item != null)
+            if (Plr.Item != null)
             {
                 if (Plr.Item.ChargeMax < Plr.Item.Charge && game._inputManager.WasMouseDown(Mouse.GetState()))
                 {
@@ -127,7 +135,7 @@ namespace MinecraftAlpha
                     Plr.Item.CanFire = true;
                     game._actionManager.PlaceBlock(game.WorldMousePos, Plr.Item);
                     //Plr.Item.Charge = 0;
-                    
+
                 }
             }
             Inventory = game._userInterfaceManager.windows.Find(w => w.Name == "Inventory");
@@ -143,23 +151,23 @@ namespace MinecraftAlpha
                     slot.Item.Cooldown += 1f;
                 }
             }
-            
+
         }
     }
 
-    
+
     public class Cammera
     {
-        
+
         public Vector2 position = new Vector2(0, 0);
         public Vector2 size { get; set; } = new Vector2(0, 0);
 
         //public void RenderLayer(BlockManager blockManager, SpriteBatch _spriteBatch, TileGrid[,] Map, float layer, Vector2 pos,Texture2D BreakingTexture)
         //{
         //    var Grid = Map;
-            
-            
-           
+
+
+
 
 
         //    var BlockSize = blockManager.BlockSize;
@@ -173,7 +181,7 @@ namespace MinecraftAlpha
         //        {
         //            if (Map[i, j].ID != 0)
         //            {
-                        
+
 
         //                float Light = Map[i, j].brightness;
         //                float Light01 = Light - layer;
@@ -193,7 +201,7 @@ namespace MinecraftAlpha
         //                {
         //                    BlockState = new Rectangle(State, 0, block.Texture.Width, block.Texture.Height);
         //                }
-                        
+
         //                _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, BlockState, color, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
         //                _spriteBatch.Draw(BreakingTexture, new Vector2(j * BlockSize, i * BlockSize) + Camera.position, sourceRectangle, Color.White, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 0f);
 
@@ -204,7 +212,7 @@ namespace MinecraftAlpha
 
         //}
 
-        
+
 
     }
 
@@ -213,7 +221,7 @@ namespace MinecraftAlpha
         public List<Keys> KeyHistory = new List<Keys>();
         public float TimeSinceLastKeyPress = 0f;
         public MouseState LastMouseState;
-        
+
         // to stop key repeat
         public bool IsKeyUp_Now(Keys key)
         {
@@ -221,18 +229,19 @@ namespace MinecraftAlpha
             {
                 if (k == key)
                 {
-                    
+
                     return false;
 
                 }
             }
-            
+
             return true;
         }
 
-        public bool WasMouseDown(MouseState state) {
+        public bool WasMouseDown(MouseState state)
+        {
 
-            if(state.RightButton == ButtonState.Released && LastMouseState.RightButton == ButtonState.Pressed)
+            if (state.RightButton == ButtonState.Released && LastMouseState.RightButton == ButtonState.Pressed)
             {
                 return true;
             }
@@ -241,7 +250,7 @@ namespace MinecraftAlpha
 
         public bool IsKeyDown_Now(Keys key)
         {
-            
+
             foreach (var k in KeyHistory)
             {
                 if (k == key)
@@ -251,14 +260,14 @@ namespace MinecraftAlpha
 
                 }
             }
-            if(Keyboard.GetState().IsKeyDown(key))
+            if (Keyboard.GetState().IsKeyDown(key))
             {
                 return true;
             }
             return false;
         }
 
-        public void UpdateKeyHistory(KeyboardState keyboardState) 
+        public void UpdateKeyHistory(KeyboardState keyboardState)
         {
             KeyHistory.Clear();
             foreach (var key in keyboardState.GetPressedKeys())
@@ -268,7 +277,7 @@ namespace MinecraftAlpha
             LastMouseState = Mouse.GetState();
         }
 
-        public bool KeyCombo(Keys key1, Keys key2,bool Order)
+        public bool KeyCombo(Keys key1, Keys key2, bool Order)
         {
             bool succes = false;
 
