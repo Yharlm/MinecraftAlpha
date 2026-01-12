@@ -86,7 +86,7 @@ public class Game1 : Game
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
     public bool InventoryOpen = false;
-    public float BlockSize = 16f;
+    public float BlockSize = 16f*5;
 
 
     static public int WorldSizeX = 300;
@@ -1029,6 +1029,12 @@ public class Game1 : Game
         {
             PLR.Jump();
         }
+
+
+
+        //Zooming
+
+
         if (keyboardState.IsKeyDown(Keys.OemPlus))
         {
 
@@ -1051,6 +1057,10 @@ public class Game1 : Game
         }
 
 
+
+
+
+
         if (keyboardState.IsKeyDown(Keys.T))
         {
             //InventoryOpen = !InventoryOpen;
@@ -1061,7 +1071,7 @@ public class Game1 : Game
         }
         if (keyboardState.IsKeyDown(Keys.H))
         {
-            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[3], WorldMousePos));
+            _entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[2], WorldMousePos));
             _entityManager.Workspace.Last().Speed = 0.6f;
         }
         if (keyboardState.IsKeyDown(Keys.B))

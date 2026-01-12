@@ -153,20 +153,22 @@ namespace MinecraftAlpha
             int id = 0;
             List<Entity> Entities = new List<Entity>();
 
+            
+
             var Plr = new Entity(id++, "Player", "Mobs/Steve", 20)
             {
                 gripIndex = 3,
                 GripOffset = new Vector2(4, 12f),
                 Ractangles = new List<Vector4>() // LimbShapes
                 {
-                        // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
+                    // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
 
-                        new Vector4(12,8,4,12), // Right Arm
-                        new Vector4(24,8,4,12),// Body
-                        new Vector4(8,0,8,8), // Head
-                        new Vector4(12,20,4,12), // Left Arm
-                        new Vector4(12,44,4,12), // Right Leg
-                        new Vector4(12,32,4,12) // Left Leg
+                    new Vector4(12, 8, 4, 12), // Right Arm
+                    new Vector4(24, 8, 4, 12),// Body
+                    new Vector4(8, 0, 8, 8), // Head
+                    new Vector4(12, 20, 4, 12), // Left Arm
+                    new Vector4(12, 44, 4, 12), // Right Leg
+                    new Vector4(12, 32, 4, 12) // Left Leg
                 },
                 Joints = new List<Joint>()
                 {
@@ -178,7 +180,7 @@ namespace MinecraftAlpha
                         B_Index = 2,
                     },
 
-                    new Joint()
+                    new Joint() //Left Arm
                     {
 
                         A = new Vector2(0, 4f),
@@ -187,7 +189,7 @@ namespace MinecraftAlpha
                         B_Index = 3
                     },
 
-                    new Joint()
+                    new Joint()// right leg
                     {
                         A = new Vector2(0, -8f),
                         B = new Vector2(0f, -4f),
@@ -195,16 +197,16 @@ namespace MinecraftAlpha
                         B_Index = 5
                     },
 
-                    new Joint()
+                    new Joint() // Right Arm
                     {
-                        
+
                         A = new Vector2(0, 4f),
                         B = new Vector2(0f, -4f),
                         A_Index = 1,
                         B_Index = 0
                     },
 
-                    new Joint()
+                    new Joint() //left arm
                     {
                         A = new Vector2(0, -8f),
                         B = new Vector2(0f, -4f),
@@ -214,8 +216,8 @@ namespace MinecraftAlpha
                 },
                 Animations = new()
                 {
-                    EntityAnimationService.LoadAnimations()[0],
-                    EntityAnimationService.LoadAnimations()[1],
+                    EntityAnimationService.GetAnimation("idle",0),
+                    EntityAnimationService.GetAnimation("Running",0),
                     EntityAnimationService.LoadAnimations()[2],
                 }
             };
@@ -230,7 +232,7 @@ namespace MinecraftAlpha
             };
             Entities.Add(item);
 
-            var Zombie = new Entity(id++, "Player", "Mobs/Zombie", 20)
+            var Zombie = new Entity(id++, "Zombie", "Mobs/Zombie", 20)
             {
                 gripIndex = 3,
                 GripOffset = new Vector2(4, 12f),
@@ -238,12 +240,12 @@ namespace MinecraftAlpha
                 {
                         // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
 
-                        new Vector4(12,8,4,12), // Right Arm
-                        new Vector4(24,8,4,12),// Body
-                        new Vector4(8,0,8,8), // Head
-                        new Vector4(12,12,4,12), // Left Arm
-                        new Vector4(12,44,4,12), // Right Leg
-                        new Vector4(12,32,4,12) // Left Leg
+                    new Vector4(12, 8, 4, 12), // Right Arm
+                    new Vector4(24, 8, 4, 12),// Body
+                    new Vector4(8, 0, 8, 8), // Head
+                    new Vector4(12, 20, 4, 12), // Left Arm
+                    new Vector4(12, 44, 4, 12), // Right Leg
+                    new Vector4(12, 32, 4, 12) // Left Leg
                 },
                 Joints = new List<Joint>()
                 {
@@ -255,16 +257,16 @@ namespace MinecraftAlpha
                         B_Index = 2,
                     },
 
-                    new Joint()
+                    new Joint() //Left Arm
                     {
-                        //orientation = 180f,
-                        A = new Vector2(0, 0f),
-                        B = new Vector2(0f, 0f),
+
+                        A = new Vector2(0, 4f),
+                        B = new Vector2(0f, -4f),
                         A_Index = 1,
                         B_Index = 3
                     },
 
-                    new Joint()
+                    new Joint()// right leg
                     {
                         A = new Vector2(0, -8f),
                         B = new Vector2(0f, -4f),
@@ -272,16 +274,16 @@ namespace MinecraftAlpha
                         B_Index = 5
                     },
 
-                    new Joint()
+                    new Joint() // Right Arm
                     {
-                        orientation = 0,
+
                         A = new Vector2(0, 4f),
                         B = new Vector2(0f, -4f),
                         A_Index = 1,
                         B_Index = 0
                     },
 
-                    new Joint()
+                    new Joint() //left arm
                     {
                         A = new Vector2(0, -8f),
                         B = new Vector2(0f, -4f),
@@ -291,12 +293,12 @@ namespace MinecraftAlpha
                 },
                 Animations = new()
                 {
-                    EntityAnimationService.LoadAnimations()[0],
-                    EntityAnimationService.LoadAnimations()[1],
+                    EntityAnimationService.GetAnimation("idle_zombie",1),
+                    EntityAnimationService.GetAnimation("Running_zombie",1),
                     EntityAnimationService.LoadAnimations()[2],
                 }
             };
-            Zombie.collisionBox = new CollisionBox() { Size = new Vector2(1.6f, 0.2f) };
+            Zombie.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1.8f) };
             Zombie.Texture = game1.Content.Load<Texture2D>(Zombie.TextureName);
             Entities.Add(Zombie);
             var Pig = new Entity(id++, "Pig", "Mobs/Pig", 10)
@@ -368,6 +370,12 @@ namespace MinecraftAlpha
             Pig.Texture = game1.Content.Load<Texture2D>(Pig.TextureName);
             Entities.Add(Pig);
 
+            var Falling_block = new Entity(-2, "Falling Block", "_block", 100)
+            {
+                position = Vector2.Zero,
+                collisionBox = new CollisionBox() { Size = new Vector2(1f, 1f) },
+                
+            };
 
 
             return Entities;

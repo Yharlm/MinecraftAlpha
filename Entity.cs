@@ -500,6 +500,7 @@ namespace MinecraftAlpha
         public void WalkTo(Vector2 pos, bool can_jump)
         {
             float lspeed = Speed;
+            
             if (can_jump)
             {
                 if (!collisionBox.Bottom || collisionBox.Left || collisionBox.Right)
@@ -517,7 +518,14 @@ namespace MinecraftAlpha
             //}
 
             velocity.velocity += pos * Vector2.UnitX * lspeed;
-
+            if(velocity.velocity.X > 0)
+            {
+                Fliped = false;
+            }
+            else if(velocity.velocity.X < 0)
+            {
+                Fliped = true;
+            }
         }
 
 

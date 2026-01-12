@@ -95,6 +95,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
                 new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
+                new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
                 new Block { Name = "Log", TexturePath = "oak_log", Health = 60},
@@ -183,7 +184,7 @@ namespace MinecraftAlpha
             getBlock("Leaves").ItemDrop = getBlock("Air");
             getBlock("Grass").ItemDrop = getBlock("Dirt");
 
-            getBlock("Tnt block").Interaction = (Pos, user,item) =>
+            getBlock("Sand").Update = (Pos) =>
             {
 
 

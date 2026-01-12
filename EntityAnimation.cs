@@ -83,6 +83,20 @@ namespace MinecraftAlpha
                 {   duration =0.2f,
                     Looped = false,
                 },
+                new EntityAnimation(1,"idle_zombie",new List<Frame>()
+                {
+
+                    //new Frame(1,0,0f,90),
+                    new Frame(2,0,0f,0),
+                    //new Frame(3,0,0f,90),
+                    new Frame(4,0,0f,0),
+                    new Frame(0,0,0f,0),
+
+
+                })
+                {   duration =1f,
+                    Looped = false,
+                },
 
                 new EntityAnimation(0,"Running",new List<Frame>()
                 {
@@ -103,6 +117,23 @@ namespace MinecraftAlpha
                     duration =4f,
                     Looped = false,
                 },
+                new EntityAnimation(1,"Running_zombie",new List<Frame>()
+                {
+
+                    new Frame(1,0f,2,-90,true),
+                    new Frame(3,0,2,-90,true),
+
+                    new Frame(4,0f,2,60),
+                    new Frame(4,2,2,-60),
+                    new Frame(2,0f,2,-60),
+                    new Frame(2,2,2,60),
+
+
+                })
+                {
+                    duration =4f,
+                    Looped = false,
+                },
                 new EntityAnimation(0,"Swing",new List<Frame>()
                 {
 
@@ -111,7 +142,7 @@ namespace MinecraftAlpha
                     new Frame(1,1,1,0),
 
                 })
-                {   duration =3f,
+                {   duration =1f,
                     Looped = false,
                 },
                 new EntityAnimation(2,"idle",new List<Frame>()
@@ -129,14 +160,9 @@ namespace MinecraftAlpha
 
                 new EntityAnimation(2,"pig_walk",new List<Frame>()
                 {
-                    new Frame(0,0f,2,-60),
-                    new Frame(0,0.5f,2,60),
-                    new Frame(1,0f,2,60),
-                    new Frame(1,0.5f,2,-60),
-                    new Frame(2,0f,2,-60),
-                    new Frame(2,0.5f,2,60),
-                    new Frame(3,0f,2,60),
-                    new Frame(3,0.5f,2,-60),
+                    new Frame(0,0f,2,0),
+                    new Frame(0,0.5f,2,0),
+                    
 
 
 
@@ -261,7 +287,8 @@ public class EntityAnimation
 
     public void ResetAnim()
     {
-        var Idle = parent.Animations.Find(x => x.name == "idle");
+
+        var Idle = parent.Animations.Find(x => x.name.Contains("idle"));
         foreach (var frame in Idle.frames)
         {
             var joint = parent.Joints[frame.Joint];
@@ -289,12 +316,11 @@ public class EntityAnimation
 
         foreach (var anim in Newlist)
         {
-            if (anim.ID == id)
-            {
+            
                 var newAnim = new EntityAnimation(anim.ID, anim.name, anim.frames);
                 newAnim.parent = parent;
                 animations.Add(newAnim);
-            }
+            
         }
         return animations;
     }
