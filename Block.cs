@@ -68,7 +68,7 @@ namespace MinecraftAlpha
 
 
 
-        public Action<TileGrid> Update = (Grid) => { };
+        public Action<TileGrid> Update = (tile) => { };
         public Action<TileGrid> OnCollide = (Grid) => { };
     }
 
@@ -186,6 +186,18 @@ namespace MinecraftAlpha
 
             getBlock("Sand").Update = (Pos) =>
             {
+                var pos = GetPosOfBlock(Pos, Game.Chunks);
+                var below = GetBlockAtPos(new Vector2(pos.X, pos.Y + 1), (int)pos.Z, Game.Chunks);
+                if (below != null)
+                {
+                    if (below.ID == getBlock("Air").ID)
+                    {
+                        below.ID = Pos.ID;
+                        Pos.ID = getBlock("Air").ID;
+                    }
+                }
+
+
 
 
             };
@@ -216,6 +228,9 @@ namespace MinecraftAlpha
                 var Window = Game._userInterfaceManager.windows[1];
                 string Data = "";
 
+                var block = Pos;
+
+
                 foreach (var slot in Window.ItemSlots)
                 {
                     if (slot.Item != null)
@@ -223,7 +238,7 @@ namespace MinecraftAlpha
                         Data += $"{slot.ID}:{GetBlockID(slot.Item)}:{slot.Count},";
                     }
                 }
-                Pos.Data = Data;
+                block.Data = Data;
 
 
             };
@@ -321,6 +336,29 @@ namespace MinecraftAlpha
         public static TileGrid GetBlockAtPos(Vector2 pos, List<Chunk> Chunks)
         {
             return GetBlockAtPos(pos, 9, Chunks);
+        }
+
+        public static Vector3 GetPosOfBlock(TileGrid tile, List<Chunk> Chunks)
+        {
+            foreach (Chunk C in Chunks)
+            {
+                for (int z = 0; z < 10; z++)
+                {
+                    for (int y = 0; y < C.Tiles.GetLength(1); y++)
+                    {
+                        for (int x = 0; x < C.Tiles.GetLength(2); x++)
+                        {
+                            if (C.Tiles[z, y, x] == tile)
+                            {
+                                int worldX = C.x * C.Tiles.GetLength(2) + x;
+                                int worldY = C.y * C.Tiles.GetLength(1) + y;
+                                return new Vector3(worldX, worldY, z);
+                            }
+                        }
+                    }
+                }
+            }
+            return Vector3.Zero; // Return zero vector if tile not found
         }
         public static TileGrid GetBlockAtPos(Vector2 pos, int z, List<Chunk> Chunks)
         {

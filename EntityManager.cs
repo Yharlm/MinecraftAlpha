@@ -97,7 +97,7 @@ namespace MinecraftAlpha
             else
             {
                 Drop.name = "item3D";
-                Drop.Data = item.ID.ToString() + ";1"+ c;
+                Drop.Data = item.ID.ToString() + ";"+ c;
             }
 
             Drop.Layer = Z;
@@ -146,6 +146,15 @@ namespace MinecraftAlpha
                 //}
                 entity.DrawEntity(SB, Size, Pos, game);
             }
+        }
+
+        public void GravityBlock(Vector2 Pos,int Z)
+        {
+            var tile = BlockManager.GetBlockAtPos(Pos, Z, game.Chunks);
+
+            var g = Entity.CloneEntity(game._entityManager.entities[3], Pos + Vector2.One * 0.5f);
+            game._entityManager.Workspace.Add(g);
+            
         }
 
         public static List<Entity> LoadEntites(Game1 game1)
@@ -227,6 +236,7 @@ namespace MinecraftAlpha
 
             var item = new Entity(-1, "Item", "null", 100)
             {
+                CanBeDamaged = false,
                 position = Vector2.Zero,
                 collisionBox = new CollisionBox() { Size = new Vector2(2f, 2f) },
             };
@@ -370,11 +380,11 @@ namespace MinecraftAlpha
             Pig.Texture = game1.Content.Load<Texture2D>(Pig.TextureName);
             Entities.Add(Pig);
 
-            var Falling_block = new Entity(-2, "Falling Block", "_block", 100)
+            var Falling_block = new Entity(-2, "Falling Block", "", 100)
             {
                 position = Vector2.Zero,
                 collisionBox = new CollisionBox() { Size = new Vector2(1f, 1f) },
-                
+                CanBeDamaged = false,
             };
 
 

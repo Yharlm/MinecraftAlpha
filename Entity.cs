@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 
 namespace MinecraftAlpha
 {
@@ -236,6 +237,7 @@ namespace MinecraftAlpha
         public float Mass = 1f;
         public float IFrame = 0.1f; // Invincibility Frames
         public bool CanDamage = true;
+        public bool CanBeDamaged = true;
         public float Layer = 8;
 
         public Entity(int id, string Name, string TextureName, int Health)
@@ -354,7 +356,21 @@ namespace MinecraftAlpha
                                1f
                                );
             }
-
+            if (ID == -2)//Gravity block
+            {
+                Texture2D Texture = game1.Content.Load<Texture2D>(Data.Split(";")[0]);
+                SB.Draw(
+                               Texture,
+                               BlockSize * position + Cam,
+                               null,
+                               Color.White,
+                               0, // Orientation
+                               Vector2.Zero, //
+                               BlockSize / 18,
+                               SpriteEffects.FlipHorizontally,
+                               1f
+                               );
+            }
 
             if (this.Model3D != null || name == "item")
             {

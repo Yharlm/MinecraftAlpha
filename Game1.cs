@@ -577,6 +577,31 @@ public class Game1 : Game
 
 
         }
+        
+        
+
+        foreach (var L in Chunks)
+        {
+            for (int z = 0; z < L.Tiles.GetLength(0); z++)
+            {
+                for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                {
+                    for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                    {
+                        var block = BlockManager.GetBlockAtPos(new Vector2(j, i),z, Chunks);
+                        if (block != null)
+                        {
+                            if (block.ID == 0) continue;
+                            _blockManager.Blocks[block.ID].Update(block);
+                        }
+                    }
+                }
+            }
+
+
+
+
+        }
 
 
         _entityAnimationService.entityAnimations.RemoveAll(x => x.parent.Animations[x.id].Paused);
