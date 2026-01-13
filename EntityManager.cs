@@ -52,7 +52,24 @@ namespace MinecraftAlpha
         public void AI(Entity mob)
         {
             Vector2 Pos = mob.position;
-            if (mob.ID <= -1) return; // Lol no ur an object
+
+
+
+
+            if (mob.ID <= -1)
+            {
+                if (mob.ID == -2)
+                {
+                    if(mob.collisionBox.Bottom)
+                    {
+                        var block = game._blockManager.GetBlockByName(mob.GetData()[0]);
+                        
+                        BlockManager.GetBlockAtPos(mob.position + new Vector2(0,-0.5f), (int)mob.Layer, game.Chunks).ID = block.ID;
+                        mob.Health = 0;
+                    }
+                }
+                return; // Lol no ur an object
+            } 
             if (mob.Target != null)
             {
                 Pos = mob.Target.position;
@@ -148,13 +165,46 @@ namespace MinecraftAlpha
             }
         }
 
-        public void GravityBlock(Vector2 Pos,int Z)
+        public void GravityBlock(Vector2 Pos,int Z,bool destroy)
         {
-            var tile = BlockManager.GetBlockAtPos(Pos, Z, game.Chunks);
 
-            var g = Entity.CloneEntity(game._entityManager.entities[3], Pos + Vector2.One * 0.5f);
+            var tile = BlockManager.GetBlockAtPos(Pos, Z, game.Chunks);
+            if (tile == null) return;
+            if (tile.ID == 0) return;
+            var g = Entity.CloneEntity(GetEntityByName("Falling block"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y))-Vector2.One*.5f);
+            g.Data = game._blockManager.GetBlockAtTile(tile).Name;
             game._entityManager.Workspace.Add(g);
-            
+            if (destroy)
+            {
+                tile.ID = new();
+            }
+        }
+
+        public void GravityBlock(TileGrid tile, bool destroy)
+        {
+
+            Vector3 Pos = BlockManager.GetPosOfBlock(tile, game.Chunks);
+            if (tile == null) return;
+            if (tile.ID == 0) return;
+            var g = Entity.CloneEntity(GetEntityByName("Falling block"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y)) - Vector2.One * .5f);
+            g.Data = game._blockManager.GetBlockAtTile(tile).Name;
+            game._entityManager.Workspace.Add(g);
+            if (destroy)
+            {
+                tile.ID = new();
+            }
+        }
+
+        public Entity GetEntityByName(string name)
+        {
+            foreach (var entity in entities)
+            {
+                if (entity.name == name)
+                {
+                    return entity;
+                }
+            }
+            return null;
         }
 
         public static List<Entity> LoadEntites(Game1 game1)
@@ -380,12 +430,13 @@ namespace MinecraftAlpha
             Pig.Texture = game1.Content.Load<Texture2D>(Pig.TextureName);
             Entities.Add(Pig);
 
-            var Falling_block = new Entity(-2, "Falling Block", "", 100)
+            var Falling_block = new Entity(-2, "Falling block", "", 100)
             {
                 position = Vector2.Zero,
                 collisionBox = new CollisionBox() { Size = new Vector2(1f, 1f) },
                 CanBeDamaged = false,
             };
+            Entities.Add(Falling_block);
 
 
             return Entities;

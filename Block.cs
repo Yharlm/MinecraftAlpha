@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MinecraftAlpha
 {
@@ -187,15 +189,10 @@ namespace MinecraftAlpha
             getBlock("Sand").Update = (Pos) =>
             {
                 var pos = GetPosOfBlock(Pos, Game.Chunks);
-                var below = GetBlockAtPos(new Vector2(pos.X, pos.Y + 1), (int)pos.Z, Game.Chunks);
-                if (below != null)
-                {
-                    if (below.ID == getBlock("Air").ID)
-                    {
-                        below.ID = Pos.ID;
-                        Pos.ID = getBlock("Air").ID;
-                    }
-                }
+                
+                
+                Game._entityManager.GravityBlock(new Vector2(pos.X,pos.Y),(int)pos.Z,true);
+                   
 
 
 
@@ -352,13 +349,53 @@ namespace MinecraftAlpha
                             {
                                 int worldX = C.x * C.Tiles.GetLength(2) + x;
                                 int worldY = C.y * C.Tiles.GetLength(1) + y;
+
+                                if (C.x < 0)
+                                {
+                                    worldX = (C.x + 1) * C.Tiles.GetLength(2) - (C.Tiles.GetLength(2) - x);
+                                }
+                                if (C.y < 0)
+                                {
+                                    worldY = (C.y + 1) * C.Tiles.GetLength(1) - (C.Tiles.GetLength(1) - y);
+                                }
+                                //if (C.x > 0) {
+                                //    worldX -= 1;
+                                //}
+                                //if (C.y > 0)
+                                //{
+                                //    worldY -= 1;
+                                //}
+                                
+
+
+
+
+
+
+
                                 return new Vector3(worldX, worldY, z);
+
+                                
+                                    
+
+                                
+
+
+
+
+
                             }
                         }
                     }
                 }
             }
             return Vector3.Zero; // Return zero vector if tile not found
+        
+        }
+        public Block GetBlockAtTile(TileGrid tile)
+        {
+            if (tile == null) return null;
+            return Blocks[tile.ID];
         }
         public static TileGrid GetBlockAtPos(Vector2 pos, int z, List<Chunk> Chunks)
         {

@@ -330,6 +330,11 @@ namespace MinecraftAlpha
 
 
         }
+        public string[] GetData()
+        {
+            return Data.Split(";");
+        }
+
 
         public void DrawEntity(SpriteBatch SB, float BlockSize, Vector2 Cam, Game1 game1)
         {
@@ -346,7 +351,7 @@ namespace MinecraftAlpha
 
                 SB.Draw(
                                Texture,
-                               BlockSize * position + Cam,
+                               BlockSize / 18 * position + Cam,
                                null,
                                Color.White,
                                angle, // Orientation
@@ -358,18 +363,21 @@ namespace MinecraftAlpha
             }
             if (ID == -2)//Gravity block
             {
-                Texture2D Texture = game1.Content.Load<Texture2D>(Data.Split(";")[0]);
+                Texture2D Texture = game1._blockManager.GetBlockByName(GetData()[0]).Texture;
                 SB.Draw(
                                Texture,
                                BlockSize * position + Cam,
                                null,
                                Color.White,
                                0, // Orientation
-                               Vector2.Zero, //
-                               BlockSize / 18,
+                               new Vector2(8,8), //
+                               BlockSize/16,
                                SpriteEffects.FlipHorizontally,
                                1f
                                );
+                Debuging.DebugPosWOrld(SB, BlockSize * position + Cam, game1, Color.Green);
+                return;
+                
             }
 
             if (this.Model3D != null || name == "item")

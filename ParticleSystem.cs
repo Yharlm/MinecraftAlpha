@@ -100,12 +100,12 @@ namespace MinecraftAlpha
             //spriteBatch.Begin(samplerState:SamplerState.PointClamp);
             spriteBatch.Draw(
                 Texture,
-                Size * Position + Camera,
+                Size * (Position) + Camera,
                 Ractangle,
                 Color,
                 0f, // Orientation
-                Vector2.Zero, //
-                size *Size/8,
+                new Vector2(4,4), //
+                size*Size/8,
                 SpriteEffects.None,
                 1f
                 );

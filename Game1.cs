@@ -29,7 +29,7 @@ public class Game1 : Game
 
 
 
-
+    public Effect Shader;
 
 
     public UserInterfaceManager _userInterfaceManager;
@@ -42,7 +42,7 @@ public class Game1 : Game
     public InputManager _inputManager = new();
 
 
-    public Effect Shader;
+
 
 
 
@@ -120,7 +120,7 @@ public class Game1 : Game
 
         _userInterfaceManager = new UserInterfaceManager(this);
         _blockManager = new BlockManager(this);
-
+        _entityManager.game = this;
         _actionManager.Game = this;
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
@@ -144,7 +144,7 @@ public class Game1 : Game
     {
         windowWidth = GraphicsDevice.Viewport.Width;
         windowHeight = GraphicsDevice.Viewport.Height;
-        _entityManager.game = this;
+        
         Player = new Player() { game = this };
         Random random = new Random();
         _particleSystem.Content = Content;
@@ -186,7 +186,7 @@ public class Game1 : Game
 
 
         // TODO: Add your initialization logic here
-        Entities = _entityManager.entities;
+        Entities = _entityManager.Workspace;
         BlockTypes = _blockManager.Blocks;
 
 
@@ -591,6 +591,7 @@ public class Game1 : Game
                         var block = BlockManager.GetBlockAtPos(new Vector2(j, i),z, Chunks);
                         if (block != null)
                         {
+                            
                             if (block.ID == 0) continue;
                             _blockManager.Blocks[block.ID].Update(block);
                         }
@@ -805,7 +806,24 @@ public class Game1 : Game
 
             if (key == Keys.X)
             {
-                PLR.velocity.flying = !PLR.velocity.flying;
+
+                TileGrid tile = BlockManager.GetLastBlockAtPos(WorldMousePos, Chunks);
+
+                //_entityManager.GravityBlock(WorldMousePos,8,true);
+                _entityManager.GravityBlock(BlockManager.GetBlockAtPos(WorldMousePos, (int)Player.Plr.Layer, Chunks), true);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             }
             if (key == Keys.Y)
@@ -1158,13 +1176,13 @@ public class Game1 : Game
         if (GameStarted)
         {
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack, effect: Shader);
-            foreach (var Mob in Entities)
-            {
+            //foreach (var Mob in Entities)
+            //{
 
-                _spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Player.cam.position + (BlockSize) * Vector2.One / 2, null, Color.White, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
+            //    _spriteBatch.Draw(BlockTypes[2].Texture, BlockSize * Mob.position + Player.cam.position + (BlockSize) * Vector2.One / 2, null, Color.White, 0f, Vector2.Zero, BlockSize / BlockTypes[1].Texture.Width, SpriteEffects.None, 0f);
 
 
-            }
+            //}
 
 
             // 2 cycles to render both directions of the world
@@ -1276,7 +1294,7 @@ public class Game1 : Game
             _spriteBatch.DrawString(font, ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
             _spriteBatch.DrawString(font, ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
             _spriteBatch.DrawString(font, (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
-
+            _spriteBatch.DrawString(font, (BlockManager.GetPosOfBlock(BlockManager.GetBlockAtPos(WorldMousePos,Chunks),Chunks)).ToString(), new Vector2(470, 40), Color.Red);
 
 
             _spriteBatch.DrawString(font, ((Player.Plr.velocity.velocity)).ToString(), new Vector2(500, 20), Color.WhiteSmoke);
@@ -1353,6 +1371,7 @@ public class Game1 : Game
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
         _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer + 0.01f);
+
 
     }
     // UI:
