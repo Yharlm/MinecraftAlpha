@@ -106,7 +106,9 @@ namespace MinecraftAlpha
                     for (int z = 0; z < Tiles.GetLength(0); z++)
                     {
                         Tiles[z, i, j] = new TileGrid()
-                        { ID = 0 };
+                        { ID = 0,
+                           pos = new Vector3((x * 32) + j, (y * 32) + i,z),
+                        };
                     }
                 }
             }

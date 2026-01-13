@@ -188,7 +188,7 @@ namespace MinecraftAlpha
 
             getBlock("Sand").Update = (Pos) =>
             {
-                var pos = GetPosOfBlock(Pos, Game.Chunks);
+                var pos = GetPosAtBlock(Pos, Game.Chunks);
                 
                 
                 Game._entityManager.GravityBlock(new Vector2(pos.X,pos.Y),(int)pos.Z,true);
@@ -335,10 +335,12 @@ namespace MinecraftAlpha
             return GetBlockAtPos(pos, 9, Chunks);
         }
 
-        public static Vector3 GetPosOfBlock(TileGrid tile, List<Chunk> Chunks)
+        public static Vector3 GetPosAtBlock(TileGrid tile, List<Chunk> Chunks)
         {
             foreach (Chunk C in Chunks)
             {
+                
+                
                 for (int z = 0; z < 10; z++)
                 {
                     for (int y = 0; y < C.Tiles.GetLength(1); y++)
@@ -347,41 +349,22 @@ namespace MinecraftAlpha
                         {
                             if (C.Tiles[z, y, x] == tile)
                             {
-                                int worldX = C.x * C.Tiles.GetLength(2) + x;
-                                int worldY = C.y * C.Tiles.GetLength(1) + y;
-
+                                int worldX = C.x + x;
+                                int worldY = C.y + y;
                                 if (C.x < 0)
                                 {
                                     worldX = (C.x + 1) * C.Tiles.GetLength(2) - (C.Tiles.GetLength(2) - x);
+                                   
                                 }
                                 if (C.y < 0)
                                 {
                                     worldY = (C.y + 1) * C.Tiles.GetLength(1) - (C.Tiles.GetLength(1) - y);
+
                                 }
-                                //if (C.x > 0) {
-                                //    worldX -= 1;
-                                //}
-                                //if (C.y > 0)
-                                //{
-                                //    worldY -= 1;
-                                //}
-                                
-
-
-
-
 
 
 
                                 return new Vector3(worldX, worldY, z);
-
-                                
-                                    
-
-                                
-
-
-
 
 
                             }
@@ -397,6 +380,8 @@ namespace MinecraftAlpha
             if (tile == null) return null;
             return Blocks[tile.ID];
         }
+
+
         public static TileGrid GetBlockAtPos(Vector2 pos, int z, List<Chunk> Chunks)
         {
             if (z < 0 || z > 9) return null;
@@ -467,7 +452,7 @@ namespace MinecraftAlpha
 
     public class TileGrid
     {
-        public Vector2 pos;
+        public Vector3 pos;
         public TileGrid() { }
         public int ID = 0;
         public int state = 0;
@@ -476,6 +461,7 @@ namespace MinecraftAlpha
         public float MinedHealth = 0; // How much health has been mined from this block
         public string Data { get; set; } = string.Empty;
 
+        public 
     }
 
     public class Items

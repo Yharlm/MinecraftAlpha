@@ -183,7 +183,7 @@ namespace MinecraftAlpha
         public void GravityBlock(TileGrid tile, bool destroy)
         {
 
-            Vector3 Pos = BlockManager.GetPosOfBlock(tile, game.Chunks);
+            Vector3 Pos = BlockManager.GetPosAtBlock(tile, game.Chunks);
             if (tile == null) return;
             if (tile.ID == 0) return;
             var g = Entity.CloneEntity(GetEntityByName("Falling block"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y)) - Vector2.One * .5f);
