@@ -8,6 +8,7 @@ using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace MinecraftAlpha;
 
@@ -850,9 +851,10 @@ public class Game1 : Game
                     }
                 }
             }
-            if (key == Keys.R)
+            if (_inputManager.IsKeyDown_Now(Keys.R))
             {
-                _actionManager.DeleteBlocksSphere(WorldMousePos, Player.Plr.Layer, 4);
+                //_actionManager.DeleteBlocksSphere(WorldMousePos, Player.Plr.Layer, 4);
+                _actionManager.Explosion(new Vector3(WorldMousePos.X,WorldMousePos.Y,PLR.Layer), 5, true);
             }
             if (key == Keys.NumPad1)
             {

@@ -190,11 +190,15 @@ namespace MinecraftAlpha
             {
                 //Pos.ID = 2;
                 var pos = GetPosAtBlock(Pos, Game.Chunks);
-                GetBlockAtPos(new Vector2(pos.X, pos.Y), Game.Chunks).ID = 1;
+                //Debuging.DebugPosWOrld(Game._spriteBatch,new Vector2(pos.X,pos.Y), Game);
 
-                
-                Game._entityManager.GravityBlock(new Vector2(pos.X,pos.Y),(int)pos.Z,true);
-                   
+                var lower = GetBlockAtPos(new Vector2(pos.X, pos.Y+1), (int)pos.Z, Game.Chunks);
+                if (lower == null) return;
+                Debuging.DebugPosWOrld(Game._spriteBatch, new Vector2(pos.X, pos.Y+1), Game);
+
+                if (lower.ID ==0)
+                Game._entityManager.GravityBlock(new Vector2(pos.X, pos.Y), (int)pos.Z, true);
+
 
 
 
@@ -341,14 +345,11 @@ namespace MinecraftAlpha
         {
             if (tile != null)
             {
-                var pos = tile.pos;
+                var pos = tile.pos + new Vector3(0.5f, 0.5f, 0.5f);
                 
-
-
-
-
                 return pos;
             }
+
             return Vector3.Zero;// Return zero vector if tile not found
         
         }

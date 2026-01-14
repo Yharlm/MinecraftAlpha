@@ -63,9 +63,14 @@ namespace MinecraftAlpha
                     if(mob.collisionBox.Bottom)
                     {
                         var block = game._blockManager.GetBlockByName(mob.GetData()[0]);
+                        var tile = BlockManager.GetBlockAtPos(mob.position + new Vector2(0,0f), (int)mob.Layer, game.Chunks);
+                        if (tile != null)
+                        {
+                            tile.ID = block.ID;
+                            mob.Health = 0;
+                        }
                         
-                        BlockManager.GetBlockAtPos(mob.position + new Vector2(0,-0.5f), (int)mob.Layer, game.Chunks).ID = block.ID;
-                        mob.Health = 0;
+                        
                     }
                 }
                 return; // Lol no ur an object
@@ -165,12 +170,12 @@ namespace MinecraftAlpha
             }
         }
 
-        public void GravityBlock(Vector2 Pos,int Z,bool destroy)
+        public Entity GravityBlock(Vector2 Pos,int Z,bool destroy)
         {
 
             var tile = BlockManager.GetBlockAtPos(Pos, Z, game.Chunks);
-            if (tile == null) return;
-            if (tile.ID == 0) return;
+            if (tile == null) return null;
+            if (tile.ID == 0) return null;
             var g = Entity.CloneEntity(GetEntityByName("Falling block"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y))-Vector2.One*.5f);
             g.Data = game._blockManager.GetBlockAtTile(tile).Name;
             game._entityManager.Workspace.Add(g);
@@ -178,6 +183,7 @@ namespace MinecraftAlpha
             {
                 tile.ID = 0;
             }
+            return g;
         }
 
         public void GravityBlock(TileGrid tile, bool destroy)

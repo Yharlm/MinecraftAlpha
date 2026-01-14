@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace MinecraftAlpha
 {
@@ -346,13 +347,79 @@ namespace MinecraftAlpha
             }
 
         }
-        public void GetAction(string action)
+        public void Explosion(Vector3 pos,float power, bool GravityBlocks)
         {
-            foreach (var act in Actions)
+            Vector2 Pos = new Vector2(pos.X, pos.Y);
+            float Z = pos.Z;
+            float radius = power;
+
+
+            float radiusSquared = radius * radius;
+            
+            // Determine the bounding box to minimize iterations
+            int minX = (int)Math.Floor(Pos.X - radius);
+            int maxX = (int)Math.Ceiling(Pos.X + radius);
+            int minY = (int)Math.Floor(Pos.Y - radius);
+            int maxY = (int)Math.Ceiling(Pos.Y + radius);
+            int minZ = (int)Math.Floor(Z - radius);
+            int maxZ = (int)Math.Ceiling(Z + radius);
+
+            int max = 1000;
+            int count = 0;
+
+            for (int x = minX; x <= maxX; x++)
             {
-                if (act.Name == action)
+                for (int y = minY; y <= maxY; y++)
                 {
-                    act.Action.Invoke();
+                    
+
+
+                    for (int z = minZ; z <= maxZ; z++)
+                    {
+                        // Calculate distance from center to current point
+                        float dx = x - Pos.X;
+                        float dy = y - Pos.Y;
+                        float dz = z - Z;
+                        float distance = dx * dx + dy * dy + dz * dz;
+                        // If distance squared is <= radius squared, it's inside the sphere
+
+                        if (z == 9)
+                        {
+                            var Smoke = new Particle()
+                            {
+                                Position = new Vector2(x + 0.5f, y + 0.5f) + LogicsClass.Randomiser(-1, 1),
+                                TextureName = "ParticleSmokeEffect",
+                                Texture = Game._particleSystem.sprites[0],
+                                lifeTime = 1.4f + (float)random.NextDouble(),
+                                size = 2.0f,
+                                Color = Color.White,
+                                Velocity = Vector2.Zero,
+                                Acceleration = new Vector2(0, -0.1f),
+                                gravity = 0.0f
+                            };
+                            Game._particleSystem.Particles.Add(Smoke);
+                        }
+
+                        if (distance <= radiusSquared)
+                        {
+                            if (GravityBlocks)
+                            {
+
+
+
+                                if(max > count)
+                                {
+                                    var block = Game._entityManager.GravityBlock(new Vector2(x, y) + Vector2.One / 2, z, true);
+                                    count++;
+                                    if (block == null) continue;
+                                    block.velocity.velocity = new Vector2(1, -2) * Vector2.Normalize(new Vector2(pos.X, pos.Y) - block.position) * -3 * radius;
+                                    continue;
+                                }
+                                
+                            }
+                            BreakBlock(new Vector2(x, y) + Vector2.One / 2, z, 12);
+                        }
+                    }
                 }
             }
         }
