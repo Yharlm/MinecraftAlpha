@@ -196,20 +196,20 @@ public class Game1 : Game
 
 
 
-            var Map = Generation.GenerateWhiteNoise(250, 5, 0, 0);
-            Map = Generation.GeneratePerlinNoise(Map, 6, 1f);
-            Generation.SumMaps(Map, Generation.GenerateFlat(250, 5, 0.2f), 0.7f);
-            Map = Generation.GenerateSmoothNoise(Map, 4);
-            //Map = Generation.GenerateFlat(250, 5, 0.2f);
-            int Height = 17;
-            for (int i = 0; i < Map.GetLength(1); i++)
-            {
-                float Y = (Map[0, i]) * Height + 50;
-                World[(int)Y, i].ID = 2;
-                World[(int)Y + 1, i].ID = 1;
-                World[(int)Y + 2, i].ID = 1;
-                //place blocks Downwards from here
-            }
+            //var Map = Generation.GenerateWhiteNoise(250, 5, 0, 0);
+            //Map = Generation.GeneratePerlinNoise(Map, 6, 1f);
+            //Generation.SumMaps(Map, Generation.GenerateFlat(250, 5, 0.2f), 0.7f);
+            //Map = Generation.GenerateSmoothNoise(Map, 4);
+            ////Map = Generation.GenerateFlat(250, 5, 0.2f);
+            //int Height = 17;
+            //for (int i = 0; i < Map.GetLength(1); i++)
+            //{
+            //    float Y = (Map[0, i]) * Height + 50;
+            //    World[(int)Y, i].ID = 2;
+            //    World[(int)Y + 1, i].ID = 1;
+            //    World[(int)Y + 2, i].ID = 1;
+            //    //place blocks Downwards from here
+            //}
 
 
 
@@ -581,13 +581,15 @@ public class Game1 : Game
                 {
                     for (int j = 0; j < L.Tiles.GetLength(2); j++)
                     {
-                        var block = BlockManager.GetBlockAtPos(new Vector2(j, i),z, Chunks);
-                        if (block != null)
-                        {
-                            
-                            if (block.ID == 0) continue;
-                            _blockManager.Blocks[block.ID].Update(block);
-                        }
+                        var tile = L.Tiles[z, i, j];
+                        if (tile == null) continue;
+                        if (tile.ID == 0) continue;
+                        
+                            _blockManager.GetBlockAtTile(tile).Update.Invoke(tile);
+
+                        
+
+                        
                     }
                 }
             }
@@ -802,7 +804,7 @@ public class Game1 : Game
 
                 TileGrid tile = BlockManager.GetLastBlockAtPos(WorldMousePos, Chunks);
 
-                //_entityManager.GravityBlock(WorldMousePos,8,true);
+                _entityManager.GravityBlock(WorldMousePos, 8, true);
                 _entityManager.GravityBlock(BlockManager.GetBlockAtPos(WorldMousePos, (int)Player.Plr.Layer, Chunks), true);
 
 

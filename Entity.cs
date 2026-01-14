@@ -122,19 +122,7 @@ namespace MinecraftAlpha
 
         }
 
-        public void CheckCollision(Entity entity, TileGrid[,] World)
-        {
-            foreach (var block in World)
-            {
-                if (LogicsClass.BlockCollide(entity.position, block.pos, 32 * Vector2.One))
-                {
-                    block.MinedHealth += 10;
-                }
-
-            }
-
-
-        }
+        
     }
 
     public class Entity

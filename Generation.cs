@@ -105,9 +105,23 @@ namespace MinecraftAlpha
                 {
                     for (int z = 0; z < Tiles.GetLength(0); z++)
                     {
+                        Vector3 pos = new Vector3(j, i, z);
+                        if(this.x < 0)
+                        {
+                            pos.X = Tiles.GetLength(0) - j;
+
+                        }
+                        if(this.y < 0)
+                        {
+                            pos.Y = Tiles.GetLength(1) - i;
+                        }
+
+
+
                         Tiles[z, i, j] = new TileGrid()
-                        { ID = 0,
-                           pos = new Vector3((x * 32) + j, (y * 32) + i,z),
+                        {
+                            ID = 0,
+                            pos = new Vector3(j, i, z),
                         };
                     }
                 }

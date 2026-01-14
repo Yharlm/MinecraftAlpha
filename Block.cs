@@ -188,8 +188,10 @@ namespace MinecraftAlpha
 
             getBlock("Sand").Update = (Pos) =>
             {
+                //Pos.ID = 2;
                 var pos = GetPosAtBlock(Pos, Game.Chunks);
-                
+                GetBlockAtPos(new Vector2(pos.X, pos.Y), Game.Chunks).ID = 1;
+
                 
                 Game._entityManager.GravityBlock(new Vector2(pos.X,pos.Y),(int)pos.Z,true);
                    
@@ -337,42 +339,17 @@ namespace MinecraftAlpha
 
         public static Vector3 GetPosAtBlock(TileGrid tile, List<Chunk> Chunks)
         {
-            foreach (Chunk C in Chunks)
+            if (tile != null)
             {
+                var pos = tile.pos;
                 
-                
-                for (int z = 0; z < 10; z++)
-                {
-                    for (int y = 0; y < C.Tiles.GetLength(1); y++)
-                    {
-                        for (int x = 0; x < C.Tiles.GetLength(2); x++)
-                        {
-                            if (C.Tiles[z, y, x] == tile)
-                            {
-                                int worldX = C.x + x;
-                                int worldY = C.y + y;
-                                if (C.x < 0)
-                                {
-                                    worldX = (C.x + 1) * C.Tiles.GetLength(2) - (C.Tiles.GetLength(2) - x);
-                                   
-                                }
-                                if (C.y < 0)
-                                {
-                                    worldY = (C.y + 1) * C.Tiles.GetLength(1) - (C.Tiles.GetLength(1) - y);
-
-                                }
 
 
 
-                                return new Vector3(worldX, worldY, z);
 
-
-                            }
-                        }
-                    }
-                }
+                return pos;
             }
-            return Vector3.Zero; // Return zero vector if tile not found
+            return Vector3.Zero;// Return zero vector if tile not found
         
         }
         public Block GetBlockAtTile(TileGrid tile)
@@ -461,7 +438,7 @@ namespace MinecraftAlpha
         public float MinedHealth = 0; // How much health has been mined from this block
         public string Data { get; set; } = string.Empty;
 
-        public 
+        
     }
 
     public class Items

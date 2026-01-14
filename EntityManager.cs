@@ -176,7 +176,7 @@ namespace MinecraftAlpha
             game._entityManager.Workspace.Add(g);
             if (destroy)
             {
-                tile.ID = new();
+                tile.ID = 0;
             }
         }
 
@@ -184,15 +184,7 @@ namespace MinecraftAlpha
         {
 
             Vector3 Pos = BlockManager.GetPosAtBlock(tile, game.Chunks);
-            if (tile == null) return;
-            if (tile.ID == 0) return;
-            var g = Entity.CloneEntity(GetEntityByName("Falling block"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y)) - Vector2.One * .5f);
-            g.Data = game._blockManager.GetBlockAtTile(tile).Name;
-            game._entityManager.Workspace.Add(g);
-            if (destroy)
-            {
-                tile.ID = new();
-            }
+            GravityBlock(new Vector2(Pos.X, Pos.Y), (int)Pos.Z, destroy);
         }
 
         public Entity GetEntityByName(string name)
