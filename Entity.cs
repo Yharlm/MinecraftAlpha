@@ -339,7 +339,7 @@ namespace MinecraftAlpha
 
                 SB.Draw(
                                Texture,
-                               BlockSize / 18 * position + Cam,
+                               BlockSize * position + Cam,
                                null,
                                Color.White,
                                angle, // Orientation

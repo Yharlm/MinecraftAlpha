@@ -189,7 +189,7 @@ namespace MinecraftAlpha
         public void GravityBlock(TileGrid tile, bool destroy)
         {
 
-            Vector3 Pos = BlockManager.GetPosAtBlock(tile, game.Chunks);
+            Vector3 Pos = BlockManager.GetPosAtBlock(tile);
             GravityBlock(new Vector2(Pos.X, Pos.Y), (int)Pos.Z, destroy);
         }
 

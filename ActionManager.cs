@@ -1,9 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Numerics;
 using Color = Microsoft.Xna.Framework.Color;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
@@ -60,15 +56,36 @@ namespace MinecraftAlpha
         }
         public void PlaceBlock(Vector2 pos, Block block)
         {
+
+            int Zindex = (int)Game.Player.Plr.Layer;
+            var Chunks = Game.Chunks;
+
+            if (Zindex < 0 || Zindex > 9) { return; }
+            if (block == null) return;
+            TileGrid Tile = BlockManager.GetBlockAtPos(pos, Zindex, Chunks);
+
             if (block == null) return;
             if (block.Item)
             {
+                if (Tile != null)
+                {
+                    if (Tile.ID != 0)
+                    {
+                        Block B = Game._blockManager.GetBlockAtTile(Tile);
+                        if (B == null) return;
+                        if (B.Interaction == null) return;
+                        B.Interaction.Invoke(Tile, Game.Player.Plr, block);
+                    }
+                }
+                
+
+
                 if (block.Interaction == null) return;
 
                 if (block.ChargeMax > block.Charge)
                 {
                     block.Charge += 0.1f;
-                    
+
                     return;
                 }
                 if (!block.CanFire && block.ChargeMax < block.Charge)
@@ -94,11 +111,11 @@ namespace MinecraftAlpha
 
                 if (!Game.creativeMode) // Use cost
                 {
-                    
 
 
 
-                    if(block.ammo == null && block.ammoTag == "") // Doesn't use ammo
+
+                    if (block.ammo == null && block.ammoTag == "") // Doesn't use ammo
                     {
                         Game._userInterfaceManager.amount -= 1;
                         if (Game._userInterfaceManager.amount <= 0)
@@ -107,15 +124,15 @@ namespace MinecraftAlpha
 
                         }
                     }
-                    else 
+                    else
                     {
-                        
-                        var ammo = Game.Player.FindItem(block.ammo.Name,block.ammoTag);
 
-                        if(ammo != null && ammo.Count > 0)
+                        var ammo = Game.Player.FindItem(block.ammo.Name, block.ammoTag);
+
+                        if (ammo != null && ammo.Count > 0)
                         {
                             ammo.Count -= 1;
-                            if(ammo.Count <= 0)
+                            if (ammo.Count <= 0)
                             {
                                 ammo.Item = null;
                             }
@@ -125,18 +142,13 @@ namespace MinecraftAlpha
                             return; // no ammo found
                         }
                     }
-                    
+
                 }
                 block.Interaction.Invoke(null, Game.Player.Plr, block);
-                
+
                 return;
             }
-            int Zindex = (int)Game.Player.Plr.Layer;
-            var Chunks = Game.Chunks;
 
-            if (Zindex < 0 || Zindex > 9) { return; }
-            if (block == null) return;
-            TileGrid Tile = BlockManager.GetBlockAtPos(pos, Zindex, Chunks);
             if (Tile == null)
             {
 
@@ -150,6 +162,7 @@ namespace MinecraftAlpha
 
             if (Tile.ID != 0)
             {
+
                 return;
             }
 
@@ -209,7 +222,7 @@ namespace MinecraftAlpha
             if (block.Interaction != null)
             {
 
-                block.Interaction.Invoke(Tile, Game.Player.Plr,block);
+                block.Interaction.Invoke(Tile, Game.Player.Plr, block);
                 Game._userInterfaceManager.LastUsedBlock = Tile;
 
             }
@@ -335,8 +348,8 @@ namespace MinecraftAlpha
 
                 Tile.ID = 0;
                 Entity drop = null;
-                if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop,1);
-                else drop = Game._entityManager.SpawnItem(pos, Zindex, block,1);
+                if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop, 1);
+                else drop = Game._entityManager.SpawnItem(pos, Zindex, block, 1);
                 if (drop != null)
                 {
                     drop.IFrame = 0.1f;
@@ -347,7 +360,7 @@ namespace MinecraftAlpha
             }
 
         }
-        public void Explosion(Vector3 pos,float power, bool GravityBlocks)
+        public void Explosion(Vector3 pos, float power, bool GravityBlocks)
         {
             Vector2 Pos = new Vector2(pos.X, pos.Y);
             float Z = pos.Z;
@@ -355,7 +368,7 @@ namespace MinecraftAlpha
 
 
             float radiusSquared = radius * radius;
-            
+
             // Determine the bounding box to minimize iterations
             int minX = (int)Math.Floor(Pos.X - radius);
             int maxX = (int)Math.Ceiling(Pos.X + radius);
@@ -367,11 +380,47 @@ namespace MinecraftAlpha
             int max = 1000;
             int count = 0;
 
+            for (int n = 0; n < 40; n++)
+            {
+                Vector2 Point = new Vector2((float)random.NextDouble(), (float)random.NextDouble()) - Vector2.One / 2;
+
+
+
+
+
+                var Smoke = new Particle()
+                {
+                    Position = Vector2.Normalize(Point) * power * (float)random.NextDouble() + new Vector2(pos.X, pos.Y),
+                    TextureName = "ParticleSmokeEffect",
+                    Texture = Game._particleSystem.sprites[0],
+                    lifeTime = 1.4f + (float)random.NextDouble(),
+                    size = (float)random.NextDouble() * 7,
+                    Color = Color.White,
+                    Velocity = Vector2.Zero,
+                    Acceleration = new Vector2(0, -0.1f),
+                    gravity = 0.0f
+                };
+                Game._particleSystem.Particles.Add(Smoke);
+            }
+
+            foreach (Entity ent in Game._entityManager.Workspace)
+            {
+                float dis = Vector2.Distance(Pos, ent.position);
+                if (dis < radius + 2)
+                {
+                    ent.velocity.velocity = Vector2.Normalize(Pos - ent.position) * -radius * 10;
+                    ent.TakeDamage(null, (int)power, 3);
+                }
+            }
+
+
+
+
             for (int x = minX; x <= maxX; x++)
             {
                 for (int y = minY; y <= maxY; y++)
                 {
-                    
+
 
 
                     for (int z = minZ; z <= maxZ; z++)
@@ -382,23 +431,13 @@ namespace MinecraftAlpha
                         float dz = z - Z;
                         float distance = dx * dx + dy * dy + dz * dz;
                         // If distance squared is <= radius squared, it's inside the sphere
-
-                        if (z == 9)
+                        var BLOCK = BlockManager.GetBlockAtPos(new Vector2(x, y) + Vector2.One / 2,z, Game.Chunks);
+                        if (BLOCK == null) continue;
+                        if (Game._blockManager.GetBlockAtTile(BLOCK).ID == 13)
                         {
-                            var Smoke = new Particle()
-                            {
-                                Position = new Vector2(x + 0.5f, y + 0.5f) + LogicsClass.Randomiser(-1, 1),
-                                TextureName = "ParticleSmokeEffect",
-                                Texture = Game._particleSystem.sprites[0],
-                                lifeTime = 1.4f + (float)random.NextDouble(),
-                                size = 2.0f,
-                                Color = Color.White,
-                                Velocity = Vector2.Zero,
-                                Acceleration = new Vector2(0, -0.1f),
-                                gravity = 0.0f
-                            };
-                            Game._particleSystem.Particles.Add(Smoke);
+                            Game._blockManager.GetBlockAtTile(BLOCK).Interaction.Invoke(BLOCK, null, Game._blockManager.getBlock("Flint and Steel"));
                         }
+
 
                         if (distance <= radiusSquared)
                         {
@@ -407,17 +446,22 @@ namespace MinecraftAlpha
 
 
 
-                                if(max > count)
+                                if (max > count)
                                 {
+                                    
                                     var block = Game._entityManager.GravityBlock(new Vector2(x, y) + Vector2.One / 2, z, true);
+
+                                    
+
+
                                     count++;
                                     if (block == null) continue;
                                     block.velocity.velocity = new Vector2(1, -2) * Vector2.Normalize(new Vector2(pos.X, pos.Y) - block.position) * -3 * radius;
                                     continue;
                                 }
-                                
+
                             }
-                            BreakBlock(new Vector2(x, y) + Vector2.One / 2, z, 12);
+                            BreakBlock(new Vector2(x, y) + Vector2.One / 2, z, power * power);
                         }
                     }
                 }

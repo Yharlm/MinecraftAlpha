@@ -21,6 +21,9 @@ public class RecipeManager
         int log = blocksManager.GetBlockByName("Log").ID;
         int stick = blocksManager.GetBlockByName("Stick").ID;
         int wood = blocksManager.GetBlockByName("Wood").ID;
+        int Cstone = blocksManager.GetBlockByName("Cobblestone").ID;
+        int iron = blocksManager.GetBlockByName("Iron Ingot").ID;
+        int gold = blocksManager.GetBlockByName("Gold Ingot").ID;
         int CraftT = blocksManager.GetBlockByName("Crafting Table").ID;
         var List = new List<CraftingRecipe>()
         
@@ -38,6 +41,21 @@ public class RecipeManager
                 { wood, wood,wood },
                 { 0, stick,0  },
                 { 0, stick,0  }} ,stick,1,blocksManager),
+            new CraftingRecipe(new int[,] {
+                { Cstone, Cstone,Cstone },
+                { 0, stick,0  },
+                { 0, stick,0  }} ,stick,1,blocksManager),
+
+            new CraftingRecipe(new int[,] {
+                { iron, iron,iron },
+                { 0, stick,0  },
+                { 0, stick,0  }} ,stick,1,blocksManager),
+
+            new CraftingRecipe(new int[,] {
+                { gold, gold,gold },
+                { 0, stick,0  },
+                { 0, stick,0  }} ,stick,1,blocksManager),
+
 
         };
 

@@ -1291,7 +1291,7 @@ public class Game1 : Game
             _spriteBatch.DrawString(font, ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
             _spriteBatch.DrawString(font, ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
             _spriteBatch.DrawString(font, (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
-            _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos,Chunks),Chunks)).ToString(), new Vector2(470, 40), Color.Red);
+            _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos,Chunks))).ToString(), new Vector2(470, 40), Color.Red);
 
 
             _spriteBatch.DrawString(font, ((Player.Plr.velocity.velocity)).ToString(), new Vector2(500, 20), Color.WhiteSmoke);

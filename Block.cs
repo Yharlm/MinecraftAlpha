@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -96,6 +97,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
                 new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
+                new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true},
@@ -103,7 +105,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Log", TexturePath = "oak_log", Health = 60},
                 new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
                 new Block { Name = "Glass block", TexturePath = "glass", Health = 4,Transparent = true},
-                new Block { Name = "Tnt block", TexturePath = "tnt_side", Health = 2,Transparent = false},
+                new Block { Name = "TNT", TexturePath = "tnt_side", Health = 2,Transparent = false,Tag="Explosive"},
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
                 new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
                 new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.4f,Tag="Pickaxe",MineLevel = 1},
@@ -111,6 +113,8 @@ namespace MinecraftAlpha
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
                 new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.8f,Tag="Pickaxe",MineLevel = 4},
                 new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 36,Damage = 3f,Tag="Bow",Grip = 90f,ChargeMax = 4},
+                new Block { Name = "Flint and Steel", TexturePath = "_item" ,ItemID= 28,Item = true,Placable = false},
+
 
             };
 
@@ -137,7 +141,20 @@ namespace MinecraftAlpha
         
         public void LoadActions()
         {
+            //getBlock("Flint and Steel").Interaction = (Pos, ent, item) =>
+            //{
 
+            //};
+            getBlock("TNT").Interaction = (Pos, ent, item) =>
+            {
+                if (item == getBlock("Flint and Steel"))
+                    {
+                    var pos = GetPosAtBlock(Pos);
+                    Pos.ID = 0;
+                    Game._actionManager.Explosion(pos, 5, true);
+
+                }
+            };
             getBlock("Bow").Interaction = (Pos, ent,item) =>
             {
 
@@ -189,7 +206,7 @@ namespace MinecraftAlpha
             getBlock("Sand").Update = (Pos) =>
             {
                 //Pos.ID = 2;
-                var pos = GetPosAtBlock(Pos, Game.Chunks);
+                var pos = GetPosAtBlock(Pos);
                 //Debuging.DebugPosWOrld(Game._spriteBatch,new Vector2(pos.X,pos.Y), Game);
 
                 var lower = GetBlockAtPos(new Vector2(pos.X, pos.Y+1), (int)pos.Z, Game.Chunks);
@@ -198,6 +215,24 @@ namespace MinecraftAlpha
 
                 if (lower.ID ==0)
                 Game._entityManager.GravityBlock(new Vector2(pos.X, pos.Y), (int)pos.Z, true);
+
+
+
+
+
+            };
+            getBlock("Gravel").Update = (Pos) =>
+            {
+                //Pos.ID = 2;
+                var pos = GetPosAtBlock(Pos);
+                //Debuging.DebugPosWOrld(Game._spriteBatch,new Vector2(pos.X,pos.Y), Game);
+
+                var lower = GetBlockAtPos(new Vector2(pos.X, pos.Y + 1), (int)pos.Z, Game.Chunks);
+                if (lower == null) return;
+                Debuging.DebugPosWOrld(Game._spriteBatch, new Vector2(pos.X, pos.Y + 1), Game);
+
+                if (lower.ID == 0)
+                    Game._entityManager.GravityBlock(new Vector2(pos.X, pos.Y), (int)pos.Z, true);
 
 
 
@@ -301,7 +336,11 @@ namespace MinecraftAlpha
         }
         public Block GetBlockByName(string name)
         {
-            return Blocks.Find(x => x.Name == name);
+            var block = Blocks.Find(x => x.Name == name);
+            if (block == null)
+                return GetBlockByName("Air");
+            else
+                return block;
         }
 
         public ItemSlot[,] RandomiseLoot()
@@ -341,7 +380,7 @@ namespace MinecraftAlpha
             return GetBlockAtPos(pos, 9, Chunks);
         }
 
-        public static Vector3 GetPosAtBlock(TileGrid tile, List<Chunk> Chunks)
+        public static Vector3 GetPosAtBlock(TileGrid tile)
         {
             if (tile != null)
             {
