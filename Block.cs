@@ -24,7 +24,7 @@ namespace MinecraftAlpha
         public bool Transparent = false;
 
         public int DefaultState = 0; // Default state of the block
-
+        public string Data = ""; // Additional data for the block
 
         //Tool stuff
         public float Durrability = -1; // How much damage the block can take before breaking
@@ -71,8 +71,8 @@ namespace MinecraftAlpha
 
 
 
-        public Action<TileGrid> Update = (tile) => { };
-        public Action<TileGrid> OnCollide = (Grid) => { };
+        public Action<TileGrid,string> Update ;
+        public Action<TileGrid> OnCollide ;
     }
 
     public class BlockManager
@@ -96,7 +96,8 @@ namespace MinecraftAlpha
                 new Block { Name = "Dirt", TexturePath = "dirt",Health = 30, Tag="dirt"},
                 new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
-                new Block { Name = "Stone", TexturePath = "stone" ,Health = 100},
+                new Block { Name = "Stone", TexturePath = "stone" ,Health = 100,},
+                new Block { Name = "Water", TexturePath = "clay" ,Health = 100,Color = Color.Blue,Data = "7"},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
@@ -145,6 +146,50 @@ namespace MinecraftAlpha
             //{
 
             //};
+
+            getBlock("Water").Update = (Pos,data) =>
+            {
+                var pos = GetPosAtBlock(Pos);
+                if(data == "") data = "0";
+                int Data = int.Parse(data);
+                var lower = GetBlockAtPos(new Vector2(pos.X, pos.Y + 1), (int)pos.Z, Game.Chunks);
+                var top = GetBlockAtPos(new Vector2(pos.X, pos.Y - 1), (int)pos.Z, Game.Chunks);
+                if (lower == null) return;
+                if (top == null) return;
+
+                if (Data == 6)
+                {
+                    if (top.ID == 0)
+                    {
+                        Game._actionManager.SetTile(Pos, "Air");
+                    }
+                }
+                if (Data <= 1) return;
+                if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
+                {
+                    //Game._actionManager.SetTile(Pos, "Air");
+                    Game._actionManager.SetTile(lower, "Water", "5");
+                }
+                else
+                {
+                    var Left = GetBlockAtPos(new Vector2(pos.X - 1, pos.Y), (int)pos.Z, Game.Chunks);
+                    var Right = GetBlockAtPos(new Vector2(pos.X + 1, pos.Y), (int)pos.Z, Game.Chunks);
+
+                    if (Right == null) return;
+                    if (Left == null) return;
+                    if (Right.ID == 0)
+                    {
+                        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString()); 
+                    }
+                    else if (Left.ID == 0)
+                    {
+                        Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString()); 
+                    }
+                }
+                
+
+            };
+
             getBlock("TNT").Interaction = (Pos, ent, item) =>
             {
                 if (item == getBlock("Flint and Steel"))
@@ -203,7 +248,7 @@ namespace MinecraftAlpha
             getBlock("Leaves").ItemDrop = getBlock("Air");
             getBlock("Grass").ItemDrop = getBlock("Dirt");
 
-            getBlock("Sand").Update = (Pos) =>
+            getBlock("Sand").Update = (Pos, data) =>
             {
                 //Pos.ID = 2;
                 var pos = GetPosAtBlock(Pos);
@@ -221,7 +266,7 @@ namespace MinecraftAlpha
 
 
             };
-            getBlock("Gravel").Update = (Pos) =>
+            getBlock("Gravel").Update = (Pos,data) =>
             {
                 //Pos.ID = 2;
                 var pos = GetPosAtBlock(Pos);
@@ -261,7 +306,7 @@ namespace MinecraftAlpha
 
                 }
             };
-            getBlock("Chest").Update = (Pos) =>
+            getBlock("Chest").Update = (Pos, data) =>
             {
                 var Window = Game._userInterfaceManager.windows[1];
                 string Data = "";
@@ -476,6 +521,7 @@ namespace MinecraftAlpha
         public float brightness = 0;
         public float LightSource = 0;
         public float MinedHealth = 0; // How much health has been mined from this block
+        public bool MarkedForUpdate = false;
         public string Data { get; set; } = string.Empty;
 
         

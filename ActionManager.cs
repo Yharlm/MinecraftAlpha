@@ -165,8 +165,9 @@ namespace MinecraftAlpha
 
                 return;
             }
-
-            Tile.ID = Game._blockManager.Blocks.IndexOf(block);
+            //Places block here
+            block.Data = Game._blockManager.GetBlockByName(block.Name).Data;
+            SetTile(Tile,block.Name,block.Data);
             Tile.MinedHealth = 0;
             if (!Game.creativeMode)
             {
@@ -270,7 +271,12 @@ namespace MinecraftAlpha
 
         public void SetTile(TileGrid tile,string name)
         {
+            SetTile(tile, name, "");
+        }
+        public void SetTile(TileGrid tile, string name,string Data)
+        {
             tile.ID = Game._blockManager.Blocks.FindIndex(b => b.Name == name);
+            tile.Data = Data;
         }
         public void SpawnEntity(Vector2 Pos, string EntityName)
         {

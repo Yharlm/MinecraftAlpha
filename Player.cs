@@ -187,20 +187,33 @@ namespace MinecraftAlpha
                     case "/SPAWN":
                         string name = "Zombie"; // default
                         Vector2 pos = game.Player.Plr.position;
+                        int num = 1;
 
                         if (Parts.Length > 1)
                         {
                             name = Parts[1];
                         }
-                        if (Parts.Length > 3)
+                        if (Parts.Length > 2)
                         {
-                            float x, y;
-                            if (float.TryParse(Parts[2], out x) && float.TryParse(Parts[3], out y))
+                            name = Parts[1];
+                            if (int.TryParse(Parts[2], out int n))
                             {
-                                pos = new Vector2(x, y);
+                                num = n;
                             }
                         }
-                        game._actionManager.SpawnEntity(pos,name );
+                        //if (Parts.Length > 3)
+                        //{
+                        //    float x, y;
+                        //    if (float.TryParse(Parts[2], out x) && float.TryParse(Parts[3], out y))
+                        //    {
+                        //        pos = new Vector2(x, y);
+                        //    }
+                        //}
+                        for (int i = 0; i < num; i++)
+                        {
+                            game._actionManager.SpawnEntity(pos, name);
+                        }    
+                            //game._actionManager.SpawnEntity(pos,name );
                         return;
                     case "/CLEAR":
                         Buffer.Clear();
@@ -255,6 +268,16 @@ namespace MinecraftAlpha
                     {
                         Command += " ";
                         
+                    }
+                    if ((int)key >= 49 && (int)key < 49 + 9 )
+                    {
+                        int number = (int)key - 48;
+                        Command += $"{number}";
+
+                    }
+                    if (key == Keys.D0)
+                    {
+                        Command += "0";
                     }
                     if (key == Keys.OemPipe)
                     {

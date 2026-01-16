@@ -241,16 +241,12 @@ namespace MinecraftAlpha
             var ract = Margin;
             var target = Color.White;
 
-            Vector2 A = Attachment;
-            Vector2 B = mob.Joints[3].B;
-
-
             
+
+
+
             SpriteEffects spriteEffect = SpriteEffects.None;
-            if (Flip)
-            {
-                spriteEffect = SpriteEffects.FlipHorizontally;
-            }
+            
             //Draws the sprite where the attachment of its parent is
             //Vector2 Attachment = this.Attachment / new Vector2(Margin.Width,Margin.Height);
 
@@ -266,17 +262,27 @@ namespace MinecraftAlpha
             var ParentPos = Vector2.Transform(Parent, AnglePos);
             var attachmentPos = Vector2.Transform(Attachment, AnglePos);
 
+
+
+            Vector2 A = Attachment;
+            Vector2 B = ParentPos;
+            if (Flip)
+            {
+                A *= new Vector2(-1, 1);
+                B *= new Vector2(-1, 1);
+                spriteEffect = SpriteEffects.FlipHorizontally;
+            }
             if (Iframe)
             {
                 Layer = Color.PaleVioletRed;
             }
             spriteBatch.Draw(
                 texture,
-                Pos - ParentPos * size,
+                Pos - B * size,
                 ract,
                 Layer,
                 Angle + JointOrientation, // Orientation
-                new Vector2(ract.Width, ract.Height) / 2 + Attachment, //
+                new Vector2(ract.Width, ract.Height) / 2 + A, //
                 size,
                 spriteEffect,
                 Z - 0.01f
@@ -304,7 +310,7 @@ namespace MinecraftAlpha
                 {
                     spriteBatch.Draw(
                         game1.items.Atlas,
-                        Pos - (ParentPos) * size,
+                        Pos - (B) * size,
                         game1.items.GetRactangle(item.ItemID),
                         Layer,
                         Angle + JointOrientation + rotation, // Orientation
@@ -313,13 +319,13 @@ namespace MinecraftAlpha
                         spriteEffect,
                         Z
                     );
-                    Debuging.DebugPos(spriteBatch, Pos - (ParentPos) * size, game1);
+                    Debuging.DebugPos(spriteBatch, Pos - (B) * size, game1);
                 }
                 else
                 {
                     spriteBatch.Draw(
                         item.Texture,
-                        Pos - (ParentPos) * size,
+                        Pos - (B) * size,
                         null,
                         Layer,
                         Angle + JointOrientation + rotation, // Orientation
@@ -328,7 +334,7 @@ namespace MinecraftAlpha
                         spriteEffect,
                         Z
                     );
-                    Debuging.DebugPos(spriteBatch, Pos - (ParentPos) * size, game1);
+                    Debuging.DebugPos(spriteBatch, Pos - (B) * size, game1);
                 }
 
             }

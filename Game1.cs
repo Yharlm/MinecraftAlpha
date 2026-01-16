@@ -57,6 +57,7 @@ public class Game1 : Game
     public bool DebugMode = false;
 
     public bool GameStarted = false;
+    public float TimeSinceStart = 0f;
 
     public float Daytime = 0f;
     public List<Entity> Entities;
@@ -458,7 +459,7 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         
-
+        TimeSinceStart += 0.1f;
 
         MouseClick = 0;
         if (Mouse.GetState().LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Released && Clicked)
@@ -576,26 +577,37 @@ public class Game1 : Game
         }
         
         
-
-        foreach (var L in Chunks)
+        if(TimeSinceStart > 5)
         {
-            for (int z = 0; z < L.Tiles.GetLength(0); z++)
+            TimeSinceStart = 0;
+            foreach (var L in Chunks)
             {
-                for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                for (int z = 0; z < L.Tiles.GetLength(0); z++)
                 {
-                    for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                    for (int i = 0; i < L.Tiles.GetLength(1); i++)
                     {
-                        var tile = L.Tiles[z, i, j];
-                        if (tile == null) continue;
-                        if (tile.ID == 0) continue;
-                        
-                            _blockManager.GetBlockAtTile(tile).Update.Invoke(tile);
+                        for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                        {
+                            
+                            var tile = L.Tiles[z, i, j];
+                            if (tile == null) continue;
+                            if (tile.ID == 0) continue;
+                            
 
-                        
+                            var block = _blockManager.GetBlockAtTile(tile);
+                            if (block.Update == null) continue;
+                            block.Update.Invoke(tile, tile.Data);
+                            tile.MarkedForUpdate = true;
 
-                        
+
+
+
+
+
+                        }
                     }
                 }
+
             }
 
 
@@ -1288,7 +1300,7 @@ public class Game1 : Game
 
 
 
-
+            _spriteBatch.DrawString(font, TimeSinceStart.ToString(), new Vector2(0, 10), Color.White);
 
             if (DebugMode) {
                 _spriteBatch.DrawString(font, ((int)Math.Ceiling((WorldMousePos.X / 32))).ToString(), Vector2.One * 40, Color.Chartreuse);
@@ -1299,6 +1311,7 @@ public class Game1 : Game
                 _spriteBatch.DrawString(font, ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
                 _spriteBatch.DrawString(font, (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
                 _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos, Chunks))).ToString(), new Vector2(470, 40), Color.Red);
+
             }
             if (_CommandManager.active) {
                 int c = 0;
