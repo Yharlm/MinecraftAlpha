@@ -41,6 +41,7 @@ public class Game1 : Game
     public ParticleSystem _particleSystem = new();
     public RecipeManager _RecipeManager = new();
     public InputManager _inputManager = new();
+    public CommandMannger _CommandManager = new(); 
 
 
 
@@ -125,6 +126,7 @@ public class Game1 : Game
         _actionManager.Game = this;
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
+        _CommandManager.game = this;
 
         // In Game1 constructor, after 'graphics = new GraphicsDeviceManager(this);'
         _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; // Your desired width
@@ -724,6 +726,10 @@ public class Game1 : Game
     public void Input(GameTime time)
     {
 
+        _CommandManager.Read();
+        if(_CommandManager.active) { return; }
+
+
         bool jump = false;
         var PLR = Player.Plr;
 
@@ -1283,15 +1289,25 @@ public class Game1 : Game
 
 
 
+            if (DebugMode) {
+                _spriteBatch.DrawString(font, ((int)Math.Ceiling((WorldMousePos.X / 32))).ToString(), Vector2.One * 40, Color.Chartreuse);
+                _spriteBatch.DrawString(font, (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
+                _spriteBatch.DrawString(font, Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
+                _spriteBatch.DrawString(font, Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
+                _spriteBatch.DrawString(font, ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
+                _spriteBatch.DrawString(font, ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
+                _spriteBatch.DrawString(font, (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
+                _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos, Chunks))).ToString(), new Vector2(470, 40), Color.Red);
+            }
+            if (_CommandManager.active) {
+                foreach(var text in _CommandManager.Buffer)
+                {
+                    _spriteBatch.DrawString(font,text, new Vector2(0, 0), Color.White);
+                }
+                
 
-            _spriteBatch.DrawString(font, ((int)Math.Ceiling((WorldMousePos.X / 32))).ToString(), Vector2.One * 40, Color.Chartreuse);
-            _spriteBatch.DrawString(font, (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
-            _spriteBatch.DrawString(font, Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
-            _spriteBatch.DrawString(font, Player.Plr.Health.ToString(), Vector2.One * 30, Color.Red);
-            _spriteBatch.DrawString(font, ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
-            _spriteBatch.DrawString(font, ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
-            _spriteBatch.DrawString(font, (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
-            _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos,Chunks))).ToString(), new Vector2(470, 40), Color.Red);
+            }
+
 
 
             _spriteBatch.DrawString(font, ((Player.Plr.velocity.velocity)).ToString(), new Vector2(500, 20), Color.WhiteSmoke);

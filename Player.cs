@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Linq;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 //using Vector4 = Microsoft.Xna.Framework.Vector4;
@@ -63,7 +66,15 @@ namespace MinecraftAlpha
 
             game._entityManager.Workspace.Add(Plr);
             respawnTimer = 60f;
+
+
+
         }
+
+        
+
+
+
         public void PickupItem(Block item, int amount, WindowFrame inventory)
         {
             foreach (var slot in inventory.ItemSlots)
@@ -155,7 +166,69 @@ namespace MinecraftAlpha
         }
     }
 
+    public class CommandMannger
+    {
+        public bool active = false;
+        public List<string> Buffer = new List<string>();
+        public Game1 game;
+        public string Command;
 
+        public void Run(string Input)
+        {
+            if (Input[0] == '/')
+            {
+                var Parts = Input.Split(' ');
+                switch (Parts[0])
+                {
+                    case "spawn":
+                        game._entityManager.Workspace.Add(Entity.CloneEntity(game._entityManager.entities[2], game.WorldMousePos));
+                        return;
+                    default:
+                        Chat("Error");
+                        return;
+                }
+
+                
+
+            }
+            else
+            {
+                Chat(Input);
+            }
+
+        }
+        public void Chat(string input)
+        {
+            Buffer.Add(input);
+
+        }
+        public void Read()
+        {
+            KeyboardState keyboard = Keyboard.GetState();
+            if (keyboard.GetPressedKeyCount() > 0)
+            {
+                if (game._inputManager.IsKeyDown_Now(keyboard.GetPressedKeys()[0]))
+                {
+                    Command += keyboard.GetPressedKeys()[0].ToString();
+                }
+                if (!active)
+                {
+                    if(keyboard.IsKeyDown(Keys.T))
+                    {
+                        active = true;
+                    }
+                }
+                if (keyboard.IsKeyDown(Keys.Enter))
+                {
+                    active = false;
+                    Run(Command);
+                    //Command = "";
+                }
+                
+            }
+        }
+
+    }
     public class Cammera
     {
 
@@ -276,6 +349,8 @@ namespace MinecraftAlpha
             }
             LastMouseState = Mouse.GetState();
         }
+
+        
 
         public bool KeyCombo(Keys key1, Keys key2, bool Order)
         {
