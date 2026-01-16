@@ -11,6 +11,7 @@ using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace MinecraftAlpha
 {
+
     public class Player
     {
         public Vector2 SpawnPoint = new Vector2(0, 0);
@@ -172,19 +173,40 @@ namespace MinecraftAlpha
         public List<string> Buffer = new List<string>();
         public Game1 game;
         public string Command;
+        public bool CapsLock = false;
+        public int cursor = 0;
 
         public void Run(string Input)
         {
+            if (Input == "") return;
             if (Input[0] == '/')
             {
                 var Parts = Input.Split(' ');
                 switch (Parts[0])
                 {
-                    case "spawn":
-                        game._entityManager.Workspace.Add(Entity.CloneEntity(game._entityManager.entities[2], game.WorldMousePos));
+                    case "/SPAWN":
+                        string name = "Zombie"; // default
+                        Vector2 pos = game.Player.Plr.position;
+
+                        if (Parts.Length > 1)
+                        {
+                            name = Parts[1];
+                        }
+                        if (Parts.Length > 3)
+                        {
+                            float x, y;
+                            if (float.TryParse(Parts[2], out x) && float.TryParse(Parts[3], out y))
+                            {
+                                pos = new Vector2(x, y);
+                            }
+                        }
+                        game._actionManager.SpawnEntity(pos,name );
+                        return;
+                    case "/CLEAR":
+                        Buffer.Clear();
                         return;
                     default:
-                        Chat("Error");
+                        Chat("*Error invalid command!");
                         return;
                 }
 
@@ -205,25 +227,53 @@ namespace MinecraftAlpha
         public void Read()
         {
             KeyboardState keyboard = Keyboard.GetState();
+            if (!active)
+            {
+                if (keyboard.IsKeyDown(Keys.OemPipe))
+                {
+                    active = true;
+                    Command = "";
+                }
+            }
+            if (keyboard.IsKeyDown(Keys.Enter))
+            {
+                active = false;
+                Run(Command);
+                Command = "";
+            }
             if (keyboard.GetPressedKeyCount() > 0)
             {
                 if (game._inputManager.IsKeyDown_Now(keyboard.GetPressedKeys()[0]))
                 {
-                    Command += keyboard.GetPressedKeys()[0].ToString();
-                }
-                if (!active)
-                {
-                    if(keyboard.IsKeyDown(Keys.T))
+                    var key = keyboard.GetPressedKeys()[0];
+                    if (key == Keys.Back && Command.Length > 0)
                     {
-                        active = true;
+                        Command = Command.Remove(Command.Length - 1);
+                        
                     }
+                    if (key == Keys.Space)
+                    {
+                        Command += " ";
+                        
+                    }
+                    if (key == Keys.OemPipe)
+                    {
+                        Command += "/";
+
+                    }
+                    if (key == Keys.OemTilde)
+                    {
+                        Command += "~";
+
+                    }
+                    if (key.ToString().Length == 1)
+                    {
+                        Command += key.ToString();
+                    }
+                   
+
                 }
-                if (keyboard.IsKeyDown(Keys.Enter))
-                {
-                    active = false;
-                    Run(Command);
-                    //Command = "";
-                }
+                
                 
             }
         }

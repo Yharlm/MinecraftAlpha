@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -1300,11 +1301,19 @@ public class Game1 : Game
                 _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos, Chunks))).ToString(), new Vector2(470, 40), Color.Red);
             }
             if (_CommandManager.active) {
-                foreach(var text in _CommandManager.Buffer)
+                int c = 0;
+
+                foreach (var text in _CommandManager.Buffer)
                 {
-                    _spriteBatch.DrawString(font,text, new Vector2(0, 0), Color.White);
+                    if (text[0] == '*') 
+                    {
+                        _spriteBatch.DrawString(font, text, new Vector2(0, 20 * c), Color.IndianRed); c++; continue;
+
+                    }
+                    _spriteBatch.DrawString(font,text, new Vector2(0, 20*c), Color.White);
+                    c++;
                 }
-                
+                _spriteBatch.DrawString(font, _CommandManager.Command + "_", new Vector2(0, 120 * c), Color.White);
 
             }
 

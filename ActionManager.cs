@@ -267,6 +267,22 @@ namespace MinecraftAlpha
             }
 
         }
+
+        public void SetTile(TileGrid tile,string name)
+        {
+            tile.ID = Game._blockManager.Blocks.FindIndex(b => b.Name == name);
+        }
+        public void SpawnEntity(Vector2 Pos, string EntityName)
+        {
+            var ent = Game._entityManager.entities.Find(e => e.name.ToUpper() == EntityName.ToUpper());
+
+            if (ent == null) { return; }
+            ent = Entity.CloneEntity(ent,Pos);
+            ent.position = Pos;
+            
+
+            Game._entityManager.Workspace.Add(ent);
+        }
         public void BreakBlock(Vector2 Pos, float Z, float Dmg)
         {
 

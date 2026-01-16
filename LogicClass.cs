@@ -3,12 +3,31 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace MinecraftAlpha
 {
+    //public static char toNumber()
+    //{
 
-    public class Debuging
+    //    { "zero", '0' },
+    //    { "one", '1' },
+    //    { "two", '2' },
+    //    { "three", '3' },
+    //    { "four", '4' },
+    //    { "five", '5' },
+    //    { "six", '6' },
+    //    { "seven", '7' },
+    //    { "eight", '8' },
+    //    { "nine", '9' }
+
+
+
+    //};
+
+    
+public class Debuging
     {
         public static void DrawBlockLayout(TileGrid Tile, int Position)
         {
