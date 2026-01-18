@@ -16,6 +16,7 @@ namespace MinecraftAlpha
         public int ID = 0;
         public float Health = 30;
         public string Tag = "";
+        public bool Animated = false;
         public string Name { get; set; }
         public string Description { get; set; }
 
@@ -100,6 +101,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Water", TexturePath = "clay" ,Health = 100,Color = Color.Blue,Data = "7"},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
+                new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
@@ -183,7 +185,7 @@ namespace MinecraftAlpha
                     }
                     else if (Left.ID == 0)
                     {
-                        Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString()); 
+                        Game._actionManager.SetTile(Left , "Water", (Data - 1).ToString()); 
                     }
                 }
                 

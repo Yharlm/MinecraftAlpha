@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using Color = Microsoft.Xna.Framework.Color;
@@ -577,9 +578,10 @@ public class Game1 : Game
         }
         
         
-        if(TimeSinceStart > 5)
+        if(TimeSinceStart % 10 >= 1f)
         {
-            TimeSinceStart = 0;
+            
+            //TimeSinceStart = 0;
             foreach (var L in Chunks)
             {
                 for (int z = 0; z < L.Tiles.GetLength(0); z++)
@@ -590,14 +592,36 @@ public class Game1 : Game
                         {
                             
                             var tile = L.Tiles[z, i, j];
-                            if (tile == null) continue;
-                            if (tile.ID == 0) continue;
                             
-
+                            if (tile == null) continue;
+                            if (tile.ID == 0 || tile.MarkedForUpdate) continue;
                             var block = _blockManager.GetBlockAtTile(tile);
                             if (block.Update == null) continue;
                             block.Update.Invoke(tile, tile.Data);
-                            tile.MarkedForUpdate = true;
+                            
+
+
+
+
+
+
+                        }
+                    }
+                }
+
+                for (int z = 0; z < L.Tiles.GetLength(0); z++)
+                {
+                    for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                    {
+                        for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                        {
+
+                            var tile = L.Tiles[z, i, j];
+
+                            if (tile.ID == 0) continue;
+                            tile.MarkedForUpdate = false;
+
+
 
 
 
@@ -1384,6 +1408,7 @@ public class Game1 : Game
         //var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) ;
         var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
 
+        
         int healthPercent = (int)Tile.MinedHealth / 10;
         Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);
         if ((int)Tile.MinedHealth <= 0)
@@ -1391,7 +1416,16 @@ public class Game1 : Game
             sourceRectangle = new Rectangle(0, 0, 0, 0);
         }
         Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
+        if (block.Animated)
+        {
+            int Side = int.Min(block.Texture.Width, block.Texture.Height);
+            int frames = int.Max(block.Texture.Width, block.Texture.Height);
+            int framesCount = frames / Side;
+            int currentFrame = (int)((TimeSinceStart * 5) % framesCount);
+            BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
+
+        }
         int State = block.DefaultState;
         if (Tile.state > 0)
         {
@@ -1409,6 +1443,13 @@ public class Game1 : Game
 
 
     }
+
+
+    void DrawBlock(Block block, int state, float size, Vector2 position, float layer,float Orientation,Vector2 Origin)
+    {
+        
+    }
+
     // UI:
     // - SingleClick get stack
     // - DoubleClick get Pull all from container

@@ -275,8 +275,10 @@ namespace MinecraftAlpha
         }
         public void SetTile(TileGrid tile, string name,string Data)
         {
+            
             tile.ID = Game._blockManager.Blocks.FindIndex(b => b.Name == name);
             tile.Data = Data;
+            tile.MarkedForUpdate = true;
         }
         public void SpawnEntity(Vector2 Pos, string EntityName)
         {
