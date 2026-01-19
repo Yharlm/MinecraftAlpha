@@ -79,12 +79,30 @@ public class Debuging
     }
     internal class LogicsClass
     {
+        public static readonly Vector3[] Sides =
+        {
+            new Vector3(0, 1, 0), //Up
+            new Vector3(0, -1, 0), // Down
+            new Vector3(-1, 0, 0), //Left
+            new Vector3(1, 0, 0), //Right
+            new Vector3(0, 0, 1), // front
+            new Vector3(0, 0, -1), //back
+        };
         public static Vector2 Randomiser(float min, float max)
         {
             Random rand = new Random();
             float X = (float)(rand.NextDouble() * (max - min) + min);
             float Y = (float)(rand.NextDouble() * (max - min) + min);
             return new Vector2(X, Y);
+        }
+        public static TileGrid[] SidesPos(Vector3 pos,Game1 game)
+        {
+            var tiles = new TileGrid[6];
+            for (int i = 0; i < Sides.Length; i++)
+            {
+                tiles[i]=BlockManager.GetBlockAtPos(pos + Sides[i], game.Chunks);
+            }
+            return tiles;
         }
         public static bool BlockCollide(Vector2 point, Vector2 Position, Vector2 size)
         {

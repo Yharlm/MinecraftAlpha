@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Emit;
 using static System.Net.Mime.MediaTypeNames;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -1438,16 +1439,31 @@ public class Game1 : Game
         }
         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
-        _spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
+        //_spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
+        DrawBlock(block, State, BlockSize / block.Texture.Width, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos,layer,0, Vector2.Zero, block.Color);
         _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer + 0.01f);
 
 
     }
 
 
-    void DrawBlock(Block block, int state, float size, Vector2 position, float layer,float Orientation,Vector2 Origin)
+    public void DrawBlock(Block block, int state, float size, Vector2 position, float layer,float Orientation,Vector2 Origin,Color color)
     {
-        
+        Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
+        if (block.Animated)
+        {
+            int Side = int.Min(block.Texture.Width, block.Texture.Height);
+            int frames = int.Max(block.Texture.Width, block.Texture.Height);
+            int framesCount = frames / Side;
+            int currentFrame = (int)((TimeSinceStart * 5) % framesCount);
+            BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
+
+
+        }
+
+
+
+        _spriteBatch.Draw(block.Texture, position, BlockState, color, 0f, Vector2.Zero, size, SpriteEffects.None, layer);
     }
 
     // UI:

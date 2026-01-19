@@ -100,12 +100,12 @@ namespace MinecraftAlpha
                 new Block { Name = "Stone", TexturePath = "stone" ,Health = 100,},
                 new Block { Name = "Water", TexturePath = "clay" ,Health = 100,Color = Color.Blue,Data = "7"},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
-                new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60},
+                new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood"},
                 new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
-                new Block { Name = "Log", TexturePath = "oak_log", Health = 60},
+                new Block { Name = "Log", TexturePath = "oak_log", Health = 60,Tag="Wood"},
                 new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
                 new Block { Name = "Glass block", TexturePath = "glass", Health = 4,Transparent = true},
                 new Block { Name = "TNT", TexturePath = "tnt_side", Health = 2,Transparent = false,Tag="Explosive"},
@@ -148,7 +148,28 @@ namespace MinecraftAlpha
             //{
 
             //};
+            getBlock("Fire").Update = (Pos, data) =>
+            {
+                var pos = GetPosAtBlock(Pos);
+                var Sides = LogicsClass.SidesPos(pos,Game);
 
+                for (int i = 0;i < 6;i++)
+                {
+                    TileGrid tile = Sides[i];
+                    if (tile == null) continue;
+                    if (GetBlockAtTile(tile).Tag == "Wood" || GetBlockAtTile(tile).Tag=="Planks")
+                    {
+
+                        if (tile.MinedHealth < 5)
+                        {
+                            Game._actionManager.SetTile(tile, "Fire");
+                        }
+                        else tile.MinedHealth += 0.1f;
+                    }
+                }
+
+
+            };
             getBlock("Water").Update = (Pos,data) =>
             {
                 var pos = GetPosAtBlock(Pos);
@@ -426,6 +447,10 @@ namespace MinecraftAlpha
         {
             return GetBlockAtPos(pos, 9, Chunks);
         }
+        public static TileGrid GetBlockAtPos(Vector3 pos, List<Chunk> Chunks)
+        {
+            return GetBlockAtPos(new(pos.X,pos.Y),(int)pos.Z, Chunks);
+        }
 
         public static Vector3 GetPosAtBlock(TileGrid tile)
         {
@@ -546,6 +571,8 @@ namespace MinecraftAlpha
             Rectangle sourceRectangle = new Rectangle(column * itemSize, row * itemSize, itemSize, itemSize);
             _spriteBatch.Draw(Atlas, position, sourceRectangle, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
         }
+
+
 
         public Rectangle GetRactangle(int itemID)
         {

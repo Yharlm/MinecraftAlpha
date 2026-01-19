@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Reflection.Emit;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -323,17 +324,18 @@ namespace MinecraftAlpha
                 }
                 else
                 {
-                    spriteBatch.Draw(
-                        item.Texture,
-                        Pos - (B) * size,
-                        null,
-                        Layer,
-                        Angle + JointOrientation + rotation, // Orientation
-                        new Vector2(item.Texture.Width, item.Texture.Height) / 2 + attachmentPos, //
-                        size * 0.6f,
-                        spriteEffect,
-                        Z
-                    );
+                    //spriteBatch.Draw(
+                    //    item.Texture,
+                    //    Pos - (B) * size,
+                    //    null,
+                    //    Layer,
+                    //    Angle + JointOrientation + rotation, // Orientation
+                    //    new Vector2(item.Texture.Width, item.Texture.Height) / 2 + attachmentPos, //
+                    //    size * 0.6f,
+                    //    spriteEffect,
+                    //    Z
+                    //);
+                    game1.DrawBlock(item, 0, size * 0.6f, Pos - (B) * size, Z, Angle + JointOrientation + rotation, new Vector2(item.Texture.Width, item.Texture.Height) / 2 + attachmentPos, Layer);
                     Debuging.DebugPos(spriteBatch, Pos - (B) * size, game1);
                 }
 
