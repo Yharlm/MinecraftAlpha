@@ -150,7 +150,7 @@ namespace MinecraftAlpha
             else
             {
                 //spriteBatch.Draw(selectedItem.Texture, new Rectangle((int)mouse.X, (int)mouse.Y, 32, 32), Color.White);
-                Game.DrawBlock(selectedItem, 0, 1.6f, mouse, 1, 0, Vector2.One * 16, selectedItem.Color);
+                Game.DrawBlock(selectedItem, 0, 1.6f, mouse, 1, 0, Vector2.One * 16, selectedItem.Color, SpriteEffects.None);
             }
             spriteBatch.DrawString(Text, Amounts, mouse - new Vector2(16, 16), Color.White);
 
@@ -646,7 +646,7 @@ namespace MinecraftAlpha
                 else
                 {
                     //Spritebatch.Draw(Item.Texture, SlotPos + Vector2.One * 4, null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
-                    game.DrawBlock(Item, 0, 1.5f, SlotPos + Vector2.One * 4, 1, 0, Vector2.Zero, Item.Color);
+                    game.DrawBlock(Item, 0, 1.5f, SlotPos + Vector2.One * 4, 1, 0, Vector2.Zero, Item.Color, SpriteEffects.None);
                 }
 
 

@@ -142,6 +142,7 @@ namespace MinecraftAlpha
 
 
 
+            public void DrawBlock(Visible.SideA, int state, float size, Vector2 position, float layer, float Orientation, Vector2 Origin, Color color, SpriteEffects spriteEffect);
 
 
 
@@ -335,7 +336,7 @@ namespace MinecraftAlpha
                     //    spriteEffect,
                     //    Z
                     //);
-                    game1.DrawBlock(item, 0, size * 0.6f, Pos - (B) * size, Z, Angle + JointOrientation + rotation, new Vector2(item.Texture.Width, item.Texture.Height) / 2 + attachmentPos, Layer);
+                    game1.DrawBlock(item, 0, size * 0.6f, Pos - (B) * size, Z, Angle + JointOrientation + rotation, new Vector2(item.Texture.Width, item.Texture.Width) / 2 + attachmentPos, Layer, spriteEffect);
                     Debuging.DebugPos(spriteBatch, Pos - (B) * size, game1);
                 }
 
