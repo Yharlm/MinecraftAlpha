@@ -88,6 +88,7 @@ public class Debuging
             new Vector3(0, 0, 1), // front
             new Vector3(0, 0, -1), //back
         };
+        
         public static Vector2 Randomiser(float min, float max)
         {
             Random rand = new Random();
@@ -101,6 +102,24 @@ public class Debuging
             for (int i = 0; i < Sides.Length; i++)
             {
                 tiles[i]=BlockManager.GetBlockAtPos(pos + Sides[i], game.Chunks);
+            }
+            return tiles;
+        }
+        public static TileGrid[] SidesPosPlus(Vector3 pos, Game1 game)
+        {
+            var tiles = new TileGrid[27];
+            int count = 0;
+            for (int i = -1; i <= 1; i++)
+            {
+
+                for (int j = -1; j <= 1; j++)
+                {
+                    for (int k = -1; k <= 1; k++)
+                    {
+                        tiles[count] = BlockManager.GetBlockAtPos(pos + new Vector3(i, j, k), game.Chunks);
+                        count++;
+                    }
+                }
             }
             return tiles;
         }

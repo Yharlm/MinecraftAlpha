@@ -218,6 +218,26 @@ namespace MinecraftAlpha
                     case "/CLEAR":
                         Buffer.Clear();
                         return;
+                    case "/FILL":
+
+                        //if (Parts.Length == 3)
+                        //{
+                            
+                        //    Vector3 pos = new Vector3(float.Parse(Parts[1]), float.Parse(Parts[2]), float.Parse(Parts[3]));
+
+                            
+
+
+                        //}
+
+                        //if (Parts.Length == 6)
+                        //{
+                        //    Vector3 pos1 = new Vector3(float.Parse(Parts[1]), float.Parse(Parts[2]), float.Parse(Parts[3]));
+                        //    Vector3 pos2 = new Vector3(float.Parse(Parts[4]), float.Parse(Parts[5]), float.Parse(Parts[6]));
+
+                            
+                        //}
+                        return;
                     default:
                         Chat("*Error invalid command!");
                         return;

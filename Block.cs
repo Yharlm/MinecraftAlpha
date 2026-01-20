@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -101,7 +102,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Water", TexturePath = "clay" ,Health = 100,Color = Color.Blue,Data = "7"},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood"},
-                new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true},
+                new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
@@ -151,21 +152,34 @@ namespace MinecraftAlpha
             getBlock("Fire").Update = (Pos, data) =>
             {
                 var pos = GetPosAtBlock(Pos); //
-                var Sides = LogicsClass.SidesPos(pos,Game);
-
-                for (int i = 0;i < 6;i++)
+                var Sides = LogicsClass.SidesPosPlus(pos,Game);
+                bool Extinguish = true;
+                for (int i = 0;i < 27;i++)
                 {
                     TileGrid tile = Sides[i];
                     if (tile == null) continue;
+                    
                     if (GetBlockAtTile(tile).Tag == "Wood" || GetBlockAtTile(tile).Tag=="Planks")
                     {
-
-                        if (tile.MinedHealth < 5)
+                        if (tile.ID != 0)
                         {
-                            Game._actionManager.SetTile(tile, "Fire");
+                            Extinguish = false;
                         }
-                        else tile.MinedHealth += 0.1f;
+                        if (tile.MinedHealth > (GetBlockAtTile(tile).Health))
+                        {
+                            Game._actionManager.SetTile(tile, "Fire","0");
+                        }
+                        else tile.MinedHealth += 1f;
                     }
+                    if (GetBlockAtTile(tile).Name == "TNT")
+                    {
+                        var TNT = GetPosAtBlock(tile);
+                        GetBlockAtTile(tile).Interaction(Pos, null, getBlock("Flint and Steel"));
+                    }
+                }
+                if(Extinguish)
+                {
+                    Game._actionManager.SetTile(Pos, "Air");
                 }
 
 
@@ -218,7 +232,7 @@ namespace MinecraftAlpha
                 if (item == getBlock("Flint and Steel"))
                     {
                     var pos = GetPosAtBlock(Pos);
-                    Pos.ID = 0;
+                    Game._actionManager.SetTile(Pos, "Air");
                     Game._actionManager.Explosion(pos, 5, true);
 
                 }

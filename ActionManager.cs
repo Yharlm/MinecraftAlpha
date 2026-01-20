@@ -278,6 +278,7 @@ namespace MinecraftAlpha
             
             tile.ID = Game._blockManager.Blocks.FindIndex(b => b.Name == name);
             tile.Data = Data;
+            tile.MinedHealth = 0;
             tile.MarkedForUpdate = true;
         }
         public void SpawnEntity(Vector2 Pos, string EntityName)

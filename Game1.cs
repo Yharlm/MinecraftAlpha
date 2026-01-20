@@ -1401,13 +1401,14 @@ public class Game1 : Game
     }
     void DrawBlock(TileGrid Tile, Chunk chunk, int i, int j, float Z, float layer, bool Opaque)
     {
+        //float BlockSizeZ = this.BlockSize - layer;
         var block = _blockManager.Blocks[Tile.ID];
 
         float Light = Tile.brightness;
         float Light01 = Light - 0.2f;
-        float a = Z / 2 + 0.4f;
+        float a = Z;
         //var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) ;
-        var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
+        var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color ;
 
         
         int healthPercent = (int)Tile.MinedHealth / 10;
@@ -1435,17 +1436,33 @@ public class Game1 : Game
 
         if (Opaque)
         {
-            Layer = Color.White * 0.2f;
+            Layer = Color.White* 0.3f;
         }
         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         //_spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
-        DrawBlock(block, State, BlockSize / block.Texture.Width, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos,layer,0, Vector2.Zero, block.Color,SpriteEffects.None);
+        DrawBlock(block, State, BlockSize / block.Texture.Width, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos,layer,0, Vector2.Zero, Layer, SpriteEffects.None);
         _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer + 0.01f);
 
 
     }
+    public void DrawBlock(Texture2D Texture, int state, Vector2 size, Vector2 position, float layer, float Orientation, Vector2 Origin, Color color, SpriteEffects spriteEffect)
+    {
+        Rectangle BlockState = new Rectangle(0, 0, Texture.Width, Texture.Height);
+        
+            int Side = int.Min(Texture.Width,Texture.Height);
+            int frames = int.Max(Texture.Width,Texture.Height);
+            int framesCount = frames / Side;
+            int currentFrame = (int)((TimeSinceStart * 5) % framesCount);
+            BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
+
+        
+
+
+
+        _spriteBatch.Draw(Texture, position, BlockState, color, Orientation, Origin, size, spriteEffect, layer);
+    }
 
     public void DrawBlock(Block block, int state, float size, Vector2 position, float layer,float Orientation,Vector2 Origin,Color color,SpriteEffects spriteEffect)
     {

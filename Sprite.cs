@@ -38,73 +38,8 @@ namespace MinecraftAlpha
         public float Size = 1f;
 
         public float Orientation = 0f; // 0,90,180,270
-        public void Draw(SpriteBatch spritebatch)
-        {
-            Sides2_3D Visible = null;
-            for (int i = 0; i < Sides.Length; i++)
-            {
-                float Angle = (i * 90);
-                if (Orientation >= Angle && Orientation <= Angle + 90)
-                {
-                    Visible = Sides[i];
-                }
-            }
-
-
-
-            float sizeRatio = (Orientation % 90) / 90;
-
-            Color lightingA = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(1 - sizeRatio, 1 - sizeRatio, 1 - sizeRatio, 1));
-            Color lightingB = Color.FromNonPremultiplied(new Microsoft.Xna.Framework.Vector4(0.3f + sizeRatio, 0.3f + sizeRatio, 0.3f + sizeRatio, 1));
-
-
-            Vector2 SizeA = new Vector2(1 - sizeRatio, 1) * Size;
-            Vector2 SizeB = new Vector2((sizeRatio), 1) * Size;
-
-            if (Visible == null)
-            {
-
-                return;
-            }
-            spritebatch.Begin();
-
-            float Floating = float.Cos(Orientation * MathF.PI / 180) * 10;
-
-            //spritebatch.Draw(Visible.SideA, new Rectangle(0, 0, (int)(Visible.SideA.Width * SizeA.X), (int)(Visible.SideA.Height * SizeA.Y)), lightingA);
-            //spritebatch.Draw(Visible.SideB, new Rectangle((int)(Visible.SideA.Width * SizeA.X), 0, (int)(Visible.SideB.Width * SizeB.X), (int)(Visible.SideB.Height * SizeB.Y)), lightingB);
-            Vector2 position = Position + Vector2.One * 32f / 2 * Size;
-
-            spritebatch.Draw(
-                Visible.SideA,
-                position + new Vector2(0, Floating),
-                null,
-                lightingA,
-                0f, // Orientation
-                Vector2.Zero, //
-                SizeA,
-                SpriteEffects.None,
-                1f
-                );
-
-            // Draws the second side
-
-            spritebatch.Draw(
-                Visible.SideB,
-                position + new Vector2(SizeA.X * 16, Floating),
-                null,
-                lightingB,
-                0f, // Orientation
-                Vector2.Zero, //
-                SizeB,
-                SpriteEffects.None,
-                1f
-                );
-            spritebatch.End();
-
-
-        }
-
-        public void Draw(SpriteBatch spritebatch, Vector2 Pos, float size, Vector2 offset)
+        
+        public void Draw(SpriteBatch spritebatch, Vector2 Pos, float size, Vector2 offset,Game1 game)
         {
             Sides2_3D Visible = null;
             float Orientation = this.Orientation + offset.Y * 180;
@@ -140,37 +75,37 @@ namespace MinecraftAlpha
             //spritebatch.Draw(Visible.SideA, new Rectangle(0, 0, (int)(Visible.SideA.Width * SizeA.X), (int)(Visible.SideA.Height * SizeA.Y)), lightingA);
             //spritebatch.Draw(Visible.SideB, new Rectangle((int)(Visible.SideA.Width * SizeA.X), 0, (int)(Visible.SideB.Width * SizeB.X), (int)(Visible.SideB.Height * SizeB.Y)), lightingB);
 
+            game.DrawBlock(Visible.SideA, 0, SizeA, Pos + new Vector2(0, Floating), 1f, 0f, Vector2.Zero, lightingA, SpriteEffects.None);
+            game.DrawBlock(Visible.SideB, 0, SizeB, Pos + new Vector2(SizeA.X * 16, Floating), 1f, 0f, Vector2.Zero, lightingB, SpriteEffects.None);
+            //public void DrawBlock(Visible., int state, float size, Vector2 position, float layer, float Orientation, Vector2 Origin, Color color, SpriteEffects spriteEffect);
 
 
-            public void DrawBlock(Visible.SideA, int state, float size, Vector2 position, float layer, float Orientation, Vector2 Origin, Color color, SpriteEffects spriteEffect);
 
+            //spritebatch.Draw(
+            //    Visible.SideA,
+            //    Pos + new Vector2(0, Floating),
+            //    null,
+            //    lightingA,
+            //    0f, // Orientation
+            //    Vector2.Zero, //
+            //    SizeA,
+            //    SpriteEffects.None,
+            //    1f
+            //    );
 
+            //// Draws the second side
 
-            spritebatch.Draw(
-                Visible.SideA,
-                Pos + new Vector2(0, Floating),
-                null,
-                lightingA,
-                0f, // Orientation
-                Vector2.Zero, //
-                SizeA,
-                SpriteEffects.None,
-                1f
-                );
-
-            // Draws the second side
-
-            spritebatch.Draw(
-                Visible.SideB,
-                Pos + new Vector2(SizeA.X * 16, Floating),
-                null,
-                lightingB,
-                0f, // Orientation
-                Vector2.Zero, //
-                SizeB,
-                SpriteEffects.None,
-                1
-                );
+            //spritebatch.Draw(
+            //    Visible.SideB,
+            //    Pos + new Vector2(SizeA.X * 16, Floating),
+            //    null,
+            //    lightingB,
+            //    0f, // Orientation
+            //    Vector2.Zero, //
+            //    SizeB,
+            //    SpriteEffects.None,
+            //    1
+            //    );
             //spritebatch.End();
 
 

@@ -381,13 +381,13 @@ namespace MinecraftAlpha
                     SB.Draw(game1.items.Atlas, BlockSize * position + Cam - new Vector2(0, float.Cos(Lifetime / 2) * 2), game1.items.GetRactangle(game1._blockManager.Blocks[int.Parse(Data.Split(";")[0])].ItemID), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize / 18, SpriteEffects.None, 0f);
                     return;
                 }
-                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, Vector2.Zero);
+                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, Vector2.Zero,game1);
                 if (int.Parse(Data.Split(";")[1]) >= 10)
                 {
-                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(1.8f, -0.2f));
-                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(1f, -0.3f));
-                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(-1.2f, 0.6f));
-                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(0.4f, -0.2f));
+                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(1.8f, -0.2f), game1);
+                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(1f, -0.3f), game1);
+                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(-1.2f, 0.6f), game1);
+                    this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(0.4f, -0.2f), game1);
                 }
 
                 return;
