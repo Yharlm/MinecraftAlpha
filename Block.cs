@@ -150,7 +150,7 @@ namespace MinecraftAlpha
             //};
             getBlock("Fire").Update = (Pos, data) =>
             {
-                var pos = GetPosAtBlock(Pos);
+                var pos = GetPosAtBlock(Pos); //
                 var Sides = LogicsClass.SidesPos(pos,Game);
 
                 for (int i = 0;i < 6;i++)
