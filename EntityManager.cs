@@ -170,7 +170,7 @@ namespace MinecraftAlpha
             }
         }
 
-        public Entity GravityBlock(Vector2 Pos,int Z,bool destroy,Action update)
+        public Entity GravityBlock(Vector2 Pos,int Z,bool destroy)
         {
 
             var tile = BlockManager.GetBlockAtPos(Pos, Z, game.Chunks);
@@ -178,7 +178,7 @@ namespace MinecraftAlpha
             if (tile.ID == 0) return null;
             var g = Entity.CloneEntity(GetEntityByName("Fallingblock"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y))-Vector2.One*.5f);
             g.Data = game._blockManager.GetBlockAtTile(tile).Name;
-            g.Update = update;
+            
             game._entityManager.Workspace.Add(g);
 
             if (destroy)

@@ -4,10 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Reflection.Emit;
-using static System.Net.Mime.MediaTypeNames;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -21,7 +18,7 @@ public class Game1 : Game
 {
 
     //Game Rules
-    
+
     public bool KeepInventory = false;
 
 
@@ -44,7 +41,7 @@ public class Game1 : Game
     public ParticleSystem _particleSystem = new();
     public RecipeManager _RecipeManager = new();
     public InputManager _inputManager = new();
-    public CommandMannger _CommandManager = new(); 
+    public CommandMannger _CommandManager = new();
 
 
 
@@ -92,7 +89,7 @@ public class Game1 : Game
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
     public bool InventoryOpen = false;
-    public float BlockSize = 16f*5;
+    public float BlockSize = 16f * 5;
 
 
     static public int WorldSizeX = 300;
@@ -151,7 +148,7 @@ public class Game1 : Game
     {
         windowWidth = GraphicsDevice.Viewport.Width;
         windowHeight = GraphicsDevice.Viewport.Height;
-        
+
         Player = new Player() { game = this };
         Random random = new Random();
         _particleSystem.Content = Content;
@@ -199,7 +196,7 @@ public class Game1 : Game
 
 
         {
-            
+
 
 
 
@@ -460,7 +457,7 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
-        
+
         TimeSinceStart += 0.1f;
 
         MouseClick = 0;
@@ -508,10 +505,10 @@ public class Game1 : Game
 
         if (Player.Plr.Health <= 0)
         {
-            
 
 
-                Player.Respawn();
+
+            Player.Respawn();
         }
 
         //if (Keyboard.GetState().IsKeyDown(Keys.F11))
@@ -566,7 +563,7 @@ public class Game1 : Game
             var anim = Entity.Animations[Animation.id];
             anim.parent = Entity;
 
-            if(Entity.name == "Pig")
+            if (Entity.name == "Pig")
             {
 
             }
@@ -577,63 +574,66 @@ public class Game1 : Game
 
 
         }
-        
-        
-        if(TimeSinceStart % 10 >= 1f)
+
+        int Tick = (int)TimeSinceStart;
+
+
+        //TimeSinceStart = 0;
+        foreach (var L in Chunks)
         {
-            
-            //TimeSinceStart = 0;
-            foreach (var L in Chunks)
+            for (int z = 0; z < L.Tiles.GetLength(0); z++)
             {
-                for (int z = 0; z < L.Tiles.GetLength(0); z++)
+                for (int i = 0; i < L.Tiles.GetLength(1); i++)
                 {
-                    for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                    for (int j = 0; j < L.Tiles.GetLength(2); j++)
                     {
-                        for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                        var tile = L.Tiles[z, i, j];
+                        if (tile == null) continue;
+                        var block = _blockManager.GetBlockAtTile(tile);
+                        if (block == null) continue;
+                        if (block.Update == null) continue;
+                        
+
+                        
+                        if(tile.ID == _blockManager.getBlock("Water").ID)
                         {
-                            
-                            var tile = L.Tiles[z, i, j];
-                            
-                            if (tile == null) continue;
+                            int a = 4;
+                        }
+                        //int TickUP = block.TickUpdate;
+                        if (Tick % block.TickUpdate == 0)
+                        {
                             if (tile.ID == 0 || tile.MarkedForUpdate) continue;
-                            var block = _blockManager.GetBlockAtTile(tile);
-                            if (block.Update == null) continue;
                             block.Update.Invoke(tile, tile.Data);
-                            
-
-
-
-
-
-
                         }
-                    }
-                }
-
-                for (int z = 0; z < L.Tiles.GetLength(0); z++)
-                {
-                    for (int i = 0; i < L.Tiles.GetLength(1); i++)
-                    {
-                        for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                        else
                         {
-
-                            var tile = L.Tiles[z, i, j];
-
-                            if (tile.ID == 0) continue;
+                            
                             tile.MarkedForUpdate = false;
-
-
-
-
-
-
-
-
                         }
+
+
                     }
                 }
-
             }
+
+            //for (int z = 0; z < L.Tiles.GetLength(0); z++)
+            //{
+            //    for (int i = 0; i < L.Tiles.GetLength(1); i++)
+            //    {
+            //        for (int j = 0; j < L.Tiles.GetLength(2); j++)
+            //        {
+
+            //            var tile = L.Tiles[z, i, j];
+
+            //            if (tile.ID == 0) continue;
+            //            if (!tile.MarkedForUpdate) continue;
+            //            tile.MarkedForUpdate = false;
+
+            //        }
+            //    }
+            //}
+
+
 
 
 
@@ -675,7 +675,7 @@ public class Game1 : Game
                 {
                     Entity.CollisionEventCollision(entity1, entity, this);
                 }
-                
+
             }
 
             //Raycast for projectiles
@@ -718,7 +718,7 @@ public class Game1 : Game
                 Running = true;
             }
 
-            if (Running) 
+            if (Running)
                 _entityAnimationService.Play(1, entity);
             else
             {
@@ -753,7 +753,7 @@ public class Game1 : Game
 
         Player.Update();
         _inputManager.UpdateKeyHistory(Keyboard.GetState());
-        
+
     }
 
     int HotbarIndex;
@@ -765,7 +765,7 @@ public class Game1 : Game
     {
 
         _CommandManager.Read();
-        if(_CommandManager.active) { return; }
+        if (_CommandManager.active) { return; }
 
 
         bool jump = false;
@@ -849,7 +849,7 @@ public class Game1 : Game
 
                 TileGrid tile = BlockManager.GetLastBlockAtPos(WorldMousePos, Chunks);
 
-                _entityManager.GravityBlock(WorldMousePos, 8, true);
+                //_entityManager.GravityBlock(WorldMousePos, 8, true);
                 _entityManager.GravityBlock(BlockManager.GetBlockAtPos(WorldMousePos, (int)Player.Plr.Layer, Chunks), true);
 
 
@@ -898,7 +898,7 @@ public class Game1 : Game
             if (_inputManager.IsKeyDown_Now(Keys.R))
             {
                 //_actionManager.DeleteBlocksSphere(WorldMousePos, Player.Plr.Layer, 4);
-                _actionManager.Explosion(new Vector3(WorldMousePos.X,WorldMousePos.Y,PLR.Layer), 5, true);
+                _actionManager.Explosion(new Vector3(WorldMousePos.X, WorldMousePos.Y, PLR.Layer), 5, true);
             }
             if (key == Keys.NumPad1)
             {
@@ -970,7 +970,7 @@ public class Game1 : Game
 
         };
 
-        
+
 
 
         //_particleSystem.Particles[0].Position = PLR.position;
@@ -1006,15 +1006,15 @@ public class Game1 : Game
                 }
 
                 float Damage = 0.3f;
-                if(PLR.Item != null)
+                if (PLR.Item != null)
                 {
                     if (PLR.Item.Item)
                     {
                         Damage = PLR.Item.Damage;
                     }
                 }
-                
-                
+
+
 
 
 
@@ -1071,7 +1071,7 @@ public class Game1 : Game
 
             }
 
-            
+
 
 
 
@@ -1314,20 +1314,21 @@ public class Game1 : Game
 
             //Player.cam.RenderLayer(_blockManager, _spriteBatch, Foreground, 0f, Player.Plr.position, BreakTexture);
             //Camera.RenderLayer(_blockManager, _spriteBatch, World, 2f);
-            
-                foreach (var P in _particleSystem.Particles)
-                {
 
-                    P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
-                }
-            
+            foreach (var P in _particleSystem.Particles)
+            {
+
+                P.DrawParticles(_spriteBatch, Player.cam.position, BlockSize, Content.Load<Texture2D>("ParticleSmokeEffect"));
+            }
+
             base.Draw(gameTime);
 
 
 
             _spriteBatch.DrawString(font, TimeSinceStart.ToString(), new Vector2(0, 10), Color.White);
 
-            if (DebugMode) {
+            if (DebugMode)
+            {
                 _spriteBatch.DrawString(font, ((int)Math.Ceiling((WorldMousePos.X / 32))).ToString(), Vector2.One * 40, Color.Chartreuse);
                 _spriteBatch.DrawString(font, (Player.Plr.position).ToString(), Vector2.One, Color.Wheat);
                 _spriteBatch.DrawString(font, Player.Plr.velocity.Gravity.ToString(), Vector2.One * 10, Color.Red);
@@ -1338,17 +1339,18 @@ public class Game1 : Game
                 _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos, Chunks))).ToString(), new Vector2(470, 40), Color.Red);
 
             }
-            if (_CommandManager.active) {
+            if (_CommandManager.active)
+            {
                 int c = 0;
 
                 foreach (var text in _CommandManager.Buffer)
                 {
-                    if (text[0] == '*') 
+                    if (text[0] == '*')
                     {
                         _spriteBatch.DrawString(font, text, new Vector2(0, 20 * c), Color.IndianRed); c++; continue;
 
                     }
-                    _spriteBatch.DrawString(font,text, new Vector2(0, 20*c), Color.White);
+                    _spriteBatch.DrawString(font, text, new Vector2(0, 20 * c), Color.White);
                     c++;
                 }
                 _spriteBatch.DrawString(font, _CommandManager.Command + "_", new Vector2(0, 120 * c), Color.White);
@@ -1408,9 +1410,9 @@ public class Game1 : Game
         float Light01 = Light - 0.2f;
         float a = Z;
         //var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) ;
-        var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color ;
+        var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
 
-        
+
         int healthPercent = (int)Tile.MinedHealth / 10;
         Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);
         if ((int)Tile.MinedHealth <= 0)
@@ -1436,35 +1438,40 @@ public class Game1 : Game
 
         if (Opaque)
         {
-            Layer = Color.White* 0.3f;
+            Layer = Color.White * 0.3f;
         }
         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         //_spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
-        DrawBlock(block, State, BlockSize / block.Texture.Width, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos,layer,0, Vector2.Zero, Layer, SpriteEffects.None);
+        DrawBlock(block, State, BlockSize / block.Texture.Width, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, layer, 0, Vector2.Zero, Layer, SpriteEffects.None);
         _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer + 0.01f);
+        if(DebugMode)
+        {
+            if(Tile.Data != "")
+            _spriteBatch.DrawString(font, Tile.Data, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, Color.WhiteSmoke);
 
+        }
 
     }
     public void DrawBlock(Texture2D Texture, int state, Vector2 size, Vector2 position, float layer, float Orientation, Vector2 Origin, Color color, SpriteEffects spriteEffect)
     {
         Rectangle BlockState = new Rectangle(0, 0, Texture.Width, Texture.Height);
-        
-            int Side = int.Min(Texture.Width,Texture.Height);
-            int frames = int.Max(Texture.Width,Texture.Height);
-            int framesCount = frames / Side;
-            int currentFrame = (int)((TimeSinceStart * 5) % framesCount);
-            BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
+
+        int Side = int.Min(Texture.Width, Texture.Height);
+        int frames = int.Max(Texture.Width, Texture.Height);
+        int framesCount = frames / Side;
+        int currentFrame = (int)((TimeSinceStart * 5) % framesCount);
+        BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
 
-        
+
 
 
 
         _spriteBatch.Draw(Texture, position, BlockState, color, Orientation, Origin, size, spriteEffect, layer);
     }
 
-    public void DrawBlock(Block block, int state, float size, Vector2 position, float layer,float Orientation,Vector2 Origin,Color color,SpriteEffects spriteEffect)
+    public void DrawBlock(Block block, int state, float size, Vector2 position, float layer, float Orientation, Vector2 Origin, Color color, SpriteEffects spriteEffect)
     {
         Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         if (block.Animated)

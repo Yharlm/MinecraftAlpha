@@ -55,7 +55,7 @@ namespace MinecraftAlpha
         public string ammoTag = "";
         //Constants for use types
         public float ChargeMax = 0f; // Time taken to charge the item
-        //public float ChargeMin = 0f; // Time taken to charge the item
+        public int TickUpdate = 10;
 
         public float CooldownMax = 0f;//cooldown after using the item
         public float UseTimeMax = 0f; // Time taken to use/interact with the block
@@ -99,7 +99,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
                 new Block { Name = "Stone", TexturePath = "stone" ,Health = 100,},
-                new Block { Name = "Water", TexturePath = "clay" ,Health = 100,Color = Color.Blue,Data = "7"},
+                new Block { Name = "Water", TexturePath = "clay" ,Health = 100,Color = Color.Blue,Data = "7",TickUpdate = 5},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood"},
                 new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true},
@@ -187,43 +187,64 @@ namespace MinecraftAlpha
             getBlock("Water").Update = (Pos,data) =>
             {
                 var pos = GetPosAtBlock(Pos);
-                if(data == "") data = "0";
+                
+                if(data == "") data = "7";
                 int Data = int.Parse(data);
                 var lower = GetBlockAtPos(new Vector2(pos.X, pos.Y + 1), (int)pos.Z, Game.Chunks);
                 var top = GetBlockAtPos(new Vector2(pos.X, pos.Y - 1), (int)pos.Z, Game.Chunks);
-                if (lower == null) return;
-                if (top == null) return;
+                var Left = GetBlockAtPos(new Vector2(pos.X - 1, pos.Y), (int)pos.Z, Game.Chunks);
+                var Right = GetBlockAtPos(new Vector2(pos.X + 1, pos.Y), (int)pos.Z, Game.Chunks);
+                if (lower == null || top == null || Right == null || Left == null) return;
 
-                if (Data == 6)
+                if (Data == 7)
                 {
-                    if (top.ID == 0)
+                    if (lower.ID == 0)
                     {
-                        Game._actionManager.SetTile(Pos, "Air");
+                        
+                        Game._actionManager.SetTile(lower, "Water", "6");
                     }
                 }
-                if (Data <= 1) return;
-                if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
+                if(Data <= 6)
                 {
-                    //Game._actionManager.SetTile(Pos, "Air");
-                    Game._actionManager.SetTile(lower, "Water", "5");
+                    if (lower.ID == 0)
+                    {
+                        Game._actionManager.SetTile(Pos, "Air", "");
+                        Game._actionManager.SetTile(lower, "Water", "6");
+                    }
                 }
-                else
-                {
-                    var Left = GetBlockAtPos(new Vector2(pos.X - 1, pos.Y), (int)pos.Z, Game.Chunks);
-                    var Right = GetBlockAtPos(new Vector2(pos.X + 1, pos.Y), (int)pos.Z, Game.Chunks);
+                //Pos.MarkedForUpdate = true;
+                //if (Data == 6)
+                //{
+                //    if (top.ID == 0)
+                //    {
+                //        Game._actionManager.SetTile(Pos, "Air");
+                //    }
+                //}
+                //if (Data <= 1) return;
+                //if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
+                //{
+                //    //Game._actionManager.SetTile(Pos, "Air");
+                //    Game._actionManager.SetTile(lower, "Water", "5");
+                //}
+                //else
+                //{
+                //    
 
-                    if (Right == null) return;
-                    if (Left == null) return;
-                    if (Right.ID == 0)
-                    {
-                        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString()); 
-                    }
-                    else if (Left.ID == 0)
-                    {
-                        Game._actionManager.SetTile(Left , "Water", (Data - 1).ToString()); 
-                    }
-                }
-                
+                //    if (Right == null) return;
+                //    if (Left == null) return;
+                //    if (Right.ID == 0)
+                //    {
+                //        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString()); 
+                //    }
+                //    else if (Left.ID == 0)
+                //    {
+                //        Game._actionManager.SetTile(Left , "Water", (Data - 1).ToString()); 
+                //    }
+                //}
+
+
+
+
 
             };
 
@@ -481,7 +502,10 @@ namespace MinecraftAlpha
         public Block GetBlockAtTile(TileGrid tile)
         {
             if (tile == null) return null;
+            
+
             return Blocks[tile.ID];
+            
         }
 
 
