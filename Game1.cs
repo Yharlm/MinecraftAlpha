@@ -458,7 +458,7 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
 
-        TimeSinceStart += 0.1f;
+        TimeSinceStart += 0.3f;
 
         MouseClick = 0;
         if (Mouse.GetState().LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Released && Clicked)
@@ -575,7 +575,7 @@ public class Game1 : Game
 
         }
 
-        int Tick = (int)TimeSinceStart;
+        int Tick = (int)(TimeSinceStart);
 
 
         //TimeSinceStart = 0;
@@ -595,10 +595,7 @@ public class Game1 : Game
                         
 
                         
-                        if(tile.ID == _blockManager.getBlock("Water").ID)
-                        {
-                            int a = 4;
-                        }
+                        
                         //int TickUP = block.TickUpdate;
                         if (Tick % block.TickUpdate == 0)
                         {
@@ -1425,7 +1422,7 @@ public class Game1 : Game
             int Side = int.Min(block.Texture.Width, block.Texture.Height);
             int frames = int.Max(block.Texture.Width, block.Texture.Height);
             int framesCount = frames / Side;
-            int currentFrame = (int)((TimeSinceStart * 5) % framesCount);
+            int currentFrame = (int)((TimeSinceStart) % framesCount);
             BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
 
@@ -1460,7 +1457,7 @@ public class Game1 : Game
         int Side = int.Min(Texture.Width, Texture.Height);
         int frames = int.Max(Texture.Width, Texture.Height);
         int framesCount = frames / Side;
-        int currentFrame = (int)((TimeSinceStart * 5) % framesCount);
+        int currentFrame = (int)((TimeSinceStart) % framesCount);
         BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
 
@@ -1479,7 +1476,7 @@ public class Game1 : Game
             int Side = int.Min(block.Texture.Width, block.Texture.Height);
             int frames = int.Max(block.Texture.Width, block.Texture.Height);
             int framesCount = frames / Side;
-            int currentFrame = (int)((TimeSinceStart * 5) % framesCount);
+            int currentFrame = (int)((TimeSinceStart) % framesCount);
             BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
 
