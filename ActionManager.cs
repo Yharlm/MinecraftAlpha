@@ -209,7 +209,8 @@ namespace MinecraftAlpha
                 if (LogicsClass.IsInBounds(Pos, entity.position, entity.collisionBox.Size))
                 {
 
-                    entity.Interaction.Action.Invoke();
+                    entity.Interaction.Invoke();
+                    
                 }
             }
 
@@ -458,7 +459,7 @@ namespace MinecraftAlpha
                         // If distance squared is <= radius squared, it's inside the sphere
                         var BLOCK = BlockManager.GetBlockAtPos(new Vector2(x, y) + Vector2.One / 2,z, Game.Chunks);
                         if (BLOCK == null) continue;
-                        if (Game._blockManager.GetBlockAtTile(BLOCK).ID == 13)
+                        if (Game._blockManager.GetBlockAtTile(BLOCK).ID == Game._blockManager.getBlock("TNT").ID)
                         {
                             Game._blockManager.GetBlockAtTile(BLOCK).Interaction.Invoke(BLOCK, null, Game._blockManager.getBlock("Flint and Steel"));
                         }

@@ -99,7 +99,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Water", TexturePath = "clay" ,Health = 100,Color = Color.Blue,Data = "7",TickUpdate = 8},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood"},
-                new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 10},
+                new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
@@ -307,8 +307,22 @@ namespace MinecraftAlpha
                 if (item == getBlock("Flint and Steel"))
                 {
                     var pos = GetPosAtBlock(Pos);
-                    Game._actionManager.SetTile(Pos, "Air");
-                    Game._actionManager.Explosion(pos, 5, true);
+                    var tnt = Game._entityManager.GravityBlock(Pos, true);
+                    tnt.Health = 100;
+                    tnt.Update = (This) =>
+                    {
+                        
+                        if(This.Health <= 5 && This.Health >0)
+                        {
+                            Vector3 exp = new(This.position.X, This.position.Y, This.Layer);
+                            Game._actionManager.Explosion(exp, 6, true);
+                            tnt.Health = 0;
+                            return;
+                        }
+                        This.Health -= 1;
+                    };
+
+                   
 
                 }
             };
