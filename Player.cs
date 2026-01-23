@@ -1,10 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 //using Vector4 = Microsoft.Xna.Framework.Vector4;
@@ -40,7 +37,7 @@ namespace MinecraftAlpha
 
             if (!game.KeepInventory)
             {
-                
+
 
                 foreach (var item in Inventory.ItemSlots)
                 {
@@ -72,7 +69,7 @@ namespace MinecraftAlpha
 
         }
 
-        
+
 
 
 
@@ -175,7 +172,8 @@ namespace MinecraftAlpha
         public string Command;
         public bool CapsLock = false;
         public int cursor = 0;
-
+        
+        
         public void Run(string Input)
         {
             if (Input == "") return;
@@ -184,6 +182,26 @@ namespace MinecraftAlpha
                 var Parts = Input.Split(' ');
                 switch (Parts[0])
                 {
+                    case "/GIVE":
+                        int ammount = 1;
+                        string itemName = "Dirt"; // default
+
+                        if (Parts.Length == 3)
+                        {
+                            ammount = int.Parse(Parts[2]);
+                        }
+                        if (Parts.Length == 2)
+                        {
+                            itemName = Parts[1].Replace('_', ' ');
+
+
+
+                        }
+                        var item = game._blockManager.GetBlockByName(itemName);
+                        var drop = game._entityManager.SpawnItem(game.Player.Plr.position, (int)game.Player.Plr.Layer, item, ammount);
+                        game._entityManager.Workspace.Add(drop);
+
+                        return;
                     case "/SPAWN":
                         string name = "Zombie"; // default
                         Vector2 pos = game.Player.Plr.position;
@@ -212,38 +230,22 @@ namespace MinecraftAlpha
                         for (int i = 0; i < num; i++)
                         {
                             game._actionManager.SpawnEntity(pos, name);
-                        }    
-                            //game._actionManager.SpawnEntity(pos,name );
+                        }
+                        //game._actionManager.SpawnEntity(pos,name );
                         return;
                     case "/CLEAR":
                         Buffer.Clear();
                         return;
-                    case "/FILL":
+                    case "/STR":
 
-                        //if (Parts.Length == 3)
-                        //{
-                            
-                        //    Vector3 pos = new Vector3(float.Parse(Parts[1]), float.Parse(Parts[2]), float.Parse(Parts[3]));
-
-                            
-
-
-                        //}
-
-                        //if (Parts.Length == 6)
-                        //{
-                        //    Vector3 pos1 = new Vector3(float.Parse(Parts[1]), float.Parse(Parts[2]), float.Parse(Parts[3]));
-                        //    Vector3 pos2 = new Vector3(float.Parse(Parts[4]), float.Parse(Parts[5]), float.Parse(Parts[6]));
-
-                            
-                        //}
+                        FileManager.Run();
                         return;
                     default:
                         Chat("*Error invalid command!");
                         return;
                 }
 
-                
+
 
             }
             else
@@ -282,14 +284,14 @@ namespace MinecraftAlpha
                     if (key == Keys.Back && Command.Length > 0)
                     {
                         Command = Command.Remove(Command.Length - 1);
-                        
+
                     }
                     if (key == Keys.Space)
                     {
                         Command += " ";
-                        
+
                     }
-                    if ((int)key >= 49 && (int)key < 49 + 9 )
+                    if ((int)key >= 49 && (int)key < 49 + 9)
                     {
                         int number = (int)key - 48;
                         Command += $"{number}";
@@ -309,15 +311,20 @@ namespace MinecraftAlpha
                         Command += "~";
 
                     }
+                    if (key == Keys.OemQuotes)
+                    {
+                        Command += "_";
+
+                    }
                     if (key.ToString().Length == 1)
                     {
                         Command += key.ToString();
                     }
-                   
+
 
                 }
-                
-                
+
+
             }
         }
 
@@ -443,7 +450,7 @@ namespace MinecraftAlpha
             LastMouseState = Mouse.GetState();
         }
 
-        
+
 
         public bool KeyCombo(Keys key1, Keys key2, bool Order)
         {

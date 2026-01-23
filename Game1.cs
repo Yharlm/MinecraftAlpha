@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -362,8 +362,7 @@ public class Game1 : Game
 
         _particleSystem.Load();
         _blockManager.LoadActions();
-        _userInterfaceManager.selectedItem = _blockManager.Blocks[3];
-        _userInterfaceManager.amount = 5;
+
 
         //var Grass = Content.Load<Texture2D>("dirt");
         //var wood = Content.Load<Texture2D>("oak_planks");
@@ -376,14 +375,14 @@ public class Game1 : Game
         _userInterfaceManager.LoadGUI();
 
 
-        for (int i = 1; i < _blockManager.Blocks.Count; i++)
-        {
-            _userInterfaceManager.windows[0].ItemSlots[i].Item = _blockManager.Blocks[i];
-            _userInterfaceManager.windows[0].ItemSlots[i].Count = 64;
-        }
+        //for (int i = 1; i < _blockManager.Blocks.Count; i++)
+        //{
+        //    _userInterfaceManager.windows[0].ItemSlots[i].Item = _blockManager.Blocks[i];
+        //    _userInterfaceManager.windows[0].ItemSlots[i].Count = 64;
+        //}
 
     }
-    Sprite3D test;
+   
     public void IluminateDiamond(int x, int y, float val1, TileGrid[,] grid)
     {
         int val = (int)val1;
@@ -592,10 +591,10 @@ public class Game1 : Game
                         var block = _blockManager.GetBlockAtTile(tile);
                         if (block == null) continue;
                         if (block.Update == null) continue;
-                        
 
-                        
-                        
+
+
+
                         //int TickUP = block.TickUpdate;
                         if (Tick % block.TickUpdate == 0)
                         {
@@ -604,7 +603,7 @@ public class Game1 : Game
                         }
                         else
                         {
-                            
+
                             tile.MarkedForUpdate = false;
                         }
 
@@ -1442,10 +1441,10 @@ public class Game1 : Game
         //_spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
         DrawBlock(block, State, BlockSize / block.Texture.Width, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, layer, 0, Vector2.Zero, Layer, SpriteEffects.None);
         _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer + 0.01f);
-        if(DebugMode)
+        if (DebugMode)
         {
-            if(Tile.Data != "")
-            _spriteBatch.DrawString(font, Tile.Data, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, Color.WhiteSmoke);
+            if (Tile.Data != "")
+                _spriteBatch.DrawString(font, Tile.Data, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, Color.WhiteSmoke);
 
         }
 

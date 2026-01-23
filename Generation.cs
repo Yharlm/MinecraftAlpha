@@ -216,14 +216,13 @@ public class Generation
 
 
 
-        //float Val = (PerlinMap[0, 1+int.Abs(x) * 31]) * 20;
-        //PlaceBlock(new Vector2((x * 32)-1, Val), 2, chunks);
+       // Generate terreain
 
         for (int z = 0; z < 10; z++)
         {
             for (int i = 0; i < 32; i++)
             {
-                
+
                 int I = i;
                 float Val = (PerlinMap[z, I + (int.Abs(x) * 32)]) * 20;
                 Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
@@ -240,21 +239,46 @@ public class Generation
                         Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), true);
                     }
                 }
-                PlaceBlock(placement,z, 2, chunks);
+                PlaceBlock(placement, z, 2, chunks);
 
                 for (int j = 1; j < 5; j++)
                 {
-                    PlaceBlock(placement + new Vector2(0, j),z, 1, chunks);
+                    PlaceBlock(placement + new Vector2(0, j), z, 1, chunks);
                 }
                 for (int j = 5; j < 12; j++)
                 {
-                    PlaceBlock(placement + new Vector2(0, j),z, 4, chunks);
+                    PlaceBlock(placement + new Vector2(0, j), z, 4, chunks);
                 }
 
 
             }
         }
 
+
+        //Generate Ores
+
+        for (int i = 0; i < 32; i++)
+        {
+            int I = i;
+            float Val = (PerlinMap[9, I + (int.Abs(x) * 32)]) * 20;
+            Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
+            if (x < 0)
+                placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
+            for (int z = 0; z < 10; z++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if (random.Next(1, 50) == 25)
+                    {
+                        PlaceBlock(placement + new Vector2(0, j), z, 5, chunks);
+                    }
+                    if (random.Next(1, 80) == 40)
+                    {
+                        PlaceBlock(placement + new Vector2(0, j), z, 6, chunks);
+                    }
+                }
+            }
+        }
 
 
 

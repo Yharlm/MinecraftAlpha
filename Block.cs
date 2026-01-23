@@ -96,6 +96,14 @@ namespace MinecraftAlpha
                 new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
                 new Block { Name = "Stone", TexturePath = "stone" ,Health = 100,},
+
+
+                new Block { Name = "Coal Ore", TexturePath = "coal_ore" ,Health = 100,},
+                new Block { Name = "Iron Ore", TexturePath = "iron_ore" ,Health = 100,},
+                new Block { Name = "Gold Ore", TexturePath = "gold_ore" ,Health = 100,},
+                new Block { Name = "Diamond Ore", TexturePath = "diamond_ore" ,Health = 100,},
+
+
                 new Block { Name = "Water", TexturePath = "clay" ,Health = 100,Color = Color.Blue,Data = "7",TickUpdate = 8},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood"},
@@ -105,7 +113,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
                 new Block { Name = "Log", TexturePath = "oak_log", Health = 60,Tag="Wood"},
                 new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
-                new Block { Name = "Glass block", TexturePath = "glass", Health = 4,Transparent = true},
+                new Block { Name = "Glass Block", TexturePath = "glass", Health = 4,Transparent = true},
                 new Block { Name = "TNT", TexturePath = "tnt_side", Health = 2,Transparent = false,Tag="Explosive"},
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
                 new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
@@ -493,7 +501,7 @@ namespace MinecraftAlpha
         }
         public Block GetBlockByName(string name)
         {
-            var block = Blocks.Find(x => x.Name == name);
+            var block = Blocks.Find(x => x.Name.ToLower() == name.ToLower());
             if (block == null)
                 return GetBlockByName("Air");
             else
