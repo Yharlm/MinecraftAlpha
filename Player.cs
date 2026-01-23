@@ -190,7 +190,7 @@ namespace MinecraftAlpha
                         {
                             ammount = int.Parse(Parts[2]);
                         }
-                        if (Parts.Length == 2)
+                        if (Parts.Length >= 2)
                         {
                             itemName = Parts[1].Replace('_', ' ');
 
