@@ -209,7 +209,8 @@ namespace MinecraftAlpha
                 if (LogicsClass.IsInBounds(Pos, entity.position, entity.collisionBox.Size))
                 {
 
-                    entity.Interaction.Action.Invoke();
+                    entity.Interaction.Invoke();
+                    
                 }
             }
 

@@ -53,25 +53,14 @@ namespace MinecraftAlpha
         {
             Vector2 Pos = mob.position;
 
-
+            
 
 
             if (mob.ID <= -1)
             {
                 if (mob.ID == -2)
                 {
-                    if(mob.collisionBox.Bottom)
-                    {
-                        var block = game._blockManager.GetBlockByName(mob.GetData()[0]);
-                        var tile = BlockManager.GetBlockAtPos(mob.position + new Vector2(0,0f), (int)mob.Layer, game.Chunks);
-                        if (tile != null)
-                        {
-                            tile.ID = block.ID;
-                            mob.Health = 0;
-                        }
-                        
-                        
-                    }
+                    
                 }
                 return; // Lol no ur an object
             } 
@@ -101,6 +90,7 @@ namespace MinecraftAlpha
                     mob.Punch(Targ, game);
                 }
             }
+            
         }
 
         public Entity SpawnItem(Vector2 position, int Z, Block item,int c)
@@ -178,7 +168,21 @@ namespace MinecraftAlpha
             if (tile.ID == 0) return null;
             var g = Entity.CloneEntity(GetEntityByName("Fallingblock"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y))-Vector2.One*.5f);
             g.Data = game._blockManager.GetBlockAtTile(tile).Name;
-            
+            g.Update = (mob) =>
+            {
+                if (mob.collisionBox.Bottom)
+                {
+                    var block = game._blockManager.GetBlockByName(mob.GetData()[0]);
+                    var tile = BlockManager.GetBlockAtPos(mob.position + new Vector2(0, 0f), (int)mob.Layer, game.Chunks);
+                    if (tile != null)
+                    {
+                        tile.ID = block.ID;
+                        mob.Health = 0;
+                    }
+
+
+                }
+            };
             game._entityManager.Workspace.Add(g);
 
             if (destroy)
@@ -188,11 +192,11 @@ namespace MinecraftAlpha
             return g;
         }
 
-        public void GravityBlock(TileGrid tile, bool destroy)
+        public Entity GravityBlock(TileGrid tile, bool destroy)
         {
 
             Vector3 Pos = BlockManager.GetPosAtBlock(tile);
-            GravityBlock(new Vector2(Pos.X, Pos.Y), (int)Pos.Z, destroy);
+            return GravityBlock(new Vector2(Pos.X, Pos.Y), (int)Pos.Z, destroy);
         }
 
         public Entity GetEntityByName(string name)
@@ -277,7 +281,7 @@ namespace MinecraftAlpha
                 {
                     EntityAnimationService.GetAnimation("idle",0),
                     EntityAnimationService.GetAnimation("Running",0),
-                    EntityAnimationService.LoadAnimations()[2],
+                    EntityAnimationService.GetAnimation("Swing",0),
                 }
             };
             Plr.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1.8f) };

@@ -643,6 +643,7 @@ public class Game1 : Game
         foreach (var entity in _entityManager.Workspace)
         {
             if (entity.Health <= 0) continue;
+            entity.Update.Invoke(entity);
             //entity.collisionBox.CheckCollision(entity,World);
             entity.Lifetime += 0.1f;
             if (entity.position.Y > 600)
@@ -697,6 +698,7 @@ public class Game1 : Game
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             entity.collisionBox.UpdateCollision(entity, Chunks, this);
             _entityManager.AI(entity);
+            
             var EntVal = entity.velocity.velocity;
             entity.ResetIframes();
             if (entity.ID == -1)
@@ -730,6 +732,7 @@ public class Game1 : Game
             if (entity.Health <= 0)
             {
                 _entityManager.Die(entity, ItemList);
+                break;
             }
 
 
@@ -1456,7 +1459,7 @@ public class Game1 : Game
         int Side = int.Min(Texture.Width, Texture.Height);
         int frames = int.Max(Texture.Width, Texture.Height);
         int framesCount = frames / Side;
-        int currentFrame = (int)((TimeSinceStart) % framesCount);
+        int currentFrame = (int)((TimeSinceStart)*2 % framesCount);
         BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
 
@@ -1475,7 +1478,7 @@ public class Game1 : Game
             int Side = int.Min(block.Texture.Width, block.Texture.Height);
             int frames = int.Max(block.Texture.Width, block.Texture.Height);
             int framesCount = frames / Side;
-            int currentFrame = (int)((TimeSinceStart) % framesCount);
+            int currentFrame = (int)((TimeSinceStart)*2 % framesCount);
             BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
 

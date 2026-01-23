@@ -240,11 +240,11 @@ namespace MinecraftAlpha
 
 
 
-        public Event Interaction;
+        public Action Interaction;
 
-        public Event Update;
+        public Action<Entity> Update = (This) => {};
 
-        public Event Damaged;
+        public Action Damaged;
 
         public static void CollisionEventCollision(Entity A, Entity B, Game1 game1)
         {
