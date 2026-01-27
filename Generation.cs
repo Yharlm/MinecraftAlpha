@@ -234,18 +234,37 @@ public class Generation
         if (x == 0)
         {
 
-            int Ax = 31;
-            int Bx = 0;
-            var l =  { GenerateWhiteNoise(width, 40, seed + 1, 0),GenerateWhiteNoise(width, 40, seed, 0)};
+            int Ax = 0;
+            int Bx = 1;
+            var A = GenerateWhiteNoise(width, 40, seed + 1, 0);
+            var B = GenerateWhiteNoise(width, 40, seed, 0);
+
+            var list = new List<float[,]>
+            {
+                A,
+                B
+            };
+
+            for(int i = 0; i < 2;i++)
+            { 
+                var map = list[i];
+                map = GenerateSmoothNoise(map, 4);
+                map = GeneratePerlinNoise(map, 3, 0.6f);
+
+                var MountainA = GenerateWhiteNoise(width, 40, seed + 1, 1);
+                MountainA = GeneratePerlinNoise(MountainA, 4, 0.6f);
+                SubMaps(map, MountainA, 0.2f);
+                map = GenerateSmoothNoise(map, 1);
+
+            }
 
 
 
 
 
-
-                int yA = (int)(A[0, int.Abs(Ax)] * 20 + 10);
-            int yB = (int)(B[0, int.Abs(Bx)] * 20 + 10);
-            float blend = (yA);
+            int yA = (int)(list[0][0, int.Abs(Ax)] * 20 + 10);
+            int yB = (int)(list[1][0, int.Abs(Bx)] * 20 + 10);
+            float blend = (yB);
 
 
 
