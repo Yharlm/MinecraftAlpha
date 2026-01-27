@@ -648,6 +648,7 @@ namespace MinecraftAlpha
             int size = 32;
             int ChunkX = (int)Math.Ceiling((pos.X / size));
             int ChunkY = (int)Math.Ceiling((pos.Y / size));
+            
             return [ChunkX, ChunkY];
         }
 

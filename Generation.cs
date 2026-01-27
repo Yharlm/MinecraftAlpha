@@ -1,7 +1,7 @@
-﻿using MinecraftAlpha;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using MinecraftAlpha;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MinecraftAlpha
@@ -12,7 +12,7 @@ namespace MinecraftAlpha
 
         public static List<Structure> LoadStructures()
         {
-            
+
             int a = BlockManager.getBlocks("Log").ID;
             int b = BlockManager.getBlocks("Leaves").ID;
 
@@ -20,7 +20,7 @@ namespace MinecraftAlpha
 
             var list = new List<Structure>()
             {
-                
+
                 new Structure()
                 {
 
@@ -106,9 +106,9 @@ namespace MinecraftAlpha
                     for (int z = 0; z < Tiles.GetLength(0); z++)
                     {
                         Vector3 pos = new Vector3(j, i, z);
-                        
+
                         pos.X += (this.x - 1) * 32;
-                        pos.Y += (this.y-1) * 32;
+                        pos.Y += (this.y - 1) * 32;
 
 
 
@@ -192,16 +192,35 @@ public class Generation
         return Layer;
     }
 
+    public static void Blend()
+    {
+
+    }
     public static void GenerateChunk(Vector2 pos, List<Chunk> chunks)
     {
-        int seed = 42;
+
+        //Seed stuff
         int x = BlockManager.GetChunkAtPos(pos)[0] - 1;
+        int seed = 2;
         var random = new Random(seed);
+        int width = (int.Abs(x) + 1) * 32 * 5;
+        int neg = 1;
+        if (x < 0)
+        {
+            neg = -1;
+        }
+
+        var PerlinMap = GenerateWhiteNoise(width, 40, seed + neg, 0);
 
 
-        int width = 5000;
+        //Terrain struff
 
-        var PerlinMap = GenerateWhiteNoise(width, 40, seed, 0);
+
+
+
+        //Blending
+
+
 
         PerlinMap = GenerateSmoothNoise(PerlinMap, 4);
         PerlinMap = GeneratePerlinNoise(PerlinMap, 3, 0.6f);
@@ -212,73 +231,155 @@ public class Generation
         PerlinMap = GenerateSmoothNoise(PerlinMap, 1);
 
 
-
-
-
-
-       // Generate terreain
-
-        for (int z = 0; z < 10; z++)
+        if (x == 0)
         {
+
+            int Ax = 31;
+            int Bx = 0;
+            var l =  { GenerateWhiteNoise(width, 40, seed + 1, 0),GenerateWhiteNoise(width, 40, seed, 0)};
+
+
+
+
+
+
+                int yA = (int)(A[0, int.Abs(Ax)] * 20 + 10);
+            int yB = (int)(B[0, int.Abs(Bx)] * 20 + 10);
+            float blend = (yA);
+
+
+
             for (int i = 0; i < 32; i++)
             {
 
-                int I = i;
-                float Val = (PerlinMap[z, I + (int.Abs(x) * 32)]) * 20;
-                Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
-                if (x < 0)
-                    placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
-
-
-                if (random.Next(1, 7) == 4)
+                int x1 = i;
+                int y = (int)(blend);
+                PlaceBlock(new(x1 + 0.4f, y), 8, 2, chunks);
+                if (x1 % 100 == 0)
                 {
-
-                    //Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 6), false);
-                    if (random.Next(0, 12) == 2)
-                    {
-                        Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), true);
-                    }
+                    PlaceBlock(new(x1 + 0.4f, y), 8, 4, chunks);
                 }
-                PlaceBlock(placement, z, 2, chunks);
-
-                for (int j = 1; j < 5; j++)
-                {
-                    PlaceBlock(placement + new Vector2(0, j), z, 1, chunks);
-                }
-                for (int j = 5; j < 12; j++)
-                {
-                    PlaceBlock(placement + new Vector2(0, j), z, 4, chunks);
-                }
-
 
             }
+
+            return;
         }
 
+        //Execution
 
-        //Generate Ores
 
         for (int i = 0; i < 32; i++)
         {
-            int I = i;
-            float Val = (PerlinMap[9, I + (int.Abs(x) * 32)]) * 20;
-            Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
-            if (x < 0)
-                placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
-            for (int z = 0; z < 10; z++)
+
+            int x1 = i + x * 32;
+            int y = (int)(PerlinMap[0, int.Abs(x1)] * 20 + 10);
+            PlaceBlock(new(x1 + 0.4f, y), 8, 2, chunks);
+            if (x1 % 100 == 0)
             {
-                for (int j = 0; j < 5; j++)
-                {
-                    if (random.Next(1, 50) == 25)
-                    {
-                        PlaceBlock(placement + new Vector2(0, j), z, 5, chunks);
-                    }
-                    if (random.Next(1, 80) == 40)
-                    {
-                        PlaceBlock(placement + new Vector2(0, j), z, 6, chunks);
-                    }
-                }
+                PlaceBlock(new(x1 + 0.4f, y), 8, 4, chunks);
             }
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // int seed = 42;
+        // int x = BlockManager.GetChunkAtPos(pos)[0] - 1;
+        // var random = new Random(seed);
+
+
+        // int width = 5000;
+
+        // var PerlinMap = GenerateWhiteNoise(width, 40, seed + x, 0);
+
+        // PerlinMap = GenerateSmoothNoise(PerlinMap, 4);
+        // PerlinMap = GeneratePerlinNoise(PerlinMap, 3, 0.6f);
+
+        // var Mountain = GenerateWhiteNoise(width, 40, seed + 1, 1);
+        // Mountain = GeneratePerlinNoise(Mountain, 4, 0.6f);
+        // SubMaps(PerlinMap, Mountain, 0.2f);
+        // PerlinMap = GenerateSmoothNoise(PerlinMap, 1);
+
+
+
+
+
+
+        //// Generate terreain
+
+        // for (int z = 0; z < 10; z++)
+        // {
+        //     for (int i = 0; i < 32; i++)
+        //     {
+
+        //         int I = i;
+        //         float Val = (PerlinMap[z, I + (int.Abs(x) * 32)]) * 20;
+        //         Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
+        //         if (x < 0)
+        //             placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
+
+
+        //         if (random.Next(1, 7) == 4)
+        //         {
+
+        //             //Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 6), false);
+        //             if (random.Next(0, 12) == 2)
+        //             {
+        //                 Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), true);
+        //             }
+        //         }
+        //         PlaceBlock(placement, z, 2, chunks);
+
+        //         for (int j = 1; j < 5; j++)
+        //         {
+        //             PlaceBlock(placement + new Vector2(0, j), z, 1, chunks);
+        //         }
+        //         for (int j = 5; j < 12; j++)
+        //         {
+        //             PlaceBlock(placement + new Vector2(0, j), z, 4, chunks);
+        //         }
+
+
+        //     }
+        // }
+
+
+        // //Generate Ores
+
+        // for (int i = 0; i < 32; i++)
+        // {
+        //     int I = i;
+        //     float Val = (PerlinMap[9, I + (int.Abs(x) * 32)]) * 20;
+        //     Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
+        //     if (x < 0)
+        //         placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
+        //     for (int z = 0; z < 10; z++)
+        //     {
+        //         for (int j = 0; j < 5; j++)
+        //         {
+        //             if (random.Next(1, 50) == 25)
+        //             {
+        //                 PlaceBlock(placement + new Vector2(0, j), z, 5, chunks);
+        //             }
+        //             if (random.Next(1, 80) == 40)
+        //             {
+        //                 PlaceBlock(placement + new Vector2(0, j), z, 6, chunks);
+        //             }
+        //         }
+        //     }
+        // }
 
 
 
@@ -289,9 +390,9 @@ public class Generation
 
     }
 
-    public static void PlaceBlock(Vector2 pos, int z,int id, List<Chunk> chunks)
+    public static void PlaceBlock(Vector2 pos, int z, int id, List<Chunk> chunks)
     {
-        TileGrid Tile = BlockManager.GetBlockAtPos(pos,z, chunks);
+        TileGrid Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
         if (Tile == null)
         {
 
@@ -307,7 +408,16 @@ public class Generation
     //Terrain algoritms
 
 
+    //public static void Blend(float[,] A, float[,] B, int size)
+    //{
+    //    for(int x = 0; x < size; x++)
+    //    {
+    //        for (int y = 0; y < size; y++)
+    //        {
 
+    //        }
+    //    }
+    //}
 
     public static float[,] GenerateFlat(int Width, int Height, float peak)
     {
