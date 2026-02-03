@@ -188,6 +188,7 @@ namespace MinecraftAlpha
 
                         if (Parts.Length == 3)
                         {
+                            itemName = Parts[1].Replace('_', ' ');
                             ammount = int.Parse(Parts[2]);
                         }
                         if (Parts.Length >= 2)
@@ -239,6 +240,14 @@ namespace MinecraftAlpha
                     case "/STR":
 
                         FileManager.Run();
+                        return;
+                    case "/SPEED":
+                        int speed= 30;
+                        if (Parts.Length >2) return;
+                        {
+                            speed = int.Parse(Parts[1]);
+                        }
+                        game.Player.Plr.Speed = speed/10;
                         return;
                     default:
                         Chat("*Error invalid command!");

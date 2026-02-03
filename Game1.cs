@@ -89,7 +89,7 @@ public class Game1 : Game
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
     public bool InventoryOpen = false;
-    public float BlockSize = 16f * 5;
+    public float BlockSize = 16f * 1;
 
 
     static public int WorldSizeX = 300;
@@ -732,7 +732,7 @@ public class Game1 : Game
             if (entity.Health <= 0)
             {
                 _entityManager.Die(entity, ItemList);
-                break;
+                //break;
             }
 
 

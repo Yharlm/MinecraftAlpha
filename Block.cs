@@ -227,15 +227,17 @@ namespace MinecraftAlpha
                 {
                     if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
                     {
-                        Game._actionManager.SetTile(Pos, "Air", "");
                         Game._actionManager.SetTile(lower, "Water", "6");
+                        
                     }
+
                 }
                 if (Data == 7)
                 {
                     if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
                     {
                         Game._actionManager.SetTile(lower, "Water", "6");
+                        lower.MarkedForUpdate = false;
                     }
                 }
 

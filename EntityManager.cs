@@ -60,7 +60,18 @@ namespace MinecraftAlpha
             {
                 if (mob.ID == -2)
                 {
-                    
+                    if (mob.collisionBox.Bottom)
+                    {
+                        var block = game._blockManager.GetBlockByName(mob.GetData()[0]);
+                        var tile = BlockManager.GetBlockAtPos(mob.position + new Vector2(0, 0f), (int)mob.Layer, game.Chunks);
+                        if (tile != null)
+                        {
+                            tile.ID = block.ID;
+                            mob.Health = 0;
+                        }
+
+
+                    }
                 }
                 return; // Lol no ur an object
             } 
@@ -168,21 +179,7 @@ namespace MinecraftAlpha
             if (tile.ID == 0) return null;
             var g = Entity.CloneEntity(GetEntityByName("Fallingblock"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y))-Vector2.One*.5f);
             g.Data = game._blockManager.GetBlockAtTile(tile).Name;
-            g.Update = (mob) =>
-            {
-                if (mob.collisionBox.Bottom)
-                {
-                    var block = game._blockManager.GetBlockByName(mob.GetData()[0]);
-                    var tile = BlockManager.GetBlockAtPos(mob.position + new Vector2(0, 0f), (int)mob.Layer, game.Chunks);
-                    if (tile != null)
-                    {
-                        tile.ID = block.ID;
-                        mob.Health = 0;
-                    }
-
-
-                }
-            };
+            
             game._entityManager.Workspace.Add(g);
 
             if (destroy)
