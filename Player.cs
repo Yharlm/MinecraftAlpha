@@ -243,7 +243,7 @@ namespace MinecraftAlpha
                         return;
                     case "/SPEED":
                         int speed= 30;
-                        if (Parts.Length >2) return;
+                        if (Parts.Length == 2)
                         {
                             speed = int.Parse(Parts[1]);
                         }

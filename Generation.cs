@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.Intrinsics.X86;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MinecraftAlpha
@@ -172,73 +173,34 @@ public class Generation
         seed = Seed;
     }
 
-    //Generate a layer of terrain at position (x, y)
-    public float[,] GenerateGround(int x, int y)
+
+    public void GenerateChunk(Vector2 pos, List<Chunk> chunks)
     {
-        int Width = 32;
-        int Height = 5;
-        float[,] Layer = new float[Height, Width]; //The layer to be generated
-
-        // Flat terrain
-
-        // Hills
-
-        // Mountains
+        //Overworld
+        int chunkX = BlockManager.GetChunkAtPos(pos)[0];
+        PerlinNoise Perlin = new PerlinNoise(seed);
+        Random random = new Random(seed);
 
 
-
-
-
-        return Layer;
-    }
-
-    public static void GenerateChunk(Vector2 pos, List<Chunk> chunks)
-    {
-        int seed = 42;
-        int x = BlockManager.GetChunkAtPos(pos)[0] - 1;
-        var random = new Random(seed);
-
-
-        int width = 5000;
-
-        var PerlinMap = GenerateWhiteNoise(width, 40, seed, 0);
-
-        PerlinMap = GenerateSmoothNoise(PerlinMap, 4);
-        PerlinMap = GeneratePerlinNoise(PerlinMap, 3, 0.6f);
-
-        var Mountain = GenerateWhiteNoise(width, 40, seed + 1, 1);
-        Mountain = GeneratePerlinNoise(Mountain, 4, 0.6f);
-        SubMaps(PerlinMap, Mountain, 0.2f);
-        PerlinMap = GenerateSmoothNoise(PerlinMap, 1);
-
-
-
-
-
-
-        // Generate terreain
-
+        float scale = 0.05f;
+        //Terrain
         for (int z = 0; z < 10; z++)
         {
             for (int i = 0; i < 32; i++)
             {
+                float worldX = chunkX * 32 + i;
+                
+                float worldZ = z;
 
-                int I = i;
-                float Val = (PerlinMap[z, I + (int.Abs(x) * 32)]) * 20;
-                Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
-                if (x < 0)
-                    placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
+                float noise = Perlin.Noise(worldX * scale, worldZ * scale);
+                float n = Perlin.Noise(worldX * scale/4, z * scale);
+                n += Perlin.Noise(worldX * scale*2, z * scale)*0.1f;
+                n += Perlin.Noise(worldX * scale*3, z * scale) * 0.2f;
+                noise += n;
 
+                float Y = noise * 20f;
 
-                if (random.Next(1, 7) == 4)
-                {
-
-                    //Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 6), false);
-                    if (random.Next(0, 12) == 2)
-                    {
-                        Structure.LoadStructures()[0].GenerateStructure(chunks, placement - new Vector2(3, 5), true);
-                    }
-                }
+                Vector2 placement = new Vector2(worldX + 0.2f, Y) + Vector2.One * 0.2f;
                 PlaceBlock(placement, z, 2, chunks);
 
                 for (int j = 1; j < 5; j++)
@@ -247,45 +209,21 @@ public class Generation
                 }
                 for (int j = 5; j < 12; j++)
                 {
+                    
                     PlaceBlock(placement + new Vector2(0, j), z, 4, chunks);
                 }
 
-
-            }
-        }
+                
 
 
-        //Generate Ores
 
-        for (int i = 0; i < 32; i++)
-        {
-            int I = i;
-            float Val = (PerlinMap[9, I + (int.Abs(x) * 32)]) * 20;
-            Vector2 placement = new Vector2((x * 32) + 0.2f + I, Val);
-            if (x < 0)
-                placement = new Vector2((x * 32) + 0.2f + 32 - I, Val);
-            for (int z = 0; z < 10; z++)
-            {
-                for (int j = 0; j < 5; j++)
-                {
-                    if (random.Next(1, 50) == 25)
-                    {
-                        PlaceBlock(placement + new Vector2(0, j), z, 5, chunks);
-                    }
-                    if (random.Next(1, 80) == 40)
-                    {
-                        PlaceBlock(placement + new Vector2(0, j), z, 6, chunks);
-                    }
-                }
             }
         }
 
 
 
 
-
-        //float Val = (1 - terrain[0, i]) * 32;
-        //            PlaceBlock(new Vector2(x * 32 + i + 1, Val), 3, chunks);
+        
 
     }
 

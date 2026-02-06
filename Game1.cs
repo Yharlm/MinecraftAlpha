@@ -42,7 +42,7 @@ public class Game1 : Game
     public RecipeManager _RecipeManager = new();
     public InputManager _inputManager = new();
     public CommandMannger _CommandManager = new();
-
+    public Generation generation= new Generation(0);
 
 
 
@@ -871,7 +871,7 @@ public class Game1 : Game
                 //var Chunk = Chunks.Last();
 
 
-                Generation.GenerateChunk(WorldMousePos, Chunks);
+                generation.GenerateChunk(WorldMousePos, Chunks);
 
             }
 

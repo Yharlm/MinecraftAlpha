@@ -500,6 +500,12 @@
 /processorParam:TextureFormat=Color
 /build:sandstone.png
 
+#begin Shaders/BlockEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/BlockEffect.fx
+
 #begin Shaders/Shader.fx
 /importer:EffectImporter
 /processor:EffectProcessor
