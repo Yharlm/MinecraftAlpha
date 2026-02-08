@@ -326,7 +326,7 @@ public class Game1 : Game
             block.Texture = Content.Load<Texture2D>(block.TexturePath);
         }
 
-        Shader = Content.Load<Effect>("Shaders/Shader");
+        Shader = Content.Load<Effect>("Shaders/BlockEffect");
 
 
         //_userInterfaceManager.ItemSlots = UserInterfaceManager.LoadItemSlots(_blockManager.Blocks);
@@ -1283,7 +1283,11 @@ public class Game1 : Game
                                 }
 
                             }
-
+                            if(Tile.ID == _blockManager.getBlock("Water").ID)
+                            {
+                                Shader.Parameters["ID"].SetValue(1);
+                                //Shader.Parameters["State"].SetValue(1);
+                            }
 
                             DrawBlock(Tile, chunk, i, j, Z, zindex / 10);
                             if (plrZ <= 8 && chunk.Tiles[(int)plrZ + 1, i, j] != null)
@@ -1295,7 +1299,7 @@ public class Game1 : Game
                                 DrawBlock(Transparent, chunk, i, j, Z, TraZ / 10);
                             }
 
-
+                            Shader.Parameters["ID"].SetValue(0);
 
 
                         }

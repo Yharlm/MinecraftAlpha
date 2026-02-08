@@ -204,42 +204,59 @@ namespace MinecraftAlpha
                 if (lower == null || top == null || Right == null || Left == null) return;
 
 
+                if (Data <= 7)
+                {
+                    if (top.ID == 0)
+                    {
+                        Game._actionManager.SetTile(Pos, "AIr", "");
+                    }
+                    if (lower.ID == 0)
+                    {
+                        Game._actionManager.SetTile(lower, "Water", "6");
+                    }
+                }
+
+
+
+
+
+
 
 
                 //Spread if hit block left and right
-                if (lower.ID != 0 && lower.ID != getBlock("Water").ID)
-                {
-                    if (Data <= 1)
-                    {
-                        return;
-                    }
-                    if (Left.ID == 0)
-                    {
-                        Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString());
-                    }
-                    if (Right.ID == 0)
-                    {
-                        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString());
-                    }
-                }
-                //Fall down
-                if (Data < 7)
-                {
-                    if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
-                    {
-                        Game._actionManager.SetTile(lower, "Water", "6");
-                        
-                    }
+                //if (lower.ID != 0 && lower.ID != getBlock("Water").ID)
+                //{
+                //    if (Data <= 1)
+                //    {
+                //        return;
+                //    }
+                //    if (Left.ID == 0)
+                //    {
+                //        Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString());
+                //    }
+                //    if (Right.ID == 0)
+                //    {
+                //        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString());
+                //    }
+                //}
+                ////Fall down
+                //if (Data < 7)
+                //{
+                //    if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
+                //    {
+                //        Game._actionManager.SetTile(lower, "Water", "6");
 
-                }
-                if (Data == 7)
-                {
-                    if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
-                    {
-                        Game._actionManager.SetTile(lower, "Water", "6");
-                        lower.MarkedForUpdate = false;
-                    }
-                }
+                //    }
+
+                //}
+                //if (Data == 7)
+                //{
+                //    if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
+                //    {
+                //        Game._actionManager.SetTile(lower, "Water", "6");
+                //        lower.MarkedForUpdate = false;
+                //    }
+                //}
 
 
 

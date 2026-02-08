@@ -11,8 +11,8 @@
 Texture2D SpriteTexture;
 
 int State = 0;
-int Direction = 1;
-string Name = "Null";
+int Direction = 0;
+int ID = 0;
 
 
 sampler2D SpriteTextureSampler = sampler_state
@@ -28,9 +28,9 @@ struct VertexShaderOutput
     float2 TextureCoordinates : TEXCOORD0;
 };
 
-float f(float x, float y)
+float f(float x)
 {
-    return (x * x + y * y);
+    return -7 / (x + 1) + 1.2f;
 }
 
 
@@ -38,7 +38,14 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 Color = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
     
-	
+    if (ID == 1)
+    {
+        if (input.TextureCoordinates.y < f(input.TextureCoordinates.x))
+        {
+            Color.a = 0;
+        }
+
+    }
 	
 	
 
@@ -50,6 +57,6 @@ technique SpriteDrawing
 {
     pass P0
     {
-        PixelShader = compile PS_SHADERMODELMainPS();
+        PixelShader = compile PS_SHADERMODEL MainPS();
     }
 };
