@@ -76,6 +76,13 @@ public class Debuging
 
             game._particleSystem.Particles.Add(part);
         }
+
+        public static void DebugText(SpriteBatch sb, Vector2 pos, Game1 game, Color color,string Text)
+        {
+            if (!game.DebugMode) return;
+            game._spriteBatch.DrawString(game.font, Text, pos, color);
+            
+        }
     }
     internal class LogicsClass
     {
@@ -202,7 +209,8 @@ public class Debuging
         public static Entity RaycastDir(Vector2 origin, Vector2 direction, Game1 game,List<Entity> ignore)
         {
             Entity Instance = null;
-            for (float i = -30; i < 30; i++)
+            int Neg = (int)(direction.X / Math.Abs(direction.X));
+            for (float i = 0; i < 30* Neg; i+= Neg)
             {
 
                 

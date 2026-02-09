@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -204,18 +204,35 @@ namespace MinecraftAlpha
                 if (lower == null || top == null || Right == null || Left == null) return;
 
 
-                if (Data <= 7)
+
+
+
+                if (Data == 7)
                 {
-                    if (top.ID == 0)
-                    {
-                        Game._actionManager.SetTile(Pos, "AIr", "");
-                    }
                     if (lower.ID == 0)
                     {
                         Game._actionManager.SetTile(lower, "Water", "6");
+                        //lower.MarkedForUpdate = false;
+
                     }
                 }
+                if (Data < 7)
+                {
+                    if (top.ID != getBlock("Water").ID && !top.MarkedForUpdate)
+                    {
+                        Game._actionManager.SetTile(Pos, "Air", "");
+                       
+                    }
+                    else if (lower.ID == 0)
+                    {
 
+                        Game._actionManager.SetTile(lower, "Water", "6");
+
+
+                    }
+
+                }
+                Pos.MarkedForUpdate = true;
 
 
 
@@ -338,8 +355,8 @@ namespace MinecraftAlpha
                     tnt.Health = 100;
                     tnt.Update = (This) =>
                     {
-                        
-                        if(This.Health <= 5 && This.Health >0)
+
+                        if (This.Health <= 5 && This.Health > 0)
                         {
                             Vector3 exp = new(This.position.X, This.position.Y, This.Layer);
                             Game._actionManager.Explosion(exp, 6, true);
@@ -349,7 +366,7 @@ namespace MinecraftAlpha
                         This.Health -= 1;
                     };
 
-                   
+
 
                 }
             };
@@ -559,20 +576,20 @@ namespace MinecraftAlpha
             }
             return Chest;
         }
-        public static void Makechunk(Vector2 pos, List<Chunk> Chunks)
-        {
+        //public static void Makechunk(Vector2 pos, List<Chunk> Chunks)
+        //{
 
 
 
-            TileGrid Tile = BlockManager.GetBlockAtPos(pos, Chunks);
-            if (Tile == null)
-            {
+        //    TileGrid Tile = BlockManager.GetBlockAtPos(pos, Chunks);
+        //    if (Tile == null)
+        //    {
 
-                var ChunkNot = BlockManager.GetChunkAtPos(pos);
-                Chunks.Add(new(ChunkNot[0], ChunkNot[1]));
-                Tile = BlockManager.GetBlockAtPos(pos, Chunks);
-            }
-        }
+        //        var ChunkNot = BlockManager.GetChunkAtPos(pos);
+        //        Chunks.Add(new(ChunkNot[0], ChunkNot[1]));
+        //        Tile = BlockManager.GetBlockAtPos(pos, Chunks);
+        //    }
+        //}
         public static TileGrid GetBlockAtPos(Vector2 pos, List<Chunk> Chunks)
         {
             return GetBlockAtPos(pos, 9, Chunks);
@@ -643,6 +660,18 @@ namespace MinecraftAlpha
             return Tile;
         }
 
+        public static Chunk GetChunk(int x,int y, List<Chunk> Chunks)
+        {
+            foreach (Chunk C in Chunks)
+            {
+                if (C.x == x && C.y == y)
+                {
+                    return C;
+                }
+            }
+            return null;
+        }
+
         public static TileGrid GetLastBlockAtPos(Vector2 pos, List<Chunk> Chunks)
         {
 
@@ -667,7 +696,7 @@ namespace MinecraftAlpha
             int size = 32;
             int ChunkX = (int)Math.Ceiling((pos.X / size));
             int ChunkY = (int)Math.Ceiling((pos.Y / size));
-            
+
             return [ChunkX, ChunkY];
         }
 

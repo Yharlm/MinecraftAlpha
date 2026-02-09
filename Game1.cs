@@ -578,8 +578,22 @@ public class Game1 : Game
 
 
         //TimeSinceStart = 0;
-        foreach (var L in Chunks)
+        int Render_Distance = 2;
+
+        List<Chunk> Loaded = new List<Chunk>();
+
+        for(int i = -Render_Distance; i < Render_Distance;i++)
         {
+            var pos = BlockManager.GetChunkAtPos(new Vector2(Player.Plr.position.X + i * 16, Player.Plr.position.Y));
+            var chunk = BlockManager.GetChunk(pos[0], pos[1],Chunks);
+            if (chunk == null) continue;
+            Loaded.Add(chunk);
+        }
+
+
+        foreach (var L in Loaded)
+        {
+            
             for (int z = 0; z < L.Tiles.GetLength(0); z++)
             {
                 for (int i = 0; i < L.Tiles.GetLength(1); i++)
@@ -653,7 +667,7 @@ public class Game1 : Game
 
 
             entity.Grounded = true;
-            if (entity.velocity.velocity.Y > 6f)
+            if (entity.velocity.velocity.Y > 12f)
             {
                 entity.Fall_damage = (int)(entity.velocity.velocity.Y) - 7;
             }
@@ -1264,7 +1278,10 @@ public class Game1 : Game
                             float plrZ = float.Floor(Player.Plr.Layer);
                             for (int z = 0; z < chunk.Tiles.GetLength(0) && z <= plrZ; z++)
                             {
-
+                                if (chunk.Tiles[z, i, j].ID <= -1)
+                                {
+                                    continue;
+                                }
                                 if (_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
                                 {
                                     Transparent = chunk.Tiles[z, i, j];

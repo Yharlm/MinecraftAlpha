@@ -11,7 +11,7 @@ namespace MinecraftAlpha
 
     public class Player
     {
-        public Vector2 SpawnPoint = new Vector2(0, 0);
+        public Vector2 SpawnPoint = new Vector2(0, 10);
         public Game1 game;
         public WindowFrame Inventory = null;
         public Entity Plr;
@@ -168,6 +168,7 @@ namespace MinecraftAlpha
     {
         public bool active = false;
         public List<string> Buffer = new List<string>();
+        public List<Vector3> Points = new List<Vector3>();
         public Game1 game;
         public string Command;
         public bool CapsLock = false;
@@ -236,9 +237,23 @@ namespace MinecraftAlpha
                         return;
                     case "/CLEAR":
                         Buffer.Clear();
+                        Points.Clear();
                         return;
                     case "/STR":
 
+
+                        if(Points.Count >= 2)
+                        {
+                            Vector3 A = Points[0];
+                            Vector3 B = Points[1];
+                            
+                            //For loop for every block bettween,
+
+                            
+
+
+                            //FileManager.SaveStructure(str);
+                        }
                         FileManager.Run();
                         return;
                     case "/SPEED":
