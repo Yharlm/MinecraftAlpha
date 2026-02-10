@@ -241,6 +241,7 @@ public class Debuging
                 Vector2 Hit = new(entity.position.X, F(X, v3, v1));
                 if (float.Abs(entity.position.Y - Hit.Y) < entity.collisionBox.Size.Y)
                 {
+                    
                     if(game.DebugMode)
                     {
                         var part = new Particle()

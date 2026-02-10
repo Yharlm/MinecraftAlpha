@@ -18,102 +18,49 @@ public class Game1 : Game
 {
 
     //Game Rules
-
     public bool KeepInventory = false;
+    public float Daytime = 0f;
+    public bool DebugMode = false;
+    public bool GameStarted = false;
+    public float TimeSinceStart = 0f;
+    public bool creativeMode = true;
+    public bool InventoryOpen = false;
 
-
-
-
-
-
-
-
-
-
-    public Effect Shader;
-
-
-    public UserInterfaceManager _userInterfaceManager;
-    public EntityManager _entityManager = new();
-    public BlockManager _blockManager;
-    public ActionManager _actionManager = new();
-    public EntityAnimationService _entityAnimationService = new();
-    public ParticleSystem _particleSystem = new();
-    public RecipeManager _RecipeManager = new();
-    public InputManager _inputManager = new();
-    public CommandMannger _CommandManager = new();
-    public Generation generation= new Generation(0);
-
-
+    //Program Settings
+    public int windowWidth;
+    public int windowHeight;
+    private GraphicsDeviceManager _graphics;
+    public SpriteBatch _spriteBatch;
 
 
 
 
     public Texture2D BreakTexture;
     public SpriteFont font;
-
-    public Player Player;
-    public bool DebugMode = false;
-
-    public bool GameStarted = false;
-    public float TimeSinceStart = 0f;
-
-    public float Daytime = 0f;
-    public List<Entity> Entities;
-    public List<Block> BlockTypes;
-    public Items items = new();
-
-    public bool creativeMode = true;
-    //Chunks list
-
-    public List<Chunk> Chunks = new List<Chunk>()
+    public Effect Shader;
+    public Player Player; //Local player;
+    public UserInterfaceManager _userInterfaceManager; //UI and GUI
+    public EntityManager _entityManager = new(); //entities
+    public BlockManager _blockManager; //Blocks and tiles
+    public ActionManager _actionManager = new(); //Special actions in gameplay
+    public EntityAnimationService _entityAnimationService = new(); //Animations
+    public ParticleSystem _particleSystem = new(); //Particles / seperate form entity class.
+    public RecipeManager _RecipeManager = new(); // Loads the difrent interactions in UI using items.
+    public InputManager _inputManager = new(); //Reading and storing User Input.
+    public CommandMannger _CommandManager = new(); //Debug and testing features
+    public Generation generation = new Generation(0); //Procedural gen and structures.
+    
+    public List<Chunk> Chunks = new() // Preset 3 chunks
     {
         new Chunk(1,2),
         new Chunk(0,2),
         new Chunk(-1,2),
-
-
     };
-
-
-
-
-
-
-
-
-
-
-
-
+    //Gameplay variables
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
-    public bool InventoryOpen = false;
     public float BlockSize = 16f * 1;
-
-
-    static public int WorldSizeX = 300;
-    static public int WorldSizeY = 300;
-
-    public List<TileGrid[,]> Layers = new List<TileGrid[,]>()
-    {
-        new TileGrid[WorldSizeX, WorldSizeY], // Background3
-        new TileGrid[WorldSizeX, WorldSizeY], // Background2
-        new TileGrid[WorldSizeX, WorldSizeY], // Background
-        new TileGrid[WorldSizeX, WorldSizeY], // Main World
-        new TileGrid[WorldSizeX, WorldSizeY], // Foreground
-    };
-    public TileGrid[,] BackGround { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
-    public TileGrid[,] Foreground { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
-    public TileGrid[,] World { get; set; } = new TileGrid[WorldSizeX, WorldSizeY];
-
-
-    public int windowWidth;
-    public int windowHeight;
-
-
-    private GraphicsDeviceManager _graphics;
-    public SpriteBatch _spriteBatch;
+    
 
     public Game1()
     {
@@ -190,8 +137,8 @@ public class Game1 : Game
 
 
         // TODO: Add your initialization logic here
-        Entities = _entityManager.Workspace;
-        BlockTypes = _blockManager.Blocks;
+        
+        
 
 
 
@@ -305,7 +252,7 @@ public class Game1 : Game
         //BreakTexture = Content.Load<Texture2D>("break_animation");
 
 
-        items.Atlas = Content.Load<Texture2D>("Items");
+
 
 
         // Items
@@ -1391,30 +1338,32 @@ public class Game1 : Game
 
             }
             _spriteBatch.End();
+
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            for (int h = 0; h < Player.Plr.MaxHealth; h += 2)
+            {
+
+                Player.DrawStats(_spriteBatch, Content.Load<Texture2D>("UIelements/Stats"), "heart.0", new Vector2(h * 20 + windowWidth / 2, windowHeight * 0.8f));
+            }
+
+            for (int h = 0; h < Player.Plr.Health; h += 2)
+            {
+                string heartType = "heart";
+                if (h + 1 == Player.Plr.Health)
+                {
+                    heartType = "heart.5";
+                }
+
+                Player.DrawStats(_spriteBatch, Content.Load<Texture2D>("UIelements/Stats"), heartType, new Vector2(h * 20 + windowWidth / 2, windowHeight * 0.8f));
+            }
+            _spriteBatch.End();
         }
 
         _userInterfaceManager.DrawUI(_spriteBatch, Content);
 
         //test.Draw(_spriteBatch);
 
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        for (int h = 0; h < Player.Plr.MaxHealth; h += 2)
-        {
-
-            Player.DrawStats(_spriteBatch, Content.Load<Texture2D>("UIelements/Stats"), "heart.0", new Vector2(h * 20 + windowWidth / 2, windowHeight * 0.8f));
-        }
-
-        for (int h = 0; h < Player.Plr.Health; h += 2)
-        {
-            string heartType = "heart";
-            if (h + 1 == Player.Plr.Health)
-            {
-                heartType = "heart.5";
-            }
-
-            Player.DrawStats(_spriteBatch, Content.Load<Texture2D>("UIelements/Stats"), heartType, new Vector2(h * 20 + windowWidth / 2, windowHeight * 0.8f));
-        }
-        _spriteBatch.End();
+        
 
     }
     void DrawBlock(TileGrid Tile, Chunk chunk, int i, int j, float Z, float layer)

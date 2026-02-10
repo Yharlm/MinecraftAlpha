@@ -248,8 +248,12 @@ namespace MinecraftAlpha
 
         public static void CollisionEventCollision(Entity A, Entity B, Game1 game1)
         {
-            A.velocity.velocity += (A.position - B.position) * new Vector2(0.5f,0.1f);
-            B.velocity.velocity += (B.position - A.position) * new Vector2(0.5f, 0.1f);
+            if(A.ID+ B.ID >= 0)
+            {
+                A.velocity.velocity += (A.position - B.position) * new Vector2(0.5f, 0.1f);
+                B.velocity.velocity += (B.position - A.position) * new Vector2(0.5f, 0.1f);
+            }
+            
 
 
 
