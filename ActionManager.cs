@@ -35,7 +35,7 @@ namespace MinecraftAlpha
             {
 
                 //Kills all entities
-                new Event("KIll","", () => { Game.Entities.Clear(); }),
+                new Event("KIll","", () => { /*Game.Entities.Clear();*/ }),
                 // 
                 new Event("LeftInteract","",() => {  })
 

@@ -34,7 +34,7 @@ public class Game1 : Game
 
 
 
-
+    public Items items = new();
     public Texture2D BreakTexture;
     public SpriteFont font;
     public Effect Shader;
@@ -310,7 +310,7 @@ public class Game1 : Game
         _particleSystem.Load();
         _blockManager.LoadActions();
 
-
+        items.Atlas = Content.Load<Texture2D>("Items");
         //var Grass = Content.Load<Texture2D>("dirt");
         //var wood = Content.Load<Texture2D>("oak_planks");
 

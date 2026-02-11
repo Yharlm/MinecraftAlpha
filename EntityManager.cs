@@ -445,7 +445,6 @@ namespace MinecraftAlpha
                         /* 1,2
                            3,4*/
 
-
                         new Vector4(0,16,4,6), // Leg1
                         new Vector4(0,16,4,6), // Leg2
                         new Vector4(0,16,4,6), // Leg3
@@ -485,7 +484,8 @@ namespace MinecraftAlpha
                     },
                     new Joint() //Head
                     {
-                        A = new Vector2(-10, 2f),
+                        
+                        A = new Vector2(-0, 2f),
                         B = new Vector2(0f, 0f),
                         A_Index = 4,
                         B_Index = 5,
