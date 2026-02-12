@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -207,136 +207,65 @@ namespace MinecraftAlpha
 
 
 
-                if (Data == 7)
-                {
-                    if (lower.ID == 0)
-                    {
-                        Game._actionManager.SetTile(lower, "Water", "6");
-                        //lower.MarkedForUpdate = false;
-
-                    }
-                }
-                if (Data < 7)
-                {
-                    if (top.ID != getBlock("Water").ID && !top.MarkedForUpdate)
-                    {
-                        Game._actionManager.SetTile(Pos, "Air", "");
-                       
-                    }
-                    else if (lower.ID == 0)
-                    {
-
-                        Game._actionManager.SetTile(lower, "Water", "6");
-
-
-                    }
-
-                }
-                Pos.MarkedForUpdate = true;
-
-
-
-
-
-
-
-                //Spread if hit block left and right
-                //if (lower.ID != 0 && lower.ID != getBlock("Water").ID)
-                //{
-                //    if (Data <= 1)
-                //    {
-                //        return;
-                //    }
-                //    if (Left.ID == 0)
-                //    {
-                //        Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString());
-                //    }
-                //    if (Right.ID == 0)
-                //    {
-                //        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString());
-                //    }
-                //}
-                ////Fall down
-                //if (Data < 7)
-                //{
-                //    if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
-                //    {
-                //        Game._actionManager.SetTile(lower, "Water", "6");
-
-                //    }
-
-                //}
                 //if (Data == 7)
                 //{
-                //    if (lower.ID == 0 || lower.ID == getBlock("Water").ID)
+                //    if (lower.ID == 0)
                 //    {
                 //        Game._actionManager.SetTile(lower, "Water", "6");
-                //        lower.MarkedForUpdate = false;
+                //        //lower.MarkedForUpdate = false;
+
                 //    }
                 //}
-
-
-
-
-                //Absorb int oground
-
-
-
-                //if (lower.ID != 0 && lower.ID != getBlock("Water").ID)
+                //if (Data < 7)
                 //{
-                //    if (Data >= 1)
-                //    {
-                //        return;
-                //    }
-                //    if (Right.ID == 0)
-                //    {
-                //        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString());
-                //    }
-
-                //    //if (Left.ID == 0)
-                //    //{
-                //    //    Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString());
-                //    //}
-
-
-
-                //}
-                //if (lower.ID == 0 && lower.ID != getBlock("Water").ID)
-                //{
-                //    Game._actionManager.SetTile(lower, "Water", "6");
-                //}
-                //if (top.ID != getBlock("Water").ID)
-                //{
-
-
-                //    if (lower.ID == getBlock("Water").ID)
+                //    if (top.ID != getBlock("Water").ID && !top.MarkedForUpdate)
                 //    {
                 //        Game._actionManager.SetTile(Pos, "Air", "");
+
+                //    }
+                //    else if (lower.ID == 0)
+                //    {
+
                 //        Game._actionManager.SetTile(lower, "Water", "6");
+
+
                 //    }
-                //    //Game._actionManager.SetTile(lower, "Water", "6");
 
                 //}
+                Pos.MarkedForUpdate = true;
+                
+                if (lower.ID == 0)
+                {
+                    Game._actionManager.SetTile(lower, "Water", "6");
+                    //lower.MarkedForUpdate = false;
+                }
+                
+                
 
+                
+                
 
-                //if (lower.ID != 0)
+                if(lower.ID != 0 && lower.ID != getBlock("Water").ID)
+                {
+                    if (int.Abs(Data) <= 1)
+                    {
+                        return;
+                    }
+                    if (Left.ID == 0)
+                    {
+                        Game._actionManager.SetTile(Left, "Water", (-Data - 1).ToString());
+                    }
+                    if (Right.ID == 0)
+                    {
+                        Game._actionManager.SetTile(Right,"Water", (Data - 1).ToString());
+                    }
+
+                }
+                //if (top.ID == 0)
                 //{
-                //    if (Data >= 1)
-                //    {
-                //        return;
-                //    }
-                //    if (Right.ID == 0)
-                //    {
-                //        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString());
-                //    }
-
-                //    if (Left.ID == 0)
-                //    {
-                //        Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString());
-                //    }
+                //    Game._actionManager.SetTile(Pos, "Air", "");
+                //    lower.MarkedForUpdate = true;
                 //}
-
-
 
 
 
@@ -660,7 +589,7 @@ namespace MinecraftAlpha
             return Tile;
         }
 
-        public static Chunk GetChunk(int x,int y, List<Chunk> Chunks)
+        public static Chunk GetChunk(int x, int y, List<Chunk> Chunks)
         {
             foreach (Chunk C in Chunks)
             {

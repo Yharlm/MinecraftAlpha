@@ -1304,6 +1304,11 @@ public class Game1 : Game
                 _spriteBatch.DrawString(font, ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
                 _spriteBatch.DrawString(font, (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
                 _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos, Chunks))).ToString(), new Vector2(470, 40), Color.Red);
+                var b = BlockManager.GetBlockAtPos(WorldMousePos, Chunks);
+                if (b != null) _spriteBatch.DrawString(font, b.Data, new Vector2(70, 70), Color.Blue);
+                else _spriteBatch.DrawString(font, "Null", new Vector2(70, 70), Color.Blue);
+
+
 
             }
             if (_CommandManager.active)
