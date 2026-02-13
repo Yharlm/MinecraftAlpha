@@ -239,21 +239,21 @@ namespace MinecraftAlpha
                     Game._actionManager.SetTile(lower, "Water", "6");
                     //lower.MarkedForUpdate = false;
                 }
-                
-                
 
-                
-                
 
-                if(lower.ID != 0 && lower.ID != getBlock("Water").ID)
+
+
+
+                if (int.Abs(Data) <= 1)
                 {
-                    if (int.Abs(Data) <= 1)
-                    {
-                        return;
-                    }
+                    return;
+                }
+                if (lower.ID != 0 && lower.ID != getBlock("Water").ID)
+                {
+                    
                     if (Left.ID == 0)
                     {
-                        Game._actionManager.SetTile(Left, "Water", (-Data - 1).ToString());
+                        Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString());
                     }
                     if (Right.ID == 0)
                     {
@@ -261,11 +261,30 @@ namespace MinecraftAlpha
                     }
 
                 }
-                //if (top.ID == 0)
-                //{
-                //    Game._actionManager.SetTile(Pos, "Air", "");
-                //    lower.MarkedForUpdate = true;
-                //}
+                
+                if(Data == 6)
+                {
+                    if(top.ID != getBlock("Water").ID)
+                        Game._actionManager.SetTile(Pos, "Air", "");
+                }
+                if(Data <6)
+                {
+                    if(Right.ID == getBlock("Water").ID && Left.ID == getBlock("Water").ID )
+                    {
+                        if (int.Parse(Right.Data) < Data && int.Parse(Left.Data) < Data)
+                        {
+                            Game._actionManager.SetTile(Pos, "Air", "");
+                            //lower.MarkedForUpdate = true;
+                        }
+                    }
+                    else
+                    {
+                        Game._actionManager.SetTile(Pos, "Air", "");
+                        //lower.MarkedForUpdate = true;
+                    }
+
+                    
+                }
 
 
 
