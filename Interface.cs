@@ -313,7 +313,7 @@ namespace MinecraftAlpha
             windows.Add(new WindowFrame()
             {
                 Name = "Crafting3x3",
-                Visible = true,
+                Visible = false,
                 Frames = new() { },
                 Buttons = new() { },
                 ItemSlots = new() { },

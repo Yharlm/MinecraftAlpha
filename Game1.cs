@@ -1304,7 +1304,7 @@ public class Game1 : Game
                 _spriteBatch.DrawString(font, ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
                 _spriteBatch.DrawString(font, (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
                 _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos, Chunks))).ToString(), new Vector2(470, 40), Color.Red);
-                var b = BlockManager.GetBlockAtPos(WorldMousePos, Chunks); //WHY NOT WORK!
+                var b = BlockManager.GetBlockAtPos(WorldMousePos,(int)(Player.Plr.Layer), Chunks); //WHY NOT WORK!
                 if (b != null)
                 {
                     if (b.Data != "")

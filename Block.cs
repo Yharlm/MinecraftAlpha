@@ -244,11 +244,8 @@ namespace MinecraftAlpha
 
 
 
-                if (int.Abs(Data) <= 1)
-                {
-                    return;
-                }
-                if (lower.ID != 0 && lower.ID != getBlock("Water").ID)
+                
+                if (lower.ID != 0 && lower.ID != getBlock("Water").ID && Data > 1)
                 {
                     
                     if (Left.ID == 0)
