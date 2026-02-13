@@ -271,13 +271,13 @@ namespace MinecraftAlpha
                         if (int.Parse(Right.Data) < Data && int.Parse(Left.Data) < Data)
                         {
                             Game._actionManager.SetTile(Pos, "Air", "");
-                            //lower.MarkedForUpdate = true;
+                            lower.MarkedForUpdate = true;
                         }
                     }
                     else
                     {
                         Game._actionManager.SetTile(Pos, "Air", "");
-                        //lower.MarkedForUpdate = true;
+                        lower.MarkedForUpdate = true;
                     }
 
                     
