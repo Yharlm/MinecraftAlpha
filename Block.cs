@@ -104,7 +104,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Diamond Ore", TexturePath = "diamond_ore" ,Health = 100,},
 
 
-                new Block { Name = "Water", TexturePath = "clay" ,Health = 100,Color = Color.Blue,Data = "7",TickUpdate = 8},
+                new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood"},
                 new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5},
@@ -262,7 +262,12 @@ namespace MinecraftAlpha
                 if(Data == 6)
                 {
                     if(top.ID != getBlock("Water").ID)
+                    {
                         Game._actionManager.SetTile(Pos, "Air", "");
+                        lower.MarkedForUpdate = true;
+                    }
+                       
+
                 }
                 if(Data <6)
                 {
@@ -271,13 +276,13 @@ namespace MinecraftAlpha
                         if (int.Parse(Right.Data) < Data && int.Parse(Left.Data) < Data)
                         {
                             Game._actionManager.SetTile(Pos, "Air", "");
-                            lower.MarkedForUpdate = true;
+                            
                         }
                     }
                     else
                     {
                         Game._actionManager.SetTile(Pos, "Air", "");
-                        lower.MarkedForUpdate = true;
+                        
                     }
 
                     

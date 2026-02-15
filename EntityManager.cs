@@ -450,42 +450,42 @@ namespace MinecraftAlpha
                         new Vector4(0,16,4,6), // Leg3
                         new Vector4(0,16,4,6), // Leg4
                         new Vector4(0,8,16,8), // Torso
-                        new Vector4(17,0,9,8), // Head
+                        new Vector4(8,0,9,8), // Head
                 },
                 Joints = new List<Joint>()
                 {
                     new Joint() //1
                     {
-                        A = new Vector2(6f, -7f),
-                        B = new Vector2(0, 0),
+                        A = new Vector2(6f, -2f),
+                        B = new Vector2(0, -4),
                         A_Index = 4,
                         B_Index = 0,
                     },
                     new Joint() //2
                     {
-                        A = new Vector2(6f, -7f),
-                        B = new Vector2(0, 0),
+                        A = new Vector2(6f, -2f),
+                        B = new Vector2(0, -4),
                         A_Index = 4,
                         B_Index = 1,
                     },
                     new Joint() //3
                     {
-                        A = new Vector2(-6f, -7f),
-                        B = new Vector2(0, 0),
+                        A = new Vector2(-6f, -2f),
+                        B = new Vector2(0, -4),
                         A_Index = 4,
                         B_Index = 2,
                     },
                     new Joint() //4
                     {
-                        A = new Vector2(-6f, -7f),
-                        B = new Vector2(0, 0),
+                        A = new Vector2(-6f, -2f),
+                        B = new Vector2(0, -4),
                         A_Index = 4,
                         B_Index = 3,
                     },
                     new Joint() //Head
                     {
                         
-                        A = new Vector2(-0, 2f),
+                        A = new Vector2(-9, 3f),
                         B = new Vector2(0f, 0f),
                         A_Index = 4,
                         B_Index = 5,

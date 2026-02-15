@@ -148,10 +148,10 @@ namespace MinecraftAlpha
                 new EntityAnimation(2,"idle",new List<Frame>()
                 {
 
-                    new Frame(0,0f,2,180),
-
-
-
+                    new Frame(0,0f,0,0),
+                    new Frame(1,0f,0,0),
+                    new Frame(2,0f,0,0),
+                    new Frame(3,0f,0,0),
 
                 })
                 {   duration =0.2f,
@@ -160,17 +160,34 @@ namespace MinecraftAlpha
 
                 new EntityAnimation(2,"pig_walk",new List<Frame>()
                 {
-                    new Frame(0,0f,2,0),
-                    new Frame(0,0.5f,2,0),
-                    
 
+
+                    //new Frame(1,0f,1,0),
+                    new Frame(1,1f,1,50),
+                    new Frame(1,2f,1f,-50),
+                    //new Frame(1,3f,1,0),
+
+                    //new Frame(2,0f,1,0),
+                    new Frame(2,1f,1,-50),
+                    new Frame(2,2f,1f,50),
+                    //new Frame(2,3f,1,0),
+
+                    //new Frame(3,0f,1,0),
+                    new Frame(3,1f,1,50),
+                    new Frame(3,2f,1f,-50),
+                    //new Frame(3,3f,1,0),
+
+                    //new Frame(0,0f,1,0),
+                    new Frame(0,1f,1,-50),
+                    new Frame(0,2f,1f,50),
+                    //new Frame(0,3f,1,0),
 
 
 
 
 
                 })
-                {   duration =1f,
+                {   duration =4f,
                     Looped = false,
                 },
 
