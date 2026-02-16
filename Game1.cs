@@ -1229,7 +1229,7 @@ public class Game1 : Game
 
         if (GameStarted)
         {
-            
+
             //foreach (var Mob in Entities)
             //{
 
@@ -1250,52 +1250,58 @@ public class Game1 : Game
 
 
 
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
             foreach (var chunk in Chunks)
             {
-                for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
+                int maxLayer = chunk.Tiles.GetLength(0);
+
+                for (int z = 0; z < maxLayer; z++)
                 {
-                    for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
+                    // -----------------------------
+                    // DRAW TILES IN THIS LAYER
+                    // -----------------------------
+                    for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
                     {
-                        var renderList = GetVisible(j, i, chunk);
-
-                        for (int z = 0; z < chunk.Tiles.GetLength(0); z++)
+                        for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
                         {
-
-                            //Draw entity here
-                            foreach (Entity entity in _entityManager.Workspace)
-                            {
-
-                                var Pos = BlockManager.GetChunkAtPos(entity.position);
-                                var Chunk = BlockManager.GetChunk(Pos[0], Pos[1], Chunks);
-
-
-                                if ((int)entity.Layer == z && Chunk == chunk)
-                                {
-                                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                                    entity.DrawEntity(_spriteBatch, BlockSize, Player.cam.position, this);
-                                    _spriteBatch.End();
-
-                                }
-
-
-                            }
-
-
-                            //Draw block here
+                            var renderList = GetVisible(j, i, chunk);
                             var tile = renderList[z];
+                            var block = _blockManager.GetBlockAtTile(tile);
+                            if (_blockManager.getBlock("Water").ID == tile.ID)
+                            {
+                                //Shader.Parameters["Time"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
+                                //Shader.CurrentTechnique = Shader.Techniques["Water"];
+                                _spriteBatch.End();
+                                _spriteBatch.Begin(effect: Shader, samplerState: SamplerState.PointClamp);
+                            }
                             if (tile != null)
                             {
-                                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                                 DrawBlock(tile, chunk, i, j, 1, 1);
-                                _spriteBatch.End();
                             }
-
-
-
                         }
+                    }
+
+                    // -----------------------------
+                    // DRAW ENTITIES IN THIS LAYER
+                    // -----------------------------
+                    foreach (Entity entity in _entityManager.Workspace)
+                    {
+                        if ((int)entity.Layer != z)
+                            continue;
+
+                        var pos = BlockManager.GetChunkAtPos(entity.position);
+                        var entityChunk = BlockManager.GetChunk(pos[0], pos[1], Chunks);
+
+                        if (entityChunk != chunk)
+                            continue;
+
+                        entity.DrawEntity(_spriteBatch, BlockSize, Player.cam.position, this);
                     }
                 }
             }
+
+            _spriteBatch.End();
 
 
 

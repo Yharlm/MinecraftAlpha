@@ -49,6 +49,8 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     return Color;
 }
 
+
+
 technique SpriteDrawing
 {
     pass P0
