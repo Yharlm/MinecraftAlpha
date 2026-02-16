@@ -222,7 +222,7 @@ namespace MinecraftAlpha
                 new Vector2(ract.Width, ract.Height) / 2 + A, //
                 size,
                 spriteEffect,
-                Z - 0.01f
+                0
                 );
 
             if (isGrip && mob.Item != null)
@@ -254,7 +254,7 @@ namespace MinecraftAlpha
                         new Vector2(game1.items.GetRactangle(item.ItemID).Width, game1.items.GetRactangle(item.ItemID).Height) / 2 + attachmentPos, //
                         size * 0.6f,
                         spriteEffect,
-                        Z
+                        0
                     );
                     Debuging.DebugPos(spriteBatch, Pos - (B) * size, game1);
                 }

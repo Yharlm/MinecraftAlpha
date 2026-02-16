@@ -356,7 +356,7 @@ namespace MinecraftAlpha
                                Vector2.Zero, //
                                BlockSize / 18,
                                SpriteEffects.FlipHorizontally,
-                               1f
+                               0f
                                );
             }
             if (ID == -2)//Gravity block
@@ -371,7 +371,7 @@ namespace MinecraftAlpha
                                new Vector2(8,8), //
                                BlockSize/16,
                                SpriteEffects.FlipHorizontally,
-                               1f
+                               0f
                                );
                 Debuging.DebugPosWOrld(SB, BlockSize * position + Cam, game1, Color.Green);
                 return;

@@ -49,7 +49,7 @@ public class Game1 : Game
     public InputManager _inputManager = new(); //Reading and storing User Input.
     public CommandMannger _CommandManager = new(); //Debug and testing features
     public Generation generation = new Generation(0); //Procedural gen and structures.
-    
+
     public List<Chunk> Chunks = new() // Preset 3 chunks
     {
         new Chunk(1,2),
@@ -60,7 +60,7 @@ public class Game1 : Game
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
     public float BlockSize = 16f * 1;
-    
+
 
     public Game1()
     {
@@ -137,8 +137,8 @@ public class Game1 : Game
 
 
         // TODO: Add your initialization logic here
-        
-        
+
+
 
 
 
@@ -329,7 +329,7 @@ public class Game1 : Game
         //}
 
     }
-   
+
     public void IluminateDiamond(int x, int y, float val1, TileGrid[,] grid)
     {
         int val = (int)val1;
@@ -529,10 +529,10 @@ public class Game1 : Game
 
         List<Chunk> Loaded = new List<Chunk>();
 
-        for(int i = -Render_Distance; i < Render_Distance;i++)
+        for (int i = -Render_Distance; i < Render_Distance; i++)
         {
             var pos = BlockManager.GetChunkAtPos(new Vector2(Player.Plr.position.X + i * 16, Player.Plr.position.Y));
-            var chunk = BlockManager.GetChunk(pos[0], pos[1],Chunks);
+            var chunk = BlockManager.GetChunk(pos[0], pos[1], Chunks);
             if (chunk == null) continue;
             Loaded.Add(chunk);
         }
@@ -540,7 +540,7 @@ public class Game1 : Game
 
         foreach (var L in Loaded)
         {
-            
+
             for (int z = 0; z < L.Tiles.GetLength(0); z++)
             {
                 for (int i = 0; i < L.Tiles.GetLength(1); i++)
@@ -659,7 +659,7 @@ public class Game1 : Game
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
             entity.collisionBox.UpdateCollision(entity, Chunks, this);
             _entityManager.AI(entity);
-            
+
             var EntVal = entity.velocity.velocity;
             entity.ResetIframes();
             if (entity.ID == -1)
@@ -1151,6 +1151,43 @@ public class Game1 : Game
 
     }
 
+    TileGrid[] GetVisible(int x, int y, Chunk chunk) // Reduce lag by rendering only the 2-3 blocks at pos
+    {
+        var Render = new TileGrid[chunk.Tiles.GetLength(0)];
+        TileGrid[,,] tileGrids = chunk.Tiles;
+
+        for (int Z = 0; Z < tileGrids.GetLength(0); Z++)
+        {
+
+            var tile = tileGrids[Z, y, x];
+
+            if (tile.ID == 0)
+            {
+
+                continue;
+
+            }
+            if (_blockManager.GetBlockAtTile(tile).Transparent && Render.Last() != tile)
+            {
+                Render[Z] = tile;
+
+            }
+            else
+            {
+                Render[Z] = tile;
+                break;
+            }
+
+        }
+
+        return Render;
+
+    }
+
+
+
+
+
 
 
 
@@ -1173,10 +1210,26 @@ public class Game1 : Game
         //Matrix transformMatrix = Matrix.CreateScale(scaleX, scaleY, 1.0f);
 
 
+        //render layer, then entities 
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
 
         if (GameStarted)
         {
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack, effect: Shader);
+            
             //foreach (var Mob in Entities)
             //{
 
@@ -1196,85 +1249,148 @@ public class Game1 : Game
             //Player.cam.RenderLayer(_blockManager, _spriteBatch, World, 0f, Player.Plr.position, BreakTexture);
 
 
+
             foreach (var chunk in Chunks)
             {
-                int RenderDistance = 2;
-                var Pos = BlockManager.GetChunkAtPos(Player.Plr.position);
-                int x = Pos[0];
-                int y = Pos[1];
-
-                if (chunk.x <= x + RenderDistance && chunk.x > x - RenderDistance)
+                for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
                 {
-
-
-
-
-
-                    for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
+                    for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
                     {
-                        for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
+                        var renderList = GetVisible(j, i, chunk);
+
+                        for (int z = 0; z < chunk.Tiles.GetLength(0); z++)
                         {
-                            float zindex = 0f;
-                            float Z = 0;
-                            var Tile = chunk.Tiles[0, i, j];
-                            float TraZ = 0f;
-                            TileGrid Transparent = null;
 
-                            //TileGrid Opaque = null;
-
-                            float plrZ = float.Floor(Player.Plr.Layer);
-                            for (int z = 0; z < chunk.Tiles.GetLength(0) && z <= plrZ; z++)
+                            //Draw entity here
+                            foreach (Entity entity in _entityManager.Workspace)
                             {
-                                if (chunk.Tiles[z, i, j].ID <= -1)
-                                {
-                                    continue;
-                                }
-                                if (_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
-                                {
-                                    Transparent = chunk.Tiles[z, i, j];
-                                    TraZ = z;
-                                    Z = z / 9f;
-                                }
-                                if (chunk.Tiles[z, i, j].ID != 0 && !_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
-                                {
+
+                                var Pos = BlockManager.GetChunkAtPos(entity.position);
+                                var Chunk = BlockManager.GetChunk(Pos[0], Pos[1], Chunks);
 
 
-
-                                    zindex = z;
-                                    Z = z / 9f;
-                                    Tile = chunk.Tiles[z, i, j];
+                                if ((int)entity.Layer == z && Chunk == chunk)
+                                {
+                                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                                    entity.DrawEntity(_spriteBatch, BlockSize, Player.cam.position, this);
+                                    _spriteBatch.End();
 
                                 }
 
-                            }
-                            if(Tile.ID == _blockManager.getBlock("Water").ID)
-                            {
-                                Shader.Parameters["ID"].SetValue(1);
-                                //Shader.Parameters["State"].SetValue(1);
+
                             }
 
-                            DrawBlock(Tile, chunk, i, j, Z, zindex / 10);
-                            if (plrZ <= 8 && chunk.Tiles[(int)plrZ + 1, i, j] != null)
+
+                            //Draw block here
+                            var tile = renderList[z];
+                            if (tile != null)
                             {
-                                DrawBlock(chunk.Tiles[(int)plrZ + 1, i, j], chunk, i, j, Z, (TraZ + 9) / 10f, true);
-                            }
-                            if (Transparent != null)
-                            {
-                                DrawBlock(Transparent, chunk, i, j, Z, TraZ / 10);
+                                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                                DrawBlock(tile, chunk, i, j, 1, 1);
+                                _spriteBatch.End();
                             }
 
-                            Shader.Parameters["ID"].SetValue(0);
 
 
                         }
                     }
-
-
                 }
             }
-            _entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
 
-            _spriteBatch.End();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //foreach (var chunk in Chunks)
+            //{
+            //    int RenderDistance = 2;
+            //    var Pos = BlockManager.GetChunkAtPos(Player.Plr.position);
+            //    int x = Pos[0];
+            //    int y = Pos[1];
+
+            //    if (chunk.x <= x + RenderDistance && chunk.x > x - RenderDistance)
+            //    {
+
+
+
+
+
+            //        for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
+            //        {
+            //            for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
+            //            {
+            //                float zindex = 0f;
+            //                float Z = 0;
+            //                var Tile = chunk.Tiles[0, i, j];
+            //                float TraZ = 0f;
+            //                TileGrid Transparent = null;
+
+            //                //TileGrid Opaque = null;
+
+            //                float plrZ = float.Floor(Player.Plr.Layer);
+            //                for (int z = 0; z < chunk.Tiles.GetLength(0) && z <= plrZ; z++)
+            //                {
+            //                    if (chunk.Tiles[z, i, j].ID <= -1)
+            //                    {
+            //                        continue;
+            //                    }
+            //                    if (_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
+            //                    {
+            //                        Transparent = chunk.Tiles[z, i, j];
+            //                        TraZ = z;
+            //                        Z = z / 9f;
+            //                    }
+            //                    if (chunk.Tiles[z, i, j].ID != 0 && !_blockManager.Blocks[chunk.Tiles[z, i, j].ID].Transparent)
+            //                    {
+
+
+
+            //                        zindex = z;
+            //                        Z = z / 9f;
+            //                        Tile = chunk.Tiles[z, i, j];
+
+            //                    }
+
+            //                }
+            //                if (Tile.ID == _blockManager.getBlock("Water").ID)
+            //                {
+
+            //                    Shader.Parameters["ID"].SetValue(1f);
+            //                }
+
+            //                DrawBlock(Tile, chunk, i, j, Z, zindex / 10);
+            //                if (plrZ <= 8 && chunk.Tiles[(int)plrZ + 1, i, j] != null)
+            //                {
+            //                    DrawBlock(chunk.Tiles[(int)plrZ + 1, i, j], chunk, i, j, Z, (TraZ + 9) / 10f, true);
+            //                }
+            //                if (Transparent != null)
+            //                {
+            //                    DrawBlock(Transparent, chunk, i, j, Z, TraZ / 10);
+            //                }
+
+
+
+
+            //            }
+            //        }
+
+
+            //    }
+            //}
+            //_entityManager.RenderAll(_spriteBatch, BlockSize, Player.cam.position);
+
+            //_spriteBatch.End();
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
 
@@ -1304,7 +1420,7 @@ public class Game1 : Game
                 _spriteBatch.DrawString(font, ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
                 _spriteBatch.DrawString(font, (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
                 _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos, Chunks))).ToString(), new Vector2(470, 40), Color.Red);
-                var b = BlockManager.GetBlockAtPos(WorldMousePos,(int)(Player.Plr.Layer), Chunks); //WHY NOT WORK!
+                var b = BlockManager.GetBlockAtPos(WorldMousePos, (int)(Player.Plr.Layer), Chunks); //WHY NOT WORK!
                 if (b != null)
                 {
                     if (b.Data != "")
@@ -1375,7 +1491,7 @@ public class Game1 : Game
 
         //test.Draw(_spriteBatch);
 
-        
+
 
     }
     void DrawBlock(TileGrid Tile, Chunk chunk, int i, int j, float Z, float layer)
@@ -1425,7 +1541,7 @@ public class Game1 : Game
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         //_spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
         DrawBlock(block, State, BlockSize / block.Texture.Width, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, layer, 0, Vector2.Zero, Layer, SpriteEffects.None);
-        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer + 0.01f);
+        _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 1);
         if (DebugMode)
         {
             if (Tile.Data != "")
@@ -1441,7 +1557,7 @@ public class Game1 : Game
         int Side = int.Min(Texture.Width, Texture.Height);
         int frames = int.Max(Texture.Width, Texture.Height);
         int framesCount = frames / Side;
-        int currentFrame = (int)((TimeSinceStart)*2 % framesCount);
+        int currentFrame = (int)((TimeSinceStart) * 2 % framesCount);
         BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
 
@@ -1452,7 +1568,7 @@ public class Game1 : Game
         _spriteBatch.Draw(Texture, position, BlockState, color, Orientation, Origin, size, spriteEffect, layer);
     }
 
-    public void DrawBlock(Block block, int state, float size, Vector2 position, float layer, float Orientation, Vector2 Origin, Color color, SpriteEffects spriteEffect)
+    public void DrawBlock(Block block, int state, float size, Vector2 position, float layer, float Orientation, Vector2 Origin, Color color, SpriteEffects spriteEffect) //Animated
     {
         Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         if (block.Animated)
@@ -1460,7 +1576,7 @@ public class Game1 : Game
             int Side = int.Min(block.Texture.Width, block.Texture.Height);
             int frames = int.Max(block.Texture.Width, block.Texture.Height);
             int framesCount = frames / Side;
-            int currentFrame = (int)((TimeSinceStart)*2 % framesCount);
+            int currentFrame = (int)((TimeSinceStart) * 2 % framesCount);
             BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
 

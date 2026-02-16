@@ -9,10 +9,9 @@
 
 
 Texture2D SpriteTexture;
+float ID;
 
-int State = 0;
-int Direction = 0;
-int ID = 0;
+
 
 
 sampler2D SpriteTextureSampler = sampler_state
@@ -38,12 +37,9 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 Color = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
     
-    if (ID == 1)
+    if (ID == 1.0)
     {
-        if (input.TextureCoordinates.y < f(input.TextureCoordinates.x))
-        {
-            Color.a = 0;
-        }
+        Color.r + 1;
 
     }
 	
