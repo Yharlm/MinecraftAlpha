@@ -232,20 +232,22 @@ namespace MinecraftAlpha
 
             windows.Add(new WindowFrame()
             {
+                Position = new Vector2(520, 600),
                 Name = "Inventory",
                 Visible = false,
-                Frames = new() { new UIFrame() { Window = Frames[0].Window, Size = new Vector2(80, 30), Position = new Vector2(0, 0) } },
+                Frames = new() { new UIFrame() { Window = Frames[0].Window, Size = new Vector2(10, 10) } },
                 Buttons = new() { },
                 ItemSlots = new() { },
             });
             int ID = 0;
+            float w = ItemSlots[0].Texture.Width * 3;
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
 
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(32 * i, 32 * j) + new Vector2(300, 30), Texture = ItemSlots[0].Texture, ID = ID };
+                    { ItemPosition = new Vector2(w * i, w * j), Texture = ItemSlots[0].Texture, ID = ID };
                     windows.Last().ItemSlots.Add(slot);
                     ID++;
                 }
@@ -634,9 +636,9 @@ namespace MinecraftAlpha
 
         public void Render(SpriteBatch Spritebatch, Game1 game)
         {
-            Vector2 SlotPos = Position + ItemPosition - Vector2.One * 16;
+            Vector2 SlotPos = Position + this.ItemPosition;
             string AmmountInSlot = "";
-            Spritebatch.Draw(Texture, new Rectangle((int)SlotPos.X, (int)SlotPos.Y, 32, 32), Color.White);
+            Spritebatch.Draw(Texture,SlotPos,null,Color.White,0f,Vector2.Zero, 3, SpriteEffects.None,0f);
             if (Item != null)
             {
                 if (Item.Item)

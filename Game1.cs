@@ -1258,8 +1258,8 @@ public class Game1 : Game
 
                 for (int z = 0; z < maxLayer; z++)
                 {
-                    // -----------------------------
-                    // DRAW TILES IN THIS LAYER
+                      // -----------------------------
+                     // DRAW TILES IN THIS LAYER
                     // -----------------------------
                     for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
                     {
@@ -1267,23 +1267,31 @@ public class Game1 : Game
                         {
                             var renderList = GetVisible(j, i, chunk);
                             var tile = renderList[z];
-                            var block = _blockManager.GetBlockAtTile(tile);
-                            if (_blockManager.getBlock("Water").ID == tile.ID)
-                            {
-                                //Shader.Parameters["Time"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
-                                //Shader.CurrentTechnique = Shader.Techniques["Water"];
-                                _spriteBatch.End();
-                                _spriteBatch.Begin(effect: Shader, samplerState: SamplerState.PointClamp);
-                            }
                             if (tile != null)
                             {
+                                var block = _blockManager.GetBlockAtTile(tile);
+                                if (_blockManager.getBlock("Water").ID == tile.ID)
+                                {
+                                    //Shader.Parameters["Time"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
+                                    //Shader.CurrentTechnique = Shader.Techniques["Water"];
+                                    _spriteBatch.End();
+                                    _spriteBatch.Begin(effect: Shader, samplerState: SamplerState.PointClamp);
+                                    DrawBlock(tile, chunk, i, j, 1, 1);
+                                    _spriteBatch.End();
+                                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                                    continue;
+
+                                }
+
                                 DrawBlock(tile, chunk, i, j, 1, 1);
                             }
+                            
+                           
                         }
                     }
 
-                    // -----------------------------
-                    // DRAW ENTITIES IN THIS LAYER
+                      // -----------------------------
+                     // DRAW ENTITIES IN THIS LAYER
                     // -----------------------------
                     foreach (Entity entity in _entityManager.Workspace)
                     {

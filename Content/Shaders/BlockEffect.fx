@@ -31,23 +31,25 @@ float f(float x)
 {
     return -7 / (x + 1) + 1.2f;
 }
+float g(float x)
+{
+    return x;
+}
 
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 Color = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
     
-    if (ID == 1.0)
+    if(g(input.TextureCoordinates.x) < input.TextureCoordinates.y)
     {
-        Color.r + 1;
-
-    }
-	
-	
-
+        Color.a = 0;
+	}
 
     return Color;
 }
+
+
 
 
 
