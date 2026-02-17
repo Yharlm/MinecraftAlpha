@@ -1276,14 +1276,14 @@ public class Game1 : Game
                                     //Shader.CurrentTechnique = Shader.Techniques["Water"];
                                     _spriteBatch.End();
                                     _spriteBatch.Begin(effect: Shader, samplerState: SamplerState.PointClamp);
-                                    DrawBlock(tile, chunk, i, j, 1, 1);
+                                    DrawBlock(tile, chunk, i, j, 1, z);
                                     _spriteBatch.End();
                                     _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                                     continue;
 
                                 }
 
-                                DrawBlock(tile, chunk, i, j, 1, 1);
+                                DrawBlock(tile, chunk, i, j, 1-(float)z/9, 1);
                             }
                             
                            
@@ -1520,7 +1520,7 @@ public class Game1 : Game
         float Light = Tile.brightness;
         float Light01 = Light - 0.2f;
         float a = Z;
-        //var color = Color.FromNonPremultiplied(new Vector4(Light01, Light01, Light01, 1)) ;
+        
         var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
 
 
