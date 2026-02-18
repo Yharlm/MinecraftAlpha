@@ -448,8 +448,11 @@ namespace MinecraftAlpha
             getBlock("Crafting Table").Interaction = (Pos, user, item) =>
             {
 
-                var Window = Game._userInterfaceManager.windows[4];
-                Window.Visible = !Window.Visible;
+                var Craft = Game._userInterfaceManager.GetWindow("Crafting3x3");
+                var Inv = Game._userInterfaceManager.GetWindow("Inventory");
+                Craft.Visible = true;
+                Inv.Visible = true;
+                
 
             };
             //getBlock("Crafting Table").Update = (Pos) =>

@@ -27,7 +27,7 @@ struct VertexShaderOutput
     float2 TextureCoordinates : TEXCOORD0;
 };
 
-float f(float x)
+float f(float x,)
 {
     return -7 / (x + 1) + 1.2f;
 }
@@ -40,11 +40,13 @@ float g(float x)
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 Color = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
-    
-    if(g(input.TextureCoordinates.x) < input.TextureCoordinates.y)
-    {
-        Color.a = 0;
+    Color.r = 0.;
+    if(g(input.TextureCoordinates.x*1./40.) > fmod(input.TextureCoordinates.y,1./40.))
+	{
+		Color = 0.;
 	}
+	
+    
 
     return Color;
 }
@@ -60,3 +62,5 @@ technique SpriteDrawing
         PixelShader = compile PS_SHADERMODEL MainPS();
     }
 };
+
+

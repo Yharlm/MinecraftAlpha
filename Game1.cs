@@ -1156,7 +1156,7 @@ public class Game1 : Game
         var Render = new TileGrid[chunk.Tiles.GetLength(0)];
         TileGrid[,,] tileGrids = chunk.Tiles;
 
-        for (int Z = 0; Z < tileGrids.GetLength(0); Z++)
+        for (int Z = tileGrids.GetLength(0)*0 + (int)Player.Plr.Layer; Z >= 0; Z--)
         {
 
             var tile = tileGrids[Z, y, x];
@@ -1276,14 +1276,14 @@ public class Game1 : Game
                                     //Shader.CurrentTechnique = Shader.Techniques["Water"];
                                     _spriteBatch.End();
                                     _spriteBatch.Begin(effect: Shader, samplerState: SamplerState.PointClamp);
-                                    DrawBlock(tile, chunk, i, j, 1, z);
+                                    DrawBlock(tile, chunk, i, j, (float)z / (int)Player.Plr.Layer + 1, 1);
                                     _spriteBatch.End();
                                     _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                                     continue;
 
                                 }
 
-                                DrawBlock(tile, chunk, i, j, 1-(float)z/9, 1);
+                                DrawBlock(tile, chunk, i, j, (float)z/(int)Player.Plr.Layer+1, 1);
                             }
                             
                            
