@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -19,7 +21,6 @@ namespace MinecraftAlpha
         public bool Jumping = false;
         public float respawnTimer = 60f;
         public int DisplayID = -1;
-        public Block LastInteraction = null;
 
 
         public ItemSlot FindItem(string name, string tag)
@@ -174,10 +175,16 @@ namespace MinecraftAlpha
         public string Command;
         public bool CapsLock = false;
         public int cursor = 0;
-        
+        //public List<Action<>> Commands = new List<Action<>>();
         
         public void Run(string Input)
         {
+
+
+
+
+
+
             if (Input == "") return;
             if (Input[0] == '/')
             {
@@ -300,6 +307,22 @@ namespace MinecraftAlpha
                 active = false;
                 Run(Command);
                 Command = "";
+            }
+            if (keyboard.IsKeyDown(Keys.Tab))
+            {
+                //Autocomplete
+                string item = Command.Split(' ').Last();
+                var block = game._blockManager.Blocks.Find(x => x.Name.ToUpper().StartsWith(item));
+                if (block == null)
+                {
+                    return;
+                }
+
+
+                Command = Command.Substring(0, Command.Length - item.Length) + block.Name.ToUpper().Replace(' ','_') ;
+
+                
+
             }
             if (keyboard.GetPressedKeyCount() > 0)
             {

@@ -117,11 +117,24 @@ namespace MinecraftAlpha
                 new Block { Name = "Glass Block", TexturePath = "glass", Health = 4,Transparent = true},
                 new Block { Name = "TNT", TexturePath = "tnt_side", Health = 2,Transparent = false,Tag="Explosive"},
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
+                
                 new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
+
+
                 new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.4f,Tag="Pickaxe",MineLevel = 1},
                 new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 0.6f,Tag="Pickaxe",MineLevel = 2},
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
                 new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.8f,Tag="Pickaxe",MineLevel = 4},
+
+                new Block { Name = "Wooden Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 1.5f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Stone Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 3f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Iron Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 3f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Diamond Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 4.5f,Tag="Sword",MineLevel = 0},
+
+
+
+
+
                 new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 36,Damage = 3f,Tag="Bow",Grip = 90f,ChargeMax = 4},
                 new Block { Name = "Flint and Steel", TexturePath = "_item" ,ItemID= 28,Item = true,Placable = false},
 
@@ -339,7 +352,7 @@ namespace MinecraftAlpha
 
                     return;
                 }
-                Entity Arrow = new Entity(-3, "Arrow", "_projectile", 3) { Texture = Game.Content.Load<Texture2D>("Projectiles/Arrow"), };
+                Entity Arrow = new Entity(-3, "Arrow", "_projectile", 1) { Texture = Game.Content.Load<Texture2D>("Projectiles/Arrow"), };
                 Arrow.collisionBox = new CollisionBox() { Size = new Vector2(0.5f) };
                 Arrow.position = Game.Player.Plr.position;
                 Arrow.Mass = 0.4f;
@@ -432,7 +445,7 @@ namespace MinecraftAlpha
             };
             getBlock("Chest").Update = (Pos, data) =>
             {
-                return;
+                
                 var Window = Game._userInterfaceManager.GetWindow("Chest");
                 string Data = "";
 

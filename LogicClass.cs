@@ -180,7 +180,7 @@ public class Debuging
                 Vector2 v2 = v0 - v1;
 
                 Vector2 Hit = new(entity.position.X, F(entity.position.X, v2, v1));
-                if (float.Abs(entity.position.Y-Hit.Y) < entity.collisionBox.Size.Y)
+                if (float.Abs(entity.position.Y-Hit.Y) < entity.collisionBox.Size.Y)//height
                 {
                     var part = new Particle()
                     {
@@ -237,7 +237,8 @@ public class Debuging
 
                 float X = entity.position.X;
                 float Y = F(X, v3, v1);
-
+                if(origin.X > entity.position.X && direction.X > 0 || origin.X < entity.position.X && direction.X < 0) continue;
+                if(float.Abs(entity.position.X - origin.X) > entity.collisionBox.Size.X) continue;
                 Vector2 Hit = new(entity.position.X, F(X, v3, v1));
                 if (float.Abs(entity.position.Y - Hit.Y) < entity.collisionBox.Size.Y)
                 {

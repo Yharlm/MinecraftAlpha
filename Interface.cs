@@ -281,7 +281,7 @@ namespace MinecraftAlpha
                 {
 
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(w * i, w * j), Texture = ItemSlots[0].Texture, ID = ID,Clicked = (slot) => {  }  };
+                    { ItemPosition = new Vector2(w * i, w * j), Texture = ItemSlots[0].Texture, ID = ID,Clicked = (slot) => { Game._blockManager.GetBlockAtTile(LastUsedBlock).Update(LastUsedBlock, LastUsedBlock.Data);  }  };
                     windows.Last().ItemSlots.Add(slot);
                     ID++;
                 }

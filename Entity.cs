@@ -248,7 +248,7 @@ namespace MinecraftAlpha
 
         public static void CollisionEventCollision(Entity A, Entity B, Game1 game1)
         {
-            if(A.ID+ B.ID >= 0)
+            if(A.ID >= 0 && B.ID >= 0)
             {
                 A.velocity.velocity += (A.position - B.position) * new Vector2(0.5f, 0.1f);
                 B.velocity.velocity += (B.position - A.position) * new Vector2(0.5f, 0.1f);
@@ -419,7 +419,7 @@ namespace MinecraftAlpha
             foreach (Sprite s in Sprites)
             {
                 int i = Sprites.IndexOf(s);
-                s.DrawSprite(game1, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, float.Floor(Layer), (IFrame > 0), this);
+                s.DrawSprite(game1, BlockSize * position + Cam, BlockSize / 18, 0, Fliped, float.Floor(Layer) / 10 + (float)i / 60, 1 - (game1.Player.Plr.Layer - Layer) / 9f, (IFrame > 0), this);
 
             }
             if (game1.DebugMode) SB.DrawString(game1.Content.Load<SpriteFont>("Font"), $"{Health}/{MaxHealth}", BlockSize * position + Cam - new Vector2(4, 80), Color.Red);

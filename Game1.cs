@@ -1303,7 +1303,7 @@ public class Game1 : Game
 
                                 }
 
-                                DrawBlock(tile, chunk, i, j, (float)z / (int)Player.Plr.Layer + 1, 1);
+                                DrawBlock(tile, chunk, i, j, 1-(float.Ceiling( Player.Plr.Layer -z))/9f, 1);
                             }
 
 
