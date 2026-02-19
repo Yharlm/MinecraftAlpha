@@ -19,6 +19,7 @@ namespace MinecraftAlpha
         public bool Jumping = false;
         public float respawnTimer = 60f;
         public int DisplayID = -1;
+        public Block LastInteraction = null;
 
 
         public ItemSlot FindItem(string name, string tag)

@@ -53,6 +53,7 @@ namespace MinecraftAlpha
         //Constants for use types
         public float ChargeMax = 0f; // Time taken to charge the item
         public int TickUpdate = 10;
+        public bool IgnoreUpdate = false; // If true, the block will not update every tick
 
         public float CooldownMax = 0f;//cooldown after using the item
         public float UseTimeMax = 0f; // Time taken to use/interact with the block
@@ -109,7 +110,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood"},
                 new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
-                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true},
+                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true,IgnoreUpdate = true},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
                 new Block { Name = "Log", TexturePath = "oak_log", Health = 60,Tag="Wood"},
                 new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
@@ -408,8 +409,11 @@ namespace MinecraftAlpha
             {
 
                 string Items = Pos.Data;
-                var Window = Game._userInterfaceManager.windows[1];
-                Window.Visible = !Window.Visible;
+                var Window = Game._userInterfaceManager.GetWindow("Chest");
+                var Inv = Game._userInterfaceManager.GetWindow("Inventory");
+                
+                Inv.Visible = true;
+                Window.Visible = true;
                 foreach (var slot in Window.ItemSlots)
                 {
                     slot.Item = null;
@@ -428,7 +432,8 @@ namespace MinecraftAlpha
             };
             getBlock("Chest").Update = (Pos, data) =>
             {
-                var Window = Game._userInterfaceManager.windows[1];
+                return;
+                var Window = Game._userInterfaceManager.GetWindow("Chest");
                 string Data = "";
 
                 var block = Pos;

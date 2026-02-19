@@ -240,6 +240,7 @@ namespace MinecraftAlpha
             float w = ItemSlots[0].Texture.Width * 3;
             windows.Add(new WindowFrame()
             {
+                
                 Position = new Vector2(Middlex / 2 - w * 9 / 2, 600),
                 Name = "Inventory",
                 Visible = false,
@@ -264,12 +265,14 @@ namespace MinecraftAlpha
 
             windows.Add(new WindowFrame()
             {
+                Tag = "cls",
                 Position = new Vector2(Middlex / 2 - w * 9 / 2, 200),
                 Name = "Chest",
                 Visible = false,
-                Frames = new() { new UIFrame() { position = new Vector2(-43, -50), Window = Frames[0].Window, Size = new Vector2(130, 60) } },
+                Frames = new() { new UIFrame() { position = new Vector2(-43, -50), Window = Frames[0].Window, Size = new Vector2(130, 60), } },
                 Buttons = new() { },
                 ItemSlots = new() { },
+                
             });
             ID = 0;
             for (int i = 0; i < 9; i++)
@@ -278,7 +281,7 @@ namespace MinecraftAlpha
                 {
 
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(w * i, w * j), Texture = ItemSlots[0].Texture, ID = ID };
+                    { ItemPosition = new Vector2(w * i, w * j), Texture = ItemSlots[0].Texture, ID = ID,Clicked = (slot) => {  }  };
                     windows.Last().ItemSlots.Add(slot);
                     ID++;
                 }
@@ -305,7 +308,7 @@ namespace MinecraftAlpha
 
             }
             ItemSlot result = new()
-            { ItemPosition = new Vector2(2.4f*w, 0.5f*w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = () => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
+            { ItemPosition = new Vector2(2.4f*w, 0.5f*w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = (slot) => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
             windows.Last().ItemSlots.Add(result);
 
 
@@ -325,6 +328,7 @@ namespace MinecraftAlpha
 
             windows.Add(new WindowFrame()
             {
+                Tag = "cls",
                 Position = new Vector2(Middlex / 2 - w * 9 / 2, 200),
                 Name = "Crafting3x3",
                 Visible = false,
@@ -344,7 +348,7 @@ namespace MinecraftAlpha
 
             }
             result = new()
-            { ItemPosition = new Vector2(3f * w, 1 * w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = () => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
+            { ItemPosition = new Vector2(3f * w, 1 * w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = (slot) => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
             windows.Last().ItemSlots.Add(result);
 
 
@@ -491,7 +495,7 @@ namespace MinecraftAlpha
         public List<ItemSlot> ItemSlots = new List<ItemSlot>();
         public List<UIFrame> Frames = new List<UIFrame>();
         public List<textLabel> TextLabels = new List<textLabel>();
-
+        public string Tag = "";
 
         public bool Visible = false;
         public string Name { get; set; }
@@ -578,6 +582,7 @@ namespace MinecraftAlpha
     }
     public class ItemSlot : WindowFrame
     {
+        public WindowFrame parent;
         public bool canTake = true;
         public bool canPlace = true;
         public string Tag = "";
@@ -603,7 +608,7 @@ namespace MinecraftAlpha
 
         }
 
-        public Action Clicked = () => { };
+        public Action<ItemSlot> Clicked = (slot) => { };
 
         public void TakeItem(int Amount, UserInterfaceManager UI)
         {
@@ -622,7 +627,7 @@ namespace MinecraftAlpha
             {
                 Item = null;
             }
-            Clicked.Invoke();
+            Clicked.Invoke(this);
         }
 
         public void TakeItem(int Amount)
@@ -654,7 +659,7 @@ namespace MinecraftAlpha
             {
                 UI.selectedItem = null;
             }
-            Clicked.Invoke();
+            Clicked.Invoke(this);
         }
 
         public void Render(SpriteBatch Spritebatch, Game1 game)

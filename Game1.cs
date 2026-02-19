@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -552,7 +552,7 @@ public class Game1 : Game
                         var block = _blockManager.GetBlockAtTile(tile);
                         if (block == null) continue;
                         if (block.Update == null) continue;
-
+                        if(block.IgnoreUpdate) continue;
 
 
 
@@ -887,8 +887,28 @@ public class Game1 : Game
 
         if (_inputManager.IsKeyDown_Now(Keys.E))
         {
-            _userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
-            _userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
+            //_userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
+            //_userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
+
+            _userInterfaceManager.GetWindow("Inventory").Visible = !_userInterfaceManager.GetWindow("Inventory").Visible;
+            bool close = false;
+            for (int i = 0; i < _userInterfaceManager.windows.Count; i++)
+            {
+
+                var u = _userInterfaceManager.windows[i];
+                if (u.Tag == "cls")
+                {
+                    u.Visible = false;
+                    close = true;
+                }
+            }
+            if (close) { return; }
+
+            _userInterfaceManager.GetWindow("Crafting2x2").Visible = !_userInterfaceManager.GetWindow("Crafting2x2").Visible;
+
+
+
+
         }
         if (_inputManager.IsKeyDown_Now(Keys.NumPad2))
         {
@@ -1156,7 +1176,7 @@ public class Game1 : Game
         var Render = new TileGrid[chunk.Tiles.GetLength(0)];
         TileGrid[,,] tileGrids = chunk.Tiles;
 
-        for (int Z = tileGrids.GetLength(0)*0 + (int)Player.Plr.Layer; Z >= 0; Z--)
+        for (int Z = tileGrids.GetLength(0) * 0 + (int)Player.Plr.Layer; Z >= 0; Z--)
         {
 
             var tile = tileGrids[Z, y, x];
@@ -1215,7 +1235,7 @@ public class Game1 : Game
 
 
 
-        
+
 
 
 
@@ -1258,8 +1278,8 @@ public class Game1 : Game
 
                 for (int z = 0; z < maxLayer; z++)
                 {
-                      // -----------------------------
-                     // DRAW TILES IN THIS LAYER
+                    // -----------------------------
+                    // DRAW TILES IN THIS LAYER
                     // -----------------------------
                     for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
                     {
@@ -1283,15 +1303,15 @@ public class Game1 : Game
 
                                 }
 
-                                DrawBlock(tile, chunk, i, j, (float)z/(int)Player.Plr.Layer+1, 1);
+                                DrawBlock(tile, chunk, i, j, (float)z / (int)Player.Plr.Layer + 1, 1);
                             }
-                            
-                           
+
+
                         }
                     }
 
-                      // -----------------------------
-                     // DRAW ENTITIES IN THIS LAYER
+                    // -----------------------------
+                    // DRAW ENTITIES IN THIS LAYER
                     // -----------------------------
                     foreach (Entity entity in _entityManager.Workspace)
                     {
@@ -1520,7 +1540,7 @@ public class Game1 : Game
         float Light = Tile.brightness;
         float Light01 = Light - 0.2f;
         float a = Z;
-        
+
         var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
 
 
