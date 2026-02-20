@@ -330,75 +330,9 @@ public class Game1 : Game
 
     }
 
-    public void IluminateDiamond(int x, int y, float val1, TileGrid[,] grid)
-    {
-        int val = (int)val1;
+    
 
-        int size = (int)val1;
-        //int mid = size / 2;
-        //for (int i = 0; i <= size; i++)
-        //{
-        //    int diff = Math.Abs(mid - i);
-        //    for (int j = diff; j <= size - diff; j++)
-        //    {
-        //        var Distancex = mid - j;
-        //        var Distancey = mid - i;
-        //        var DistanceToMid = 1 - Math.Sqrt(Distancex * Distancex + Distancey * Distancey) / mid;
-
-
-        //        float dist = (new Vector2(j, i) - new Vector2(mid, mid)).Length();
-        //        grid[i + y - val / 2, j + x - val / 2].brightness += 1 - (float)DistanceToMid;
-        //    }
-
-        //}
-
-        //int size = 14;
-        int mid = size / 2;
-        for (int i = 0; i <= size; i++)
-        {
-            int diff = Math.Abs(mid - i);
-            for (int j = diff; j <= size - diff; j++)
-            {
-                var Distancex = mid - j;
-                var Distancey = mid - i;
-                var DistanceToMid = Math.Sqrt(Distancex * Distancex + Distancey * Distancey) / mid;
-
-
-
-                grid[i + y - val / 2, j + x - val / 2].brightness += 1 - (float)DistanceToMid;
-            }
-
-        }
-
-    }
-
-    public void Lighting(TileGrid[,] map, float layer)
-    {
-        var Grid = map;
-        Vector2 pos = Player.Plr.position;
-        for (float i = pos.Y - 20; i < pos.Y + 20; i++)
-        {
-            for (float j = pos.X - 20; j < pos.X + 20; j++)
-            {
-                var grid = Grid[(int)i, (int)j];
-
-                grid.brightness = 0f;
-
-            }
-        }
-        for (int i = (int)pos.X - 20; i < pos.X + 20; i += 1)
-        {
-            int localY = (int)pos.Y - 20;
-            while (localY < (int)pos.Y + 20)
-            {
-                if (Grid[localY + 1, i].ID != 0)
-                {
-                    IluminateDiamond(i, localY, layer, Grid); break;
-                }
-                localY += 1;
-            }
-        }
-    }
+    
     public bool Clicked = false;
 
     protected override void Update(GameTime gameTime)
@@ -537,9 +471,32 @@ public class Game1 : Game
             Loaded.Add(chunk);
         }
 
-
+        var Lights = new List<Vector3>();
         foreach (var L in Loaded)
         {
+            
+            foreach(var tile in L.Tiles)
+            {
+                var block = _blockManager.GetBlockAtTile(tile);
+                if(block == null) continue;
+                if(block.Light_Emission > 0)
+                {
+                    tile.brightness = block.Light_Emission;
+                    Lights.Add(tile.pos);
+                }
+                else
+                {
+                    tile.brightness = 0f;
+                }
+                
+               
+            }
+            
+
+
+
+
+
 
             for (int z = 0; z < L.Tiles.GetLength(0); z++)
             {
@@ -548,7 +505,24 @@ public class Game1 : Game
                     for (int j = 0; j < L.Tiles.GetLength(2); j++)
                     {
                         var tile = L.Tiles[z, i, j];
-                        if (tile == null) continue;
+                        
+                        
+                        float brightness = 0f;
+                        foreach(var light in Lights)
+                        {
+                            float dist = Vector3.Distance(tile.pos, light);
+                            
+                            float intensity = BlockManager.GetBlockAtPos(light,Loaded).brightness;
+
+                            brightness = dist;
+                        }
+
+
+                        if(brightness > 0)
+                        {
+                            tile.brightness = brightness;
+                        }
+                        
                         var block = _blockManager.GetBlockAtTile(tile);
                         if (block == null) continue;
                         if (block.Update == null) continue;
@@ -564,7 +538,6 @@ public class Game1 : Game
                         }
                         else
                         {
-
                             tile.MarkedForUpdate = false;
                         }
 
@@ -1534,16 +1507,13 @@ public class Game1 : Game
     }
     void DrawBlock(TileGrid Tile, Chunk chunk, int i, int j, float Z, float layer, bool Opaque)
     {
-        //float BlockSizeZ = this.BlockSize - layer;
         var block = _blockManager.Blocks[Tile.ID];
 
+
         float Light = Tile.brightness;
-        float Light01 = Light - 0.2f;
-        float a = Z;
-
+        
+        float a = Z * Light;
         var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
-
-
         int healthPercent = (int)Tile.MinedHealth / 10;
         Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);
         if ((int)Tile.MinedHealth <= 0)

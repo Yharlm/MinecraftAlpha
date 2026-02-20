@@ -29,7 +29,7 @@ namespace MinecraftAlpha
         public float Durrability = -1; // How much damage the block can take before breaking
         public int ItemID = 0; // Id ot the item in atlas
         public bool Placable = true;
-
+        public float Light_Emission = 0f; // How much light the block emits
 
 
 
@@ -103,6 +103,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Iron Ore", TexturePath = "iron_ore" ,Health = 100,},
                 new Block { Name = "Gold Ore", TexturePath = "gold_ore" ,Health = 100,},
                 new Block { Name = "Diamond Ore", TexturePath = "diamond_ore" ,Health = 100,},
+                new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 20f },
 
 
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
@@ -119,6 +120,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
                 
                 new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
+
 
 
                 new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.4f,Tag="Pickaxe",MineLevel = 1},
@@ -168,6 +170,30 @@ namespace MinecraftAlpha
             //{
 
             //};
+
+            getBlock("Torch").Update = (Pos, data) =>
+            {
+                return; // Remove this to enable light emission from torches, currently disabled for performance reasons
+                var pos = GetPosAtBlock(Pos);
+                // area of light
+                for (int x = -5; x <= 5; x++)
+                {
+                    for (int y = -5; y <= 5; y++)
+                    {
+                        for(int z = -5; z <= 5; z++)
+                        {
+                            var tile = GetBlockAtPos(new Vector2(pos.X + x, pos.Y + y), (int)pos.Z, Game.Chunks);
+                            if (tile == null) continue;
+                            float distance = Vector3.Distance(pos, pos+new Vector3(x,y,z));
+                            
+                            tile.brightness = 0.4f;
+
+                            
+                        }
+                    }
+                }
+            };
+
             getBlock("Fire").Update = (Pos, data) =>
             {
                 var pos = GetPosAtBlock(Pos); //
