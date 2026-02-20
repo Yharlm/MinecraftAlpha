@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -99,7 +100,6 @@ public class Game1 : Game
         Player = new Player() { game = this };
         Random random = new Random();
         _particleSystem.Content = Content;
-
 
 
 
@@ -330,9 +330,9 @@ public class Game1 : Game
 
     }
 
-    
 
-    
+
+
     public bool Clicked = false;
 
     protected override void Update(GameTime gameTime)
@@ -471,80 +471,62 @@ public class Game1 : Game
             Loaded.Add(chunk);
         }
 
-        var Lights = new List<Vector3>();
+
+        
         foreach (var L in Loaded)
         {
             
-            foreach(var tile in L.Tiles)
-            {
-                var block = _blockManager.GetBlockAtTile(tile);
-                if(block == null) continue;
-                if(block.Light_Emission > 0)
-                {
-                    tile.brightness = block.Light_Emission;
-                    Lights.Add(tile.pos);
-                }
-                else
-                {
-                    tile.brightness = 0f;
-                }
-                
-               
-            }
-            
-
-
-
-
-
-
             for (int z = 0; z < L.Tiles.GetLength(0); z++)
             {
                 for (int i = 0; i < L.Tiles.GetLength(1); i++)
                 {
                     for (int j = 0; j < L.Tiles.GetLength(2); j++)
                     {
+                        
                         var tile = L.Tiles[z, i, j];
                         
                         
-                        float brightness = 0f;
-                        foreach(var light in Lights)
-                        {
-                            float dist = Vector3.Distance(tile.pos, light);
-                            
-                            float intensity = BlockManager.GetBlockAtPos(light,Loaded).brightness;
-
-                            brightness = dist;
-                        }
-
-
-                        if(brightness > 0)
-                        {
-                            tile.brightness = brightness;
-                        }
                         
                         var block = _blockManager.GetBlockAtTile(tile);
-                        if (block == null) continue;
-                        if (block.Update == null) continue;
-                        if(block.IgnoreUpdate) continue;
 
+                        if (!tile.updateLight)
+                        {
+
+                            if (tile.brightness > 0)
+                                tile.brightness -= 0.01f;
+                        }
+                        
+
+
+
+                        if (block == null) continue;
+                        
+                        
+                        
+                        if (block.IgnoreUpdate) continue;
+                        
+                       
 
 
                         //int TickUP = block.TickUpdate;
                         if (Tick % block.TickUpdate == 0)
                         {
-                            if (tile.ID == 0 || tile.MarkedForUpdate) continue;
+                            if (block.Update == null) continue;
+                            if ((tile.ID == 0 && tile.brightness > 0) || tile.MarkedForUpdate) continue;
                             block.Update.Invoke(tile, tile.Data);
+                            
                         }
                         else
                         {
+                            tile.updateLight = false;
                             tile.MarkedForUpdate = false;
                         }
-
+                        
 
                     }
                 }
             }
+            ;
 
             //for (int z = 0; z < L.Tiles.GetLength(0); z++)
             //{
@@ -1276,7 +1258,7 @@ public class Game1 : Game
 
                                 }
 
-                                DrawBlock(tile, chunk, i, j, 1-(float.Ceiling( Player.Plr.Layer -z))/9f, 1);
+                                DrawBlock(tile, chunk, i, j, 1 - (float.Ceiling(Player.Plr.Layer - z)) / 9f, 1);
                             }
 
 
@@ -1511,7 +1493,7 @@ public class Game1 : Game
 
 
         float Light = Tile.brightness;
-        
+
         float a = Z * Light;
         var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
         int healthPercent = (int)Tile.MinedHealth / 10;

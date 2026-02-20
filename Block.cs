@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -92,7 +93,7 @@ namespace MinecraftAlpha
             var list = new List<Block>()
             {
 
-                new Block { Name = "Air", TexturePath = "air" ,Health = 1000},
+                new Block { Name = "Air", TexturePath = "air" ,Health = 1000, TickUpdate = 3},
                 new Block { Name = "Dirt", TexturePath = "dirt",Health = 30, Tag="dirt"},
                 new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
@@ -103,7 +104,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Iron Ore", TexturePath = "iron_ore" ,Health = 100,},
                 new Block { Name = "Gold Ore", TexturePath = "gold_ore" ,Health = 100,},
                 new Block { Name = "Diamond Ore", TexturePath = "diamond_ore" ,Health = 100,},
-                new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 20f },
+                new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 20f,TickUpdate = 3},
 
 
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
@@ -168,29 +169,36 @@ namespace MinecraftAlpha
         {
             //getBlock("Flint and Steel").Interaction = (Pos, ent, item) =>
             //{
+            getBlock("Air").Update = (Pos, data) =>
+            {
+                //return;
+                var pos = GetPosAtBlock(Pos); //
+                var Sides = LogicsClass.SidesPosPlus(pos, Game);
 
+                for (int i = 0; i < 27; i++)
+                {
+                    TileGrid tile = Sides[i];
+                    if (tile == null) continue;
+
+                    tile.brightness += Pos.brightness - 0.1f;
+                    tile.updateLight = true;
+                }
+            };
             //};
 
             getBlock("Torch").Update = (Pos, data) =>
             {
-                return; // Remove this to enable light emission from torches, currently disabled for performance reasons
-                var pos = GetPosAtBlock(Pos);
-                // area of light
-                for (int x = -5; x <= 5; x++)
-                {
-                    for (int y = -5; y <= 5; y++)
-                    {
-                        for(int z = -5; z <= 5; z++)
-                        {
-                            var tile = GetBlockAtPos(new Vector2(pos.X + x, pos.Y + y), (int)pos.Z, Game.Chunks);
-                            if (tile == null) continue;
-                            float distance = Vector3.Distance(pos, pos+new Vector3(x,y,z));
-                            
-                            tile.brightness = 0.4f;
+                var pos = GetPosAtBlock(Pos); //
+                var Sides = LogicsClass.SidesPos(pos, Game);
 
-                            
-                        }
-                    }
+                for (int i = 0; i < 6; i++)
+                {
+                    TileGrid tile = Sides[i];
+                    if (tile == null) continue;
+
+                    tile.brightness = 3f;
+                    tile.updateLight = true;
+                    //tile.MarkedForUpdate = true;
                 }
             };
 
@@ -610,7 +618,7 @@ namespace MinecraftAlpha
         }
         public Block GetBlockAtTile(TileGrid tile)
         {
-            if (tile == null) return null;
+            if (tile == null) return Blocks[0];
 
 
             return Blocks[tile.ID];
@@ -709,6 +717,7 @@ namespace MinecraftAlpha
         public float LightSource = 0;
         public float MinedHealth = 0; // How much health has been mined from this block
         public bool MarkedForUpdate = false;
+        public bool updateLight = false;
         public string Data { get; set; } = string.Empty;
 
 
