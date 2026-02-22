@@ -460,7 +460,7 @@ public class Game1 : Game
 
         //TimeSinceStart = 0;
         int Render_Distance = 2;
-
+        List<Vector3> Lights = new List<Vector3>();
         List<Chunk> Loaded = new List<Chunk>();
 
         for (int i = -Render_Distance; i < Render_Distance; i++)
@@ -471,30 +471,47 @@ public class Game1 : Game
             Loaded.Add(chunk);
         }
 
-
+        
         
         foreach (var L in Loaded)
         {
-            
+
+            foreach (var tile in L.Tiles)
+            {
+                if (tile.ID == 0) continue;
+                var block = _blockManager.GetBlockAtTile(tile);
+                if (block == null) continue;
+                if (block.Light_Emission > 0)
+                {
+                    Lights.Add(tile.pos + new Vector3(L.x, L.y, 1f) * 32);
+                }
+            }
+
+
             for (int z = 0; z < L.Tiles.GetLength(0); z++)
             {
                 for (int i = 0; i < L.Tiles.GetLength(1); i++)
                 {
                     for (int j = 0; j < L.Tiles.GetLength(2); j++)
                     {
-                        
+                        float B = 0;
                         var tile = L.Tiles[z, i, j];
-                        
-                        
-                        
+                        foreach (var light in Lights)
+                        {
+                            
+                            float dist = Vector3.Distance(light, tile.pos + new Vector3(L.x, L.y, 1f) * 32);
+                            B = 1 - dist / (Render_Distance * 16);
+                        }
+                        tile.brightness = B;
+
                         var block = _blockManager.GetBlockAtTile(tile);
 
-                        if (!tile.updateLight)
-                        {
+                        //if (!tile.updateLight)
+                        //{
 
-                            if (tile.brightness > 0)
-                                tile.brightness -= 0.01f;
-                        }
+                        //    if (tile.brightness > 0)
+                        //        tile.brightness -= 0.01f;
+                        //}
                         
 
 
@@ -512,13 +529,13 @@ public class Game1 : Game
                         if (Tick % block.TickUpdate == 0)
                         {
                             if (block.Update == null) continue;
-                            if ((tile.ID == 0 && tile.brightness > 0) || tile.MarkedForUpdate) continue;
+                            if ((tile.ID == 0 /*&& tile.brightness > 1*/) || tile.MarkedForUpdate) continue;
                             block.Update.Invoke(tile, tile.Data);
                             
                         }
                         else
                         {
-                            tile.updateLight = false;
+                            //tile.updateLight = false;
                             tile.MarkedForUpdate = false;
                         }
                         

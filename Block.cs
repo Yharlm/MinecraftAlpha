@@ -104,7 +104,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Iron Ore", TexturePath = "iron_ore" ,Health = 100,},
                 new Block { Name = "Gold Ore", TexturePath = "gold_ore" ,Health = 100,},
                 new Block { Name = "Diamond Ore", TexturePath = "diamond_ore" ,Health = 100,},
-                new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 20f,TickUpdate = 3},
+                new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 20f},
 
 
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
@@ -186,21 +186,22 @@ namespace MinecraftAlpha
             };
             //};
 
-            getBlock("Torch").Update = (Pos, data) =>
-            {
-                var pos = GetPosAtBlock(Pos); //
-                var Sides = LogicsClass.SidesPos(pos, Game);
+            //getBlock("Torch").Update = (Pos, data) =>
+            //{
+            //    return;
+            //    var pos = GetPosAtBlock(Pos); //
+            //    var Sides = LogicsClass.SidesPos(pos, Game);
 
-                for (int i = 0; i < 6; i++)
-                {
-                    TileGrid tile = Sides[i];
-                    if (tile == null) continue;
+            //    for (int i = 0; i < 6; i++)
+            //    {
+            //        TileGrid tile = Sides[i];
+            //        if (tile == null) continue;
 
-                    tile.brightness = 3f;
-                    tile.updateLight = true;
-                    //tile.MarkedForUpdate = true;
-                }
-            };
+            //        tile.brightness = 3f;
+            //        tile.updateLight = true;
+            //        //tile.MarkedForUpdate = true;
+            //    }
+            //};
 
             getBlock("Fire").Update = (Pos, data) =>
             {
