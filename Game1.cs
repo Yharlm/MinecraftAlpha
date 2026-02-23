@@ -58,6 +58,9 @@ public class Game1 : Game
         new Chunk(-1,2),
     };
     //Gameplay variables
+
+    public List<Chunk> Loaded;
+
     public Vector2 WorldMousePos = Vector2.Zero;
     public Vector2 MousePosition = Vector2.Zero;
     public float BlockSize = 16f * 1;
@@ -242,6 +245,9 @@ public class Game1 : Game
             */
         }
         base.Initialize();
+
+        Lighting(); //Start lighting checks
+
     }
 
 
@@ -331,7 +337,95 @@ public class Game1 : Game
     }
 
 
+    public void Lighting()
+    {
 
+        List<Vector4> Lights = new List<Vector4>();
+        Thread Light = new Thread(() =>
+        {
+            while (true)
+            {
+
+                if (Loaded == null) continue;
+                if (!GameStarted && Loaded.Count > 0) continue;
+
+
+
+                for (int c = 0; c < Chunks.Count; c++)
+                {
+                    var L = Chunks[c];
+
+
+
+
+                    if (L != null)
+                    {
+                        
+                            
+                            for (int z = 0; z < L.Tiles.GetLength(0); z++)
+                            {
+
+                                for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                                {
+                                TileGrid tallest = null;
+
+                                for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                                {
+                                    
+                                    //float B = 0;
+                                    var tile = L.Tiles[z, i, j];
+
+                                    if (tile.ID == 0) continue;
+                                    var block = _blockManager.GetBlockAtTile(tile);
+                                    if (block == null) continue;
+                                    if (block.Light_Emission > 0)
+                                    {
+                                        Lights.Add(new Vector4(tile.pos.X, tile.pos.Y, tile.pos.Z, block.Light_Emission));
+                                    }
+                                    //if (tile.ID != 0 && tallest == null && tallest.pos.Y < tile.pos.Y)
+                                    //{
+                                    //    tallest = tile;
+
+                                    //}
+                                   
+                                }
+                                //if(tallest != null)
+                                //Lights.Add(new Vector4(tallest.pos.X, tallest.pos.Y, tallest.pos.Z, 5));
+                            }
+                        }
+                        for (int z = 0; z < L.Tiles.GetLength(0); z++)
+                        {
+                            for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                            {
+                                for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                                {
+                                    var tile = L.Tiles[z, i, j];
+                                    float B = 0;
+
+                                    foreach (var light in Lights)
+                                    {
+                                        float emision = float.Ceiling(light.W);
+                                        float dist = Vector3.Distance(new Vector3(light.X, light.Y, light.Z), tile.pos);
+                                        if (dist < emision)
+                                            B += 1 - dist / emision;
+                                    }
+                                    tile.brightness = B;
+                                }
+                            }
+                        }
+                    }
+                }
+                Lights.Clear();
+
+
+            }
+
+
+
+
+        }); Light.IsBackground = true;
+        Light.Start();
+    }
 
     public bool Clicked = false;
 
@@ -459,9 +553,9 @@ public class Game1 : Game
 
 
         //TimeSinceStart = 0;
-        int Render_Distance = 2;
-        List<Vector3> Lights = new List<Vector3>();
-        List<Chunk> Loaded = new List<Chunk>();
+        int Render_Distance = 3;
+
+        Loaded = new List<Chunk>();
 
         for (int i = -Render_Distance; i < Render_Distance; i++)
         {
@@ -471,22 +565,12 @@ public class Game1 : Game
             Loaded.Add(chunk);
         }
 
-        
-        
+
+
+
+
         foreach (var L in Loaded)
         {
-
-            foreach (var tile in L.Tiles)
-            {
-                if (tile.ID == 0) continue;
-                var block = _blockManager.GetBlockAtTile(tile);
-                if (block == null) continue;
-                if (block.Light_Emission > 0)
-                {
-                    Lights.Add(tile.pos + new Vector3(L.x, L.y, 1f) * 32);
-                }
-            }
-
 
             for (int z = 0; z < L.Tiles.GetLength(0); z++)
             {
@@ -494,15 +578,17 @@ public class Game1 : Game
                 {
                     for (int j = 0; j < L.Tiles.GetLength(2); j++)
                     {
-                        float B = 0;
+                        //float B = 0;
                         var tile = L.Tiles[z, i, j];
-                        foreach (var light in Lights)
-                        {
-                            
-                            float dist = Vector3.Distance(light, tile.pos + new Vector3(L.x, L.y, 1f) * 32);
-                            B = 1 - dist / (Render_Distance * 16);
-                        }
-                        tile.brightness = B;
+
+                        //foreach (var light in Lights)
+                        //{
+
+                        //    float dist = Vector3.Distance(light, tile.pos);
+                        //    if (dist < 15)
+                        //        B = 1-dist / 15;
+                        //}
+                        //tile.brightness = B;
 
                         var block = _blockManager.GetBlockAtTile(tile);
 
@@ -512,17 +598,17 @@ public class Game1 : Game
                         //    if (tile.brightness > 0)
                         //        tile.brightness -= 0.01f;
                         //}
-                        
+
 
 
 
                         if (block == null) continue;
-                        
-                        
-                        
+
+
+
                         if (block.IgnoreUpdate) continue;
-                        
-                       
+
+
 
 
                         //int TickUP = block.TickUpdate;
@@ -531,14 +617,14 @@ public class Game1 : Game
                             if (block.Update == null) continue;
                             if ((tile.ID == 0 /*&& tile.brightness > 1*/) || tile.MarkedForUpdate) continue;
                             block.Update.Invoke(tile, tile.Data);
-                            
+
                         }
                         else
                         {
                             //tile.updateLight = false;
                             tile.MarkedForUpdate = false;
                         }
-                        
+
 
                     }
                 }
@@ -1188,7 +1274,9 @@ public class Game1 : Game
 
         // In your Draw() method, after setting up spriteBatch.Begin()
 
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        Color Sky = Color.CornflowerBlue * float.Sin(TimeSinceStart / 10f);
+
+        GraphicsDevice.Clear(Sky);
 
         //SunImage
 
@@ -1425,7 +1513,7 @@ public class Game1 : Game
                 _spriteBatch.DrawString(font, ((int)(WorldMousePos.X % 32)).ToString(), Vector2.One * 60, Color.Red);
                 _spriteBatch.DrawString(font, ((int)(WorldMousePos.Y % 32)).ToString(), Vector2.One * 60 + Vector2.UnitX * 30, Color.Red);
                 _spriteBatch.DrawString(font, (HotbarIndex).ToString(), new Vector2(70, 20), Color.Red);
-                _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos, Chunks))).ToString(), new Vector2(470, 40), Color.Red);
+                _spriteBatch.DrawString(font, (BlockManager.GetPosAtBlock(BlockManager.GetBlockAtPos(WorldMousePos, Chunks))).ToString(), new Vector2(470, 40), Color.Beige);
                 var b = BlockManager.GetBlockAtPos(WorldMousePos, (int)(Player.Plr.Layer), Chunks); //WHY NOT WORK!
                 if (b != null)
                 {

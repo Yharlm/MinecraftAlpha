@@ -146,7 +146,7 @@ namespace MinecraftAlpha
                 Clone.paused = Example.paused;
                 //Events
                 Clone.Model3D = Example.Model3D;
-
+                Clone.CanBeDamaged = Example.CanBeDamaged;
 
                 Clone.Interaction = Example.Interaction;
                 Clone.Update = Example.Update;
@@ -505,7 +505,7 @@ namespace MinecraftAlpha
             if (DMG < 1) return;
             //velocity.velocity += new Vector2(0, -1f);
             Vector2 Knockback = new Vector2(0, 1);
-            if (IFrame > 0) return;
+            if (IFrame > 0 || !CanBeDamaged) return;
             if (source != null) Knockback = (position - source.position);
 
             if (Knockback == Vector2.Zero)

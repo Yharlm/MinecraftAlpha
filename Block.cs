@@ -104,7 +104,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Iron Ore", TexturePath = "iron_ore" ,Health = 100,},
                 new Block { Name = "Gold Ore", TexturePath = "gold_ore" ,Health = 100,},
                 new Block { Name = "Diamond Ore", TexturePath = "diamond_ore" ,Health = 100,},
-                new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 20f},
+                new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 7f},
 
 
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
