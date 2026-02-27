@@ -89,6 +89,7 @@ namespace MinecraftAlpha
         public int y;
 
         public TileGrid[,,] Tiles = new TileGrid[10, 32, 32];
+        public int[,] HeightMap= new int[32, 32];
         public Chunk(int x, int y, TileGrid[,,] Grid)
         {
             this.x = x;
@@ -209,7 +210,6 @@ public class Generation
                 }
                 for (int j = 5; j < 12; j++)
                 {
-                    
                     PlaceBlock(placement + new Vector2(0, j), z, 4, chunks);
                 }
 
@@ -230,6 +230,9 @@ public class Generation
     public static void PlaceBlock(Vector2 pos, int z, int id, List<Chunk> chunks)
     {
         TileGrid Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
+        var Cpos = BlockManager.GetChunkAtPos(pos);
+        var chunk = chunks.Find(x => x.x == Cpos[0] && x.y == Cpos[1]);
+
         if (Tile == null)
         {
 
@@ -238,6 +241,7 @@ public class Generation
             Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
         }
         Tile.ID = id;
+        chunk.HeightMap[(int)(pos.X % 32), (int)(pos.Y % 32)] = (int)pos.Y;
     }
 
 

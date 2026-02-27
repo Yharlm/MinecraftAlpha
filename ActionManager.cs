@@ -6,43 +6,30 @@ using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace MinecraftAlpha
 {
+    
     public class Event
     {
+        public Block block;
+        public TileGrid tile;
+        public string Data;
 
+        
 
-
-        public string Name = "New Event";
-        public string Description = "This is a new event";
-        public Action Action;
-
-        public Event(string name, string description, Action action)
-        {
-            Name = name;
-            Description = description;
-            Action = action;
-        }
+        
     }
     public class ActionManager
     {
         public Random random = new Random();
         public Game1 Game;
         public List<Event> Actions = new List<Event>();
-        public ActionManager() { Actions = LoadActions(); }
+        
+        public List<Event> EventQue = new List<Event>(); // Stores changes done durring gameplay
 
-        public List<Event> LoadActions()
+        public void QueChange(Event ev)
         {
-            var list = new List<Event>()
-            {
-
-                //Kills all entities
-                new Event("KIll","", () => { /*Game.Entities.Clear();*/ }),
-                // 
-                new Event("LeftInteract","",() => {  })
-
-
-            };
-            return list;
+            EventQue.Add(ev);
         }
+        
 
         public bool CheckAround(int x, int y, TileGrid[,] Map)
         {
@@ -281,6 +268,7 @@ namespace MinecraftAlpha
             tile.Data = Data;
             tile.MinedHealth = 0;
             tile.MarkedForUpdate = true;
+            EventQue.Add(new Event() { block = Game._blockManager.GetBlockAtTile(tile), tile = tile, Data = "SetBlock" });
         }
         public void SpawnEntity(Vector2 Pos, string EntityName)
         {

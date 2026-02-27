@@ -9,7 +9,7 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 namespace MinecraftAlpha
 {
 
-
+    
     public class Block
     {
         public int ID = 0;
@@ -582,20 +582,80 @@ namespace MinecraftAlpha
             }
             return Chest;
         }
-        //public static void Makechunk(Vector2 pos, List<Chunk> Chunks)
-        //{
+        //Get Functions
+        //Info
+        public void TilePos(TileGrid Tile)
+        {
+            //Returns Int
+        }
+        public void TilePos(TileGrid Tile,Chunk chunk)
+        {
+
+        }
+        public void ChunkPos(TileGrid Tile)
+        {
+
+        }
+        //object
+        public void GetBlock(TileGrid Tile)
+        {
+
+        }
+        public void GetBlock(string Name)
+        {
+
+        }
+        public void GetBlock(int ID)
+        {
+
+        }
+        public void GetTile(Vector3 Pos) // world
+        {
+
+        }
+        public void GetTile(Vector3 pos,Chunk chunk) // 0 -32
+        {
+
+        }
+        public void GetChunk(TileGrid Tile)
+        {
+
+        }
+        public void GetChunk(Vector2 Pos)
+        {
+
+        }
 
 
 
-        //    TileGrid Tile = BlockManager.GetBlockAtPos(pos, Chunks);
-        //    if (Tile == null)
-        //    {
+        //Set Functions
+        public void SpawnChunk(Vector2 Pos)
+        {
 
-        //        var ChunkNot = BlockManager.GetChunkAtPos(pos);
-        //        Chunks.Add(new(ChunkNot[0], ChunkNot[1]));
-        //        Tile = BlockManager.GetBlockAtPos(pos, Chunks);
-        //    }
-        //}
+        }
+        public void SpawnChunk(TileGrid Tile)
+        {
+
+        }
+        public void SetTile(TileGrid Tile,int ID, string Data)
+        {
+
+        }
+        public void SetTile(TileGrid Tile,TileGrid other)
+        {
+
+        }
+        public void SetTile(TileGrid Tile,string block)
+        {
+
+        }
+
+
+
+
+
+
+
         public static TileGrid GetBlockAtPos(Vector2 pos, List<Chunk> Chunks)
         {
             return GetBlockAtPos(pos, 9, Chunks);
@@ -706,6 +766,7 @@ namespace MinecraftAlpha
             return [ChunkX, ChunkY];
         }
 
+
     }
 
     public class TileGrid
@@ -719,6 +780,10 @@ namespace MinecraftAlpha
         public float MinedHealth = 0; // How much health has been mined from this block
         public bool MarkedForUpdate = false;
         public bool updateLight = false;
+
+        public int SkyLight = 0;
+
+
         public string Data { get; set; } = string.Empty;
 
 
