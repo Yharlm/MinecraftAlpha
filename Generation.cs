@@ -175,7 +175,7 @@ public class Generation
     }
 
 
-    public void GenerateChunk(Vector2 pos, List<Chunk> chunks)
+    public void GenerateChunk(Vector2 pos, Game1 game)
     {
         //Overworld
         int chunkX = BlockManager.GetChunkAtPos(pos)[0];
@@ -201,16 +201,16 @@ public class Generation
 
                 float Y = noise * 20f;
 
-                Vector2 placement = new Vector2(worldX + 0.2f, Y) + Vector2.One * 0.2f;
-                PlaceBlock(placement, z, 2, chunks);
-
+                Vector3 placement = new Vector3(worldX + 0.2f, Y,z);
+                PlaceBlock();
+                game._blockManager.SetTile(placement, z, 2);
                 for (int j = 1; j < 5; j++)
                 {
-                    PlaceBlock(placement + new Vector2(0, j), z, 1, chunks);
+                    PlaceBlock(placement + new Vector2(0, j), z, 1, game);
                 }
                 for (int j = 5; j < 12; j++)
                 {
-                    PlaceBlock(placement + new Vector2(0, j), z, 4, chunks);
+                    PlaceBlock(placement + new Vector2(0, j), z, 4, game);
                 }
 
                 
@@ -227,11 +227,11 @@ public class Generation
 
     }
 
-    public static void PlaceBlock(Vector2 pos, int z, int id, List<Chunk> chunks)
+    public void PlaceBlock(Vector2 pos, int z, int id, Game1 game1)
     {
         TileGrid Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
         var Cpos = BlockManager.GetChunkAtPos(pos);
-        var chunk = chunks.Find(x => x.x == Cpos[0] && x.y == Cpos[1]);
+        var chunk = Game1;
 
         if (Tile == null)
         {

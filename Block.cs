@@ -2,14 +2,14 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Net.Http.Headers;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MinecraftAlpha
 {
 
-    
+
     public class Block
     {
         public int ID = 0;
@@ -119,7 +119,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Glass Block", TexturePath = "glass", Health = 4,Transparent = true},
                 new Block { Name = "TNT", TexturePath = "tnt_side", Health = 2,Transparent = false,Tag="Explosive"},
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
-                
+
                 new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
 
 
@@ -282,7 +282,7 @@ namespace MinecraftAlpha
 
                 //}
                 Pos.MarkedForUpdate = true;
-                
+
                 if (lower.ID == 0)
                 {
                     Game._actionManager.SetTile(lower, "Water", "6");
@@ -293,48 +293,48 @@ namespace MinecraftAlpha
 
 
 
-                
+
                 if (lower.ID != 0 && lower.ID != getBlock("Water").ID && Data > 1)
                 {
-                    
+
                     if (Left.ID == 0)
                     {
                         Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString());
                     }
                     if (Right.ID == 0)
                     {
-                        Game._actionManager.SetTile(Right,"Water", (Data - 1).ToString());
+                        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString());
                     }
 
                 }
-                
-                if(Data == 6)
+
+                if (Data == 6)
                 {
-                    if(top.ID != getBlock("Water").ID)
+                    if (top.ID != getBlock("Water").ID)
                     {
                         Game._actionManager.SetTile(Pos, "Air", "");
                         lower.MarkedForUpdate = true;
                     }
-                       
+
 
                 }
-                if(Data <6)
+                if (Data < 6)
                 {
-                    if(Right.ID == getBlock("Water").ID && Left.ID == getBlock("Water").ID )
+                    if (Right.ID == getBlock("Water").ID && Left.ID == getBlock("Water").ID)
                     {
                         if (int.Parse(Right.Data) < Data && int.Parse(Left.Data) < Data)
                         {
                             Game._actionManager.SetTile(Pos, "Air", "");
-                            
+
                         }
                     }
                     else
                     {
                         Game._actionManager.SetTile(Pos, "Air", "");
-                        
+
                     }
 
-                    
+
                 }
 
 
@@ -459,7 +459,7 @@ namespace MinecraftAlpha
                 string Items = Pos.Data;
                 var Window = Game._userInterfaceManager.GetWindow("Chest");
                 var Inv = Game._userInterfaceManager.GetWindow("Inventory");
-                
+
                 Inv.Visible = true;
                 Window.Visible = true;
                 foreach (var slot in Window.ItemSlots)
@@ -480,7 +480,7 @@ namespace MinecraftAlpha
             };
             getBlock("Chest").Update = (Pos, data) =>
             {
-                
+
                 var Window = Game._userInterfaceManager.GetWindow("Chest");
                 string Data = "";
 
@@ -505,7 +505,7 @@ namespace MinecraftAlpha
                 var Inv = Game._userInterfaceManager.GetWindow("Inventory");
                 Craft.Visible = true;
                 Inv.Visible = true;
-                
+
 
             };
             //getBlock("Crafting Table").Update = (Pos) =>
@@ -584,70 +584,196 @@ namespace MinecraftAlpha
         }
         //Get Functions
         //Info
-        public void TilePos(TileGrid Tile)
-        {
-            //Returns Int
-        }
-        public void TilePos(TileGrid Tile,Chunk chunk)
+        public int[] TilePos(TileGrid Tile)
         {
 
-        }
-        public void ChunkPos(TileGrid Tile)
-        {
+
+            int size = 32;
+            int ChunkX = (int)Math.Ceiling((Tile.pos.X / size));
+            int ChunkY = (int)Math.Ceiling((Tile.pos.Y / size));
+
+            return [ChunkX, ChunkY];
+
 
         }
+        public Vector2 TilePos(TileGrid Tile, Chunk chunk)
+        {
+            return new Vector2(Tile.pos.X % 32, Tile.pos.Y % 32);
+        }
+
         //object
-        public void GetBlock(TileGrid Tile)
+        public Block GetBlock(TileGrid tile)
+        {
+            if (tile == null) return Blocks[0];
+
+
+            return Blocks[tile.ID];
+        }
+        public Block GetBlock(string Name)
+        {
+            var blocks = Blocks;
+            return blocks.Find(x => x.Name == Name);
+        }
+        public int GetBlock(Block block)
+        {
+            return Blocks.IndexOf(block);
+        }
+        public Block GetBlock(int ID)
+        {
+            return Blocks[ID];
+        }
+        public TileGrid GetTile(Vector3 pos) // world
+        {
+            int z = (int)pos.Z;
+            if (z < 0 || z > 9) return null;
+            TileGrid Tile = null;
+            if (Game.Chunks.Count == 0) return null;
+
+            int size = Game.Chunks[0].Tiles.GetLength(1);
+            int ChunkX = (int)Math.Ceiling((pos.X / size));
+            int ChunkY = (int)Math.Ceiling((pos.Y / size));
+
+
+
+
+
+            var C = GetChunk(new Vector2(ChunkX, ChunkY));
+            if (C == null) return null;
+            int x = (int)(pos.X % size);
+            int y = (int)(pos.Y % size);
+
+            if (pos.X < 0)
+            {
+                x = size - 1 - Math.Abs(x);
+            }
+            if (pos.Y < 0)
+            {
+                y = size - 1 - Math.Abs(y);
+            }
+
+            Tile = C.Tiles[z, y, x];
+
+
+
+            return Tile;
+        }
+        public TileGrid GetTile(Vector3 pos, Chunk chunk) // 0 -32
         {
 
+            int x = (int)(pos.X % 32);
+            int y = (int)(pos.Y % 32);
+            int z = (int)pos.Z;
+            return chunk.Tiles[z, y, x];
+
         }
-        public void GetBlock(string Name)
+        public Chunk GetChunk(TileGrid Tile)
         {
+            Vector2 pos = new Vector2(Tile.pos.X, Tile.pos.Y);
+            int size = 32;
+            pos.X = (float)Math.Ceiling(pos.X / size) * size;
+            pos.Y = (float)Math.Ceiling(pos.Y / size) * size;
 
+            return GetChunk(pos);
         }
-        public void GetBlock(int ID)
+        public Chunk GetChunk(Vector2 pos)
         {
+            int size = 32;
+            int ChunkX = (int)Math.Ceiling((pos.X / size));
+            int ChunkY = (int)Math.Ceiling((pos.Y / size));
+            foreach (Chunk C in Game.Chunks)
+            {
+                if (C.x == ChunkX && C.y == ChunkY)
+                {
+                    return C;
 
+
+                }
+
+            }
+            return null; //make exception to make chunk instead.
         }
-        public void GetTile(Vector3 Pos) // world
+
+        public Vector2 ChunkPos(Vector2 pos)
         {
+            int size = 32;
+            int ChunkX = (int)Math.Ceiling((pos.X / size));
+            int ChunkY = (int)Math.Ceiling((pos.Y / size));
 
+            return new Vector2(ChunkX, ChunkY);
         }
-        public void GetTile(Vector3 pos,Chunk chunk) // 0 -32
-        {
-
-        }
-        public void GetChunk(TileGrid Tile)
-        {
-
-        }
-        public void GetChunk(Vector2 Pos)
-        {
-
-        }
-
 
 
         //Set Functions
         public void SpawnChunk(Vector2 Pos)
         {
-
+            if (GetChunk(Pos) != null) return;
+            int size = 32;
+            int ChunkX = (int)Math.Ceiling((Pos.X / size));
+            int ChunkY = (int)Math.Ceiling((Pos.Y / size));
+            Chunk c = new Chunk(ChunkX, ChunkY);
+            Game.Chunks.Add(c);
         }
-        public void SpawnChunk(TileGrid Tile)
+        public void SpawnChunk(TileGrid Tile) //UnNecessary?
         {
 
         }
-        public void SetTile(TileGrid Tile,int ID, string Data)
+        public void SetTile(TileGrid Tile, int ID, string Data)
         {
+            Tile.ID = ID;
+            Tile.Data = Data;
 
         }
-        public void SetTile(TileGrid Tile,TileGrid other)
+        public void SetTile(Vector3 pos, int ID, string Data)
         {
+            var e = GetTile(pos);
+            if (e != null)
+            {
+                e.ID = ID;
+                e.Data = Data;
+            }
+
 
         }
-        public void SetTile(TileGrid Tile,string block)
+        public TileGrid SetTile(TileGrid Tile, TileGrid other)
         {
-
+            Tile = other;
+            return Tile;
+        }
+        public TileGrid SetTile(TileGrid Tile, TileGrid other,int DeepCopy)
+        {
+            Tile.state = other.state;
+            Tile.ID = other.ID;
+            Tile.brightness = other.brightness;
+            Tile.LightSource = other.LightSource;
+            Tile.MinedHealth = other.MinedHealth;
+            Tile.Data = other.Data;
+            Tile.MarkedForUpdate = other.MarkedForUpdate;
+            Tile.updateLight = other.updateLight;
+            Tile.SkyLight = other.SkyLight;
+            return Tile;
+        }
+        public TileGrid SetTile(TileGrid Tile, string block)
+        {
+            Tile.ID = GetBlockByName(block).ID;
+            Tile.Data = "";
+            return Tile;
+        }
+        public TileGrid SetTile(TileGrid Tile, string block,string Data)
+        {
+            Tile.ID = GetBlockByName(block).ID;
+            Tile.Data = Data;
+            //Tile.MarkedForUpdate = true;
+            return Tile;
+        }
+        public void SetTile(TileGrid Tile, Block block)
+        {
+            Tile.ID = block.ID;
+            Tile.Data = "";
+        }
+        public void SetTile(TileGrid Tile, Block block,string Data)
+        {
+            Tile.ID = block.ID;
+            Tile.Data = Data;
         }
 
 
