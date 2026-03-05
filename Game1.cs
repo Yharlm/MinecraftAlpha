@@ -1030,7 +1030,7 @@ public class Game1 : Game
                 //var Chunk = Chunks.Last();
 
 
-                generation.GenerateChunk(WorldMousePos, Chunks);
+                generation.GenerateChunk(WorldMousePos, this);
 
             }
 
@@ -1414,7 +1414,7 @@ public class Game1 : Game
 
         // In your Draw() method, after setting up spriteBatch.Begin()
 
-        Color Sky = Color.CornflowerBlue * float.Sin(TimeSinceStart / 24f);
+        Color Sky = Color.CornflowerBlue;
 
         GraphicsDevice.Clear(Sky);
 

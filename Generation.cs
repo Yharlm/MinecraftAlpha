@@ -178,7 +178,7 @@ public class Generation
     public void GenerateChunk(Vector2 pos, Game1 game)
     {
         //Overworld
-        int chunkX = BlockManager.GetChunkAtPos(pos)[0];
+        int chunkX = game._blockManager.GetChunk(pos).x;
         PerlinNoise Perlin = new PerlinNoise(seed);
         Random random = new Random(seed);
 
@@ -201,16 +201,18 @@ public class Generation
 
                 float Y = noise * 20f;
 
-                Vector3 placement = new Vector3(worldX + 0.2f, Y,z);
-                PlaceBlock();
-                game._blockManager.SetTile(placement, z, 2);
+                Vector3 placement = new Vector3(worldX, Y,z);
+                var Tile = game._blockManager.GetTile(placement);
+                game._blockManager.SetTile(Tile, "Grass","");
                 for (int j = 1; j < 5; j++)
                 {
-                    PlaceBlock(placement + new Vector2(0, j), z, 1, game);
+                    //PlaceBlock(placement + new Vector2(0, j), z, 1, game);
+                    game._blockManager.SetTile(placement + new Vector3(0, j,z), "Dirt", "");
                 }
                 for (int j = 5; j < 12; j++)
                 {
-                    PlaceBlock(placement + new Vector2(0, j), z, 4, game);
+                    //PlaceBlock(placement + new Vector2(0, j), z, 4, game);
+                    game._blockManager.SetTile(placement + new Vector3(0, j,z), "Stone", "");
                 }
 
                 
@@ -227,22 +229,7 @@ public class Generation
 
     }
 
-    public void PlaceBlock(Vector2 pos, int z, int id, Game1 game1)
-    {
-        TileGrid Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
-        var Cpos = BlockManager.GetChunkAtPos(pos);
-        var chunk = Game1;
-
-        if (Tile == null)
-        {
-
-            var ChunkNot = BlockManager.GetChunkAtPos(pos);
-            chunks.Add(new(ChunkNot[0], ChunkNot[1]));
-            Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
-        }
-        Tile.ID = id;
-        chunk.HeightMap[(int)(pos.X % 32), (int)(pos.Y % 32)] = (int)pos.Y;
-    }
+   
 
 
 

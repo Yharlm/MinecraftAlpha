@@ -584,7 +584,7 @@ namespace MinecraftAlpha
         }
         //Get Functions
         //Info
-        public int[] TilePos(TileGrid Tile)
+        public Vector2 TilePos(TileGrid Tile)
         {
 
 
@@ -592,7 +592,7 @@ namespace MinecraftAlpha
             int ChunkX = (int)Math.Ceiling((Tile.pos.X / size));
             int ChunkY = (int)Math.Ceiling((Tile.pos.Y / size));
 
-            return [ChunkX, ChunkY];
+            return new(ChunkX, ChunkY);
 
 
         }
@@ -627,9 +627,9 @@ namespace MinecraftAlpha
             int z = (int)pos.Z;
             if (z < 0 || z > 9) return null;
             TileGrid Tile = null;
-            if (Game.Chunks.Count == 0) return null;
+            if (Game.Chunks.Count == 0){ Game._blockManager.SpawnChunk(new Vector2(pos.X, pos.Y)); }
 
-            int size = Game.Chunks[0].Tiles.GetLength(1);
+            int size = 32;
             int ChunkX = (int)Math.Ceiling((pos.X / size));
             int ChunkY = (int)Math.Ceiling((pos.Y / size));
 
@@ -637,7 +637,7 @@ namespace MinecraftAlpha
 
 
 
-            var C = GetChunk(new Vector2(ChunkX, ChunkY));
+            var C = GetChunk(new Vector2(ChunkX, ChunkY),0);
             if (C == null) return null;
             int x = (int)(pos.X % size);
             int y = (int)(pos.Y % size);
@@ -690,7 +690,34 @@ namespace MinecraftAlpha
                 }
 
             }
-            return null; //make exception to make chunk instead.
+
+            var c = new Chunk(ChunkX, ChunkY);
+
+
+
+            return c; //make exception to make chunk instead.
+        }
+        public Chunk GetChunk(Vector2 pos,int Pos)
+        {
+            int size = 32;
+            int ChunkX =(int) pos.X;
+            int ChunkY = (int)pos.Y;
+            foreach (Chunk C in Game.Chunks)
+            {
+                if (C.x == ChunkX && C.y == ChunkY)
+                {
+                    return C;
+
+
+                }
+
+            }
+
+            var c = new Chunk(ChunkX, ChunkY);
+
+
+
+            return c; //make exception to make chunk instead.
         }
 
         public Vector2 ChunkPos(Vector2 pos)
@@ -731,6 +758,21 @@ namespace MinecraftAlpha
                 e.ID = ID;
                 e.Data = Data;
             }
+
+
+        }
+
+        public void SetTile(Vector3 pos, string block, string Data)
+        {
+            
+            var e = GetTile(pos);
+            
+            if (e != null)
+            {
+                e.ID = GetBlockByName(block).ID;
+                e.Data = Data;
+            }
+            
 
 
         }
