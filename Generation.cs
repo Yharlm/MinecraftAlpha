@@ -140,7 +140,7 @@ namespace MinecraftAlpha
 public class Generation
 {
 
-
+    public Game1 Game;
     public static List<Vector2> CaveGenerate(Vector2 position, int seed, int length)
     {
         Random random = new Random(seed);
@@ -175,9 +175,10 @@ public class Generation
     }
 
 
-    public void GenerateChunk(Vector2 pos, List<Chunk> chunks)
+    public void GenerateChunk(Vector2 pos)
     {
         //Overworld
+        var chunks = Game.Chunks;
         int chunkX = BlockManager.GetChunkAtPos(pos)[0];
         PerlinNoise Perlin = new PerlinNoise(seed);
         Random random = new Random(seed);

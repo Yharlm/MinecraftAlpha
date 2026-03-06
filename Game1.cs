@@ -79,6 +79,7 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
         _CommandManager.game = this;
+        generation.Game = this;
 
         // In Game1 constructor, after 'graphics = new GraphicsDeviceManager(this);'
         _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; // Your desired width
@@ -1030,7 +1031,7 @@ public class Game1 : Game
                 //var Chunk = Chunks.Last();
 
 
-                generation.GenerateChunk(WorldMousePos, this);
+                generation.GenerateChunk(WorldMousePos);
 
             }
 
