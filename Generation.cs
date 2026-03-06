@@ -241,7 +241,7 @@ public class Generation
             Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
         }
         Tile.ID = id;
-        chunk.HeightMap[(int)(pos.X % 32), (int)(pos.Y % 32)] = (int)pos.Y;
+        //chunk.HeightMap[(int)(pos.X % 32), (int)(pos.Y % 32)] = (int)pos.Y;
     }
 
 
