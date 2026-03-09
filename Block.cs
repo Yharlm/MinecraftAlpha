@@ -1,8 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -129,10 +128,10 @@ namespace MinecraftAlpha
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
                 new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.8f,Tag="Pickaxe",MineLevel = 4},
 
-                new Block { Name = "Wooden Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 1.5f,Tag="Sword",MineLevel = 0},
-                new Block { Name = "Stone Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 3f,Tag="Sword",MineLevel = 0},
-                new Block { Name = "Iron Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 3f,Tag="Sword",MineLevel = 0},
-                new Block { Name = "Diamond Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 4.5f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Wooden Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 212,Damage = 3f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Stone Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 204,Damage = 4f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Iron Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 95,Damage = 6f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Diamond Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 103,Damage = 7f,Tag="Sword",MineLevel = 0},
 
 
 
@@ -582,7 +581,7 @@ namespace MinecraftAlpha
             }
             return Chest;
         }
-        
+
 
 
 
@@ -660,17 +659,7 @@ namespace MinecraftAlpha
             return Tile;
         }
 
-        public static Chunk GetChunk(int x, int y, List<Chunk> Chunks)
-        {
-            foreach (Chunk C in Chunks)
-            {
-                if (C.x == x && C.y == y)
-                {
-                    return C;
-                }
-            }
-            return null;
-        }
+
 
         public static TileGrid GetLastBlockAtPos(Vector2 pos, List<Chunk> Chunks)
         {
@@ -691,14 +680,7 @@ namespace MinecraftAlpha
 
 
 
-        public static int[] GetChunkAtPos(Vector2 pos)
-        {
-            int size = 32;
-            int ChunkX = (int)Math.Ceiling((pos.X / size));
-            int ChunkY = (int)Math.Ceiling((pos.Y / size));
 
-            return [ChunkX, ChunkY];
-        }
 
         //Get Functions
         //Info
@@ -752,74 +734,109 @@ namespace MinecraftAlpha
 
         //}
 
-        //public TileGrid GetTile(Vector3 Pos)
-        //{
-        //    int z = (int)Pos.Z;
-        //    var Chunks = Game.Chunks;
-        //    Vector2 pos = new Vector2(Pos.X, Pos.Y);
+        public TileGrid GetTile(Vector3 pos)
+        {
+            Vector2 Pos = new Vector2(pos.X, pos.Y);
+            int z = (int)pos.Z;
+            var Chunks = Game.Chunks;
+            if (z < 0 || z > 9) return null;
+            TileGrid Tile = null;
+            if (Chunks.Count == 0) return null;
 
-
-        //    if (z < 0 || z > 9) return null;
-        //    TileGrid Tile = null;
-        //    if (Chunks.Count == 0) return null;
-
-        //    int size = Chunks[0].Tiles.GetLength(1); //Chunk size and pos based o vec3
-        //    int ChunkX = (int)Math.Ceiling((pos.X / size));
-        //    int ChunkY = (int)Math.Ceiling((pos.Y / size));
-
-
-        //    var C = GetChunk(ChunkX, ChunkY);
-        //    //Tile position in chunk
-        //    int x = (int)(pos.X % size);
-        //    int y = (int)(pos.Y % size);
-        //    //Some check for negative
-        //    if (pos.X < 0)
-        //    {
-        //        x = size - 1 - Math.Abs(x);
-        //    }
-        //    if (pos.Y < 0)
-        //    {
-        //        y = size - 1 - Math.Abs(y);
-        //    }
-
-        //    Tile = C.Tiles[z, y, x];
+            int size = Chunks[0].Tiles.GetLength(1);
+            int ChunkX = (int)Math.Ceiling((pos.X / size));
+            int ChunkY = (int)Math.Ceiling((pos.Y / size));
 
 
 
-        //    return Tile;
-        //}
+            var C = GetChunk(Pos);
+
+
+            int x = (int)(pos.X % size);
+            int y = (int)(pos.Y % size);
+
+            if (pos.X < 0)
+            {
+                x = size - 1 - Math.Abs(x);
+            }
+            if (pos.Y < 0)
+            {
+                y = size - 1 - Math.Abs(y);
+            }
+
+            Tile = C.Tiles[z, y, x];
+
+
+
+            return Tile;
+        }
 
         ////public Chunk GetChunk(TileGrid Tile)
         ////{
 
         ////}
-
-        //public Chunk GetChunk(Vector2 pos) //World Pos
-        //{
-        //    return GetChunk((int)pos.X, (int)pos.Y);
-        //}
-        //public Chunk GetChunk(int x, int y) //this is for given cordinates
-        //{
-
-        //    int ChunkX = x;
-        //    int ChunkY = y;
-        //    foreach (Chunk C in Game.Chunks)
-        //    {
-        //        if (C.x == ChunkX && C.y == ChunkY)
-        //        {
-        //            return C;
+        public bool GetChunk(Vector2 pos,int non) //World Pos
+        {
+            int ChunkX = (int)Math.Ceiling((pos.X / 32));
+            int ChunkY = (int)Math.Ceiling((pos.Y / 32));
+            foreach (Chunk C in Game.Chunks)
+            {
+                if (C.x == ChunkX && C.y == ChunkY)
+                {
+                    return true;
 
 
-        //        }
+                }
 
-        //    }
+            }
 
-        //    var c = new Chunk(ChunkX, ChunkY);
+            
+            return false; //make exception to make chunk instead.
+        }
+        public Chunk GetChunk(Vector2 pos) //World Pos
+        {
+            int ChunkX = (int)Math.Ceiling((pos.X / 32));
+            int ChunkY = (int)Math.Ceiling((pos.Y / 32));
+            foreach (Chunk C in Game.Chunks)
+            {
+                if (C.x == ChunkX && C.y == ChunkY)
+                {
+                    return C;
+
+
+                }
+
+            }
+
+            var c = new Chunk(ChunkX, ChunkY);
+            Game.Chunks.Add(c);
 
 
 
-        //    return c; //make exception to make chunk instead.
-        //}
+            return c; //make exception to make chunk instead.
+        }
+        public Chunk GetChunk(int x, int y) //this is for given cordinates
+        {
+
+            int ChunkX = x;
+            int ChunkY = y;
+            foreach (Chunk C in Game.Chunks)
+            {
+                if (C.x == ChunkX && C.y == ChunkY)
+                {
+                    return C;
+
+
+                }
+
+            }
+
+            var c = new Chunk(ChunkX, ChunkY);
+
+
+
+            return c; //make exception to make chunk instead.
+        }
 
         //public Vector2 ChunkPos(Vector2 pos)
         //{
@@ -926,7 +943,7 @@ namespace MinecraftAlpha
         public TileGrid() { }
         public int ID = 0;
         public int state = 0;
-        public float brightness = 0;
+        public float brightness = 1;
         public float LightSource = 0;
         public float MinedHealth = 0; // How much health has been mined from this block
         public bool MarkedForUpdate = false;

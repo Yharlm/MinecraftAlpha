@@ -23,11 +23,11 @@ namespace MinecraftAlpha
         public Game1 Game;
         public List<Event> Actions = new List<Event>();
         
-        public List<Event> EventQue = new List<Event>(); // Stores changes done durring gameplay
+        public List<Event> EventQueue = new List<Event>(); // Stores changes done durring gameplay
 
         public void QueChange(Event ev)
         {
-            EventQue.Add(ev);
+            EventQueue.Add(ev);
         }
         
 
@@ -49,7 +49,7 @@ namespace MinecraftAlpha
 
             if (Zindex < 0 || Zindex > 9) { return; }
             if (block == null) return;
-            TileGrid Tile = BlockManager.GetBlockAtPos(pos, Zindex, Chunks);
+            TileGrid Tile = Game._blockManager.GetTile(new(pos.X,pos.Y,Zindex));
 
             if (block == null) return;
             if (block.Item)
@@ -136,13 +136,7 @@ namespace MinecraftAlpha
                 return;
             }
 
-            if (Tile == null)
-            {
-
-                var ChunkNot = BlockManager.GetChunkAtPos(pos);
-                Chunks.Add(new(ChunkNot[0], ChunkNot[1]));
-                Tile = BlockManager.GetBlockAtPos(pos, Zindex, Chunks);
-            }
+            
 
 
 
@@ -268,7 +262,7 @@ namespace MinecraftAlpha
             tile.Data = Data;
             tile.MinedHealth = 0;
             tile.MarkedForUpdate = true;
-            EventQue.Add(new Event() { block = Game._blockManager.GetBlockAtTile(tile), tile = tile, Data = "SetBlock" });
+            EventQueue.Add(new Event() { block = Game._blockManager.GetBlockAtTile(tile), tile = tile, Data = "SetBlock" });
         }
         public void SpawnEntity(Vector2 Pos, string EntityName)
         {

@@ -467,10 +467,22 @@ namespace MinecraftAlpha
         {
 
             if ("Item" == Target.name) return;
+            var item = this.Item;
+            float dmg = 2;
+            if(item != null)
+            {
+                if (item.Tag == "Sword")
+                {
+                    dmg = item.Damage;
+                }
+            }
+           
+
+
             if (!collisionBox.Bottom && IFrame <= 0f)
             {
                 Random random = new Random();
-                Target.TakeDamage(this, 3, 17);
+                Target.TakeDamage(this, (int)(dmg*1.4), 17);
                 var part = new Particle()
                 {
 
@@ -493,7 +505,7 @@ namespace MinecraftAlpha
             }
             else
             {
-                Target.TakeDamage(this, 1, 10);
+                Target.TakeDamage(this, (int)dmg, 10);
             }
 
             Target.Target = this;
@@ -507,7 +519,7 @@ namespace MinecraftAlpha
             Vector2 Knockback = new Vector2(0, 1);
             if (IFrame > 0 || !CanBeDamaged) return;
             if (source != null) Knockback = (position - source.position);
-
+            Target = source;
             if (Knockback == Vector2.Zero)
             {
                 Knockback = new Vector2(0, 1);

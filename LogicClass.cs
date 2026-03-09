@@ -108,7 +108,7 @@ public class Debuging
             var tiles = new TileGrid[6];
             for (int i = 0; i < Sides.Length; i++)
             {
-                tiles[i]=BlockManager.GetBlockAtPos(pos + Sides[i], game.Chunks);
+                tiles[i]=game._blockManager.GetTile(pos + Sides[i]);
             }
             return tiles;
         }
@@ -123,7 +123,7 @@ public class Debuging
                 {
                     for (int k = -1; k <= 1; k++)
                     {
-                        tiles[count] = BlockManager.GetBlockAtPos(pos + new Vector3(i, j, k), game.Chunks);
+                        tiles[count] = game._blockManager.GetTile(pos + new Vector3(i, j, k));
                         count++;
                     }
                 }
