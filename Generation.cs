@@ -1,9 +1,11 @@
-﻿using MinecraftAlpha;
+﻿using Microsoft.Xna.Framework;
+using MinecraftAlpha;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.Intrinsics.X86;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace MinecraftAlpha
 {
@@ -203,15 +205,18 @@ public class Generation
                 float Y = noise * 20f;
 
                 Vector2 placement = new Vector2(worldX + 0.2f, Y) + Vector2.One * 0.2f;
-                PlaceBlock(placement, z, 2);
+                //PlaceBlock(placement, z, 2);
+                Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y + 0.2f, z),2,"");
 
                 for (int j = 1; j < 5; j++)
                 {
-                    PlaceBlock(placement + new Vector2(0, j), z, 1);
+                    //PlaceBlock(placement + new Vector2(0, j), z, 1);
+                    Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y+j + 0.2f, z), 1, "");
                 }
-                for (int j = 5; j < 12; j++)
+                for (int j = 5; j < 52; j++)
                 {
-                    PlaceBlock(placement + new Vector2(0, j), z, 4);
+                    Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y + j + 0.2f, z), 4, "");
+                    //PlaceBlock(placement + new Vector2(0, j), z, 4);
                 }
 
                 

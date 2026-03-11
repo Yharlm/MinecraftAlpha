@@ -862,79 +862,85 @@ namespace MinecraftAlpha
         //{
 
         //}
-        //public void SetTile(TileGrid Tile, int ID, string Data)
-        //{
-        //    Tile.ID = ID;
-        //    Tile.Data = Data;
+        public void Change(TileGrid Tile)
+        {
+            var q = new Event()
+            { block};
 
-        //}
-        //public void SetTile(Vector3 pos, int ID, string Data)
-        //{
-        //    var e = GetTile(pos);
-        //    if (e != null)
-        //    {
-        //        e.ID = ID;
-        //        e.Data = Data;
-        //    }
-
-
-        //}
-
-        //public void SetTile(Vector3 pos, string block, string Data)
-        //{
-
-        //    var e = GetTile(pos);
-
-        //    if (e != null)
-        //    {
-        //        e.ID = GetBlockByName(block).ID;
-        //        e.Data = Data;
-        //    }
+        }
+        public void SetTile(TileGrid Tile, int ID, string Data)
+        {
+            Tile.ID = ID;
+            Tile.Data = Data;
+            Game._actionManager.QueChange(Tile);
+        }
+        public void SetTile(Vector3 pos, int ID, string Data)
+        {
+            var e = GetTile(pos);
+            if (e != null)
+            {
+                e.ID = ID;
+                e.Data = Data;
+            }
 
 
+        }
 
-        //}
-        //public TileGrid SetTile(TileGrid Tile, TileGrid other)
-        //{
-        //    Tile = other;
-        //    return Tile;
-        //}
-        //public TileGrid SetTile(TileGrid Tile, TileGrid other, int DeepCopy)
-        //{
-        //    Tile.state = other.state;
-        //    Tile.ID = other.ID;
-        //    Tile.brightness = other.brightness;
-        //    Tile.LightSource = other.LightSource;
-        //    Tile.MinedHealth = other.MinedHealth;
-        //    Tile.Data = other.Data;
-        //    Tile.MarkedForUpdate = other.MarkedForUpdate;
-        //    Tile.updateLight = other.updateLight;
-        //    Tile.SkyLight = other.SkyLight;
-        //    return Tile;
-        //}
-        //public TileGrid SetTile(TileGrid Tile, string block)
-        //{
-        //    Tile.ID = GetBlockByName(block).ID;
-        //    Tile.Data = "";
-        //    return Tile;
-        //}
-        //public TileGrid SetTile(TileGrid Tile, string block, string Data)
-        //{
-        //    Tile.ID = GetBlockByName(block).ID;
-        //    Tile.Data = Data;
-        //    //Tile.MarkedForUpdate = true;
-        //    return Tile;
-        //}
-        //public void SetTile(TileGrid Tile, Block block)
-        //{
-        //    Tile.ID = block.ID;
-        //    Tile.Data = "";
-        //}
-        //public void SetTile(TileGrid Tile, Block block, string Data)
-        //{
-        //    Tile.ID = block.ID;
-        //    Tile.Data = Data;
-        //}
+        public void SetTile(Vector3 pos, string block, string Data)
+        {
+
+            var e = GetTile(pos);
+
+            if (e != null)
+            {
+                e.ID = GetBlockByName(block).ID;
+                e.Data = Data;
+            }
+
+
+
+        }
+        public TileGrid SetTile(TileGrid Tile, TileGrid other)
+        {
+            Tile = other;
+            return Tile;
+        }
+        public TileGrid SetTile(TileGrid Tile, TileGrid other, int DeepCopy)
+        {
+            Tile.state = other.state;
+            Tile.ID = other.ID;
+            Tile.brightness = other.brightness;
+            Tile.LightSource = other.LightSource;
+            Tile.MinedHealth = other.MinedHealth;
+            Tile.Data = other.Data;
+            Tile.MarkedForUpdate = other.MarkedForUpdate;
+            Tile.updateLight = other.updateLight;
+            Tile.SkyLight = other.SkyLight;
+            return Tile;
+        }
+        public TileGrid SetTile(TileGrid Tile, string block)
+        {
+            Tile.ID = GetBlockByName(block).ID;
+            Tile.Data = "";
+            return Tile;
+        }
+        public TileGrid SetTile(TileGrid Tile, string block, string Data)
+        {
+            Tile.ID = GetBlockByName(block).ID;
+            Tile.Data = Data;
+            //Tile.MarkedForUpdate = true;
+            return Tile;
+        }
+        public void SetTile(TileGrid Tile, Block block)
+        {
+            Tile.ID = block.ID;
+            Tile.Data = "";
+        }
+        public void SetTile(TileGrid Tile, Block block, string Data)
+        {
+            Tile.ID = block.ID;
+            Tile.Data = Data;
+        }
     }
 
     public class TileGrid

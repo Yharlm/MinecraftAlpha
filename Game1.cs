@@ -694,7 +694,7 @@ public class Game1 : Game
 
 
         //TimeSinceStart = 0;
-        int Render_Distance = 2;
+        float Render_Distance = 1.5f;
 
         Loaded = new List<Chunk>();
 
@@ -702,7 +702,7 @@ public class Game1 : Game
         {
             var chunk = Chunks[i];
 
-            if (float.Abs(chunk.x - Player.Plr.position.X/32) <= Render_Distance)
+            if (float.Abs(chunk.x - Player.Plr.position.X/32) <= Render_Distance && float.Abs(chunk.y - Player.Plr.position.Y / 32) <= 1.5f)
             {
                 Loaded.Add(chunk);
             }
@@ -1378,7 +1378,7 @@ public class Game1 : Game
         var Render = new TileGrid[chunk.Tiles.GetLength(0)];
         TileGrid[,,] tileGrids = chunk.Tiles;
 
-        for (int Z = tileGrids.GetLength(0) * 0 + (int)Player.Plr.Layer; Z >= 0; Z--)
+        for (int Z = (int)Player.Plr.Layer; Z >= 0; Z--)
         {
 
             var tile = tileGrids[Z, y, x];
