@@ -771,10 +771,22 @@ namespace MinecraftAlpha
             return Tile;
         }
 
-        ////public Chunk GetChunk(TileGrid Tile)
-        ////{
+        public Chunk GetChunk(TileGrid Tile)
+        {
+            int ChunkX = (int)Math.Ceiling((Tile.pos.X / 32));
+            int ChunkY = (int)Math.Ceiling((Tile.pos.Y / 32));
+            foreach (Chunk C in Game.Chunks)
+            {
+                if (C.x == ChunkX && C.y == ChunkY)
+                {
+                    return C;
 
-        ////}
+
+                }
+
+            }
+            return null; //make exception to make chunk instead.
+        }
         public bool GetChunk(Vector2 pos,int non) //World Pos
         {
             int ChunkX = (int)Math.Ceiling((pos.X / 32));
@@ -865,14 +877,19 @@ namespace MinecraftAlpha
         public void Change(TileGrid Tile)
         {
             var q = new Event()
-            { block};
+
+            {
+                tile = Tile,
+                
+            };
+            Game._actionManager.QueChange(q);
 
         }
         public void SetTile(TileGrid Tile, int ID, string Data)
         {
             Tile.ID = ID;
             Tile.Data = Data;
-            Game._actionManager.QueChange(Tile);
+            Change(Tile);
         }
         public void SetTile(Vector3 pos, int ID, string Data)
         {
@@ -882,7 +899,7 @@ namespace MinecraftAlpha
                 e.ID = ID;
                 e.Data = Data;
             }
-
+            Change(e);
 
         }
 
@@ -896,13 +913,14 @@ namespace MinecraftAlpha
                 e.ID = GetBlockByName(block).ID;
                 e.Data = Data;
             }
-
+            Change(e);
 
 
         }
         public TileGrid SetTile(TileGrid Tile, TileGrid other)
         {
             Tile = other;
+            Change(Tile);
             return Tile;
         }
         public TileGrid SetTile(TileGrid Tile, TileGrid other, int DeepCopy)
@@ -916,19 +934,22 @@ namespace MinecraftAlpha
             Tile.MarkedForUpdate = other.MarkedForUpdate;
             Tile.updateLight = other.updateLight;
             Tile.SkyLight = other.SkyLight;
+            Change(Tile);
             return Tile;
+
         }
         public TileGrid SetTile(TileGrid Tile, string block)
         {
             Tile.ID = GetBlockByName(block).ID;
             Tile.Data = "";
+            Change(Tile);
             return Tile;
         }
         public TileGrid SetTile(TileGrid Tile, string block, string Data)
         {
             Tile.ID = GetBlockByName(block).ID;
             Tile.Data = Data;
-            //Tile.MarkedForUpdate = true;
+            Change(Tile);
             return Tile;
         }
         public void SetTile(TileGrid Tile, Block block)

@@ -308,7 +308,7 @@ namespace MinecraftAlpha
         {
             foreach (var entity in Entities)
             {
-
+                if (entity.ID == -1) continue; // ItemDrop
                 if (LogicsClass.IsInBounds(Pos, entity.position, entity.collisionBox.Size))
                 {
                     return entity;

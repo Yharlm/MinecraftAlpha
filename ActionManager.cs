@@ -11,6 +11,8 @@ namespace MinecraftAlpha
     {
         public Block block;
         public TileGrid tile;
+        public Chunk chunk;
+
         public string Data;
 
         
@@ -354,7 +356,7 @@ namespace MinecraftAlpha
 
                 Tile.MinedHealth = 0;
 
-                Tile.ID = 0;
+                Game._blockManager.SetTile(Tile, "Air");
                 Entity drop = null;
                 if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop, 1);
                 else drop = Game._entityManager.SpawnItem(pos, Zindex, block, 1);
