@@ -336,8 +336,8 @@ public class Game1 : Game
 
     }
 
-    
-    public void LightingOnChange()
+
+    public async void LightingOnChange()
     {
         var Changes = _actionManager.EventQueue;
         var chunksAffected = new List<Chunk>();
@@ -365,7 +365,7 @@ public class Game1 : Game
         foreach (var c in chunksAffected)
         {
             //For the skylight Find a way to get talles chunk at X
-            
+
 
 
 
@@ -374,83 +374,152 @@ public class Game1 : Game
         }
         if (chunksAffected.Count > 0)
         {
-            for (int c = 0; c < Chunks.Count; c++)
+            bool Realistic = true;
+
             {
-                var L = Chunks[c];
-
-
-
-
-                if (L != null)
+                for (int c = 0; c < Chunks.Count; c++)
                 {
+                    var L = Chunks[c];
 
 
-                    for (int z = 0; z < L.Tiles.GetLength(0); z++)
+
+
+                    if (L != null)
                     {
 
-                        for (int j = 0; j < L.Tiles.GetLength(2); j++)
+
+                        for (int z = 0; z < L.Tiles.GetLength(0); z++)
                         {
 
-                            for (int i = 0; i < L.Tiles.GetLength(1); i++)
-                            {
-
-                                //float B = 0;
-                                var tile = L.Tiles[z, i, j];
-
-                                if (tile.ID == 0) continue;
-                                var block = _blockManager.GetBlockAtTile(tile);
-                                if (block == null) continue;
-                                if (block.Light_Emission > 0)
-                                {
-                                    Lights.Add(new Vector4(tile.pos.X, tile.pos.Y, tile.pos.Z, block.Light_Emission));
-                                }
-
-
-                            }
-
-                        }
-                    }
-                }
-            }
-            for (int c = 0; c < Chunks.Count; c++)
-            {
-                var L = Chunks[c];
-                if (L != null)
-                {
-
-                    for (int z = 0; z < L.Tiles.GetLength(0); z++)
-                    {
-                        for (int i = 0; i < L.Tiles.GetLength(1); i++)
-                        {
                             for (int j = 0; j < L.Tiles.GetLength(2); j++)
                             {
-                                var tile = L.Tiles[z, i, j];
-                                float B = 0;
 
-                                for (int e = 0; e < Lights.Count; e++)
+                                for (int i = 0; i < L.Tiles.GetLength(1); i++)
                                 {
-                                    var light = Lights[e];
-                                    float emision = float.Ceiling(light.W);
-                                    float dist = Vector3.Distance(new Vector3(light.X, light.Y, light.Z), tile.pos);
-                                    if (dist < emision)
-                                        B += 1 - dist / emision;
+
+                                    //float B = 0;
+                                    var tile = L.Tiles[z, i, j];
+
+                                    if (tile.ID == 0) continue;
+                                    var block = _blockManager.GetBlockAtTile(tile);
+                                    if (block == null) continue;
+                                    tile.brightness = 0;
+                                    if (block.Light_Emission > 0)
+                                    {
+                                        Lights.Add(new Vector4(tile.pos.X, tile.pos.Y, tile.pos.Z, block.Light_Emission));
+                                    }
+
+
                                 }
-                                tile.brightness = B;
+
                             }
                         }
                     }
                 }
+
+                if (!Realistic)
+                {
+                    for (int c = 0; c < Chunks.Count; c++)
+                    {
+                        var L = Chunks[c];
+                        if (L != null)
+                        {
+
+                            for (int z = 0; z < L.Tiles.GetLength(0); z++)
+                            {
+                                for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                                {
+                                    for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                                    {
+                                        var tile = L.Tiles[z, i, j];
+                                        float B = 0;
+
+                                        for (int e = 0; e < Lights.Count; e++)
+                                        {
+                                            var light = Lights[e];
+                                            float emision = float.Ceiling(light.W);
+                                            float dist = Vector3.Distance(new Vector3(light.X, light.Y, light.Z), tile.pos);
+                                            if (dist < emision)
+                                                B += 1 - dist / emision;
+                                        }
+                                        tile.brightness = B;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var l in Lights)
+                    {
+                        //Get point
+
+                        int Range = (int)l.W;
+                        Vector3 pos = new Vector3(l.X, l.Y, l.Z);
+
+
+                        //Spread to Closes air blocks
+                        SuroundingLight(pos, 6);
+
+
+
+
+
+                        //_blockManager.GetTile(pos);
+
+
+                        //Light up blocks near air
+                        //spread light from air -1
+                    }
+
+                }
+
+
+
             }
+
         }
-        
 
     }
+    public void SuroundingLight(Vector3 pos, int a)
+    {
+
+
+
+        if (a <= 0) return;
+
+        var n = LogicsClass.SidesPos(pos, this);
+        foreach (var side in n)
+        {
+            if (side == null) continue;
+            float B = side.brightness;
+            B = float.Max((float)a / 6, B);
+
+            side.brightness = B;
+
+            SuroundingLight(side.pos, a - 1);
+
+
+
+
+        }
+
+
+
+
+
+
+    }
+
+
+
     public void Lighting()
     {
 
         List<Vector4> Lights = new List<Vector4>();
 
-        
+
 
 
         while (false)

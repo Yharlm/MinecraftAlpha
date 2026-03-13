@@ -138,11 +138,11 @@ namespace MinecraftAlpha
                 return;
             }
 
-            
 
 
 
 
+            if (Tile == null) return ;
             if (Tile.ID != 0)
             {
 
