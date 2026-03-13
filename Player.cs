@@ -272,6 +272,12 @@ namespace MinecraftAlpha
                         }
                         game.Player.Plr.Speed = speed/10;
                         return;
+                    case"RULE":
+                        if (Parts.Length == 2)
+                        {
+
+                        }
+                            return;
                     default:
                         Chat("*Error invalid command!");
                         return;
@@ -312,14 +318,37 @@ namespace MinecraftAlpha
             {
                 //Autocomplete
                 string item = Command.Split(' ').Last();
-                var block = game._blockManager.Blocks.Find(x => x.Name.ToUpper().StartsWith(item));
-                if (block == null)
+                string start = Command.Split(' ').First();
+
+                string text = "";
+                if (start == "/SPAWN")
                 {
-                    return;
+                    var ent = game._entityManager.entities.Find(x => x.name.ToUpper().StartsWith(item));
+                    if (ent == null)
+                    {
+                        return;
+                    }
+                    text = ent.name.ToUpper().Replace(' ', '_');
+                }
+                if (start == "/GIVE")
+                {
+                    var block = game._blockManager.Blocks.Find(x => x.Name.ToUpper().StartsWith(item));
+                    if (block == null)
+                    {
+                        return;
+                    }
+                    text = block.Name.ToUpper().Replace(' ', '_');
+                }
+                if (start == "/RULE")
+                {
+
                 }
 
 
-                Command = Command.Substring(0, Command.Length - item.Length) + block.Name.ToUpper().Replace(' ','_') ;
+                
+
+
+                Command = Command.Substring(0, Command.Length - item.Length) + text ;
 
                 
 

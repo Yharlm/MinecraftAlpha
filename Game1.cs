@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -19,6 +19,7 @@ public class Game1 : Game
 
     //Game Rules
     public bool KeepInventory = false;
+    public bool RealisticLighting = true;
     public float Daytime = 0f;
     public bool DebugMode = false;
     public bool GameStarted = false;
@@ -337,7 +338,7 @@ public class Game1 : Game
     }
 
 
-    public async void LightingOnChange()
+    public void LightingOnChange()
     {
         var Changes = _actionManager.EventQueue;
         var chunksAffected = new List<Chunk>();
@@ -376,135 +377,185 @@ public class Game1 : Game
         {
             bool Realistic = true;
 
+
+            foreach (var c in Loaded)
+            {
+
+                
+            }
+
+
+
+
+
+
+
+            for (int c = 0; c < Chunks.Count; c++)
+            {
+                var L = Chunks[c];
+
+
+
+
+                if (L != null)
+                {
+
+
+                    for (int z = 0; z < L.Tiles.GetLength(0); z++)
+                    {
+
+                        for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                        {
+
+                            for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                            {
+
+                                //float B = 0;
+                                var tile = L.Tiles[z, i, j];
+
+                                if (tile.ID == 0) continue;
+                                var block = _blockManager.GetBlockAtTile(tile);
+                                if (block == null) continue;
+                                tile.brightness = 0;
+                                if (block.Light_Emission > 0)
+                                {
+                                    Lights.Add(new Vector4(tile.pos.X, tile.pos.Y, tile.pos.Z, block.Light_Emission));
+                                }
+
+
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            if (!Realistic)
             {
                 for (int c = 0; c < Chunks.Count; c++)
                 {
                     var L = Chunks[c];
-
-
-
-
                     if (L != null)
                     {
 
-
                         for (int z = 0; z < L.Tiles.GetLength(0); z++)
                         {
-
-                            for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                            for (int i = 0; i < L.Tiles.GetLength(1); i++)
                             {
-
-                                for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                                for (int j = 0; j < L.Tiles.GetLength(2); j++)
                                 {
-
-                                    //float B = 0;
                                     var tile = L.Tiles[z, i, j];
+                                    float B = 0;
 
-                                    if (tile.ID == 0) continue;
-                                    var block = _blockManager.GetBlockAtTile(tile);
-                                    if (block == null) continue;
-                                    tile.brightness = 0;
-                                    if (block.Light_Emission > 0)
+                                    for (int e = 0; e < Lights.Count; e++)
                                     {
-                                        Lights.Add(new Vector4(tile.pos.X, tile.pos.Y, tile.pos.Z, block.Light_Emission));
+                                        var light = Lights[e];
+                                        float emision = float.Ceiling(light.W);
+                                        float dist = Vector3.Distance(new Vector3(light.X, light.Y, light.Z), tile.pos);
+                                        if (dist < emision)
+                                            B += 1 - dist / emision;
                                     }
-
-
-                                }
-
-                            }
-                        }
-                    }
-                }
-
-                if (!Realistic)
-                {
-                    for (int c = 0; c < Chunks.Count; c++)
-                    {
-                        var L = Chunks[c];
-                        if (L != null)
-                        {
-
-                            for (int z = 0; z < L.Tiles.GetLength(0); z++)
-                            {
-                                for (int i = 0; i < L.Tiles.GetLength(1); i++)
-                                {
-                                    for (int j = 0; j < L.Tiles.GetLength(2); j++)
-                                    {
-                                        var tile = L.Tiles[z, i, j];
-                                        float B = 0;
-
-                                        for (int e = 0; e < Lights.Count; e++)
-                                        {
-                                            var light = Lights[e];
-                                            float emision = float.Ceiling(light.W);
-                                            float dist = Vector3.Distance(new Vector3(light.X, light.Y, light.Z), tile.pos);
-                                            if (dist < emision)
-                                                B += 1 - dist / emision;
-                                        }
-                                        tile.brightness = B;
-                                    }
+                                    tile.brightness = B;
                                 }
                             }
                         }
                     }
                 }
-                else
+            }
+            else
+            {
+                foreach (var l in Lights)
                 {
-                    foreach (var l in Lights)
-                    {
-                        //Get point
+                    //Get point
 
-                        int Range = (int)l.W;
-                        Vector3 pos = new Vector3(l.X, l.Y, l.Z);
+                    int Range = (int)l.W;
+                    Vector3 pos = new Vector3(l.X, l.Y, l.Z);
 
-
-                        //Spread to Closes air blocks
-                        SuroundingLight(pos, 6);
+                    int Checks = 0;
+                    //Spread to Closes air blocks
+                    SuroundingLight(pos, 6);
 
 
 
+                    c = 0;
+
+                    //_blockManager.GetTile(pos);
 
 
-                        //_blockManager.GetTile(pos);
-
-
-                        //Light up blocks near air
-                        //spread light from air -1
-                    }
-
+                    //Light up blocks near air
+                    //spread light from air -1
                 }
-
-
 
             }
+
+
+
+
 
         }
 
     }
+    public int c = 0;
     public void SuroundingLight(Vector3 pos, int a)
     {
 
 
 
+        //if (a <= 0) return;
+
+        //var n = LogicsClass.SidesPos(pos, this);
+        //foreach (var side in n)
+        //{
+        //    if (side == null) continue;
+        //    float B = side.brightness;
+        //    B = float.Max((float)a / 6, B);
+        //    c++; // Counter for each block updated
+        //    side.brightness = B;
+
+        //    if (side.ID == 0)//light can only spread through air, not solid blocks
+        //    {
+        //        SuroundingLight(side.pos, a - 1);
+        //    }
+
+
+
+
+
+        //}
+
+        //Ai Claims it is better, reccursive gave a 20 k updates
         if (a <= 0) return;
 
-        var n = LogicsClass.SidesPos(pos, this);
-        foreach (var side in n)
+        Queue<(Vector3 pos, int light)> q = new();
+        q.Enqueue((pos, a));
+
+        while (q.Count > 0)
         {
-            if (side == null) continue;
-            float B = side.brightness;
-            B = float.Max((float)a / 6, B);
+            var (currentPos, light) = q.Dequeue();
+            if (light <= 0) continue;
 
-            side.brightness = B;
+            var neighbors = LogicsClass.SidesPos(currentPos, this);
+            foreach (var side in neighbors)
+            {
+                if (side == null) continue;
 
-            SuroundingLight(side.pos, a - 1);
+                // Calculate new brightness
+                float newBrightness = MathF.Max(light / 6f, side.brightness);
 
+                // Update brightness if improved
+                if (newBrightness > side.brightness)
+                {
+                    side.brightness = newBrightness;
+                    c++;
+                }
 
-
-
+                // Only AIR spreads light further
+                if (side.ID == 0 && light > 1)
+                {
+                    q.Enqueue((side.pos, light - 1));
+                }
+            }
         }
-
 
 
 
