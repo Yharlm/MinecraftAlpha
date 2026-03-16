@@ -696,10 +696,12 @@ namespace MinecraftAlpha
 
 
         //}
-        //public Vector2 TilePos(TileGrid Tile, Chunk chunk)
-        //{
-        //    return new Vector2(Tile.pos.X % 32, Tile.pos.Y % 32);
-        //}
+        public Vector2 TilePos(TileGrid Tile, Chunk chunk)
+        {
+            return new Vector2(Tile.pos.X % 32, Tile.pos.Y % 32);
+        }
+
+       
 
         ////object
         //public Block GetBlock(TileGrid tile)

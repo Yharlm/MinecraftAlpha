@@ -336,7 +336,7 @@ public class Game1 : Game
         //}
 
     }
-
+    
 
     public void LightingOnChange()
     {
@@ -349,6 +349,17 @@ public class Game1 : Game
             var tile = change.tile;
             tile.brightness = 0;
             var chunk = _blockManager.GetChunk(tile);
+            //Update Heightmap
+            Vector2 p = _blockManager.TilePos(tile,chunk);
+            int x = (int)p.X;
+            int z = (int)tile.pos.Z;
+            chunk.HeightMap[z,x] = (int)tile.pos.Y;
+
+
+
+
+
+
 
 
 
@@ -378,11 +389,7 @@ public class Game1 : Game
             bool Realistic = true;
 
 
-            foreach (var c in Loaded)
-            {
-
-                
-            }
+            
 
 
 
