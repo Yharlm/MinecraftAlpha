@@ -57,7 +57,10 @@ public class Game1 : Game
         new Chunk(0,2),
         new Chunk(-1,2),
     };
+    public List<HeightMap> HeightMaps = new();
+
     //Gameplay variables
+
 
     public List<Chunk> Loaded;
 
@@ -336,12 +339,13 @@ public class Game1 : Game
         //}
 
     }
-    
+
 
     public void LightingOnChange()
     {
         var Changes = _actionManager.EventQueue;
         var chunksAffected = new List<Chunk>();
+        List<Vector4> Lights = new List<Vector4>();
         for (int i = 0; i < Changes.Count; i++)
         {
             var change = Changes[i];
@@ -349,11 +353,20 @@ public class Game1 : Game
             var tile = change.tile;
             tile.brightness = 0;
             var chunk = _blockManager.GetChunk(tile);
-            //Update Heightmap
-            Vector2 p = _blockManager.TilePos(tile,chunk);
-            int x = (int)p.X;
+            if (chunk == null) continue;
+            //var Map = HeightMap.GetMap(HeightMaps, chunk.x);
+            ////Update Heightmap
+            //HeightMap.SetHeight(Map, tile);
+
+            int x = ((int)tile.pos.X) % 32;
+            int y = (int)tile.pos.Y;
             int z = (int)tile.pos.Z;
-            chunk.HeightMap[z,x] = (int)tile.pos.Y;
+
+            var m = HeightMap.GetMap(HeightMaps, chunk.x);
+
+            HeightMap.SetHeight(m, tile);
+            
+
 
 
 
@@ -373,11 +386,18 @@ public class Game1 : Game
 
 
         }
-        List<Vector4> Lights = new List<Vector4>();
+        
         foreach (var c in chunksAffected)
         {
-            //For the skylight Find a way to get talles chunk at X
-
+            var m = HeightMap.GetMap(HeightMaps, c.x);
+            for (int x = 0; x < 32; x++)
+            {
+                for (int z = 0; z < 10; z++)
+                {
+                    var y = m.Map[z, x];
+                    Lights.Add(new Vector4(x + c.x * 32, y, z + c.y * 32, 5));
+                }
+            }
 
 
 
@@ -387,9 +407,19 @@ public class Game1 : Game
         if (chunksAffected.Count > 0)
         {
             bool Realistic = true;
+            //foreach (var h in HeightMaps)
+            //{
+            //    for (int x = 0; x < 32; x++)
+            //    {
+            //        for (int z = 0; z < 10; z++)
+            //        {
+            //            var y = h.Map[z, x];
+            //            Lights.Add(new Vector4(x, y, z, 5));
+            //        }
+            //    }
+            //}
 
 
-            
 
 
 

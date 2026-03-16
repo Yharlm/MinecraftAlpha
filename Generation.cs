@@ -1,9 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using MinecraftAlpha;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Runtime.Intrinsics.X86;
+using MinecraftAlpha;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -83,6 +81,40 @@ namespace MinecraftAlpha
 
     }
 
+    public class HeightMap
+    {
+        public int x = 0;
+
+        public int[,] Map = new int[10, 32];
+        public static void SetHeight(HeightMap heightMap, TileGrid tile)
+        {
+            
+            int x = (int)tile.pos.X % 32;
+            int y = (int)tile.pos.Y;
+            int z = (int)tile.pos.Z;
+
+            int Y = heightMap.Map[z, x];
+            if(Y < y)
+            {
+                heightMap.Map[z, x] = y;
+            }
+            
+        }
+        
+        public static HeightMap GetMap(List<HeightMap> heightMap, int x)
+        {
+            HeightMap m= heightMap.Find(m => m.x == x);
+            if (m == null)
+            {
+                m = new() { x = x };
+                heightMap.Add(m);
+            }
+            return m;
+        }
+
+       
+    }
+
     public class Chunk
     {
 
@@ -91,7 +123,7 @@ namespace MinecraftAlpha
         public int y;
 
         public TileGrid[,,] Tiles = new TileGrid[10, 32, 32];
-        public int[,] HeightMap= new int[32, 32];
+
         public Chunk(int x, int y, TileGrid[,,] Grid)
         {
             this.x = x;
@@ -135,6 +167,7 @@ namespace MinecraftAlpha
     //    Vector2 chunkPos = new Vector2(x,y) * ChunkSize;
     //    if ()
     //}
+
 }
 
 
@@ -194,25 +227,25 @@ public class Generation
             for (int i = 0; i < 32; i++)
             {
                 float worldX = chunkX * 32 + i;
-                
+
                 float worldZ = z;
 
                 float noise = Perlin.Noise(worldX * scale, worldZ * scale);
-                float n = Perlin.Noise(worldX * scale/4, z * scale);
-                n += Perlin.Noise(worldX * scale*2, z * scale)*0.1f;
-                n += Perlin.Noise(worldX * scale*3, z * scale) * 0.2f;
+                float n = Perlin.Noise(worldX * scale / 4, z * scale);
+                n += Perlin.Noise(worldX * scale * 2, z * scale) * 0.1f;
+                n += Perlin.Noise(worldX * scale * 3, z * scale) * 0.2f;
                 noise += n;
 
                 float Y = noise * 20f;
 
                 Vector2 placement = new Vector2(worldX + 0.2f, Y) + Vector2.One * 0.2f;
                 //PlaceBlock(placement, z, 2);
-                Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y + 0.2f, z),2,"");
+                Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y + 0.2f, z), 2, "");
 
                 for (int j = 1; j < 5; j++)
                 {
                     //PlaceBlock(placement + new Vector2(0, j), z, 1);
-                    Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y+j + 0.2f, z), 1, "");
+                    Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y + j + 0.2f, z), 1, "");
                 }
                 for (int j = 5; j < 52; j++)
                 {
@@ -220,7 +253,7 @@ public class Generation
                     //PlaceBlock(placement + new Vector2(0, j), z, 4);
                 }
 
-                
+
 
 
 
@@ -230,7 +263,7 @@ public class Generation
 
 
 
-        
+
 
     }
 
@@ -239,9 +272,9 @@ public class Generation
         List<Chunk> chunks = Game.Chunks;
         //TileGrid Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
         var chunk = Game._blockManager.GetChunk(pos);
-        TileGrid Tile = Game._blockManager.GetTile(new(pos.X,pos.Y,z));
-        
-       
+        TileGrid Tile = Game._blockManager.GetTile(new(pos.X, pos.Y, z));
+
+
 
         //if (Tile == null)
         //{
@@ -442,4 +475,5 @@ public class Generation
     }
 
 }
+
 

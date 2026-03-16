@@ -701,7 +701,7 @@ namespace MinecraftAlpha
             return new Vector2(Tile.pos.X % 32, Tile.pos.Y % 32);
         }
 
-       
+        
 
         ////object
         //public Block GetBlock(TileGrid tile)
