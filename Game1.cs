@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -359,12 +359,21 @@ public class Game1 : Game
             //HeightMap.SetHeight(Map, tile);
 
             int x = ((int)tile.pos.X) % 32;
-            int y = (int)tile.pos.Y;
+            
             int z = (int)tile.pos.Z;
 
             var m = HeightMap.GetMap(HeightMaps, chunk.x);
 
             HeightMap.SetHeight(m, tile);
+
+            //checks and sht here
+
+            if (Changes.Count < 5)
+            {
+                var h = m.Map[z, x];
+                Lights.Add(new Vector4(tile.pos.X, h, z, 2));
+            }
+
             
 
 
@@ -386,27 +395,31 @@ public class Game1 : Game
 
 
         }
-        
+
         foreach (var c in chunksAffected)
         {
-            var m = HeightMap.GetMap(HeightMaps, c.x);
-            for (int x = 0; x < 32; x++)
-            {
-                for (int z = 0; z < 10; z++)
-                {
-                    var y = m.Map[z, x];
-                    Lights.Add(new Vector4(x + c.x * 32, y, z + c.y * 32, 5));
-                }
-            }
+            //if (chunksAffected.Count > 10)
+            //{
+            //    var m = HeightMap.GetMap(HeightMaps, c.x);
+            //    for (int x = 0; x < 32; x += 2)
+            //    {
+            //        for (int z = 0; z < 10; z += 2)
+            //        {
+            //            var y = m.Map[z, x];
+                        
+            //        }
+            //    }
 
 
+            //    int a = 3;
+            //}
 
 
 
         }
         if (chunksAffected.Count > 0)
         {
-            bool Realistic = true;
+            bool Realistic = false;
             //foreach (var h in HeightMaps)
             //{
             //    for (int x = 0; x < 32; x++)
@@ -530,7 +543,7 @@ public class Game1 : Game
 
 
         }
-
+        Changes.Clear();
     }
     public int c = 0;
     public void SuroundingLight(Vector3 pos, int a)

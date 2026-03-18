@@ -94,11 +94,12 @@ namespace MinecraftAlpha
             int z = (int)tile.pos.Z;
 
             int Y = heightMap.Map[z, x];
-            if(Y < y)
-            {
-                heightMap.Map[z, x] = y;
-            }
             
+            
+                heightMap.Map[z, x] = y;
+            
+            
+
         }
         
         public static HeightMap GetMap(List<HeightMap> heightMap, int x)
@@ -253,7 +254,7 @@ public class Generation
                     //PlaceBlock(placement + new Vector2(0, j), z, 4);
                 }
 
-
+                HeightMap.SetHeight(HeightMap.GetMap(Game.HeightMaps, chunkX), Game._blockManager.GetTile(new Vector3(placement, z)));
 
 
 
