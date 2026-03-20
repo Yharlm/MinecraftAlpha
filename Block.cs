@@ -878,6 +878,7 @@ namespace MinecraftAlpha
         //}
         public void Change(TileGrid Tile)
         {
+            
             var q = new Event()
 
             {
@@ -900,6 +901,7 @@ namespace MinecraftAlpha
             {
                 e.ID = ID;
                 e.Data = Data;
+                //e.brightness = 0;
             }
             Change(e);
 

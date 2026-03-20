@@ -351,7 +351,7 @@ public class Game1 : Game
             var change = Changes[i];
 
             var tile = change.tile;
-            tile.brightness = 0;
+            //tile.brightness = 0;
             var chunk = _blockManager.GetChunk(tile);
             if (chunk == null) continue;
             //var Map = HeightMap.GetMap(HeightMaps, chunk.x);
@@ -368,11 +368,11 @@ public class Game1 : Game
 
             //checks and sht here
 
-            if (Changes.Count < 5)
-            {
-                var h = m.Map[z, x];
-                Lights.Add(new Vector4(tile.pos.X, h, z, 2));
-            }
+            //if (Changes.Count < 5)
+            //{
+            //    var h = m.Map[z, x];
+            //    Lights.Add(new Vector4(tile.pos.X, h, z, 2));
+            //}
 
             
 
@@ -405,15 +405,27 @@ public class Game1 : Game
             //    {
             //        for (int z = 0; z < 10; z += 2)
             //        {
+            //            int X = (c.x * 32 + x);
+
             //            var y = m.Map[z, x];
-                        
+            //            Lights.Add(new Vector4(X, y, z, 2));
             //        }
             //    }
 
 
             //    int a = 3;
             //}
+            //var m = HeightMap.GetMap(HeightMaps, c.x);
+            //for (int x = 0; x < 32; x += 2)
+            //{
+            //    for (int z = 0; z < 10; z += 2)
+            //    {
+            //        int X = (c.x * 32 + x);
 
+            //        var y = m.Map[z, x];
+            //        Lights.Add(new Vector4(X, y, z, 2));
+            //    }
+            //}
 
 
         }
@@ -466,7 +478,7 @@ public class Game1 : Game
                                 if (tile.ID == 0) continue;
                                 var block = _blockManager.GetBlockAtTile(tile);
                                 if (block == null) continue;
-                                tile.brightness = 0;
+                                //tile.brightness = 0;
                                 if (block.Light_Emission > 0)
                                 {
                                     Lights.Add(new Vector4(tile.pos.X, tile.pos.Y, tile.pos.Z, block.Light_Emission));
@@ -505,7 +517,7 @@ public class Game1 : Game
                                         if (dist < emision)
                                             B += 1 - dist / emision;
                                     }
-                                    tile.brightness = B;
+                                    tile.brightness += B;
                                 }
                             }
                         }
@@ -1266,7 +1278,21 @@ public class Game1 : Game
             if (_inputManager.IsKeyDown_Now(Keys.R))
             {
                 //_actionManager.DeleteBlocksSphere(WorldMousePos, Player.Plr.Layer, 4);
-                _actionManager.Explosion(new Vector3(WorldMousePos.X, WorldMousePos.Y, PLR.Layer), 5, true);
+                //_actionManager.Explosion(new Vector3(WorldMousePos.X, WorldMousePos.Y, PLR.Layer), 5, true);
+
+                foreach(var h in HeightMaps)
+                {
+                    for (var z = 0; z < h.Map.GetLength(0); z++)
+                    {
+                        for (var x = 0; x < h.Map.GetLength(1);x++)
+                        {
+                            int y= h.Map[z, x];
+
+                            _blockManager.GetTile(new Vector3((x + h.x*32), y, z)).brightness = 1;
+                        }
+                    }
+                }
+
             }
             if (key == Keys.NumPad1)
             {

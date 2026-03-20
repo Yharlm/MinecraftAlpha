@@ -93,10 +93,8 @@ namespace MinecraftAlpha
             int y = (int)tile.pos.Y;
             int z = (int)tile.pos.Z;
 
-            int Y = heightMap.Map[z, x];
-            
-            
-                heightMap.Map[z, x] = y;
+           
+            heightMap.Map[z, x] = y;
             
             
 
@@ -145,13 +143,14 @@ namespace MinecraftAlpha
                         Vector3 pos = new Vector3(j, i, z);
 
                         pos.X += (this.x - 1) * 32;
-                        pos.Y += (this.y - 1) * 32;
+                        pos.Y += (this.y - 1) * 32; 
 
 
 
 
                         Tiles[z, i, j] = new TileGrid()
                         {
+                            brightness = 0,
                             ID = 0,
                             pos = new Vector3(pos.X, pos.Y, pos.Z),
                         };
@@ -254,7 +253,7 @@ public class Generation
                     //PlaceBlock(placement + new Vector2(0, j), z, 4);
                 }
 
-                HeightMap.SetHeight(HeightMap.GetMap(Game.HeightMaps, chunkX), Game._blockManager.GetTile(new Vector3(placement, z)));
+                HeightMap.SetHeight(HeightMap.GetMap(Game.HeightMaps, chunkX), Game._blockManager.GetTile(new Vector3(worldX + 0.2f, Y + 0.2f, z)));
 
 
 
