@@ -252,8 +252,8 @@ public class Generation
                     Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y + j + 0.2f, z), 4, "");
                     //PlaceBlock(placement + new Vector2(0, j), z, 4);
                 }
+                HeightMap.SetHeight(HeightMap.GetMap(Game.HeightMaps, chunkX), Game._blockManager.GetTile(new Vector3(worldX + 0.2f, Y, z)));
 
-                HeightMap.SetHeight(HeightMap.GetMap(Game.HeightMaps, chunkX), Game._blockManager.GetTile(new Vector3(worldX + 0.2f, Y + 0.2f, z)));
 
 
 

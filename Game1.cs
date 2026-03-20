@@ -340,7 +340,22 @@ public class Game1 : Game
 
     }
 
-
+    public void UpdateChunkLight()
+    {
+        foreach (var h in HeightMaps)
+        {
+            for (var z = 0; z < h.Map.GetLength(0); z++)
+            {
+                for (var x = 0; x < h.Map.GetLength(1); x++)
+                {
+                    int y = h.Map[z, x];
+                    //_blockManager.SetTile(new Vector3((x + 0.3f + h.x * 32), y, z),"Chest","");
+                    _blockManager.GetTile(new Vector3((x + 0.3f + h.x * 32), y + 0.2f, z)).brightness = 1;
+                    _blockManager.GetTile(new Vector3((x + 0.3f + h.x * 32), y + 1.2f, z)).brightness = 0.5f;
+                }
+            }
+        }
+    }
     public void LightingOnChange()
     {
         var Changes = _actionManager.EventQueue;
@@ -364,17 +379,17 @@ public class Game1 : Game
 
             var m = HeightMap.GetMap(HeightMaps, chunk.x);
 
-            HeightMap.SetHeight(m, tile);
+            //HeightMap.SetHeight(m, tile);
 
             //checks and sht here
 
-            //if (Changes.Count < 5)
-            //{
-            //    var h = m.Map[z, x];
-            //    Lights.Add(new Vector4(tile.pos.X, h, z, 2));
-            //}
+            if (Changes.Count < 5)
+            {
+                var h = m.Map[z, x];
+                HeightMap.SetHeight(m, tile);
+            }
 
-            
+
 
 
 
@@ -400,33 +415,19 @@ public class Game1 : Game
         {
             //if (chunksAffected.Count > 10)
             //{
-            //    var m = HeightMap.GetMap(HeightMaps, c.x);
-            //    for (int x = 0; x < 32; x += 2)
-            //    {
-            //        for (int z = 0; z < 10; z += 2)
-            //        {
-            //            int X = (c.x * 32 + x);
-
-            //            var y = m.Map[z, x];
-            //            Lights.Add(new Vector4(X, y, z, 2));
-            //        }
-            //    }
-
-
-            //    int a = 3;
-            //}
-            //var m = HeightMap.GetMap(HeightMaps, c.x);
-            //for (int x = 0; x < 32; x += 2)
+            //var h = HeightMap.GetMap(HeightMaps, c.x);
+            //for (var z = 0; z < h.Map.GetLength(0); z++)
             //{
-            //    for (int z = 0; z < 10; z += 2)
+            //    for (var x = 0; x < h.Map.GetLength(1); x++)
             //    {
-            //        int X = (c.x * 32 + x);
-
-            //        var y = m.Map[z, x];
-            //        Lights.Add(new Vector4(X, y, z, 2));
+            //        int y = h.Map[z, x];
+            //        //_blockManager.SetTile(new Vector3((x + 0.3f + h.x * 32), y, z),"Chest","");
+            //        _blockManager.GetTile(new Vector3((x + 0.3f + h.x * 32), y + 0.2f, z)).brightness = 1;
+            //        _blockManager.GetTile(new Vector3((x + 0.3f + h.x * 32), y + 1.2f, z)).brightness = 0.5f;
             //    }
             //}
-
+            //}
+            UpdateChunkLight();
 
         }
         if (chunksAffected.Count > 0)
@@ -1279,19 +1280,8 @@ public class Game1 : Game
             {
                 //_actionManager.DeleteBlocksSphere(WorldMousePos, Player.Plr.Layer, 4);
                 //_actionManager.Explosion(new Vector3(WorldMousePos.X, WorldMousePos.Y, PLR.Layer), 5, true);
+                UpdateChunkLight();
 
-                foreach(var h in HeightMaps)
-                {
-                    for (var z = 0; z < h.Map.GetLength(0); z++)
-                    {
-                        for (var x = 0; x < h.Map.GetLength(1);x++)
-                        {
-                            int y= h.Map[z, x];
-
-                            _blockManager.GetTile(new Vector3((x + h.x*32), y, z)).brightness = 1;
-                        }
-                    }
-                }
 
             }
             if (key == Keys.NumPad1)
@@ -1577,6 +1567,7 @@ public class Game1 : Game
             //InventoryOpen = !InventoryOpen;
             //Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
             Chunks.Clear();
+            HeightMaps.Clear();
             //_entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[1], WorldMousePos));
 
         }
