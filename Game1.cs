@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -340,7 +340,7 @@ public class Game1 : Game
 
     }
 
-    public void UpdateChunkLight()
+    public void UpdateChunkLight(List<Vector4> L)
     {
         foreach (var h in HeightMaps)
         {
@@ -352,9 +352,26 @@ public class Game1 : Game
                     //_blockManager.SetTile(new Vector3((x + 0.3f + h.x * 32), y, z),"Chest","");
                     _blockManager.GetTile(new Vector3((x + 0.3f + h.x * 32), y + 0.2f, z)).brightness = 1;
                     _blockManager.GetTile(new Vector3((x + 0.3f + h.x * 32), y + 1.2f, z)).brightness = 0.5f;
+                    L.Add()
                 }
             }
         }
+    }
+    public void RollLight(int x, int z, Chunk c)
+    {
+        bool found = false;
+        for (int y = 0; y < 32; y++)
+        {
+            var tile = c.Tiles[z,y,x];
+            if (tile == null) continue;
+            if (tile.ID != 0 && !found)
+            {
+                found = true;
+                tile.brightness =1; continue;
+            }
+            tile.brightness = 0;
+        }
+        
     }
     public void LightingOnChange()
     {
@@ -373,8 +390,8 @@ public class Game1 : Game
             ////Update Heightmap
             //HeightMap.SetHeight(Map, tile);
 
-            int x = ((int)tile.pos.X) % 32;
-            
+            int x = (int)(tile.pos.X+0.3f) % 32;
+
             int z = (int)tile.pos.Z;
 
             var m = HeightMap.GetMap(HeightMaps, chunk.x);
@@ -385,8 +402,9 @@ public class Game1 : Game
 
             if (Changes.Count < 5)
             {
-                var h = m.Map[z, x];
+                //var h = m.Map[z, x];
                 HeightMap.SetHeight(m, tile);
+                RollLight(x, z, chunk);
             }
 
 
