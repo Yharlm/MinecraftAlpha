@@ -352,7 +352,7 @@ public class Game1 : Game
                     //_blockManager.SetTile(new Vector3((x + 0.3f + h.x * 32), y, z),"Chest","");
                     _blockManager.GetTile(new Vector3((x + 0.3f + h.x * 32), y + 0.2f, z)).brightness = 1;
                     _blockManager.GetTile(new Vector3((x + 0.3f + h.x * 32), y + 1.2f, z)).brightness = 0.5f;
-                    L.Add()
+                    //L.Add(new Vector4(x + 0.3f + h.x * 32, y + 0.2f, z, 1));
                 }
             }
         }
@@ -445,7 +445,7 @@ public class Game1 : Game
             //    }
             //}
             //}
-            UpdateChunkLight();
+            UpdateChunkLight(Lights);
 
         }
         if (chunksAffected.Count > 0)
@@ -471,9 +471,9 @@ public class Game1 : Game
 
 
 
-            for (int c = 0; c < Chunks.Count; c++)
+            for (int c = 0; c < chunksAffected.Count; c++)
             {
-                var L = Chunks[c];
+                var L = chunksAffected[c];
 
 
 
@@ -1298,7 +1298,7 @@ public class Game1 : Game
             {
                 //_actionManager.DeleteBlocksSphere(WorldMousePos, Player.Plr.Layer, 4);
                 //_actionManager.Explosion(new Vector3(WorldMousePos.X, WorldMousePos.Y, PLR.Layer), 5, true);
-                UpdateChunkLight();
+                //UpdateChunkLight();
 
 
             }
