@@ -46,6 +46,7 @@ namespace MinecraftAlpha
         public int id;
         public Vector2 position = new Vector2(0, 0);
         public TileGrid[,] BluePrint;
+        public TileGrid[,,] Grid3D;
 
         static public TileGrid[,] GetBluePrint(int[,] structure)
         {
@@ -150,7 +151,7 @@ namespace MinecraftAlpha
 
                         Tiles[z, i, j] = new TileGrid()
                         {
-                            brightness = 0,
+                            //brightness = 0,
                             ID = 0,
                             pos = new Vector3(pos.X, pos.Y, pos.Z),
                         };

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MinecraftAlpha
 {
@@ -24,14 +26,15 @@ namespace MinecraftAlpha
 
         }
         
+        
         public static void SaveStructure(Structure content)
         {
             //Turn structure to string
+            var e = JsonSerializer.Serialize(content,new JsonSerializerOptions() { IncludeFields = true});
 
-
-
+            
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Structures.json");
-            File.WriteAllText(filePath, "E");
+            File.WriteAllText(filePath, e);
         }
     }
 }

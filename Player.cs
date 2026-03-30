@@ -247,20 +247,50 @@ namespace MinecraftAlpha
                         Buffer.Clear();
                         Points.Clear();
                         return;
+                    case "/P":
+                        if (Points.Count >= 2)
+                        {
+                            Points.Clear();
+                            Chat("Cleared points!");
+                        }
+                        Points.Add(new Vector3(game.WorldMousePos, game.Player.Plr.Layer));
+                        Chat(new Vector3(game.WorldMousePos, game.Player.Plr.Layer).ToString());
+                        return;
                     case "/STR":
 
 
-                        if(Points.Count >= 2)
+                        if(Points.Count == 2)
                         {
                             Vector3 A = Points[0];
                             Vector3 B = Points[1];
+                            var t = game._blockManager.GetTile(A);  
                             
-                            //For loop for every block bettween,
+                            var structure = new Structure();
+                            structure.id = t.ID;
+                            int x = Math.Abs((int)(B.X - A.X) + 1);
+                            int y = Math.Abs((int)(B.Y - A.Y) + 1);
+                            int z = Math.Abs((int)(B.Z - A.Z) + 1);
+                            //structure.Grid3D = new TileGrid[z,y,x];
+                            ////For loop for every block bettween,
+                            //for (float i = 0; i < x; i++)
+                            //{
+                            //    for (float j = 0; j < y; j++)
+                            //    {
+                            //        for (float k = 0; k < z; k++)
+                            //        {
+                            //            Vector3 p = new Vector3(i,j,k);
+                            //            var t = game._blockManager.GetTile(A);
 
-                            
+                            //            structure.Grid3D[(int)p.Z, (int)p.Y, (int)p.X] = t;
+                            //            //game._blockManager.SetTile(t,"Air");
+                            //        }
+                            //    }
+
+                            //}
 
 
-                            //FileManager.SaveStructure(str);
+
+                            FileManager.SaveStructure(structure);
                         }
                         FileManager.Run();
                         return;

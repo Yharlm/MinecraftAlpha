@@ -901,7 +901,7 @@ namespace MinecraftAlpha
             {
                 e.ID = ID;
                 e.Data = Data;
-                //e.brightness = 0;
+                //e.brightness = 1;
             }
             Change(e);
 
@@ -944,6 +944,7 @@ namespace MinecraftAlpha
         }
         public TileGrid SetTile(TileGrid Tile, string block)
         {
+            
             Tile.ID = GetBlockByName(block).ID;
             Tile.Data = "";
             Change(Tile);

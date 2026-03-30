@@ -352,7 +352,7 @@ public class Game1 : Game
                     //_blockManager.SetTile(new Vector3((x + 0.3f + h.x * 32), y, z),"Chest","");
                     _blockManager.GetTile(new Vector3((x + 0.3f + h.x * 32), y + 0.2f, z)).brightness = 1;
                     _blockManager.GetTile(new Vector3((x + 0.3f + h.x * 32), y + 1.2f, z)).brightness = 0.5f;
-                    L.Add()
+                    //L.Add()
                 }
             }
         }
@@ -375,6 +375,7 @@ public class Game1 : Game
     }
     public void LightingOnChange()
     {
+        return;
         var Changes = _actionManager.EventQueue;
         var chunksAffected = new List<Chunk>();
         List<Vector4> Lights = new List<Vector4>();
@@ -383,7 +384,7 @@ public class Game1 : Game
             var change = Changes[i];
 
             var tile = change.tile;
-            //tile.brightness = 0;
+            //tile.brightness = 1;
             var chunk = _blockManager.GetChunk(tile);
             if (chunk == null) continue;
             //var Map = HeightMap.GetMap(HeightMaps, chunk.x);
@@ -404,7 +405,7 @@ public class Game1 : Game
             {
                 //var h = m.Map[z, x];
                 HeightMap.SetHeight(m, tile);
-                RollLight(x, z, chunk);
+                //RollLight(x, z, chunk);
             }
 
 
@@ -445,7 +446,7 @@ public class Game1 : Game
             //    }
             //}
             //}
-            UpdateChunkLight();
+            //UpdateChunkLight(Lights);
 
         }
         if (chunksAffected.Count > 0)
@@ -1298,7 +1299,7 @@ public class Game1 : Game
             {
                 //_actionManager.DeleteBlocksSphere(WorldMousePos, Player.Plr.Layer, 4);
                 //_actionManager.Explosion(new Vector3(WorldMousePos.X, WorldMousePos.Y, PLR.Layer), 5, true);
-                UpdateChunkLight();
+                UpdateChunkLight(null);
 
 
             }
