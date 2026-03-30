@@ -472,9 +472,9 @@ public class Game1 : Game
 
 
 
-            for (int c = 0; c < Chunks.Count; c++)
+            for (int c = 0; c < chunksAffected.Count; c++)
             {
-                var L = Chunks[c];
+                var L = chunksAffected[c];
 
 
 
