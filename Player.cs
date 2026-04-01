@@ -256,6 +256,15 @@ namespace MinecraftAlpha
                         Points.Add(new Vector3(game.WorldMousePos, game.Player.Plr.Layer));
                         Chat(new Vector3(game.WorldMousePos, game.Player.Plr.Layer).ToString());
                         return;
+                    case "BUILD":
+                        Vector3 pos1 = new(game.Player.Plr.position,game.Player.Plr.Layer);
+                        if (Points.Count == 1)
+                        {
+
+                        }
+                        FileManager.GetStructures();
+                        
+                        return;
                     case "/STR":
 
 
@@ -270,23 +279,23 @@ namespace MinecraftAlpha
                             int x = Math.Abs((int)(B.X - A.X) + 1);
                             int y = Math.Abs((int)(B.Y - A.Y) + 1);
                             int z = Math.Abs((int)(B.Z - A.Z) + 1);
-                            //structure.Grid3D = new TileGrid[z,y,x];
+                            structure.Grid3D = new TileGrid[z, y, x];
                             ////For loop for every block bettween,
-                            //for (float i = 0; i < x; i++)
-                            //{
-                            //    for (float j = 0; j < y; j++)
-                            //    {
-                            //        for (float k = 0; k < z; k++)
-                            //        {
-                            //            Vector3 p = new Vector3(i,j,k);
-                            //            var t = game._blockManager.GetTile(A);
+                            for (float i = 0; i < x; i++)
+                            {
+                                for (float j = 0; j < y; j++)
+                                {
+                                    for (float k = 0; k < z; k++)
+                                    {
+                                        Vector3 p = new Vector3(i, j, k);
+                                        t = game._blockManager.GetTile(p+A);
+                                        if (t == null) continue;
+                                        structure.Grid3D[(int)p.Z, (int)p.Y, (int)p.X] = t;
+                                        game._blockManager.SetTile(t, "Air");
+                                    }
+                                }
 
-                            //            structure.Grid3D[(int)p.Z, (int)p.Y, (int)p.X] = t;
-                            //            //game._blockManager.SetTile(t,"Air");
-                            //        }
-                            //    }
-
-                            //}
+                            }
 
 
 

@@ -1043,7 +1043,11 @@ public class Game1 : Game
         var ItemList = new List<Entity>();
         foreach (var entity in _entityManager.Workspace)
         {
-            if (entity.Health <= 0) continue;
+            if (entity.Health <= 0)
+            {
+                _entityManager.Die(entity, ItemList);
+                continue;
+            }
             entity.Update.Invoke(entity);
             //entity.collisionBox.CheckCollision(entity,World);
             entity.Lifetime += 0.1f;
@@ -1130,11 +1134,7 @@ public class Game1 : Game
 
 
 
-            if (entity.Health <= 0)
-            {
-                _entityManager.Die(entity, ItemList);
-                //break;
-            }
+            
 
 
             // Example gravity, can be replaced with actual logic

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MinecraftAlpha;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
-using MinecraftAlpha;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -44,7 +44,7 @@ namespace MinecraftAlpha
 
         public string Name;
         public int id;
-        public Vector2 position = new Vector2(0, 0);
+        public Vector3 position = new Vector3(0,0, 0);
         public TileGrid[,] BluePrint;
         public TileGrid[,,] Grid3D;
 
@@ -61,105 +61,127 @@ namespace MinecraftAlpha
             return tilegrid;
         }
 
-        public void GenerateStructure(List<Chunk> list, Vector2 position, bool Replace)
+        static public void Build(Game1 game, Structure structure,Vector3 Pos)
         {
-            for (int y = 0; y < BluePrint.GetLength(0); y++)
+            int x = structure.Grid3D.GetLength(2);
+            int y = structure.Grid3D.GetLength(1);
+            int z = structure.Grid3D.GetLength(0);
+
+            for( int k = 0; k < z; k++ )
             {
-                for (int x = 0; x < BluePrint.GetLength(1); x++)
+                for (int i = 0; i < y; i++)
                 {
-                    var grid = BlockManager.GetBlockAtPos(position + new Vector2(x, y), list);
-                    if (grid == null) return;
-                    var blueprintGrid = BluePrint[y, x];
-
-                    grid.ID = blueprintGrid.ID;
-
-
-                }
-            }
-        }
-
-
-
-    }
-
-    public class HeightMap
-    {
-        public int x = 0;
-
-        public int[,] Map = new int[10, 32];
-        public static void SetHeight(HeightMap heightMap, TileGrid tile)
-        {
-            
-            int x = (int)tile.pos.X % 32;
-            int y = (int)tile.pos.Y;
-            int z = (int)tile.pos.Z;
-
-           
-            heightMap.Map[z, x] = y;
-            
-            
-
-        }
-        
-        public static HeightMap GetMap(List<HeightMap> heightMap, int x)
-        {
-            HeightMap m= heightMap.Find(m => m.x == x);
-            if (m == null)
-            {
-                m = new() { x = x };
-                heightMap.Add(m);
-            }
-            return m;
-        }
-
-       
-    }
-
-    public class Chunk
-    {
-
-
-        public int x;
-        public int y;
-
-        public TileGrid[,,] Tiles = new TileGrid[10, 32, 32];
-
-        public Chunk(int x, int y, TileGrid[,,] Grid)
-        {
-            this.x = x;
-            this.y = y;
-            Tiles = Grid;
-        }
-        public Chunk(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-
-            for (int i = 0; i < Tiles.GetLength(1); i++)
-            {
-                for (int j = 0; j < Tiles.GetLength(2); j++)
-                {
-                    for (int z = 0; z < Tiles.GetLength(0); z++)
+                    for (int j = 0; j < x; j++)
                     {
-                        Vector3 pos = new Vector3(j, i, z);
-
-                        pos.X += (this.x - 1) * 32;
-                        pos.Y += (this.y - 1) * 32; 
-
-
-
-
-                        Tiles[z, i, j] = new TileGrid()
+                        var tile = structure.Grid3D[k, i, j];
+                        if (tile.ID != 0)
                         {
-                            //brightness = 0,
-                            ID = 0,
-                            pos = new Vector3(pos.X, pos.Y, pos.Z),
-                        };
+                            game._blockManager.SetTile(new Vector3(Pos.X + j, Pos.Y + i, Pos.Z + k), tile.ID, tile.Data);
+                        }
                     }
                 }
             }
+
+        }
+    public void GenerateStructure(List<Chunk> list, Vector2 position, bool Replace)
+    {
+        for (int y = 0; y < BluePrint.GetLength(0); y++)
+        {
+            for (int x = 0; x < BluePrint.GetLength(1); x++)
+            {
+                var grid = BlockManager.GetBlockAtPos(position + new Vector2(x, y), list);
+                if (grid == null) return;
+                var blueprintGrid = BluePrint[y, x];
+
+                grid.ID = blueprintGrid.ID;
+
+
+            }
         }
     }
+
+
+
+}
+
+public class HeightMap
+{
+    public int x = 0;
+
+    public int[,] Map = new int[10, 32];
+    public static void SetHeight(HeightMap heightMap, TileGrid tile)
+    {
+
+        int x = (int)tile.pos.X % 32;
+        int y = (int)tile.pos.Y;
+        int z = (int)tile.pos.Z;
+
+
+        heightMap.Map[z, x] = y;
+
+
+
+    }
+
+    public static HeightMap GetMap(List<HeightMap> heightMap, int x)
+    {
+        HeightMap m = heightMap.Find(m => m.x == x);
+        if (m == null)
+        {
+            m = new() { x = x };
+            heightMap.Add(m);
+        }
+        return m;
+    }
+
+
+}
+
+public class Chunk
+{
+
+
+    public int x;
+    public int y;
+
+    public TileGrid[,,] Tiles = new TileGrid[10, 32, 32];
+
+    public Chunk(int x, int y, TileGrid[,,] Grid)
+    {
+        this.x = x;
+        this.y = y;
+        Tiles = Grid;
+    }
+    public Chunk(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+
+        for (int i = 0; i < Tiles.GetLength(1); i++)
+        {
+            for (int j = 0; j < Tiles.GetLength(2); j++)
+            {
+                for (int z = 0; z < Tiles.GetLength(0); z++)
+                {
+                    Vector3 pos = new Vector3(j, i, z);
+
+                    pos.X += (this.x - 1) * 32;
+                    pos.Y += (this.y - 1) * 32;
+
+
+
+
+                    Tiles[z, i, j] = new TileGrid()
+                    {
+                        //brightness = 0,
+                        ID = 0,
+                        pos = new Vector3(pos.X, pos.Y, pos.Z),
+                    };
+                }
+            }
+        }
+    }
+}
 
 
     //public bool isinchunk(Vector2 pos)
