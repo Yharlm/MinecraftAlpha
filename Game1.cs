@@ -1054,7 +1054,9 @@ public class Game1 : Game
             if (entity.position.Y > 600)
             {
                 entity.TakeDamage(null, 5, 0);
+                
             }
+            
 
 
             entity.Grounded = true;
@@ -1140,7 +1142,7 @@ public class Game1 : Game
             // Example gravity, can be replaced with actual logic
 
         }
-        _entityManager.Workspace.RemoveAll(x => x.Health <= 0);
+        _entityManager.Workspace.RemoveAll(x => x.Health <= 0 || (x.ID < 0 && x.position.Y > 1000));
 
         foreach (var entity in _particleSystem.Particles)
         {
@@ -1164,7 +1166,7 @@ public class Game1 : Game
     public void Input(GameTime time)
     {
 
-        _CommandManager.Read();
+        _CommandManager.Read2();
         if (_CommandManager.active) { return; }
 
 
@@ -1186,7 +1188,7 @@ public class Game1 : Game
         foreach (var key in keyboard)
         {
 
-
+           
 
 
             if (key == Keys.S)
@@ -1298,8 +1300,9 @@ public class Game1 : Game
             if (_inputManager.IsKeyDown_Now(Keys.R))
             {
                 //_actionManager.DeleteBlocksSphere(WorldMousePos, Player.Plr.Layer, 4);
-                //_actionManager.Explosion(new Vector3(WorldMousePos.X, WorldMousePos.Y, PLR.Layer), 5, true);
-                UpdateChunkLight(null);
+
+                //UpdateChunkLight(null);
+                _CommandManager.Run(_CommandManager.PreviousCommand);
 
 
             }
@@ -1920,6 +1923,7 @@ public class Game1 : Game
 
                 foreach (var text in _CommandManager.Buffer)
                 {
+                    if (text == "") continue;
                     if (text[0] == '*')
                     {
                         _spriteBatch.DrawString(font, text, new Vector2(0, 20 * c), Color.IndianRed); c++; continue;

@@ -168,6 +168,7 @@ namespace MinecraftAlpha
 
     public class CommandMannger
     {
+        public string PreviousCommand = "E";
         public bool active = false;
         public List<string> Buffer = new List<string>();
         public List<Vector3> Points = new List<Vector3>();
@@ -180,7 +181,7 @@ namespace MinecraftAlpha
         public void Run(string Input)
         {
 
-
+            PreviousCommand = Input;
 
 
 
@@ -246,24 +247,59 @@ namespace MinecraftAlpha
                     case "/CLEAR":
                         Buffer.Clear();
                         Points.Clear();
+                        
                         return;
                     case "/P":
-                        if (Points.Count >= 2)
-                        {
-                            Points.Clear();
-                            Chat("Cleared points!");
-                        }
+                        
                         Points.Add(new Vector3(game.WorldMousePos, game.Player.Plr.Layer));
                         Chat(new Vector3(game.WorldMousePos, game.Player.Plr.Layer).ToString());
                         return;
-                    case "BUILD":
-                        Vector3 pos1 = new(game.Player.Plr.position,game.Player.Plr.Layer);
+                    case "/EXP":
+                        Vector3 pos1 = new(game.WorldMousePos, game.Player.Plr.Layer);
+                        int radius = 3;
+
+                        if(Points.Count > 0)
+                        {
+                            pos1 = Points.Last();
+                            
+                        }
+                        if(Parts.Length == 2)
+                        {
+                            int.TryParse(Parts[1], out radius);
+                        }
+                        game._actionManager.Explosion(pos1, radius, true);
+                        return;
+                    case "/BUILD":
+                        pos1 = new(game.Player.Plr.position,game.Player.Plr.Layer);
                         if (Points.Count == 1)
                         {
 
                         }
-                        FileManager.GetStructures();
-                        
+                        var list = FileManager.GetStructures();
+                        var str = list.Last();
+                        int x = str.Grid3D.GetLength(2);
+                        int y = str.Grid3D.GetLength(1);
+                        int z = str.Grid3D.GetLength(0);
+                        for (float i = 0; i < x; i++)
+                        {
+                            for (float j = 0; j < y; j++)
+                            {
+                                for (float k = 0; k < z; k++)
+                                {
+                                    Vector3 p = new Vector3(i, j, k);
+                                    var t = game._blockManager.GetTile(p + pos1);
+                                    var b = str.Grid3D[(int)p.Z, (int)p.Y, (int)p.X];
+                                    if (t == null || b == null) continue;
+                                    if (b.ID == 0) continue;
+                                    //game._blockManager.SetTile(t,b);
+                                    t.ID = b.ID;
+                                    t.state = b.state;
+                                }
+                            }
+
+                        }
+
+
                         return;
                     case "/STR":
 
@@ -276,9 +312,9 @@ namespace MinecraftAlpha
                             
                             var structure = new Structure();
                             structure.id = t.ID;
-                            int x = Math.Abs((int)(B.X - A.X) + 1);
-                            int y = Math.Abs((int)(B.Y - A.Y) + 1);
-                            int z = Math.Abs((int)(B.Z - A.Z) + 1);
+                             x = Math.Abs((int)(B.X - A.X) + 1);
+                             y = Math.Abs((int)(B.Y - A.Y) + 1);
+                             z = Math.Abs((int)(B.Z - A.Z) + 1);
                             structure.Grid3D = new TileGrid[z, y, x];
                             ////For loop for every block bettween,
                             for (float i = 0; i < x; i++)
@@ -290,7 +326,7 @@ namespace MinecraftAlpha
                                         Vector3 p = new Vector3(i, j, k);
                                         t = game._blockManager.GetTile(p+A);
                                         if (t == null) continue;
-                                        structure.Grid3D[(int)p.Z, (int)p.Y, (int)p.X] = t;
+                                        structure.Grid3D[(int)p.Z, (int)p.Y, (int)p.X] = new() { ID = t.ID };
                                         game._blockManager.SetTile(t, "Air");
                                     }
                                 }
@@ -334,8 +370,90 @@ namespace MinecraftAlpha
         public void Chat(string input)
         {
             Buffer.Add(input);
-
+            ;
         }
+
+
+
+
+
+
+
+        KeyboardState previousKeyboard;
+
+        bool IsKeyPressed(Keys key)
+        {
+            var current = Keyboard.GetState();
+            bool pressed = current.IsKeyDown(key) && !previousKeyboard.IsKeyDown(key);
+            previousKeyboard = current;
+            return pressed;
+        }
+        public void Read2()
+        {
+            KeyboardState keyboard = Keyboard.GetState();
+
+            // Toggle console
+            if (!active)
+            {
+                if (keyboard.IsKeyDown(Keys.OemPipe))
+                {
+                    active = true;
+                    Command = "";
+                }
+                return;
+            }
+
+            // Submit command
+            if (IsKeyPressed(Keys.Enter))
+            {
+                active = false;
+                Run(Command);
+                Command = "";
+            }
+
+            // Backspace
+            if (IsKeyPressed(Keys.Back) && Command.Length > 0)
+            {
+                Command = Command.Remove(Command.Length - 1);
+            }
+
+            // Autocomplete
+            if (IsKeyPressed(Keys.Tab))
+            {
+                string item = Command.Split(' ').Last();
+                string start = Command.Split(' ').First();
+
+                string text = "";
+
+                if (start == "/SPAWN")
+                {
+                    var ent = game._entityManager.entities
+                        .Find(x => x.name.ToUpper().StartsWith(item));
+
+                    if (ent == null) return;
+
+                    text = ent.name.ToUpper().Replace(' ', '_');
+                }
+
+                if (start == "/GIVE")
+                {
+                    var block = game._blockManager.Blocks
+                        .Find(x => x.Name.ToUpper().StartsWith(item));
+
+                    if (block == null) return;
+
+                    text = block.Name.ToUpper().Replace(' ', '_');
+                }
+
+                Command = Command.Substring(0, Command.Length - item.Length) + text;
+            }
+        }
+
+
+
+
+
+
         public void Read()
         {
             KeyboardState keyboard = Keyboard.GetState();
@@ -350,6 +468,7 @@ namespace MinecraftAlpha
             if (keyboard.IsKeyDown(Keys.Enter))
             {
                 active = false;
+                
                 Run(Command);
                 Command = "";
             }

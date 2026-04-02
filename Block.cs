@@ -924,6 +924,10 @@ namespace MinecraftAlpha
         public TileGrid SetTile(TileGrid Tile, TileGrid other)
         {
             Tile = other;
+            Tile.ID = other.ID;
+            Tile.Data = other.Data;
+            Tile.state = other.state;
+            Tile.pos = other.pos;
             Change(Tile);
             return Tile;
         }

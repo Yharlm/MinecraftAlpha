@@ -34,9 +34,12 @@ namespace MinecraftAlpha
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Structures.json");
             string s = File.ReadAllText(filePath);
             var list = JsonConvert.DeserializeObject<List<Structure>>(s);
-            
+            if (list == null)
+            {
+                list = new List<Structure>();
+            }
             //Turn structure to string
-            
+
             list.Add(content);
             var e = JsonConvert.SerializeObject(list);
 
