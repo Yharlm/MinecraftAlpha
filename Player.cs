@@ -287,7 +287,7 @@ namespace MinecraftAlpha
                                 for (float k = 0; k < z; k++)
                                 {
                                     Vector3 p = new Vector3(i, j, k);
-                                    var t = game._blockManager.GetTile(p + pos1);
+                                    var t = game._blockManager.GetTile(p + pos1 + );
                                     var b = str.Grid3D[(int)p.Z, (int)p.Y, (int)p.X];
                                     if (t == null || b == null) continue;
                                     if (b.ID == 0) continue;
@@ -381,24 +381,50 @@ namespace MinecraftAlpha
 
         KeyboardState previousKeyboard;
 
-        bool IsKeyPressed(Keys key)
+        public bool IsKeyPressed(Keys key)
         {
             var current = Keyboard.GetState();
             bool pressed = current.IsKeyDown(key) && !previousKeyboard.IsKeyDown(key);
             previousKeyboard = current;
             return pressed;
         }
-        public void Read2()
+
+
+        public void TextInputHandler(object sender, TextInputEventArgs e)
+        {
+            if (!active) return;
+
+            char c = e.Character;
+
+            if (c == '\b') // backspace
+            {
+                if (Command.Length > 0)
+                    Command = Command.Substring(0, Command.Length - 1);
+            }
+            if (c == '\t') // backspace
+            {
+                if (Command.Length > 0)
+                    Complete();
+            }
+            if (!char.IsControl(c))
+            {
+                Command += c;
+            }
+        }
+
+
+
+        public void Read()
         {
             KeyboardState keyboard = Keyboard.GetState();
 
             // Toggle console
             if (!active)
             {
-                if (keyboard.IsKeyDown(Keys.OemPipe))
+                if (IsKeyPressed(Keys.T))
                 {
                     active = true;
-                    Command = "";
+                    Command = "/";
                 }
                 return;
             }
@@ -407,163 +433,47 @@ namespace MinecraftAlpha
             if (IsKeyPressed(Keys.Enter))
             {
                 active = false;
-                Run(Command);
+                Run(Command.ToUpper());
                 Command = "";
+                return;
             }
 
-            // Backspace
-            if (IsKeyPressed(Keys.Back) && Command.Length > 0)
-            {
-                Command = Command.Remove(Command.Length - 1);
-            }
+            
+            
 
             // Autocomplete
-            if (IsKeyPressed(Keys.Tab))
-            {
-                string item = Command.Split(' ').Last();
-                string start = Command.Split(' ').First();
-
-                string text = "";
-
-                if (start == "/SPAWN")
-                {
-                    var ent = game._entityManager.entities
-                        .Find(x => x.name.ToUpper().StartsWith(item));
-
-                    if (ent == null) return;
-
-                    text = ent.name.ToUpper().Replace(' ', '_');
-                }
-
-                if (start == "/GIVE")
-                {
-                    var block = game._blockManager.Blocks
-                        .Find(x => x.Name.ToUpper().StartsWith(item));
-
-                    if (block == null) return;
-
-                    text = block.Name.ToUpper().Replace(' ', '_');
-                }
-
-                Command = Command.Substring(0, Command.Length - item.Length) + text;
-            }
+            
         }
-
-
-
-
-
-
-        public void Read()
+        public void Complete()
         {
-            KeyboardState keyboard = Keyboard.GetState();
-            if (!active)
+            string item = Command.Split(' ').Last().ToUpper().Replace('_', ' ');
+            string start = Command.Split(' ').First().ToUpper();
+
+            string text = "";
+
+            if (start == "/SPAWN")
             {
-                if (keyboard.IsKeyDown(Keys.OemPipe))
-                {
-                    active = true;
-                    Command = "";
-                }
+                var ent = game._entityManager.entities
+                    .Find(x => x.name.ToUpper().StartsWith(item));
+
+                if (ent == null) return;
+                text = ent.name.ToUpper().Replace(' ', '_');
             }
-            if (keyboard.IsKeyDown(Keys.Enter))
+
+            if (start == "/GIVE")
             {
-                active = false;
-                
-                Run(Command);
-                Command = "";
+                var block = game._blockManager.Blocks
+                    .Find(x => x.Name.ToUpper().StartsWith(item));
+
+                if (block == null) return;
+                text = block.Name.ToUpper().Replace(' ', '_');
             }
-            if (keyboard.IsKeyDown(Keys.Tab))
-            {
-                //Autocomplete
-                string item = Command.Split(' ').Last();
-                string start = Command.Split(' ').First();
 
-                string text = "";
-                if (start == "/SPAWN")
-                {
-                    var ent = game._entityManager.entities.Find(x => x.name.ToUpper().StartsWith(item));
-                    if (ent == null)
-                    {
-                        return;
-                    }
-                    text = ent.name.ToUpper().Replace(' ', '_');
-                }
-                if (start == "/GIVE")
-                {
-                    var block = game._blockManager.Blocks.Find(x => x.Name.ToUpper().StartsWith(item));
-                    if (block == null)
-                    {
-                        return;
-                    }
-                    text = block.Name.ToUpper().Replace(' ', '_');
-                }
-                if (start == "/RULE")
-                {
-
-                }
-
-
-                
-
-
-                Command = Command.Substring(0, Command.Length - item.Length) + text ;
-
-                
-
-            }
-            if (keyboard.GetPressedKeyCount() > 0)
-            {
-                if (game._inputManager.IsKeyDown_Now(keyboard.GetPressedKeys()[0]))
-                {
-                    var key = keyboard.GetPressedKeys()[0];
-                    if (key == Keys.Back && Command.Length > 0)
-                    {
-                        Command = Command.Remove(Command.Length - 1);
-
-                    }
-                    if (key == Keys.Space)
-                    {
-                        Command += " ";
-
-                    }
-                    if ((int)key >= 49 && (int)key < 49 + 9)
-                    {
-                        int number = (int)key - 48;
-                        Command += $"{number}";
-
-                    }
-                    if (key == Keys.D0)
-                    {
-                        Command += "0";
-                    }
-                    if (key == Keys.OemPipe)
-                    {
-                        Command += "/";
-
-                    }
-                    if (key == Keys.OemTilde)
-                    {
-                        Command += "~";
-
-                    }
-                    if (key == Keys.OemQuotes)
-                    {
-                        Command += "_";
-
-                    }
-                    if (key.ToString().Length == 1)
-                    {
-                        Command += key.ToString();
-                    }
-
-
-                }
-
-
-            }
+            Command = Command.Substring(0, Command.Length - item.Length) + text;
         }
-
     }
+
+    
     public class Cammera
     {
 

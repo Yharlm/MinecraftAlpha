@@ -98,12 +98,12 @@ public class Game1 : Game
         IsMouseVisible = true;
     }
 
-
+    
     protected override void Initialize()
     {
         windowWidth = GraphicsDevice.Viewport.Width;
         windowHeight = GraphicsDevice.Viewport.Height;
-
+        Window.TextInput += _CommandManager.TextInputHandler;
         Player = new Player() { game = this };
         Random random = new Random();
         _particleSystem.Content = Content;
@@ -1166,7 +1166,7 @@ public class Game1 : Game
     public void Input(GameTime time)
     {
 
-        _CommandManager.Read2();
+        _CommandManager.Read();
         if (_CommandManager.active) { return; }
 
 
