@@ -319,7 +319,7 @@ namespace MinecraftAlpha
                 Name = "Menu",
                 Visible = true,
                 Frames = new() { new() { Window = Frames[0].Window, position = new Vector2(0, 0) } },
-                Buttons = new() { new() { Background = null, position = new Vector2(0, 0), Scale = new Vector2(340, 40), Click = (game) => { game.GameStarted = true; } } },
+                Buttons = new() { new() { Background = null, position = new Vector2(0, 0), Scale = new Vector2(220, 60), Click = (game) => { game.GameStarted = true; } } },
                 ItemSlots = new() { },
 
             });
@@ -709,7 +709,7 @@ namespace MinecraftAlpha
 
         public bool IsInBounds(Vector2 Pos)
         {
-            Vector2 position = this.position + Position - Scale;
+            Vector2 position = this.position + Position;
             if (Pos.X >= position.X && Pos.X <= position.X + Scale.X)
                 if (Pos.Y > position.Y && Pos.Y <= position.Y + Scale.Y)
                 {
@@ -722,11 +722,12 @@ namespace MinecraftAlpha
 
         public void Render(SpriteBatch Spritebatch)
         {
-
+            int x = (int)Scale.X / 2;
+            int y = (int)Scale.Y / 2;
             if (Background == null) return;
             var color = Color.White;
             if (Hovered) color = Color.CornflowerBlue;
-            Spritebatch.Draw(Background, new Rectangle((int)position.X, (int)position.Y, (int)Scale.X, (int)Scale.Y), color);
+            Spritebatch.Draw(Background, new Rectangle((int)position.X- x, (int)position.Y-y, (int)Scale.X, (int)Scale.Y), color);
         }
 
 
@@ -751,6 +752,7 @@ namespace MinecraftAlpha
 
     public class UIFrame : WindowFrame
     {
+        
         public Button button;
         public string Name = "default";
         public Vector2 position = new Vector2(300, 100);
@@ -802,7 +804,7 @@ namespace MinecraftAlpha
                 Size = button.Scale / 4;
                 if (button.Hovered)
                 {
-                    color = Color.Gray;
+                    color = Color.PapayaWhip;
                 }
             }
             Vector2 CornerSize = Size;

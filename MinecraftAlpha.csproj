@@ -22,6 +22,8 @@
     <None Remove="Content\bin\DesktopGL\Steve.xnb" />
     <None Remove="Content\Chest.png" />
     <None Remove="Content\File.spritefont" />
+    <None Remove="Content\Font.spritefont" />
+    <None Remove="Content\Minecraft.ttf" />
     <None Remove="Content\obj\DesktopGL\Chest.mgcontent" />
     <None Remove="Content\obj\DesktopGL\net8.0\Content\Entities\Steve.mgcontent" />
     <None Remove="Content\obj\DesktopGL\net8.0\Content\Steve.mgcontent" />

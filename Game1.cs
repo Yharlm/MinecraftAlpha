@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -98,7 +98,7 @@ public class Game1 : Game
         IsMouseVisible = true;
     }
 
-    
+
     protected override void Initialize()
     {
         windowWidth = GraphicsDevice.Viewport.Width;
@@ -362,16 +362,16 @@ public class Game1 : Game
         bool found = false;
         for (int y = 0; y < 32; y++)
         {
-            var tile = c.Tiles[z,y,x];
+            var tile = c.Tiles[z, y, x];
             if (tile == null) continue;
             if (tile.ID != 0 && !found)
             {
                 found = true;
-                tile.brightness =1; continue;
+                tile.brightness = 1; continue;
             }
             tile.brightness = 0;
         }
-        
+
     }
     public void LightingOnChange()
     {
@@ -391,7 +391,7 @@ public class Game1 : Game
             ////Update Heightmap
             //HeightMap.SetHeight(Map, tile);
 
-            int x = (int)(tile.pos.X+0.3f) % 32;
+            int x = (int)(tile.pos.X + 0.3f) % 32;
 
             int z = (int)tile.pos.Z;
 
@@ -786,7 +786,8 @@ public class Game1 : Game
             Lights.Clear();
 
 
-        };
+        }
+        ;
 
 
 
@@ -912,15 +913,9 @@ public class Game1 : Game
         foreach (var Animation in _entityAnimationService.entityAnimations)
         {
             var Entity = Animation.parent;
-
             var anim = Entity.Animations[Animation.id];
             anim.parent = Entity;
-
-            if (Entity.name == "Pig")
-            {
-
-            }
-
+            if (Entity.name == "Pig")// Debuging pig walking was here
             anim.Update();
             //Entity.Joints[1].orientation += 10;
 
@@ -1054,9 +1049,9 @@ public class Game1 : Game
             if (entity.position.Y > 600)
             {
                 entity.TakeDamage(null, 5, 0);
-                
+
             }
-            
+
 
 
             entity.Grounded = true;
@@ -1136,7 +1131,7 @@ public class Game1 : Game
 
 
 
-            
+
 
 
             // Example gravity, can be replaced with actual logic
@@ -1163,6 +1158,8 @@ public class Game1 : Game
 
 
     public int MouseClick = 0;
+
+
     public void Input(GameTime time)
     {
 
@@ -1182,31 +1179,28 @@ public class Game1 : Game
         var keyboardState = Keyboard.GetState();
 
 
-        bool Front = false;
-        bool Back = false;
+
+        bool Front = false; //this represents for Mining infront or behind
+       
         var keyboard = Keyboard.GetState().GetPressedKeys();
         foreach (var key in keyboard)
         {
-
-           
-
-
+            // Move between layers
             if (key == Keys.S)
             {
                 Front = true;
                 var tile = BlockManager.GetBlockAtPos(Player.Plr.position, (int)Player.Plr.Layer + 1, Chunks);
                 if (tile != null)
                 {
-                    if (tile.ID == 0)
+                    if (tile.ID == 0) 
                     {
                         Player.Plr.Layer += 0.05f;
                     }
-
                 }
             }
             if (key == Keys.W)
             {
-                Back = true;
+                
                 var tile = BlockManager.GetBlockAtPos(Player.Plr.position, (int)Player.Plr.Layer - 1, Chunks);
                 if (tile != null)
                 {
@@ -1214,38 +1208,33 @@ public class Game1 : Game
                     {
                         Player.Plr.Layer -= 0.05f;
                     }
-
                 }
             }
-            if (key == Keys.LeftShift)
-            {
-
-                PLR.velocity.velocity += new Vector2(0, +2);
-            }
+            // Move along X and Y
             if (key == Keys.A)
             {
-
-
-                PLR.Fliped = true;
+                PLR.Fliped = true; //Variable for Sprite flip
                 plrVel = new Vector2(-1, 0);
             }
             if (key == Keys.D)
             {
-                //PLR.Animations[1].Paused = false;
-                PLR.Fliped = false;
+                PLR.Fliped = false;//Variable for Sprite flip
                 plrVel = new Vector2(+1, 0);
             }
 
             if (key == Keys.Space)
             {
-                //PLR.Jumping = true;
                 if (PLR.velocity.flying)
                 {
                     PLR.velocity.velocity += new Vector2(0, -2);
                 }
                 jump = true;
             }
+            if (key == Keys.LeftShift)
+            {
 
+                PLR.velocity.velocity += new Vector2(0, +2);
+            }
             if (key == Keys.X)
             {
 
@@ -1387,14 +1376,16 @@ public class Game1 : Game
             DebugMode = !DebugMode;
 
 
-        };
+        }
+        ;
         if (_inputManager.IsKeyDown_Now(Keys.F6))
         {
 
             creativeMode = !creativeMode;
 
 
-        };
+        }
+        ;
 
 
 
@@ -1426,7 +1417,7 @@ public class Game1 : Game
                 {
                     PLR.Layer += 1;
                 }
-                if (Back)
+                if (!Front)
                 {
                     PLR.Layer -= 1;
                 }
@@ -1486,10 +1477,7 @@ public class Game1 : Game
                 {
                     PLR.Layer += 1;
                 }
-                if (Back)
-                {
-                    PLR.Layer -= 1;
-                }
+                
                 _actionManager.PlaceBlock(WorldMousePos, PLR.Item);
                 PLR.Layer = TempLayer;
 
@@ -2031,6 +2019,8 @@ public class Game1 : Game
         }
 
     }
+
+
     public void DrawBlock(Texture2D Texture, int state, Vector2 size, Vector2 position, float layer, float Orientation, Vector2 Origin, Color color, SpriteEffects spriteEffect)
     {
         Rectangle BlockState = new Rectangle(0, 0, Texture.Width, Texture.Height);

@@ -279,16 +279,9 @@ namespace MinecraftAlpha
         }
         public void BreakBlock(Vector2 Pos, float Z, float Dmg)
         {
-
-
-
-
-
-
-
-            int Zindex = (int)Z;
+            int Zindex = (int)Z; // Round down to get the correct layer
             var Tile = BlockManager.GetBlockAtPos(Pos, Zindex, Game.Chunks);
-            if (Tile == null) { return; }
+            if (Tile == null) {return; }
             var block = Game._blockManager.Blocks[Tile.ID];
             int x = random.Next(0, block.Texture.Width);
             int y = random.Next(0, block.Texture.Height);
@@ -297,18 +290,10 @@ namespace MinecraftAlpha
             {
                 if (block.Health > Tile.MinedHealth)
                 {
-
-
                     if (Game.creativeMode) { Tile.MinedHealth += 2f; } // Fix this later when you want Creative to not matter for explosives
-
                     Tile.MinedHealth += Dmg;
-
-
                     if (block.Health % 0.2f == 0) return;
-
-
-
-                    var part = new Particle()
+                    var part = new Particle() // Creates a particle can be simplified if i have time
                     {
                         Position = pos,
                         TextureName = "BlockMineEffect",
@@ -322,13 +307,8 @@ namespace MinecraftAlpha
                         gravity = 0.1f
 
                     };
-
-
-
-                    Game._particleSystem.Particles.Add(part);
-                    return;
+                    Game._particleSystem.Particles.Add(part); return;
                 }
-
                 for (int i = 0; i < 15; i++)
                 {
                     x = random.Next(0, block.Texture.Width);
@@ -347,26 +327,26 @@ namespace MinecraftAlpha
                         gravity = 0.1f
 
                     };
-
-
-
                     Game._particleSystem.Particles.Add(part);
                 }
-
-
-                Tile.MinedHealth = 0;
-
-                Game._blockManager.SetTile(Tile, "Air");
-                Entity drop = null;
+                Tile.MinedHealth = 0; Game._blockManager.SetTile(Tile, "Air");
+                Entity drop; //item drop
                 if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop, 1);
-                else drop = Game._entityManager.SpawnItem(pos, Zindex, block, 1);
+                else drop = Game._entityManager.SpawnItem(pos, Zindex, block, 1); //Makes an ItemDrop object, doesnt spawn it here
                 if (drop != null)
                 {
-                    drop.IFrame = 0.1f;
+                    if (drop.ID == 0) return;
+                    drop.IFrame = 0.1f; //Invincibility frame so it isnt picked up instantly, prevents issues when throwing items
                     Game._entityManager.Workspace.Add(drop);
                 }
-
-
+            }
+            else
+            {
+                for (int i = 0; i < 3; i++) //Back is 9, front is 0 - this is when theres no blcok
+                {
+                    Tile = BlockManager.GetBlockAtPos(Pos, Zindex + i, Game.Chunks);
+                    if (Tile != null) break;
+                }
             }
 
         }

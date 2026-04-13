@@ -146,22 +146,14 @@ namespace MinecraftAlpha
 
         public bool isGrip = false;
         public Vector2 GripOffset = new Vector2(0, 0);
-        //public List<Vector2> Joints = new List<Vector2>();
         public Rectangle Margin;
         public Texture2D texture;
-
         public float ParentOrianetation = 0f;
         public Vector2 Attachment = new Vector2(0, 0);
         public Vector2 Parent = new Vector2(0, 0); // Position of the Parent Attachment
         public float JointOrientation = 0f; // Orientation of the Joint
         public float Orientation = 0f;
-        //public Sprite Parent = null; // Parent Sprite, if null then it is the root
-
-        public Sprite()
-        {
-
-        }
-
+        public Sprite() { }
         public Sprite(Texture2D texture)
         {
             this.texture = texture;
@@ -169,38 +161,23 @@ namespace MinecraftAlpha
 
 
 
-
-        // The Pos will be Pos of Parent + Attachments, Then here it gets offset to fit the orientation
-        public void DrawSprite(Game1 game1, Vector2 Pos, float size, float Rotation, bool Flip, float Z, float Shadow, bool Iframe, Entity mob) // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
-
+        // Pos is the Position of the Parent Attachment, it will be calculated with Joint, meanwhile Attachment gets joint's A attachment
+        public void DrawSprite(Game1 game1, Vector2 Pos, float size, float Rotation, bool Flip, float Z, float Shadow, bool Iframe, Entity mob) 
         {
+            var target = Color.White;
             SpriteBatch spriteBatch = game1._spriteBatch;
             var ract = Margin;
-            var target = Color.White;
-
-            
-
-
-
-            SpriteEffects spriteEffect = SpriteEffects.None;
-            
-            //Draws the sprite where the attachment of its parent is
-            //Vector2 Attachment = this.Attachment / new Vector2(Margin.Width,Margin.Height);
-
-
+            //Calculate the angle and position of the sprite based on the orientation and parent orientation
+            SpriteEffects spriteEffect = SpriteEffects.None;            
             float Angle = (MathF.PI / 180 * (Orientation + ParentOrianetation));
             float ParentAngle = (MathF.PI / 180 * (ParentOrianetation));
-            //var ract = Margin;
             Matrix4x4 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle);
-            float a = Z / 2 + 0.4f;
-
-            var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1));
-
             var ParentPos = Vector2.Transform(Parent, AnglePos);
             var attachmentPos = Vector2.Transform(Attachment, AnglePos);
 
-
-
+            float a = Z / 2 + 0.4f; // layer destinction
+            var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1));
+            
             Vector2 A = Attachment;
             Vector2 B = ParentPos;
             if (Flip)
@@ -213,6 +190,7 @@ namespace MinecraftAlpha
             {
                 Layer = Color.PaleVioletRed;
             }
+            //the sprite render, 
             spriteBatch.Draw(
                 texture,
                 Pos - B * size,
@@ -224,7 +202,7 @@ namespace MinecraftAlpha
                 spriteEffect,
                 0
                 );
-
+            //if the entity is holding an item, this is the logic behind rendering it.
             if (isGrip && mob.Item != null)
             {
                 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle - 45);
@@ -260,26 +238,11 @@ namespace MinecraftAlpha
                 }
                 else
                 {
-                    //spriteBatch.Draw(
-                    //    item.Texture,
-                    //    Pos - (B) * size,
-                    //    null,
-                    //    Layer,
-                    //    Angle + JointOrientation + rotation, // Orientation
-                    //    new Vector2(item.Texture.Width, item.Texture.Height) / 2 + attachmentPos, //
-                    //    size * 0.6f,
-                    //    spriteEffect,
-                    //    Z
-                    //);
                     game1.DrawBlock(item, 0, size * 0.6f, Pos - (B) * size, Z, Angle + JointOrientation + rotation, new Vector2(item.Texture.Width, item.Texture.Width) / 2 + attachmentPos, Layer, spriteEffect);
                     Debuging.DebugPos(spriteBatch, Pos - (B) * size, game1);
                 }
 
             }
-
-
-            //Debuging.DebugPos(spriteBatch, Pos - ParentPos * size, game1);
-
         }
 
         public static List<Sprite> LoadSprites(Entity mob)

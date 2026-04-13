@@ -221,8 +221,6 @@ namespace MinecraftAlpha
                 GripOffset = new Vector2(4, 12f),
                 Ractangles = new List<Vector4>() // LimbShapes
                 {
-                    // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
-
                     new Vector4(12, 8, 4, 12), // Right Arm
                     new Vector4(24, 8, 4, 12),// Body
                     new Vector4(8, 0, 8, 8), // Head
@@ -239,7 +237,6 @@ namespace MinecraftAlpha
                         A_Index = 1,
                         B_Index = 2,
                     },
-
                     new Joint() //Left Arm
                     {
 
@@ -248,7 +245,6 @@ namespace MinecraftAlpha
                         A_Index = 1,
                         B_Index = 3
                     },
-
                     new Joint()// right leg
                     {
                         A = new Vector2(0, -8f),
@@ -256,7 +252,6 @@ namespace MinecraftAlpha
                         A_Index = 1,
                         B_Index = 5
                     },
-
                     new Joint() // Right Arm
                     {
 
@@ -265,7 +260,6 @@ namespace MinecraftAlpha
                         A_Index = 1,
                         B_Index = 0
                     },
-
                     new Joint() //left arm
                     {
                         A = new Vector2(0, -8f),
@@ -502,7 +496,75 @@ namespace MinecraftAlpha
             Pig.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1f) };
             Pig.Texture = game1.Content.Load<Texture2D>(Pig.TextureName);
             Entities.Add(Pig);
+            var Enderman = new Entity(id++, "Enderman", "Mobs/Enderman", 40)
+            {
+                gripIndex = 3,
+                GripOffset = new Vector2(4, 12f),
+                Ractangles = new List<Vector4>() // LimbShapes
+                {
+                        // Replace Vector4 with a Object that can hold the widths of all 4 sides of an entity
 
+                    new Vector4(47, 14, 2, 24), // Right Arm
+                    new Vector4(44, 22, 4, 22),// Body
+                    new Vector4(0, 8, 8, 8), // Head
+                    new Vector4(47, 14, 2, 24), // Left Arm
+                    new Vector4(47, 14, 2, 24), // Right Leg
+                    new Vector4(47, 14, 2, 24) // Left Leg
+                },
+                Joints = new List<Joint>()
+                {
+                    new Joint() //Head
+                    {
+                        A = new Vector2(0, 8f),
+                        B = new Vector2(0f, 2f),
+                        A_Index = 1,
+                        B_Index = 2,
+                    },
+
+                    new Joint() //Left Arm
+                    {
+
+                        A = new Vector2(0, 4f),
+                        B = new Vector2(0f, -4f),
+                        A_Index = 1,
+                        B_Index = 3
+                    },
+
+                    new Joint()// right leg
+                    {
+                        A = new Vector2(0, -8f),
+                        B = new Vector2(0f, -4f),
+                        A_Index = 1,
+                        B_Index = 5
+                    },
+
+                    new Joint() // Right Arm
+                    {
+
+                        A = new Vector2(0, 4f),
+                        B = new Vector2(0f, -4f),
+                        A_Index = 1,
+                        B_Index = 0
+                    },
+
+                    new Joint() //left arm
+                    {
+                        A = new Vector2(0, -8f),
+                        B = new Vector2(0f, -4f),
+                        A_Index = 1,
+                        B_Index = 4
+                    },
+                },
+                Animations = new()
+                {
+                    EntityAnimationService.GetAnimation("idle_zombie",1),
+                    EntityAnimationService.GetAnimation("Running_zombie",1),
+                    EntityAnimationService.LoadAnimations()[2],
+                }
+            };
+            Enderman.collisionBox = new CollisionBox() { Size = new Vector2(0.6f, 1f) };
+            Enderman.Texture = game1.Content.Load<Texture2D>(Enderman.TextureName);
+            Entities.Add(Enderman);
             var Falling_block = new Entity(-2, "Fallingblock", "", 100)
             {
                 position = Vector2.Zero,

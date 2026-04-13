@@ -10,36 +10,15 @@ namespace MinecraftAlpha
     {
         public float orientation = 0f;
 
-        public Sprite A_Sprite;
+        public Sprite A_Sprite; //Null beacuse sprites dont exist when the Joints are created.
         public Sprite B_Sprite;
-        public Vector2 A = Vector2.Zero;
-        public Vector2 B = Vector2.Zero;
-
-
-
-
-        public int A_Index = -1;
+        public Vector2 A = Vector2.Zero; //Joint position in A sprite
+        public Vector2 B = Vector2.Zero; //same with B
+        public int A_Index = -1; // used afterwards to add sprite based on their index.
         public int B_Index = -1;
         public Joint() { }
-        public Joint(Sprite a, Sprite b)
-        {
-            A_Sprite = a;
-            B_Sprite = b;
-        }
-        public Joint(Sprite a, Vector2 a_attach, Sprite b, Vector2 b_attach)
-        {
-
-            A_Sprite = a;
-            B_Sprite = b;
-            A = a_attach;
-            B = b_attach;
-        }
-
-        public Vector2 Connect() // returns the distance between A and B
-        {
-
-            return Vector2.Max(A, B) - Vector2.Min(A, B);
-        }
+        
+        
     }
     public class CollisionBox
     {
@@ -127,7 +106,54 @@ namespace MinecraftAlpha
 
     public class Entity
     {
+        public List<EntityAnimation> Animations = new List<EntityAnimation>();
+        public bool paused = false;
+        public bool Fliped = true;
+        public int gripIndex = -1;
+        public Vector2 GripOffset = Vector2.Zero;
+        public Block Item = null;
+        public string Data = ""; // armor, items, if Itemdrop ammount, 
+        public int Health;
+        public int MaxHealth;
+        public int ID = 0;
+        public float Speed = 0.7f;
+        public float Lifetime = 0f;
+        public Vector2 previousPosition = Vector2.Zero;
+        public string name { get; set; } = "nullEntity";
+        public List<Joint> Joints = new List<Joint>(); // used to connect limbs together
+        public Texture2D Texture; // Main texture where all the limbs will originate from!
+        public string TextureName = "null"; // Name of the texture to be loaded
+        public List<Vector4> Ractangles = new List<Vector4>();
+        public List<Sprite> Sprites = new List<Sprite>();
+        public Sprite3D Model3D = null;
+        public CollisionBox collisionBox;
+        public Entity Target = null;
+        public bool Grounded = false;
+        public Vector2 position { get; set; } = Vector2.Zero;
+        public Velocity velocity = new Velocity();
+        public int Fall_damage = 0;
+        public float Mass = 1f;
+        public float IFrame = 0.1f; // Invincibility Frames
+        public bool CanDamage = true;
+        public bool CanBeDamaged = true;
+        public float Layer = 8;
+        public Entity(int id, string Name, string TextureName, int Health)
+        {
+            ID = id;
+            name = Name;
+            this.TextureName = TextureName;
+            this.Health = Health;
+            this.MaxHealth = Health;
 
+        } // Constructor
+
+
+
+        public Action Interaction;
+
+        public Action<Entity> Update = (This) => {};
+
+        public Action Damaged;
         public static Entity CloneEntity(Entity Example, Vector2 Position)
         {
             Entity Clone = new Entity(Example.ID, Example.name, Example.TextureName, Example.MaxHealth);
@@ -157,95 +183,6 @@ namespace MinecraftAlpha
             EntityManager.LoadJoins(Example, Clone);
             return Clone;
         }
-
-        //public Entity CloneEntity(Entity Example, Vector2 Position, string Data)
-        //{
-        //    Entity Clone = new Entity(Example.ID, Example.name, Example.TextureName, Example.MaxHealth);
-        //    {
-        //        Clone.Ractangles = Example.Ractangles;
-        //        Clone.position = Position;
-        //        Clone.Joints = Example.Joints;
-        //        Clone.collisionBox = new CollisionBox() { Size = Example.collisionBox.Size };
-        //        Clone.Animations = Example.Animations;
-        //        Clone.Sprites = Example.Sprites;
-        //        Clone.Texture = Example.Texture;
-        //        Clone.Fall_damage = Example.Fall_damage;
-        //        Clone.Mass = Example.Mass;
-        //        Clone.Fliped = Example.Fliped;
-        //        Clone.paused = Example.paused;
-        //        Clone.Data = Data;
-        //        //Events
-
-
-        //        Clone.Interaction = Example.Interaction;
-        //        Clone.Update = Example.Update;
-
-        //    }
-        //    return Clone;
-        //}
-
-
-        public List<EntityAnimation> Animations = new List<EntityAnimation>();
-        public bool paused = false;
-        public bool Fliped = true;
-        public int gripIndex = -1;
-        public Vector2 GripOffset = Vector2.Zero;
-        public Block Item = null;
-
-        //public List<PotionEffects> = new List<PotionEffects>()
-        public string Data = ""; // armor, items, if Itemdrop ammount, 
-        public int Health;
-        public int MaxHealth;
-        public int ID = 0;
-        public float Speed = 0.7f;
-        public float Lifetime = 0f;
-        public Vector2 previousPosition = Vector2.Zero;
-
-
-        public string name { get; set; } = "nullEntity";
-        public List<Joint> Joints = new List<Joint>(); // used to connect limbs together
-        public Texture2D Texture; // Main texture where all the limbs will originate from!
-        public string TextureName = "null"; // Name of the texture to be loaded
-        public List<Vector4> Ractangles = new List<Vector4>();
-        public List<Sprite> Sprites = new List<Sprite>();
-        public Sprite3D Model3D = null;
-        public CollisionBox collisionBox;
-
-
-        //public List<EntityAnimation> CurrentAnimations = new List<EntityAnimation>();
-
-
-        public Entity Target = null;
-
-
-        public bool Grounded = false;
-        public Vector2 position { get; set; } = Vector2.Zero;
-        public Velocity velocity = new Velocity();
-        public int Fall_damage = 0;
-        public float Mass = 1f;
-        public float IFrame = 0.1f; // Invincibility Frames
-        public bool CanDamage = true;
-        public bool CanBeDamaged = true;
-        public float Layer = 8;
-
-        public Entity(int id, string Name, string TextureName, int Health)
-        {
-            ID = id;
-            name = Name;
-            this.TextureName = TextureName;
-            this.Health = Health;
-            this.MaxHealth = Health;
-
-        } // Constructor
-
-
-
-        public Action Interaction;
-
-        public Action<Entity> Update = (This) => {};
-
-        public Action Damaged;
-
         public static void CollisionEventCollision(Entity A, Entity B, Game1 game1)
         {
             if(A.ID >= 0 && B.ID >= 0)
@@ -253,11 +190,6 @@ namespace MinecraftAlpha
                 A.velocity.velocity += (A.position - B.position) * new Vector2(0.5f, 0.1f);
                 B.velocity.velocity += (B.position - A.position) * new Vector2(0.5f, 0.1f);
             }
-            
-
-
-
-
             if (A.ID == -1 && B.name == "Player") // ItemDrop
             {
                 if (A.IFrame >= 1f) return;

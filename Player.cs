@@ -287,7 +287,7 @@ namespace MinecraftAlpha
                                 for (float k = 0; k < z; k++)
                                 {
                                     Vector3 p = new Vector3(i, j, k);
-                                    var t = game._blockManager.GetTile(p + pos1 + );
+                                    var t = game._blockManager.GetTile(p + pos1);
                                     var b = str.Grid3D[(int)p.Z, (int)p.Y, (int)p.X];
                                     if (t == null || b == null) continue;
                                     if (b.ID == 0) continue;

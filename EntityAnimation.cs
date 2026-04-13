@@ -1,5 +1,6 @@
 ﻿using MinecraftAlpha;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace MinecraftAlpha
 {
@@ -32,7 +33,7 @@ namespace MinecraftAlpha
 
 
 
-        }
+        }//by its index by removing it form active
         public void Play(int ID, Entity parent)
         {
             if (parent.ID <= -1 || ID > parent.Animations.Count - 1) return; // Lol no ur an object
@@ -52,8 +53,8 @@ namespace MinecraftAlpha
 
 
 
-        }
-        public static EntityAnimation GetAnimation(string name, int ID)
+        }//by its index by Adding it to active
+        public static EntityAnimation GetAnimation(string name, int ID)// litteraly overcomplicated Find() 
         {
             foreach (var anim in LoadAnimations())
             {
@@ -224,12 +225,12 @@ public class Frame
         this.Flip = Flip;
 
     }
-
-    public float start = 3;
-    public int Joint = 0;
-    public float Angle = 0f;
-    public bool Flip = false;
-    public float Durration = 1f;
+    public Vector3 Position; // First 2 are for x y movement, 3 & 4 for fake rotation of z axis - LERP
+    public float start = 3; // When the frame should start, in seconds
+    public int Joint = 0; //Joint ID
+    public float Angle = 0f; // Desired angle for the joint to be at when the frame is done
+    public bool Flip = false; // fliped means angle fliped
+    public float Durration = 1f; // How long the frame should take to complete
 
 
 }
@@ -255,50 +256,44 @@ public class EntityAnimation
     public float Time = 0f;
     public void Update()
     {
-        if (Paused)
-        {
-            return;
-        }
+        if (Paused) return;
+
         Time += 0.1f;
-        foreach (var frame in frames)
+
+       
+        if (Time >= duration)
         {
-
-            var Parent = parent.Joints[frame.Joint];
-
-            float Angle = frame.Angle;
-            if (parent.Fliped)
-            {
-                if (frame.Flip)
-                {
-                    Angle = frame.Angle + 180;
-                }
-
-            }
-
-            float Distance = GetDistanceBetweenAngles(Parent.orientation, Angle);
             if (Looped)
             {
                 Time = 0f;
-
             }
-            if (Time >= duration)
+            else
             {
                 ResetAnim();
                 Paused = true;
                 return;
-
             }
+        }
 
+        foreach (var frame in frames)
+        {
+            var Parent = parent.Joints[frame.Joint];
 
+            float targetAngle = frame.Angle;
 
-
-            if (frame.Durration + frame.start >= Time && frame.start <= Time)
+            if (parent.Fliped && frame.Flip)
             {
-
-                Parent.orientation += Distance / frame.Durration / 5;
+                targetAngle += 180f;
             }
 
+            //current time is inside this frame
+            if (frame.start <= Time && Time <= frame.start + frame.Durration)
+            {
+                float delta = GetDistanceBetweenAngles(Parent.orientation, targetAngle); //Delta
 
+                
+                Parent.orientation += delta / frame.Durration/5;
+            }
         }
     }
 
@@ -314,15 +309,18 @@ public class EntityAnimation
     }
 
 
-
+    
     public float GetDistanceBetweenAngles(float start, float end)
     {
-        float Distance = end - start;
-        if (float.Abs(Distance) > 180)
-        {
-            Distance = -360;
-        }
-        return Distance % 360;
+       
+        float delta = (end - start) % 360f;
+
+        if (delta > 180f)
+            delta -= 360f;
+        else if (delta < -180f)
+            delta += 360f;
+
+        return delta;
 
     }
 

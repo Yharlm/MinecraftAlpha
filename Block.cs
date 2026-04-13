@@ -17,11 +17,8 @@ namespace MinecraftAlpha
         public bool Animated = false;
         public string Name { get; set; }
         public string Description { get; set; }
-
         public Block ItemDrop = null;
-
         public bool Transparent = false;
-
         public int DefaultState = 0; // Default state of the block
         public string Data = ""; // Additional data for the block
 
@@ -31,16 +28,9 @@ namespace MinecraftAlpha
         public bool Placable = true;
         public float Light_Emission = 0f; // How much light the block emits
 
-
-
-
-
-
-
         public Color Color = Color.White;
         public Texture2D Texture { get; set; }
         public string TexturePath { get; set; }
-
 
         public bool Item = false;
         public int MineLevel = 0; // How fast the block can be mined
@@ -64,13 +54,6 @@ namespace MinecraftAlpha
         public float UseTime = 0f;
 
         public Action<TileGrid, Entity, Block> Interaction = null;
-
-
-
-
-
-
-
         public Action<TileGrid, string> Update;
         public Action<TileGrid> OnCollide;
     }
