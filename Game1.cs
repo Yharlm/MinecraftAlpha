@@ -814,7 +814,8 @@ public class Game1 : Game
         TimeSinceStart += 0.3f;
 
         MouseClick = 0;
-        if (Mouse.GetState().LeftButton == ButtonState.Released && Mouse.GetState().LeftButton == ButtonState.Released && Clicked)
+        if (Mouse.GetState().LeftButton == ButtonState.Released &&
+            Mouse.GetState().LeftButton == ButtonState.Released && Clicked)
         {
 
             Clicked = false;
@@ -838,17 +839,8 @@ public class Game1 : Game
             MouseClick = 2;
             Clicked = true;
         }
-
-
-
-
-
-
         MousePosition = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
         _userInterfaceManager.MouseAction(MousePosition, _actionManager, MouseClick);
-
-
-
 
         if (!GameStarted)
         {

@@ -576,10 +576,6 @@ namespace MinecraftAlpha
         {
             return GetBlockAtPos(pos, 9, Chunks);
         }
-        public static TileGrid GetBlockAtPos(Vector3 pos, List<Chunk> Chunks)
-        {
-            return GetBlockAtPos(new(pos.X, pos.Y), (int)pos.Z, Chunks);
-        }
 
         public static Vector3 GetPosAtBlock(TileGrid tile)
         {
