@@ -727,12 +727,7 @@ namespace MinecraftAlpha
             int size = Chunks[0].Tiles.GetLength(1);
             int ChunkX = (int)Math.Ceiling((pos.X / size));
             int ChunkY = (int)Math.Ceiling((pos.Y / size));
-
-
-
             var C = GetChunk(Pos);
-
-
             int x = (int)(pos.X % size);
             int y = (int)(pos.Y % size);
 

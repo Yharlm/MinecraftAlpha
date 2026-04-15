@@ -3,9 +3,121 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MinecraftAlpha
 {
+    public class PathFind
+    {
+        public class Node
+        {
+            public int X;
+            public int Y;
+
+            public float G; // cost from start
+            public float H; // heuristic to goal
+            public float F => G + H;
+
+            public Node Parent;
+        }
+        float GetTileCost(Block tile)
+        {
+            if (tile == null) return float.MaxValue;
+
+            if (tile.ID != 0)
+                return float.MaxValue; // blocked
+
+            // You can expand this later (mud, ice, water, etc.)
+            return 1f;
+        }
+        public List<Vector2> FindPath(Vector2 start, Vector2 goal, Game1 game1, int z)
+        {
+            var open = new List<Node>();
+            var closed = new HashSet<(int, int)>();
+
+            Node startNode = new Node { X = (int)start.X, Y = (int)start.Y };
+            Node goalNode = new Node { X = (int)goal.X, Y = (int)goal.Y };
+
+            open.Add(startNode);
+
+            while (open.Count > 0)
+            {
+                // get lowest F
+                Node current = open.OrderBy(n => n.F).First();
+                open.Remove(current);
+
+                if (current.X == goalNode.X && current.Y == goalNode.Y)
+                    return ReconstructPath(current);
+
+                closed.Add((current.X, current.Y));
+
+                foreach (var (nx, ny) in GetNeighbors(current))
+                {
+                    if (closed.Contains((nx, ny)))
+                        continue;
+
+                    var tile = game1._blockManager.GetTile(new Vector3(nx, ny, z));
+                    float cost = GetTileCost(game1._blockManager.GetBlockAtTile(tile));
+
+                    if (cost == float.MaxValue)
+                        continue;
+
+                    float newG = current.G + cost;
+
+                    var existing = open.FirstOrDefault(n => n.X == nx && n.Y == ny);
+
+                    if (existing == null)
+                    {
+                        open.Add(new Node
+                        {
+                            X = nx,
+                            Y = ny,
+                            G = newG,
+                            H = Heuristic(nx, ny, goalNode.X, goalNode.Y),
+                            Parent = current
+                        });
+                    }
+                    else if (newG < existing.G)
+                    {
+                        existing.G = newG;
+                        existing.Parent = current;
+                    }
+                }
+            }
+
+            return new List<Vector2>(); // no path
+        }
+
+        float Heuristic(int x1, int y1, int x2, int y2)
+        {
+            return MathF.Abs(x1 - x2) + MathF.Abs(y1 - y2); // Manhattan
+        }
+
+        List<(int, int)> GetNeighbors(Node node)
+        {
+            return new List<(int, int)>
+    {
+        (node.X + 1, node.Y),
+        (node.X - 1, node.Y),
+        (node.X, node.Y + 1),
+        (node.X, node.Y - 1)
+    };
+        }
+
+        List<Vector2> ReconstructPath(Node node)
+        {
+            var path = new List<Vector2>();
+
+            while (node != null)
+            {
+                path.Add(new Vector2(node.X + 0.5f, node.Y + 0.5f));
+                node = node.Parent;
+            }
+
+            path.Reverse();
+            return path;
+        }
+    }
     public class EntityManager
     {
         public Game1 game;
@@ -53,7 +165,7 @@ namespace MinecraftAlpha
         {
             Vector2 Pos = mob.position;
 
-            
+
 
 
             if (mob.ID <= -1)
@@ -74,7 +186,7 @@ namespace MinecraftAlpha
                     }
                 }
                 return; // Lol no ur an object
-            } 
+            }
             if (mob.Target != null)
             {
                 Pos = mob.Target.position;
@@ -101,10 +213,10 @@ namespace MinecraftAlpha
                     mob.Punch(Targ, game);
                 }
             }
-            
+
         }
 
-        public Entity SpawnItem(Vector2 position, int Z, Block item,int c)
+        public Entity SpawnItem(Vector2 position, int Z, Block item, int c)
         {
             var Drop = Entity.CloneEntity(game._entityManager.entities[1], Vector2.Floor(position) + Vector2.One * 0.5f);
             Drop.TextureName = "null";
@@ -114,13 +226,13 @@ namespace MinecraftAlpha
 
             if (item.Item)
             {
-                Drop.Data = item.ID.ToString() + ";"+ c;
+                Drop.Data = item.ID.ToString() + ";" + c;
                 Drop.name = "item";
             }
             else
             {
                 Drop.name = "item3D";
-                Drop.Data = item.ID.ToString() + ";"+ c;
+                Drop.Data = item.ID.ToString() + ";" + c;
             }
 
             Drop.Layer = Z;
@@ -156,7 +268,7 @@ namespace MinecraftAlpha
 
                 game._particleSystem.Particles.Add(part);
             }
-            list.Add(SpawnItem(entity.position, (int)entity.Layer, game._blockManager.Blocks[2],1));
+            list.Add(SpawnItem(entity.position, (int)entity.Layer, game._blockManager.Blocks[2], 1));
         }
 
         public void RenderAll(SpriteBatch SB, float Size, Vector2 Pos)
@@ -171,15 +283,15 @@ namespace MinecraftAlpha
             }
         }
 
-        public Entity GravityBlock(Vector2 Pos,int Z,bool destroy)
+        public Entity GravityBlock(Vector2 Pos, int Z, bool destroy)
         {
 
             var tile = BlockManager.GetBlockAtPos(Pos, Z, game.Chunks);
             if (tile == null) return null;
             if (tile.ID == 0) return null;
-            var g = Entity.CloneEntity(GetEntityByName("Fallingblock"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y))-Vector2.One*.5f);
+            var g = Entity.CloneEntity(GetEntityByName("Fallingblock"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y)) - Vector2.One * .5f);
             g.Data = game._blockManager.GetBlockAtTile(tile).Name;
-            
+
             game._entityManager.Workspace.Add(g);
 
             if (destroy)
@@ -213,7 +325,7 @@ namespace MinecraftAlpha
             int id = 0;
             List<Entity> Entities = new List<Entity>();
 
-            
+
 
             var Plr = new Entity(id++, "Player", "Mobs/Steve", 20)
             {
@@ -478,14 +590,14 @@ namespace MinecraftAlpha
                     },
                     new Joint() //Head
                     {
-                        
+
                         A = new Vector2(-9, 3f),
                         B = new Vector2(0f, 0f),
                         A_Index = 4,
                         B_Index = 5,
                     },
 
-                    
+
                 },
                 Animations = new()
                 {

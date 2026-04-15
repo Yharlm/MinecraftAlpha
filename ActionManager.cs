@@ -24,7 +24,7 @@ namespace MinecraftAlpha
         public Random random = new Random();
         public Game1 Game;
         public List<Event> Actions = new List<Event>();
-        
+        public List<TileGrid> UpdateTiles = new List<TileGrid>();
         public List<Event> EventQueue = new List<Event>(); // Stores changes done durring gameplay
 
         public void QueChange(Event ev)
@@ -32,7 +32,7 @@ namespace MinecraftAlpha
             EventQueue.Add(ev);
         }
         
-
+        
         public bool CheckAround(int x, int y, TileGrid[,] Map)
         {
             bool Placable = true;

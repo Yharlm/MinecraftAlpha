@@ -241,7 +241,7 @@ public class EntityAnimation
     public bool Fliped = false;
     public Entity parent;
     public bool Looped = false;
-    public bool Paused = true;
+    public bool Paused = false;
     public string name;
     public int ID = -1;
     public EntityAnimation(int ID, string name, List<Frame> Frames)
@@ -260,7 +260,7 @@ public class EntityAnimation
 
         Time += 0.1f;
 
-       
+
         if (Time >= duration)
         {
             if (Looped)
@@ -291,8 +291,8 @@ public class EntityAnimation
             {
                 float delta = GetDistanceBetweenAngles(Parent.orientation, targetAngle); //Delta
 
-                
-                Parent.orientation += delta / frame.Durration/5;
+
+                Parent.orientation += delta / frame.Durration / 5;
             }
         }
     }

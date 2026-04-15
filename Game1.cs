@@ -907,7 +907,7 @@ public class Game1 : Game
             var Entity = Animation.parent;
             var anim = Entity.Animations[Animation.id];
             anim.parent = Entity;
-            if (Entity.name == "Pig")// Debuging pig walking was here
+            //if (Entity.name == "Pig")// Debuging pig walking was here
             anim.Update();
             //Entity.Joints[1].orientation += 10;
 
@@ -1025,7 +1025,7 @@ public class Game1 : Game
         }
 
 
-        _entityAnimationService.entityAnimations.RemoveAll(x => x.parent.Animations[x.id].Paused);
+        _entityAnimationService.entityAnimations.RemoveAll(x => x.parent.Animations[x.id].Paused == true);
 
         var ItemList = new List<Entity>();
         foreach (var entity in _entityManager.Workspace)
@@ -1090,7 +1090,7 @@ public class Game1 : Game
 
 
             entity.velocity.apply_velocity(entity); // Apply gravity or any other force
-            entity.collisionBox.UpdateCollision(entity, Chunks, this);
+            CollisionBox.UpdateCollision(entity, this);
             _entityManager.AI(entity);
 
             var EntVal = entity.velocity.velocity;

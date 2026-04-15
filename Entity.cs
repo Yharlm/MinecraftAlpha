@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
 
 namespace MinecraftAlpha
 {
@@ -17,8 +16,8 @@ namespace MinecraftAlpha
         public int A_Index = -1; // used afterwards to add sprite based on their index.
         public int B_Index = -1;
         public Joint() { }
-        
-        
+
+
     }
     public class CollisionBox
     {
@@ -31,77 +30,56 @@ namespace MinecraftAlpha
 
         public bool center { get; set; } = false;
 
-        public void UpdateCollision(Entity entity, List<Chunk> World, Game1 game1)
+        public static void  UpdateCollision(Entity entity, Game1 game1)
         {
-            //if (entity.position.X < 0 || entity.position.X >= World.GetLength(1) || entity.position.Y < 0 || entity.position.Y >= World.GetLength(0))
-            //{
-            //    return; // Skip if the entity is out of bounds
-            //}
-            var old = Size;
-            entity.collisionBox = new CollisionBox() { Size = old }; // Reset collision box for each update
-            //float Collision_quality = 0.5f;
-            //World[(int)(entity.position.Y), (int)(entity.position.X)] = 1;
-
-            //if (World[(int)(entity.position.Y - Size.Y), (int)(entity.position.X)].ID != 0)
-            //{
-            //    entity.collisionBox.Top = true;
-            //}
-            //if (World[(int)(entity.position.Y + Size.Y), (int)(entity.position.X)].ID != 0)
-            //{
-            //    entity.collisionBox.Bottom = true;
-            //}
-            //if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X - Size.X)].ID != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X - Size.X)].ID != 0)
-            //{
-            //    entity.collisionBox.Left = true;
-            //}
-            //if (World[(int)(entity.position.Y - Size.Y * 0.8), (int)(entity.position.X + Size.X)].ID != 0 || World[(int)(entity.position.Y + Size.Y * 0.8), (int)(entity.position.X + Size.X)].ID != 0)
-            //{
-            //    entity.collisionBox.Right = true;
-            //}
-            Vector2 Offset = new Vector2(Size.X / 2, Size.Y / 2);
-            Vector2 Bottom = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y) - Offset;
-            Vector2 Left = entity.position + new Vector2(0, entity.collisionBox.Size.Y / 2f) - Offset;
-            Vector2 Right = entity.position + new Vector2(entity.collisionBox.Size.X, entity.collisionBox.Size.Y / 2f) - Offset;
-            Vector2 Top = entity.position + new Vector2(entity.collisionBox.Size.X / 2, 0) - Offset;
-            Vector2 Center = entity.position + new Vector2(entity.collisionBox.Size.X / 2, entity.collisionBox.Size.Y / 2f) - Offset;
+            entity.collisionBox = new CollisionBox() { Size = entity.collisionBox.Size };
             int z = (int)entity.Layer;
-
-
-            game1._spriteBatch.Begin();
-            Debuging.DebugPosWOrld(game1._spriteBatch, Bottom, game1);
-            Debuging.DebugPosWOrld(game1._spriteBatch, Left, game1);
-            Debuging.DebugPosWOrld(game1._spriteBatch, Right, game1);
-            Debuging.DebugPosWOrld(game1._spriteBatch, Top, game1);
-            Debuging.DebugPosWOrld(game1._spriteBatch, Center, game1);
-            game1._spriteBatch.End();
-
-
-
-            if (BlockManager.GetBlockAtPos(Bottom, z, World) != null && BlockManager.GetBlockAtPos(Bottom, z, World).ID != 0)
+            float halfW = entity.collisionBox.Size.X / 2f; //Hlf the collision box
+            float halfH = entity.collisionBox.Size.Y / 2f;
+            float left = entity.position.X - halfW;
+            float right = entity.position.X + halfW; //Positions of sides 
+            float top = entity.position.Y - halfH;
+            float bottom = entity.position.Y + halfH;
+            int tileLeft = (int)MathF.Floor(left);
+            int tileRight = (int)MathF.Floor(right);
+            int tileTop = (int)MathF.Floor(top);
+            int tileBottom = (int)MathF.Floor(bottom);
+            entity.collisionBox.Top = false;
+            entity.collisionBox.Bottom = false;
+            entity.collisionBox.Left = false;
+            entity.collisionBox.Right = false;
+            entity.collisionBox.center = false;
+            for (int y = tileTop; y <= tileBottom; y++) //Grid collsiion, checks in a grid
             {
-                entity.collisionBox.Bottom = true;
+                for (int x = tileLeft; x <= tileRight; x++)
+                {
+                    var tile = game1._blockManager.GetTile(new Vector3(x, y, z));
+                    if (tile == null || tile.ID == 0) continue;
+                    // center of tile
+                    float tileCenterX = x + 0.5f;
+                    float tileCenterY = y + 0.5f;
+                    float dx = entity.position.X - tileCenterX;
+                    float dy = entity.position.Y - tileCenterY;
+                    float absDX = MathF.Abs(dx); //distances from center of tile
+                    float absDY = MathF.Abs(dy);
+                    if (absDX > absDY)//Top or side
+                    {
+                        if (dx > 0)
+                            entity.collisionBox.Left = true;
+                        else
+                            entity.collisionBox.Right = true;
+                    }
+                    else
+                    {
+                        if (dy > 0)
+                            entity.collisionBox.Top = true;
+                        else
+                            entity.collisionBox.Bottom = true;
+                    }
+                    entity.collisionBox.center = true;
+                }
             }
-            if (BlockManager.GetBlockAtPos(Left, z, World) != null && BlockManager.GetBlockAtPos(Left, z, World).ID != 0)
-            {
-                entity.collisionBox.Left = true;
-            }
-            if (BlockManager.GetBlockAtPos(Right, z, World) != null && BlockManager.GetBlockAtPos(Right, z, World).ID != 0)
-            {
-                entity.collisionBox.Right = true;
-            }
-            if (BlockManager.GetBlockAtPos(Top, z, World) != null && BlockManager.GetBlockAtPos(Top, z, World).ID != 0)
-            {
-                entity.collisionBox.Top = true;
-            }
-            if (BlockManager.GetBlockAtPos(Center, z, World) != null)
-            {
-                entity.collisionBox.center = true;
-            }
-
-
         }
-
-        
     }
 
     public class Entity
@@ -151,7 +129,7 @@ namespace MinecraftAlpha
 
         public Action Interaction;
 
-        public Action<Entity> Update = (This) => {};
+        public Action<Entity> Update = (This) => { };
 
         public Action Damaged;
         public static Entity CloneEntity(Entity Example, Vector2 Position)
@@ -185,7 +163,7 @@ namespace MinecraftAlpha
         }
         public static void CollisionEventCollision(Entity A, Entity B, Game1 game1)
         {
-            if(A.ID >= 0 && B.ID >= 0)
+            if (A.ID >= 0 && B.ID >= 0)
             {
                 A.velocity.velocity += (A.position - B.position) * new Vector2(0.5f, 0.1f);
                 B.velocity.velocity += (B.position - A.position) * new Vector2(0.5f, 0.1f);
@@ -229,7 +207,7 @@ namespace MinecraftAlpha
             {
 
                 //if (A.IFrame >= 0f) return;
-                B.TakeDamage(A.Target, (int)(float.Abs(A.velocity.velocity.X)+ float.Abs(A.velocity.velocity.Y))/3 , 2);
+                B.TakeDamage(A.Target, (int)(float.Abs(A.velocity.velocity.X) + float.Abs(A.velocity.velocity.Y)) / 3, 2);
                 A.Health = 0;
 
             }
@@ -300,14 +278,14 @@ namespace MinecraftAlpha
                                null,
                                Color.White,
                                0, // Orientation
-                               new Vector2(8,8), //
-                               BlockSize/16,
+                               new Vector2(8, 8), //
+                               BlockSize / 16,
                                SpriteEffects.FlipHorizontally,
                                0f
                                );
                 Debuging.DebugPosWOrld(SB, BlockSize * position + Cam, game1, Color.Green);
                 return;
-                
+
             }
 
             if (this.Model3D != null || name == "item")
@@ -323,7 +301,7 @@ namespace MinecraftAlpha
                     SB.Draw(game1.items.Atlas, BlockSize * position + Cam - new Vector2(0, float.Cos(Lifetime / 2) * 2), game1.items.GetRactangle(game1._blockManager.Blocks[int.Parse(Data.Split(";")[0])].ItemID), Microsoft.Xna.Framework.Color.White, 0f, Vector2.Zero, BlockSize / 18, SpriteEffects.None, 0f);
                     return;
                 }
-                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, Vector2.Zero,game1);
+                this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, Vector2.Zero, game1);
                 if (int.Parse(Data.Split(";")[1]) >= 10)
                 {
                     this.Model3D.Draw(SB, BlockSize * position + Cam, BlockSize / 18, new Vector2(1.8f, -0.2f), game1);
@@ -340,7 +318,7 @@ namespace MinecraftAlpha
             {
                 Joint.B_Sprite.ParentOrianetation = Joint.A_Sprite.Orientation;
                 //Joint.A_Sprite.Joints.Add(Joint.A);
-                if(Joint.B_Index == 3)
+                if (Joint.B_Index == 3)
                 {
                     //
                 }
@@ -397,52 +375,42 @@ namespace MinecraftAlpha
 
         public void Punch(Entity Target, Game1 game)
         {
-
             if ("Item" == Target.name) return;
             var item = this.Item;
             float dmg = 2;
-            if(item != null)
+            if (item != null)
             {
                 if (item.Tag == "Sword")
                 {
                     dmg = item.Damage;
                 }
             }
-           
-
-
             if (!collisionBox.Bottom && IFrame <= 0f)
             {
                 Random random = new Random();
-                Target.TakeDamage(this, (int)(dmg*1.4), 17);
-                var part = new Particle()
+                Target.TakeDamage(this, (int)(dmg * 1.4), 17);
+                var part = new Particle() // Crit hit effect
                 {
 
-                    Position = Target.position + new Vector2((float)random.NextDouble() - 0.5f, -(float)random.NextDouble() / 2) * 2,
+                    Position = Target.position + new Vector2((float)random.NextDouble() - 0.5f,
+                    -(float)random.NextDouble() / 2) * 2,
                     TextureName = "BlockMineEffect",
                     Texture = game._particleSystem.sprites[0],
                     lifeTime = 3f,
                     size = 1f,
                     Color = Color.Beige,
 
-                    Velocity = new Vector2(0, 0),
-
-
+                    Velocity = new Vector2(0, 0)
                 };
-
                 IFrame = 2f;
-
                 game._particleSystem.Particles.Add(part);
-
             }
             else
             {
                 Target.TakeDamage(this, (int)dmg, 10);
             }
-
             Target.Target = this;
             game._entityAnimationService.Play(2, this);
-
         }
         public void TakeDamage(Entity source, int DMG, float knockback)
         {
@@ -451,59 +419,47 @@ namespace MinecraftAlpha
             Vector2 Knockback = new Vector2(0, 1);
             if (IFrame > 0 || !CanBeDamaged) return;
             if (source != null) Knockback = (position - source.position);
-            Target = source;
+            Target = source; //when hitting, the hit entity will take you as a target, for AI follow
             if (Knockback == Vector2.Zero)
             {
                 Knockback = new Vector2(0, 1);
             }
-
             velocity.velocity += Vector2.Normalize(Knockback) * knockback;
-            Jump();
+            Jump(); //makes them jump up when hit,
             Health -= DMG;
-            Iframes();
+            Iframes();//resets iframes
         }
 
         public void WalkTo(Vector2 pos, bool can_jump)
         {
             float lspeed = Speed;
-            
-            if (can_jump)
+
+            if (can_jump)// a static bool, telling if it will jump over small gaps or walk into them
             {
                 if (!collisionBox.Bottom || collisionBox.Left || collisionBox.Right)
                 {
                     Jump();
                 }
             }
-            if (IFrame > 1)
+            if (IFrame > 1)//being hit stuns
             {
                 lspeed = Speed * 0.6f;
             }
-            //if (!collisionBox.Bottom)
-            //{
-            //    lspeed = Speed * 0.5f;
-            //}
-
-            velocity.velocity += pos * Vector2.UnitX * lspeed;
-            if(velocity.velocity.X > 0)
+            velocity.velocity += pos * Vector2.UnitX * lspeed; // lspeed is walkspeed
+            if (velocity.velocity.X > 0)//flips based on direction.
             {
                 Fliped = false;
             }
-            else if(velocity.velocity.X < 0)
+            else if (velocity.velocity.X < 0)
             {
                 Fliped = true;
             }
         }
-
-
-
         public void Jump()
         {
             if (Grounded) return;
-
             velocity.velocity += new Vector2(0, -3f);
-            Grounded = true;
-            //position += new Vector2(0, -0.2f);
-
+            Grounded = true; //ensres cant jump until hit ground
         }
 
     }
@@ -513,7 +469,7 @@ namespace MinecraftAlpha
         public bool flying = false;
 
         public float Gravity = 0;
-        
+
         public Vector2 velocity = new(0, 0);
         public float Drag = 7f;
 
@@ -531,10 +487,10 @@ namespace MinecraftAlpha
             }
             else
             {
-                
+
                 Gravity += 0.02f;
             }
-            
+
 
             if (float.Abs(velocity.X) < 0.4f && entity.ID >= 0)
             {
@@ -552,17 +508,17 @@ namespace MinecraftAlpha
                 vel.X = 0;
                 velocity.X = 0;
             }
-            if (vel.Length() >20)
+            if (vel.Length() > 20)
             {
                 Drag = 20f;
-                
+
             }
             if (entity.ID < 0)
             {
                 Drag = 160f;
-                if(entity.collisionBox.Bottom) { velocity *= 0f; }
+                if (entity.collisionBox.Bottom) { velocity *= 0f; }
             }
-            
+
             vel *= velocity;
             velocity -= vel / Drag;
 
