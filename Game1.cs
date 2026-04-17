@@ -1172,7 +1172,7 @@ public class Game1 : Game
 
 
 
-        bool Front = false; //this represents for Mining infront or behind
+        bool Front = true; //this represents for Mining infront or behind
        
         var keyboard = Keyboard.GetState().GetPressedKeys();
         foreach (var key in keyboard)
@@ -1403,15 +1403,17 @@ public class Game1 : Game
                 _entityAnimationService.Play(2, PLR);
                 //add a attack part here instead
 
-                float TempLayer = PLR.Layer;
-
+                float TempLayer = 0;
+                var tile = _blockManager.GetTile(new Vector3(WorldMousePos, Player.Plr.Layer));
                 if (Front)
                 {
-                    PLR.Layer += 1;
+                    TempLayer += 1;
                 }
                 if (!Front)
                 {
-                    PLR.Layer -= 1;
+                    
+                    if (tile != null && tile.ID == 0)
+                    TempLayer -= 1;
                 }
 
                 float Damage = 0.3f;
@@ -1429,7 +1431,7 @@ public class Game1 : Game
 
 
 
-                _actionManager.BreakBlock(WorldMousePos, Player.Plr.Layer, Damage); // When tools get added this will change
+                _actionManager.BreakBlock(WorldMousePos, Player.Plr.Layer + TempLayer, Damage); // When tools get added this will change
                 PLR.Layer = TempLayer;
 
 

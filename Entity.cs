@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MinecraftAlpha
 {
@@ -30,53 +30,22 @@ namespace MinecraftAlpha
 
         public bool center { get; set; } = false;
 
-        public static void  UpdateCollision(Entity entity, Game1 game1)
+        public static void UpdateCollision(Entity entity, Game1 game1)
         {
-            entity.collisionBox = new CollisionBox() { Size = entity.collisionBox.Size };
-            int z = (int)entity.Layer;
-            float halfW = entity.collisionBox.Size.X / 2f; //Hlf the collision box
-            float halfH = entity.collisionBox.Size.Y / 2f;
-            float left = entity.position.X - halfW;
-            float right = entity.position.X + halfW; //Positions of sides 
-            float top = entity.position.Y - halfH;
-            float bottom = entity.position.Y + halfH;
-            int tileLeft = (int)MathF.Floor(left);
-            int tileRight = (int)MathF.Floor(right);
-            int tileTop = (int)MathF.Floor(top);
-            int tileBottom = (int)MathF.Floor(bottom);
-            entity.collisionBox.Top = false;
-            entity.collisionBox.Bottom = false;
-            entity.collisionBox.Left = false;
-            entity.collisionBox.Right = false;
-            entity.collisionBox.center = false;
-            for (int y = tileTop; y <= tileBottom; y++) //Grid collsiion, checks in a grid
+            float HalfX = entity.collisionBox.Size.X / 2;
+            float HalfY = entity.collisionBox.Size.Y / 2;
+            for (float i = HalfX + entity.position.X; i < HalfX + entity.position.X; i += 1)
             {
-                for (int x = tileLeft; x <= tileRight; x++)
+                for (float j = HalfY + entity.position.Y; j < HalfY + entity.position.Y; j += 1)
                 {
-                    var tile = game1._blockManager.GetTile(new Vector3(x, y, z));
-                    if (tile == null || tile.ID == 0) continue;
-                    // center of tile
-                    float tileCenterX = x + 0.5f;
-                    float tileCenterY = y + 0.5f;
-                    float dx = entity.position.X - tileCenterX;
-                    float dy = entity.position.Y - tileCenterY;
-                    float absDX = MathF.Abs(dx); //distances from center of tile
-                    float absDY = MathF.Abs(dy);
-                    if (absDX > absDY)//Top or side
+                    var t = game1._blockManager.GetTile(new Vector3(i, j, entity.Layer));
+                    if (t != null && t.ID != 0)
                     {
-                        if (dx > 0)
-                            entity.collisionBox.Left = true;
-                        else
-                            entity.collisionBox.Right = true;
+                        if (i < entity.position.X) { entity.collisionBox.Left = true; }
+                        if (i > entity.position.X) { entity.collisionBox.Right = true; }
+                        if (j < entity.position.Y) { entity.collisionBox.Top = true; }
+                        if (j > entity.position.Y) { entity.collisionBox.Bottom = true; }
                     }
-                    else
-                    {
-                        if (dy > 0)
-                            entity.collisionBox.Top = true;
-                        else
-                            entity.collisionBox.Bottom = true;
-                    }
-                    entity.collisionBox.center = true;
                 }
             }
         }
