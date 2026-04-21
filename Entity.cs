@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -30,17 +30,25 @@ namespace MinecraftAlpha
 
         public bool center { get; set; } = false;
 
+        public static bool Intersect(Rectangle A, Rectangle B)
+        {
+            return false;
+        }
         public static void UpdateCollision(Entity entity, Game1 game1)
         {
+            
+            entity.collisionBox = new CollisionBox() { Size = entity.collisionBox.Size };
             float HalfX = entity.collisionBox.Size.X / 2;
             float HalfY = entity.collisionBox.Size.Y / 2;
-            for (float i = HalfX + entity.position.X; i < HalfX + entity.position.X; i += 1)
+            for (float i =  entity.position.X- HalfX-1; i <= HalfX + entity.position.X+1; i += 0.2f)
             {
-                for (float j = HalfY + entity.position.Y; j < HalfY + entity.position.Y; j += 1)
+                for (float j = entity.position.Y - HalfY-1; j <= HalfY + entity.position.Y+1; j += 0.2f)
                 {
                     var t = game1._blockManager.GetTile(new Vector3(i, j, entity.Layer));
+                    
                     if (t != null && t.ID != 0)
                     {
+                        t.MinedHealth = 100;
                         if (i < entity.position.X) { entity.collisionBox.Left = true; }
                         if (i > entity.position.X) { entity.collisionBox.Right = true; }
                         if (j < entity.position.Y) { entity.collisionBox.Top = true; }
