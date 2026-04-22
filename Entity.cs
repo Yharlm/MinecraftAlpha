@@ -8,7 +8,7 @@ namespace MinecraftAlpha
     public class Joint
     {
         public float orientation = 0f;
-
+        public Vector4 Offsets;
         public Sprite A_Sprite; //Null beacuse sprites dont exist when the Joints are created.
         public Sprite B_Sprite;
         public Vector2 A = Vector2.Zero; //Joint position in A sprite
@@ -367,9 +367,10 @@ namespace MinecraftAlpha
                 {
                     //
                 }
-                Joint.B_Sprite.Attachment = Joint.B;
+                Joint.B_Sprite.Attachment = Joint.B + new Vector2(Joint.Offsets.X, Joint.Offsets.Y);
                 Joint.B_Sprite.Parent = Joint.A;
                 Joint.B_Sprite.JointOrientation = MathF.PI / 180 * Joint.orientation;
+                
             }
             foreach (Sprite s in Sprites)
             {

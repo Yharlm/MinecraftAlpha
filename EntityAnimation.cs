@@ -1,4 +1,5 @@
 ﻿using MinecraftAlpha;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -106,12 +107,16 @@ namespace MinecraftAlpha
                     new Frame(1,2,2,-60),
                     new Frame(3,0f,2,-60),
                     new Frame(3,2,2,60),
-
+                    
                     new Frame(4,0f,2,60),
                     new Frame(4,2,2,-60),
                     new Frame(2,0f,2,-60),
                     new Frame(2,2,2,60),
 
+
+                    new Frame(0,0,1,0){Position = new(1,0,0,0)},
+                    new Frame(0,1,0,0){Position = new(0,0,0,0)},
+                    new Frame(0,2,1,0){Position = new(-1,0,0,0)},
 
                 })
                 {
@@ -225,7 +230,8 @@ public class Frame
         this.Flip = Flip;
 
     }
-    public Vector3 Position; // First 2 are for x y movement, 3 & 4 for fake rotation of z axis - LERP
+    
+    public Vector4 Position; // First 2 are for x y movement, 3 & 4 for fake rotation of z axis - LERP
     public float start = 3; // When the frame should start, in seconds
     public int Joint = 0; //Joint ID
     public float Angle = 0f; // Desired angle for the joint to be at when the frame is done
@@ -285,17 +291,19 @@ public class EntityAnimation
             {
                 targetAngle += 180f;
             }
-
+            Vector4 pos = frame.Position; //x and y are for offset, z and w are for fake rotation of z axis to mimic 3D
             //current time is inside this frame
+            
             if (frame.start <= Time && Time <= frame.start + frame.Durration)
             {
                 float delta = GetDistanceBetweenAngles(Parent.orientation, targetAngle); //Delta
 
-
+                Parent.Offsets += frame.Position / frame.Durration/5; // Apply x offset
                 Parent.orientation += delta / frame.Durration / 5;
             }
         }
     }
+
 
     public void ResetAnim()
     {
@@ -303,8 +311,10 @@ public class EntityAnimation
         var Idle = parent.Animations.Find(x => x.name.Contains("idle"));
         foreach (var frame in Idle.frames)
         {
+            
             var joint = parent.Joints[frame.Joint];
             joint.orientation = frame.Angle;
+            joint.Offsets = Vector4.Zero;
         }
     }
 

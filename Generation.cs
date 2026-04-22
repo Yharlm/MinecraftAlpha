@@ -44,7 +44,7 @@ namespace MinecraftAlpha
 
         public string Name;
         public int id;
-        public Vector3 position = new Vector3(0,0, 0);
+        public Vector3 position = new Vector3(0, 0, 0);
         public TileGrid[,] BluePrint;
         public TileGrid[,,] Grid3D;
 
@@ -61,13 +61,13 @@ namespace MinecraftAlpha
             return tilegrid;
         }
 
-        static public void Build(Game1 game, Structure structure,Vector3 Pos)
+        static public void Build(Game1 game, Structure structure, Vector3 Pos)
         {
             int x = structure.Grid3D.GetLength(2);
             int y = structure.Grid3D.GetLength(1);
             int z = structure.Grid3D.GetLength(0);
 
-            for( int k = 0; k < z; k++ )
+            for (int k = 0; k < z; k++)
             {
                 for (int i = 0; i < y; i++)
                 {
@@ -83,105 +83,105 @@ namespace MinecraftAlpha
             }
 
         }
-    public void GenerateStructure(List<Chunk> list, Vector2 position, bool Replace)
-    {
-        for (int y = 0; y < BluePrint.GetLength(0); y++)
+        public void GenerateStructure(List<Chunk> list, Vector2 position, bool Replace)
         {
-            for (int x = 0; x < BluePrint.GetLength(1); x++)
+            for (int y = 0; y < BluePrint.GetLength(0); y++)
             {
-                var grid = BlockManager.GetBlockAtPos(position + new Vector2(x, y), list);
-                if (grid == null) return;
-                var blueprintGrid = BluePrint[y, x];
+                for (int x = 0; x < BluePrint.GetLength(1); x++)
+                {
+                    var grid = BlockManager.GetBlockAtPos(position + new Vector2(x, y), list);
+                    if (grid == null) return;
+                    var blueprintGrid = BluePrint[y, x];
 
-                grid.ID = blueprintGrid.ID;
+                    grid.ID = blueprintGrid.ID;
 
 
+                }
             }
         }
-    }
-
-
-
-}
-
-public class HeightMap
-{
-    public int x = 0;
-
-    public int[,] Map = new int[10, 32];
-    public static void SetHeight(HeightMap heightMap, TileGrid tile)
-    {
-
-        int x = (int)tile.pos.X % 32;
-        int y = (int)tile.pos.Y;
-        int z = (int)tile.pos.Z;
-
-
-        heightMap.Map[z, x] = y;
 
 
 
     }
 
-    public static HeightMap GetMap(List<HeightMap> heightMap, int x)
+    public class HeightMap
     {
-        HeightMap m = heightMap.Find(m => m.x == x);
-        if (m == null)
+        public int x = 0;
+
+        public int[,] Map = new int[10, 32];
+        public static void SetHeight(HeightMap heightMap, TileGrid tile)
         {
-            m = new() { x = x };
-            heightMap.Add(m);
+
+            int x = (int)tile.pos.X % 32;
+            int y = (int)tile.pos.Y;
+            int z = (int)tile.pos.Z;
+
+
+            heightMap.Map[z, x] = y;
+
+
+
         }
-        return m;
-    }
 
-
-}
-
-public class Chunk
-{
-
-
-    public int x;
-    public int y;
-
-    public TileGrid[,,] Tiles = new TileGrid[10, 32, 32];
-
-    public Chunk(int x, int y, TileGrid[,,] Grid)
-    {
-        this.x = x;
-        this.y = y;
-        Tiles = Grid;
-    }
-    public Chunk(int x, int y)
-    {
-        this.x = x;
-        this.y = y;
-
-        for (int i = 0; i < Tiles.GetLength(1); i++)
+        public static HeightMap GetMap(List<HeightMap> heightMap, int x)
         {
-            for (int j = 0; j < Tiles.GetLength(2); j++)
+            HeightMap m = heightMap.Find(m => m.x == x);
+            if (m == null)
             {
-                for (int z = 0; z < Tiles.GetLength(0); z++)
+                m = new() { x = x };
+                heightMap.Add(m);
+            }
+            return m;
+        }
+
+
+    }
+
+    public class Chunk
+    {
+
+
+        public int x;
+        public int y;
+
+        public TileGrid[,,] Tiles = new TileGrid[10, 32, 32];
+
+        public Chunk(int x, int y, TileGrid[,,] Grid)
+        {
+            this.x = x;
+            this.y = y;
+            Tiles = Grid;
+        }
+        public Chunk(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+
+            for (int i = 0; i < Tiles.GetLength(1); i++)
+            {
+                for (int j = 0; j < Tiles.GetLength(2); j++)
                 {
-                    Vector3 pos = new Vector3(j, i, z);
-
-                    pos.X += (this.x - 1) * 32;
-                    pos.Y += (this.y - 1) * 32;
-
-
-
-
-                    Tiles[z, i, j] = new TileGrid()
+                    for (int z = 0; z < Tiles.GetLength(0); z++)
                     {
-                        //brightness = 0,
-                        ID = 0,
-                        pos = new Vector3(pos.X, pos.Y, pos.Z),
-                    };
+                        Vector3 pos = new Vector3(j, i, z);
+
+                        pos.X += (this.x - 1) * 32;
+                        pos.Y += (this.y - 1) * 32;
+
+
+
+
+                        Tiles[z, i, j] = new TileGrid()
+                        {
+                            //brightness = 0,
+                            ID = 0,
+                            pos = new Vector3(pos.X, pos.Y, pos.Z),
+                        };
+                    }
                 }
             }
         }
     }
-}
 
 
     //public bool isinchunk(Vector2 pos)
@@ -233,11 +233,11 @@ public class Generation
     }
 
 
-    public void GenerateChunk(Vector2 pos)
+    public void GenerateChunk(Vector2 Pos)
     {
         //Overworld
         var chunks = Game.Chunks;
-        int chunkX = Game._blockManager.GetChunk(pos).x;
+        int chunkX = Game._blockManager.GetChunk(Pos).x;
 
         PerlinNoise Perlin = new PerlinNoise(seed);
         Random random = new Random(seed);
@@ -258,6 +258,10 @@ public class Generation
                 n += Perlin.Noise(worldX * scale * 2, z * scale) * 0.1f;
                 n += Perlin.Noise(worldX * scale * 3, z * scale) * 0.2f;
                 noise += n;
+                //terrain basic
+
+
+
 
                 float Y = noise * 20f;
 
@@ -269,6 +273,7 @@ public class Generation
                 {
                     //PlaceBlock(placement + new Vector2(0, j), z, 1);
                     Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y + j + 0.2f, z), 1, "");
+
                 }
                 for (int j = 5; j < 52; j++)
                 {
@@ -283,12 +288,77 @@ public class Generation
             }
         }
 
+        // --------------------------------------
+        // ORE GENERATION
+        // --------------------------------------
+
+        PerlinNoise oreNoise = new PerlinNoise(seed); // separate noise for ores
+
+        // Ore definitions
+        var ores = new[]
+        {
+    new { BlockID = Game._blockManager.getBlock("Coal Ore").ID, VeinSize = 6, Rarity = 0.25f, MinY = 5, MaxY = 40 },  // Coal
+    new { BlockID = Game._blockManager.getBlock("Iron Ore").ID, VeinSize = 4, Rarity = 0.18f, MinY = 5, MaxY = 20 },  // Iron
+    new { BlockID = Game._blockManager.getBlock("Gold Ore").ID, VeinSize = 3, Rarity = 0.10f, MinY = 5, MaxY = 45 },  // Gold
+    new { BlockID = Game._blockManager.getBlock("Diamond Ore").ID, VeinSize = 2, Rarity = 0.05f, MinY = 5, MaxY = 35 },  // Diamond
+};
+
+
+        for (int z = 0; z < 10; z++)
+        {
+            for (int x = 0; x < 32; x++)
+            {
+                float worldX = chunkX * 32 + x;
+
+                for (int y = 5; y < 52; y++)
+                {
+                    Vector3 pos = new Vector3(worldX + 0.2f, y + 0.2f, z);
+
+                    // Only replace stone
+                    if (Game._blockManager.GetTile(pos).ID != 4)
+                        continue;
+
+                    float noiseVal = oreNoise.Noise(worldX * 0.08f, y * 0.08f);
+
+                    // Evaluate each ore independently
+                    foreach (var ore in ores)
+                    {
+                        if (y < ore.MinY || y > ore.MaxY)
+                            continue;
+
+                        // If this ore doesn't spawn here, skip it
+                        if (noiseVal <= 1f - ore.Rarity)
+                            continue;
+
+                        // If stone is still here, place ore vein
+                        for (int i = 0; i < ore.VeinSize; i++)
+                        {
+                            int ox = x + random.Next(-1, 2);
+                            int oy = y + random.Next(-1, 2);
+                            int oz = z + random.Next(-1, 2);
+
+                            if (ox < 0 || ox >= 32 || oz < 0 || oz >= 10)
+                                continue;
+
+                            Vector3 veinPos = new Vector3(chunkX * 32 + ox + 0.2f, oy + 0.2f, oz);
+
+                            // Only replace stone — prevents overlapping ores
+                            if (Game._blockManager.GetTile(veinPos).ID == 4)
+                                Game._blockManager.SetTile(veinPos, ore.BlockID, "");
+                        }
+                    }
+                }
+            }
+        }
+
 
 
 
 
 
     }
+
+
 
     public void PlaceBlock(Vector2 pos, int z, int id)
     {
