@@ -43,10 +43,10 @@ namespace MinecraftAlpha
             if (Map[y - 1, x].ID == 0) Placable = false;
             return Placable;
         }
-        public void PlaceBlock(Vector2 pos, Block block)
+        public void PlaceBlock(Vector2 pos,float z, Block block)
         {
 
-            int Zindex = (int)Game.Player.Plr.Layer;
+            int Zindex = (int)z;
             var Chunks = Game.Chunks;
 
             if (Zindex < 0 || Zindex > 9) { return; }

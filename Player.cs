@@ -144,7 +144,7 @@ namespace MinecraftAlpha
                 {
                     //
                     Plr.Item.CanFire = true;
-                    game._actionManager.PlaceBlock(game.WorldMousePos, Plr.Item);
+                    game._actionManager.PlaceBlock(game.WorldMousePos,Plr.Layer, Plr.Item);
                     //Plr.Item.Charge = 0;
 
                 }

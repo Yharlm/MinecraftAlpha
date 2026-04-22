@@ -30,6 +30,9 @@ namespace MinecraftAlpha
 
         public bool center { get; set; } = false;
 
+
+
+        
         public static bool Intersect(Rectangle A, Rectangle B)
         {
             return false;
@@ -40,21 +43,86 @@ namespace MinecraftAlpha
             entity.collisionBox = new CollisionBox() { Size = entity.collisionBox.Size };
             float HalfX = entity.collisionBox.Size.X / 2;
             float HalfY = entity.collisionBox.Size.Y / 2;
-            for (float i =  entity.position.X- HalfX-1; i <= HalfX + entity.position.X+1; i += 0.2f)
+
+            
+
+            float XFidality = entity.collisionBox.Size.X / MathF.Ceiling(entity.collisionBox.Size.X)/3;
+            for (float i = -HalfX + XFidality; i <= HalfX - XFidality; i += XFidality) // ground Collsion
             {
-                for (float j = entity.position.Y - HalfY-1; j <= HalfY + entity.position.Y+1; j += 0.2f)
+                Vector3 p = new Vector3(entity.position.X + i, entity.position.Y + HalfY,MathF.Floor(entity.Layer));
+                Vector3 t = new Vector3(entity.position.X + i, entity.position.Y - HalfY, MathF.Floor(entity.Layer));
+                var tile = game1._blockManager.GetTile(p);
+                var top = game1._blockManager.GetTile(t);
+                if (tile != null)
                 {
-                    var t = game1._blockManager.GetTile(new Vector3(i, j, entity.Layer));
-                    
-                    if (t != null && t.ID != 0)
+                    if(tile.ID != 0)
                     {
-                        t.MinedHealth = 100;
-                        if (i < entity.position.X) { entity.collisionBox.Left = true; }
-                        if (i > entity.position.X) { entity.collisionBox.Right = true; }
-                        if (j < entity.position.Y) { entity.collisionBox.Top = true; }
-                        if (j > entity.position.Y) { entity.collisionBox.Bottom = true; }
+                        Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X+i, entity.position.Y + HalfY), game1, Color.Red);
+                        entity.collisionBox.Bottom = true;
+
                     }
+                    else
+                    {
+                        Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X+i, entity.position.Y + HalfY), game1, Color.Green);
+                    }
+                    
+              
                 }
+                if (top != null)
+                {
+                    if (top.ID != 0)
+                    {
+                        Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X, entity.position.Y - HalfY), game1, Color.Red);
+                        entity.collisionBox.Top = true;
+
+                    }
+                    else
+                    {
+                        Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X, entity.position.Y - HalfY), game1, Color.Green);
+                    }
+
+
+                }
+
+            }
+            float YFidality = entity.collisionBox.Size.Y / MathF.Ceiling(entity.collisionBox.Size.Y)/3;
+            for (float i = -HalfY + YFidality; i <= HalfY - YFidality; i += YFidality) // ground Collsion
+            {
+                Vector3 p = new Vector3(entity.position.X + HalfX, entity.position.Y + i, MathF.Floor(entity.Layer));
+                Vector3 t = new Vector3(entity.position.X - HalfX, entity.position.Y + i, MathF.Floor(entity.Layer));
+                var tile = game1._blockManager.GetTile(p);
+                var top = game1._blockManager.GetTile(t);
+                if (tile != null)
+                {
+                    if (tile.ID != 0)
+                    {
+                        Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X + HalfX, entity.position.Y + i), game1, Color.Red);
+                        entity.collisionBox.Right = true;
+
+                    }
+                    else
+                    {
+                        Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X + HalfX, entity.position.Y + i), game1, Color.Green);
+                    }
+
+
+                }
+                if (top != null)
+                {
+                    if (top.ID != 0)
+                    {
+                        Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X - HalfX, entity.position.Y + i), game1, Color.Red);
+                        entity.collisionBox.Left = true;
+
+                    }
+                    else
+                    {
+                        Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X - HalfX, entity.position.Y + i), game1, Color.Green);
+                    }
+
+
+                }
+
             }
         }
     }

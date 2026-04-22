@@ -1173,7 +1173,7 @@ public class Game1 : Game
 
 
         bool Front = true; //this represents for Mining infront or behind
-       
+
         var keyboard = Keyboard.GetState().GetPressedKeys();
         foreach (var key in keyboard)
         {
@@ -1184,7 +1184,7 @@ public class Game1 : Game
                 var tile = BlockManager.GetBlockAtPos(Player.Plr.position, (int)Player.Plr.Layer + 1, Chunks);
                 if (tile != null)
                 {
-                    if (tile.ID == 0) 
+                    if (tile.ID == 0)
                     {
                         Player.Plr.Layer += 0.05f;
                     }
@@ -1192,7 +1192,7 @@ public class Game1 : Game
             }
             if (key == Keys.W)
             {
-                
+
                 var tile = BlockManager.GetBlockAtPos(Player.Plr.position, (int)Player.Plr.Layer - 1, Chunks);
                 if (tile != null)
                 {
@@ -1404,16 +1404,16 @@ public class Game1 : Game
                 //add a attack part here instead
 
                 float TempLayer = 0;
-                var tile = _blockManager.GetTile(new Vector3(WorldMousePos, Player.Plr.Layer));
-                if (Front)
+
+                for (int i = 0; i < 2; i++)
                 {
-                    TempLayer += 1;
-                }
-                if (!Front)
-                {
-                    
+                    var tile = _blockManager.GetTile(new Vector3(WorldMousePos, Player.Plr.Layer + TempLayer));
                     if (tile != null && tile.ID == 0)
-                    TempLayer -= 1;
+                    {
+                        TempLayer -= 1;
+                    }
+
+
                 }
 
                 float Damage = 0.3f;
@@ -1432,19 +1432,20 @@ public class Game1 : Game
 
 
                 _actionManager.BreakBlock(WorldMousePos, Player.Plr.Layer + TempLayer, Damage); // When tools get added this will change
-                PLR.Layer = TempLayer;
+                //if(PLR.Layer + TempLayer < 10)
+                //PLR.Layer += TempLayer;
 
 
             }
 
 
-            if (MouseClick == 2)
-            {
+            //if (MouseClick == 2)
+            //{
 
-                _actionManager.Interact(WorldMousePos);
+            //    _actionManager.Interact(WorldMousePos);
 
 
-            }
+            //}
             if (int.Abs(MouseClick) == 2)
             {
                 for (int i = 0; i < 4; i++)
@@ -1465,15 +1466,11 @@ public class Game1 : Game
                 }
 
 
-                float TempLayer = PLR.Layer;
+                float TempLayer = 0;
 
-                if (Front)
-                {
-                    PLR.Layer += 1;
-                }
-                
-                _actionManager.PlaceBlock(WorldMousePos, PLR.Item);
-                PLR.Layer = TempLayer;
+
+                _actionManager.PlaceBlock(WorldMousePos, PLR.Layer + TempLayer, PLR.Item);
+
 
 
 
@@ -1607,7 +1604,7 @@ public class Game1 : Game
 
         for (int Z = (int)Player.Plr.Layer; Z >= 0; Z--)
         {
-
+            if (Z >= tileGrids.GetLength(0)) { continue; }
             var tile = tileGrids[Z, y, x];
 
             if (tile.ID == 0)
@@ -1712,6 +1709,7 @@ public class Game1 : Game
                     // -----------------------------
                     // DRAW TILES IN THIS LAYER
                     // -----------------------------
+                    
                     for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
                     {
                         for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
@@ -1733,13 +1731,15 @@ public class Game1 : Game
                                     continue;
 
                                 }
-
-                                DrawBlock(tile, chunk, i, j, 1 - (float.Ceiling(Player.Plr.Layer - z)) / 9f, 1);
+                                
+                                DrawBlock(tile, chunk, i, j, 1 - (float.Ceiling(Player.Plr.Layer - z)) / 9f, 1,false);
                             }
 
 
                         }
+                        
                     }
+                    
 
                     // -----------------------------
                     // DRAW ENTITIES IN THIS LAYER
@@ -1756,6 +1756,16 @@ public class Game1 : Game
                             continue;
 
                         entity.DrawEntity(_spriteBatch, BlockSize, Player.cam.position, this);
+                    }
+                }
+                if (Player.Plr.Layer >= 9) continue;
+                for (int i = 0; i < chunk.Tiles.GetLength(1);i++)
+                {
+                    for (int j = 0; j < chunk.Tiles.GetLength(2);j++)
+                    {
+                        
+                        var tile = chunk.Tiles[(int)Player.Plr.Layer+1, i, j];
+                        DrawBlock(tile, chunk, i, j, 1, 1, true);
                     }
                 }
             }
