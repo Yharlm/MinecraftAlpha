@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -151,21 +151,22 @@ namespace MinecraftAlpha
             return blocks.Find(x => x.Name == Name);
         }
 
-        public void Portal(TileGrid Pos)
+        public bool Portal(TileGrid Pos)
         {
             //Find Margins By sending Lines in all directions,
             var pos = GetPosAtBlock(Pos); //
             var Sides = LogicsClass.Sides;
-            var Points = new List<Vector3>();
+            var Points = new TileGrid[6];
             bool Valid = true;
-            foreach(var s in Sides)
+            for (int c = 0; c < 6; c++)
             {
+                var s = Sides[c];
                 TileGrid Hit = null;
                 int Range = 1;
-                while (Hit == null || Range > 10)
+                while (Hit == null && Range <= 10)
                 {
-                    var t = Game._blockManager.GetTile(Pos.pos + s * Range);
-                    if(t != null)
+                    var t = Game._blockManager.GetTile(Pos.pos+Vector3.One*0.3f + s * Range);
+                    if (t != null)
                     {
                         if (t.ID == 0)
                         {
@@ -174,22 +175,130 @@ namespace MinecraftAlpha
                         else
                         {
                             Hit = t;
+                            //t.ID = 9;
+                            Points[c] = t;
+                            break;
                         }
                     }
                     else
                     {
-                        return;
+                        break;
                     }
 
                 }
+
             }
 
 
 
-            //Reults are used to make edges,
-            //for Hallow loop to check for frame
-            //For loop for Fill
+            //Reults are used to make edges, Up, down, left, right, front ,back
 
+            //complicated, yes, its making the edges of the frame
+
+            var up = Points[0];
+            var down = Points[1];
+            var left = Points[2];
+            var right = Points[3];
+            var front = Points[4];
+            var back = Points[5];
+            var Center = Pos;
+
+
+            if ((up == null || down == null) &&
+            ((left == null || right == null) || (front == null || back == null)))
+            {
+                Valid = false;
+                return false;
+            }
+            bool Horizontal = (left != null && right != null);
+
+
+            if (Horizontal)
+            {
+                var A = Combiner(left, up, Center);
+                var B = Combiner(right, down, Center);
+
+                int Lx = (int)(B.pos.X - A.pos.X);
+                int Ly = (int)(A.pos.Y - B.pos.Y);
+                //Check Frame 
+                for (int i = 0; i <= Lx; i++)
+                {
+                    for (int j = 0; j <= Ly; j++)
+                    {
+                        if (j == 0 || j == Ly || i == 0 || i == Lx)
+                        {
+                            var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z));
+
+                            if (Game._blockManager.getBlock(tile).Name != "Dirt")
+                            {
+                                
+                                Valid = false;
+                                return false;
+                            }
+                            tile.ID = 9;
+                        }
+                    }
+                }
+
+
+                //for Hallow loop to check for frame
+                for (int i = 1; i < Lx; i++)
+                {
+                    for (int j = 1; j < Ly; j++)
+                    {
+                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z));
+                        if (tile.ID != 0 && Game._blockManager.getBlock(tile).Name != "Fire")
+                        {
+
+                            Valid = false;
+                            return false;
+                        }
+                    }
+                }
+
+
+
+
+
+                //For loop for Fill
+                for (int i = 1; i < Lx; i++)
+                {
+                    for (int j = 1; j < Ly; j++)
+                    {
+                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z));
+                        if (tile != null)
+                        {
+                            Game._blockManager.SetTile(tile, "Sand", "");
+                            tile.Color = Color.OrangeRed;
+                        }
+                    }
+                }
+
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            return Valid;
+        }
+        public Vector3 Combiner(Vector3 X, Vector3 Y, Vector3 Z)
+        {
+            return new Vector3(X.X, Y.Y, Z.Z);
+        }
+        public TileGrid Combiner(TileGrid X, TileGrid Y, TileGrid Z)
+        {
+            return Game._blockManager.GetTile(new Vector3(X.pos.X, Y.pos.Y, Z.pos.Z));
         }
         public void LoadActions()
         {
@@ -231,7 +340,7 @@ namespace MinecraftAlpha
 
             getBlock("Fire").Update = (Pos, data) =>
             {
-                Portal(Pos);
+                if (Portal(Pos)) { return; }
 
 
 
@@ -729,7 +838,7 @@ namespace MinecraftAlpha
             return new Vector2(Tile.pos.X % 32, Tile.pos.Y % 32);
         }
 
-        
+
 
         ////object
         //public Block GetBlock(TileGrid tile)
@@ -798,7 +907,7 @@ namespace MinecraftAlpha
 
         public Chunk GetChunk(TileGrid Tile)
         {
-            int ChunkX = (int)Math.Ceiling((Tile.pos.X+0.5) / 32);
+            int ChunkX = (int)Math.Ceiling((Tile.pos.X + 0.5) / 32);
             int ChunkY = (int)Math.Ceiling((Tile.pos.Y + 0.5) / 32);
             foreach (Chunk C in Game.Chunks)
             {
@@ -812,7 +921,7 @@ namespace MinecraftAlpha
             }
             return null; //make exception to make chunk instead.
         }
-        public bool GetChunk(Vector2 pos,int non) //World Pos
+        public bool GetChunk(Vector2 pos, int non) //World Pos
         {
             int ChunkX = (int)pos.X;
             int ChunkY = (int)pos.Y;
@@ -827,7 +936,7 @@ namespace MinecraftAlpha
 
             }
 
-            
+
             return false; //make exception to make chunk instead.
         }
         public Chunk GetChunk(Vector2 pos) //World Pos
@@ -901,12 +1010,12 @@ namespace MinecraftAlpha
         //}
         public void Change(TileGrid Tile)
         {
-            
+
             var q = new Event()
 
             {
                 tile = Tile,
-                
+
             };
             Game._actionManager.QueChange(q);
 
@@ -971,7 +1080,7 @@ namespace MinecraftAlpha
         }
         public TileGrid SetTile(TileGrid Tile, string block)
         {
-            
+
             Tile.ID = GetBlockByName(block).ID;
             Tile.Data = "";
             Change(Tile);
@@ -1007,7 +1116,7 @@ namespace MinecraftAlpha
         public float MinedHealth = 0; // How much health has been mined from this block
         public bool MarkedForUpdate = false;
         public bool updateLight = false;
-
+        public Color Color = Color.White;
         public int SkyLight = 0;
 
 

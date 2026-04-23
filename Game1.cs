@@ -1977,12 +1977,16 @@ public class Game1 : Game
     void DrawBlock(TileGrid Tile, Chunk chunk, int i, int j, float Z, float layer, bool Opaque)
     {
         var block = _blockManager.Blocks[Tile.ID];
-
+        var c = Tile.Color;
+        if(Tile.Color == Color.White)
+        {
+            c = block.Color;
+        }
 
         float Light = Tile.brightness;
 
         float a = Z * Light;
-        var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * block.Color;
+        var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * c;
         int healthPercent = (int)Tile.MinedHealth / 10;
         Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);
         if ((int)Tile.MinedHealth <= 0)
