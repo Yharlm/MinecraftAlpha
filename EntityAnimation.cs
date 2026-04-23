@@ -114,13 +114,9 @@ namespace MinecraftAlpha
                     new Frame(2,2,2,60),
 
 
-                    new Frame(0,0,1,0){Position = new(1,0,0,0)},
-                    new Frame(0,1,0,0){Position = new(0,0,0,0)},
-                    new Frame(0,2,1,0){Position = new(-1,0,0,0)},
-
                 })
                 {
-                    duration =4f,
+                    duration =10f,
                     Looped = false,
                 },
                 new EntityAnimation(1,"Running_zombie",new List<Frame>()
@@ -298,7 +294,7 @@ public class EntityAnimation
             {
                 float delta = GetDistanceBetweenAngles(Parent.orientation, targetAngle); //Delta
 
-                Parent.Offsets += frame.Position / frame.Durration/5; // Apply x offset
+                Parent.Offsets += frame.Position / frame.Durration / 10; // Apply x offset
                 Parent.orientation += delta / frame.Durration / 5;
             }
         }

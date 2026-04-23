@@ -44,7 +44,7 @@ namespace MinecraftAlpha
         public float ChargeMax = 0f; // Time taken to charge the item
         public int TickUpdate = 10;
         public bool IgnoreUpdate = false; // If true, the block will not update every tick
-
+        public bool Solid = true;
         public float CooldownMax = 0f;//cooldown after using the item
         public float UseTimeMax = 0f; // Time taken to use/interact with the block
         //Dynamic use variables
@@ -75,7 +75,7 @@ namespace MinecraftAlpha
             var list = new List<Block>()
             {
 
-                new Block { Name = "Air", TexturePath = "air" ,Health = 1000, TickUpdate = 3},
+                new Block { Name = "Air", TexturePath = "air" ,Health = 1000, TickUpdate = 3,Solid = false},
                 new Block { Name = "Dirt", TexturePath = "dirt",Health = 30, Tag="dirt"},
                 new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
@@ -92,7 +92,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood"},
-                new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5},
+                new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5,Solid = false},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true,IgnoreUpdate = true},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
@@ -140,13 +140,57 @@ namespace MinecraftAlpha
             var blocks = Blocks;
             return blocks.Find(x => x.Name == Name);
         }
-
+        public Block getBlock(TileGrid tile)
+        {
+            if (tile == null) return Blocks[0];
+            return Blocks[tile.ID];
+        }
         public static Block getBlocks(string Name)
         {
             var blocks = LoadBlocks();
             return blocks.Find(x => x.Name == Name);
         }
 
+        public void Portal(TileGrid Pos)
+        {
+            //Find Margins By sending Lines in all directions,
+            var pos = GetPosAtBlock(Pos); //
+            var Sides = LogicsClass.Sides;
+            var Points = new List<Vector3>();
+            bool Valid = true;
+            foreach(var s in Sides)
+            {
+                TileGrid Hit = null;
+                int Range = 1;
+                while (Hit == null || Range > 10)
+                {
+                    var t = Game._blockManager.GetTile(Pos.pos + s * Range);
+                    if(t != null)
+                    {
+                        if (t.ID == 0)
+                        {
+                            Range++;
+                        }
+                        else
+                        {
+                            Hit = t;
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+
+                }
+            }
+
+
+
+            //Reults are used to make edges,
+            //for Hallow loop to check for frame
+            //For loop for Fill
+
+        }
         public void LoadActions()
         {
             //getBlock("Flint and Steel").Interaction = (Pos, ent, item) =>
@@ -187,6 +231,11 @@ namespace MinecraftAlpha
 
             getBlock("Fire").Update = (Pos, data) =>
             {
+                Portal(Pos);
+
+
+
+
                 var pos = GetPosAtBlock(Pos); //
                 var Sides = LogicsClass.SidesPosPlus(pos, Game);
                 bool Extinguish = true;

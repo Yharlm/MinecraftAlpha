@@ -43,19 +43,17 @@ namespace MinecraftAlpha
             entity.collisionBox = new CollisionBox() { Size = entity.collisionBox.Size };
             float HalfX = entity.collisionBox.Size.X / 2;
             float HalfY = entity.collisionBox.Size.Y / 2;
-
-            
-
             float XFidality = entity.collisionBox.Size.X / MathF.Ceiling(entity.collisionBox.Size.X)/3;
             for (float i = -HalfX + XFidality; i <= HalfX - XFidality; i += XFidality) // ground Collsion
             {
                 Vector3 p = new Vector3(entity.position.X + i, entity.position.Y + HalfY,MathF.Floor(entity.Layer));
                 Vector3 t = new Vector3(entity.position.X + i, entity.position.Y - HalfY, MathF.Floor(entity.Layer));
-                var tile = game1._blockManager.GetTile(p);
+                var Bottom = game1._blockManager.GetTile(p); 
+                
                 var top = game1._blockManager.GetTile(t);
-                if (tile != null)
+                if (Bottom != null)
                 {
-                    if(tile.ID != 0)
+                    if(game1._blockManager.getBlock(Bottom).Solid)
                     {
                         Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X+i, entity.position.Y + HalfY), game1, Color.Red);
                         entity.collisionBox.Bottom = true;
@@ -70,7 +68,7 @@ namespace MinecraftAlpha
                 }
                 if (top != null)
                 {
-                    if (top.ID != 0)
+                    if (game1._blockManager.getBlock(top).Solid)
                     {
                         Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X, entity.position.Y - HalfY), game1, Color.Red);
                         entity.collisionBox.Top = true;
@@ -90,11 +88,11 @@ namespace MinecraftAlpha
             {
                 Vector3 p = new Vector3(entity.position.X + HalfX, entity.position.Y + i, MathF.Floor(entity.Layer));
                 Vector3 t = new Vector3(entity.position.X - HalfX, entity.position.Y + i, MathF.Floor(entity.Layer));
-                var tile = game1._blockManager.GetTile(p);
-                var top = game1._blockManager.GetTile(t);
-                if (tile != null)
+                var Right = game1._blockManager.GetTile(p);
+                var Left = game1._blockManager.GetTile(t);
+                if (Right != null)
                 {
-                    if (tile.ID != 0)
+                    if (game1._blockManager.getBlock(Right).Solid)
                     {
                         Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X + HalfX, entity.position.Y + i), game1, Color.Red);
                         entity.collisionBox.Right = true;
@@ -107,9 +105,9 @@ namespace MinecraftAlpha
 
 
                 }
-                if (top != null)
+                if (Left != null)
                 {
-                    if (top.ID != 0)
+                    if (game1._blockManager.getBlock(Left).Solid)
                     {
                         Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X - HalfX, entity.position.Y + i), game1, Color.Red);
                         entity.collisionBox.Left = true;
