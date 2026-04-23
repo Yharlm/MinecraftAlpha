@@ -208,8 +208,8 @@ namespace MinecraftAlpha
                 AnglePos = Matrix4x4.CreateRotationZ(ParentAngle - 45);
                 
                 var item = mob.Item;
-                float rotation = MathF.PI * (45) / 180;
-                Vector2 Offset = new Vector2(2, -12);
+                float rotation = MathF.PI * (45) / 180 + 0;
+                Vector2 Offset = new Vector2(-2, -12);
                 if (Flip)
                 {
                     Offset *= new Vector2(-1, 1);
@@ -230,7 +230,7 @@ namespace MinecraftAlpha
                         Layer,
                         Angle + JointOrientation + rotation, // Orientation
                         new Vector2(game1.items.GetRactangle(item.ItemID).Width, game1.items.GetRactangle(item.ItemID).Height) / 2 + attachmentPos, //
-                        size * 0.6f,
+                        size * 0.8f,
                         spriteEffect,
                         0
                     );

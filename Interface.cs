@@ -240,7 +240,7 @@ namespace MinecraftAlpha
             float w = ItemSlots[0].Texture.Width * 3;
             windows.Add(new WindowFrame()
             {
-                
+
                 Position = new Vector2(Middlex / 2 - w * 9 / 2, 600),
                 Name = "Inventory",
                 Visible = false,
@@ -272,7 +272,7 @@ namespace MinecraftAlpha
                 Frames = new() { new UIFrame() { position = new Vector2(-43, -50), Window = Frames[0].Window, Size = new Vector2(130, 60), } },
                 Buttons = new() { },
                 ItemSlots = new() { },
-                
+
             });
             ID = 0;
             for (int i = 0; i < 9; i++)
@@ -281,7 +281,7 @@ namespace MinecraftAlpha
                 {
 
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(w * i, w * j), Texture = ItemSlots[0].Texture, ID = ID,Clicked = (slot) => { Game._blockManager.GetBlockAtTile(LastUsedBlock).Update(LastUsedBlock, LastUsedBlock.Data);  }  };
+                    { ItemPosition = new Vector2(w * i, w * j), Texture = ItemSlots[0].Texture, ID = ID, Clicked = (slot) => { if (LastUsedBlock == null) return; Game._blockManager.getBlock(LastUsedBlock).Update(LastUsedBlock, LastUsedBlock.Data); } };
                     windows.Last().ItemSlots.Add(slot);
                     ID++;
                 }
@@ -308,7 +308,7 @@ namespace MinecraftAlpha
 
             }
             ItemSlot result = new()
-            { ItemPosition = new Vector2(2.4f*w, 0.5f*w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = (slot) => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
+            { ItemPosition = new Vector2(2.4f * w, 0.5f * w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = (slot) => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
             windows.Last().ItemSlots.Add(result);
 
 
@@ -348,7 +348,7 @@ namespace MinecraftAlpha
 
             }
             result = new()
-            { ItemPosition = new Vector2(3f * w, 1 * w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = (slot) => { for (int i = 0; i < 4; i++) { windows[2].ItemSlots[i].TakeItem(1); } } };
+            { ItemPosition = new Vector2(3f * w, 1 * w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = (slot) => { for (int i = 0; i < 9; i++) {GetWindow("Crafting3x3").ItemSlots[i].TakeItem(1); } } };
             windows.Last().ItemSlots.Add(result);
 
 
@@ -407,16 +407,16 @@ namespace MinecraftAlpha
 
 
                 }
-                foreach(var frame in win.Frames)
+                foreach (var frame in win.Frames)
                 {
                     if (frame.IsInBounds(Mouse))
                     {
                         In_interface = true;
                         if (Mouse1 == 1)
                         {
-                            
+
                         }
-                        
+
                     }
                 }
 
@@ -548,30 +548,25 @@ namespace MinecraftAlpha
                     foreach (CraftingRecipe Recipe in game._RecipeManager.Recipes)
                     {
 
-                        if (Recipe.RecipeGrid.GetLength(0) == 3)
-                        {
-                            if (Recipe.CheckRecipe(new ItemSlot[,]
-                        {
+
+                        if (Recipe.CheckRecipe(new ItemSlot[,]
+                    {
                             { ItemSlots[0], ItemSlots[1],ItemSlots[2] },
                             { ItemSlots[3], ItemSlots[4],ItemSlots[5] },
                             { ItemSlots[6], ItemSlots[7],ItemSlots[8] },
-                        }))
-                            {
-                                ItemSlots[9].Item = Recipe.item.Item;
-                                ItemSlots[9].Count = Recipe.item.Count;
-                                break;
+                    }))
+                        {
+                            ItemSlots[9].Item = Recipe.item.Item;
+                            ItemSlots[9].Count = Recipe.item.Count;
+                            break;
 
-                            }
-                            else
-                            {
-                                ItemSlots[9].Count = 0;
-                                ItemSlots[9].Item = null;
-                            }
                         }
                         else
                         {
-
+                            ItemSlots[9].Count = 0;
+                            ItemSlots[9].Item = null;
                         }
+
                     }
                 }
             }
@@ -595,7 +590,7 @@ namespace MinecraftAlpha
         public Texture2D Texture;
         public bool IsInBounds(Vector2 Pos)
         {
-            Vector2 Scale = Texture.Width*Vector2.One * this.Scale*2;
+            Vector2 Scale = Texture.Width * Vector2.One * this.Scale * 2;
             Vector2 PO = this.Position + this.ItemPosition - Scale / 2;
             if (Pos.X >= PO.X && Pos.X <= PO.X + Scale.X)
                 if (Pos.Y > PO.Y && Pos.Y <= PO.Y + Scale.Y)
@@ -727,7 +722,7 @@ namespace MinecraftAlpha
             if (Background == null) return;
             var color = Color.White;
             if (Hovered) color = Color.CornflowerBlue;
-            Spritebatch.Draw(Background, new Rectangle((int)position.X- x, (int)position.Y-y, (int)Scale.X, (int)Scale.Y), color);
+            Spritebatch.Draw(Background, new Rectangle((int)position.X - x, (int)position.Y - y, (int)Scale.X, (int)Scale.Y), color);
         }
 
 
@@ -752,7 +747,7 @@ namespace MinecraftAlpha
 
     public class UIFrame : WindowFrame
     {
-        
+
         public Button button;
         public string Name = "default";
         public Vector2 position = new Vector2(300, 100);
@@ -768,7 +763,7 @@ namespace MinecraftAlpha
 
         public bool IsInBounds(Vector2 Pos)
         {
-            Vector2 Scale = Size*4;
+            Vector2 Scale = Size * 4;
             Vector2 PO = this.Position + position;
             if (Pos.X >= PO.X && Pos.X <= PO.X + Scale.X)
                 if (Pos.Y > PO.Y && Pos.Y <= PO.Y + Scale.Y)

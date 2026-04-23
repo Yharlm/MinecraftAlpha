@@ -22,8 +22,9 @@ public class RecipeManager
         int stick = blocksManager.GetBlockByName("Stick").ID;
         int wood = blocksManager.GetBlockByName("Wood").ID;
         int Cstone = blocksManager.GetBlockByName("Cobblestone").ID;
-        int iron = blocksManager.GetBlockByName("Iron Ingot").ID;
-        int gold = blocksManager.GetBlockByName("Gold Ingot").ID;
+        int iron = blocksManager.GetBlockByName("Iron").ID;
+        int gold = blocksManager.GetBlockByName("Gold").ID;
+        int Diamond = blocksManager.GetBlockByName("Diamond").ID;
         int CraftT = blocksManager.GetBlockByName("Crafting Table").ID;
         var List = new List<CraftingRecipe>()
         
@@ -40,21 +41,21 @@ public class RecipeManager
             new CraftingRecipe(new int[,] {
                 { wood, wood,wood },
                 { 0, stick,0  },
-                { 0, stick,0  }} ,stick,1,blocksManager),
+                { 0, stick,0  }} ,blocksManager.GetBlockByName("Wooden Pickaxe").ID,1,blocksManager),
             new CraftingRecipe(new int[,] {
                 { Cstone, Cstone,Cstone },
                 { 0, stick,0  },
-                { 0, stick,0  }} ,stick,1,blocksManager),
+                { 0, stick,0  }} ,blocksManager.GetBlockByName("Stone Pickaxe").ID,1,blocksManager),
 
             new CraftingRecipe(new int[,] {
                 { iron, iron,iron },
                 { 0, stick,0  },
-                { 0, stick,0  }} ,stick,1,blocksManager),
+                { 0, stick,0  }} ,blocksManager.GetBlockByName("Iron Pickaxe").ID,1,blocksManager),
 
             new CraftingRecipe(new int[,] {
                 { gold, gold,gold },
                 { 0, stick,0  },
-                { 0, stick,0  }} ,stick,1,blocksManager),
+                { 0, stick,0  }} ,blocksManager.GetBlockByName("Gold Pickaxe").ID,1,blocksManager),
 
 
         };
@@ -107,11 +108,18 @@ public class CraftingRecipe
         {
             for (int j = 0; j < RecipeGrid.GetLength(1); j++)
             {
+                if (RecipeGrid[j, i].Item != null && RecipeGrid[j, i].Item.Name == "Log")
+                {
 
-                if (RecipeGrid[i, j].Item != Grid[i, j].Item)
+                }
+                if (RecipeGrid[j, i].Item != Grid[i, j].Item)
                 {
                     confirm = false;
                     //break;
+                }
+                else
+                {
+                    
                 }
 
             }

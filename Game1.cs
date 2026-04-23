@@ -927,7 +927,7 @@ public class Game1 : Game
         {
             var chunk = Chunks[i];
 
-            if (float.Abs(chunk.x - Player.Plr.position.X / 32) <= Render_Distance && float.Abs(chunk.y - Player.Plr.position.Y / 32) <= 1.5f)
+            if (float.Abs(chunk.x - Player.Plr.position.X / 32) <= Render_Distance && float.Abs(chunk.y - Player.Plr.position.Y / 32) <= 1.4f)
             {
                 Loaded.Add(chunk);
             }
@@ -1763,9 +1763,19 @@ public class Game1 : Game
                 {
                     for (int j = 0; j < chunk.Tiles.GetLength(2);j++)
                     {
+                        float dis = Vector2.Distance(new Vector2(j, i), Player.Plr.position);
+                        if (dis < 30)
+                        {
+                            if(chunk.Tiles[(int)Player.Plr.Layer, i, j].ID == 0)
+                            {
+                                var tile = chunk.Tiles[(int)Player.Plr.Layer + 1, i, j];
+                                DrawBlock(tile, chunk, i, j, 1, 1, true);
+                            }
+                            
+                        }
+                            
                         
-                        var tile = chunk.Tiles[(int)Player.Plr.Layer+1, i, j];
-                        DrawBlock(tile, chunk, i, j, 1, 1, true);
+                        
                     }
                 }
             }

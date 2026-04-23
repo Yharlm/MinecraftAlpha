@@ -43,124 +43,131 @@ namespace MinecraftAlpha
             if (Map[y - 1, x].ID == 0) Placable = false;
             return Placable;
         }
-        public void PlaceBlock(Vector2 pos,float z, Block block)
+        public void PlaceBlock(Vector2 pos,float z, Block block)//Item
         {
 
             int Zindex = (int)z;
             var Chunks = Game.Chunks;
-
+            TileGrid Tile = Game._blockManager.GetTile(new(pos.X, pos.Y, Zindex));
             if (Zindex < 0 || Zindex > 9) { return; }
-            if (block == null) return;
-            TileGrid Tile = Game._blockManager.GetTile(new(pos.X,pos.Y,Zindex));
-
-            if (block == null) return;
-            if (block.Item)
+            if (block != null)
             {
-                if (Tile != null)
-                {
-                    if (Tile.ID != 0)
-                    {
-                        Block B = Game._blockManager.GetBlockAtTile(Tile);
-                        if (B == null) return;
-                        if (B.Interaction == null) return;
-                        B.Interaction.Invoke(Tile, Game.Player.Plr, block);
-                    }
-                }
                 
-
-
-                if (block.Interaction == null) return;
-
-                if (block.ChargeMax > block.Charge)
+                
+                if (block.Item)
                 {
-                    block.Charge += 0.1f;
-
-                    return;
-                }
-                if (!block.CanFire && block.ChargeMax < block.Charge)
-                {
-                    block.Interaction.Invoke(null, Game.Player.Plr, block);
-                    return;
-                }
-                if (block.UseTimeMax > block.UseTime)
-                {
-                    block.UseTime += 0.1f;
-                    return;
-                }
-                if (block.CooldownMax > block.Cooldown)
-                {
-                    return;
-                }
-                //block.Charge = 0;
-                block.UseTime = 0;
-                block.Cooldown = 0;
-                //block.Charge = 0;
-                //block.CanFire = false;
-
-
-                if (!Game.creativeMode) // Use cost
-                {
-
-
-
-
-                    if (block.ammo == null && block.ammoTag == "") // Doesn't use ammo
+                    if (Tile != null)
                     {
-                        Game._userInterfaceManager.amount -= 1;
-                        if (Game._userInterfaceManager.amount <= 0)
+                        if (Tile.ID != 0)
                         {
-                            Game._userInterfaceManager.selectedItem = null;
-
+                            Block B = Game._blockManager.GetBlockAtTile(Tile);
+                            if (B == null) return;
+                            if (B.Interaction == null) return;
+                            B.Interaction.Invoke(Tile, Game.Player.Plr, block);
                         }
                     }
-                    else
+
+
+
+                    if (block.Interaction == null) return;
+
+                    if (block.ChargeMax > block.Charge)
+                    {
+                        block.Charge += 0.1f;
+
+                        return;
+                    }
+                    if (!block.CanFire && block.ChargeMax < block.Charge)
+                    {
+                        block.Interaction.Invoke(null, Game.Player.Plr, block);
+                        return;
+                    }
+                    if (block.UseTimeMax > block.UseTime)
+                    {
+                        block.UseTime += 0.1f;
+                        return;
+                    }
+                    if (block.CooldownMax > block.Cooldown)
+                    {
+                        return;
+                    }
+                    //block.Charge = 0;
+                    block.UseTime = 0;
+                    block.Cooldown = 0;
+                    //block.Charge = 0;
+                    //block.CanFire = false;
+
+
+                    if (!Game.creativeMode) // Use cost
                     {
 
-                        var ammo = Game.Player.FindItem(block.ammo.Name, block.ammoTag);
 
-                        if (ammo != null && ammo.Count > 0)
+
+
+                        if (block.ammo == null && block.ammoTag == "") // Doesn't use ammo
                         {
-                            ammo.Count -= 1;
-                            if (ammo.Count <= 0)
+                            Game._userInterfaceManager.amount -= 1;
+                            if (Game._userInterfaceManager.amount <= 0)
                             {
-                                ammo.Item = null;
+                                Game._userInterfaceManager.selectedItem = null;
+
                             }
                         }
                         else
                         {
-                            return; // no ammo found
+
+                            var ammo = Game.Player.FindItem(block.ammo.Name, block.ammoTag);
+
+                            if (ammo != null && ammo.Count > 0)
+                            {
+                                ammo.Count -= 1;
+                                if (ammo.Count <= 0)
+                                {
+                                    ammo.Item = null;
+                                }
+                            }
+                            else
+                            {
+                                return; // no ammo found
+                            }
                         }
+
                     }
+                    block.Interaction.Invoke(null, Game.Player.Plr, block);
 
+                    return;
                 }
-                block.Interaction.Invoke(null, Game.Player.Plr, block);
 
-                return;
             }
-
-
 
 
 
             if (Tile == null) return ;
             if (Tile.ID != 0)
             {
-
+                if(Game._blockManager.getBlock(Tile).Interaction != null)
+                {
+                    Game._blockManager.getBlock(Tile).Interaction.Invoke(Tile, Game.Player.Plr, block);
+                }
                 return;
             }
             //Places block here
-            block.Data = Game._blockManager.GetBlockByName(block.Name).Data;
-            SetTile(Tile,block.Name,block.Data);
-            Tile.MinedHealth = 0;
-            if (!Game.creativeMode)
+            if(block != null)
             {
-                Game._userInterfaceManager.amount -= 1;
-                if (Game._userInterfaceManager.amount <= 0)
+                block.Data = Game._blockManager.GetBlockByName(block.Name).Data;
+                SetTile(Tile, block.Name, block.Data);
+                Tile.MinedHealth = 0;
+                if (!Game.creativeMode)
                 {
-                    Game._userInterfaceManager.selectedItem = null;
+                    Game._userInterfaceManager.amount -= 1;
+                    if (Game._userInterfaceManager.amount <= 0)
+                    {
+                        Game._userInterfaceManager.selectedItem = null;
 
+                    }
                 }
             }
+            
 
 
             //if(!CheckAround(X,Y,Grid)) continue;
@@ -208,6 +215,7 @@ namespace MinecraftAlpha
             {
 
                 block.Interaction.Invoke(Tile, Game.Player.Plr, block);
+                if(Tile.ID != 0)
                 Game._userInterfaceManager.LastUsedBlock = Tile;
 
             }

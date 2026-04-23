@@ -103,24 +103,29 @@ namespace MinecraftAlpha
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
 
                 new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
-
+                new Block { Name = "Coal", TexturePath = "_item", Item = true,Placable = false,ItemID = 81},
+                new Block { Name = "Iron", TexturePath = "_item", Item = true,Placable = false,ItemID = 31},
+                new Block { Name = "Gold", TexturePath = "_item", Item = true,Placable = false,ItemID = 61},
+                new Block { Name = "Diamond", TexturePath = "_item", Item = true,Placable = false,ItemID = 85},
 
 
                 new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.4f,Tag="Pickaxe",MineLevel = 1},
                 new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 0.6f,Tag="Pickaxe",MineLevel = 2},
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
+                new Block { Name = "Gold Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 114,Damage = 0.75f,Tag="Pickaxe",MineLevel = 3},
                 new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.8f,Tag="Pickaxe",MineLevel = 4},
 
-                new Block { Name = "Wooden Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 212,Damage = 3f,Tag="Sword",MineLevel = 0},
-                new Block { Name = "Stone Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 204,Damage = 4f,Tag="Sword",MineLevel = 0},
-                new Block { Name = "Iron Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 95,Damage = 6f,Tag="Sword",MineLevel = 0},
-                new Block { Name = "Diamond Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 103,Damage = 7f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Wooden Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 212,Damage = 2f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Stone Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 204,Damage = 3f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Iron Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 95,Damage = 4f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Gold Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 14,Damage = 5f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Diamond Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 103,Damage = 6f,Tag="Sword",MineLevel = 0},
 
 
 
 
 
-                new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 36,Damage = 3f,Tag="Bow",Grip = 90f,ChargeMax = 4},
+                new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 36,Damage = 3f,Tag="Bow",Grip = 270f,ChargeMax = 4},
                 new Block { Name = "Flint and Steel", TexturePath = "_item" ,ItemID= 28,Item = true,Placable = false},
 
 
