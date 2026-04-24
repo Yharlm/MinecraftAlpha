@@ -111,7 +111,7 @@ namespace MinecraftAlpha
         public int[,] Map = new int[10, 32];
         public static void SetHeight(HeightMap heightMap, TileGrid tile)
         {
-
+            return;
             int x = (int)tile.pos.X % 32;
             int y = (int)tile.pos.Y;
             int z = (int)tile.pos.Z;
@@ -292,70 +292,43 @@ public class Generation
         // ORE GENERATION
         // --------------------------------------
 
-        PerlinNoise oreNoise = new PerlinNoise(seed); // separate noise for ores
-
-        // Ore definitions
-        var ores = new[]
-        {
-    new { BlockID = Game._blockManager.getBlock("Coal Ore").ID, VeinSize = 6, Rarity = 0.25f, MinY = 5, MaxY = 40 },  // Coal
-    new { BlockID = Game._blockManager.getBlock("Iron Ore").ID, VeinSize = 4, Rarity = 0.18f, MinY = 5, MaxY = 20 },  // Iron
-    new { BlockID = Game._blockManager.getBlock("Gold Ore").ID, VeinSize = 3, Rarity = 0.10f, MinY = 5, MaxY = 45 },  // Gold
-    new { BlockID = Game._blockManager.getBlock("Diamond Ore").ID, VeinSize = 2, Rarity = 0.05f, MinY = 5, MaxY = 35 },  // Diamond
-};
-
-
+        PerlinNoise Noise = new PerlinNoise(seed + 1); // separate noise for ores
         for (int z = 0; z < 10; z++)
         {
-            for (int x = 0; x < 32; x++)
+            for (int i = 0; i < 32; i++)
             {
-                float worldX = chunkX * 32 + x;
-
-                for (int y = 5; y < 52; y++)
+                for (int j = 0; j < 62; j++)
                 {
-                    Vector3 pos = new Vector3(worldX + 0.2f, y + 0.2f, z);
+                    float spread = 0.02f;
 
-                    // Only replace stone
-                    if (Game._blockManager.GetTile(pos).ID != 4)
-                        continue;
 
-                    float noiseVal = oreNoise.Noise(worldX * 0.08f, y * 0.08f);
-
-                    // Evaluate each ore independently
-                    foreach (var ore in ores)
+                    float worldX = chunkX * 32 + i;
+                    float worldY = j;
+                    float worldZ = z;
+                    float Coal = Noise.Noise(worldX * spread * 1, worldY * spread * 3);
+                    float Iron = Noise.Noise(worldX * spread * 4, worldY * spread * 3);
+                    float Gold = Noise.Noise(worldX * spread * 2, worldY * spread * 3);
+                    if (Coal - float.Abs(z - Perlin.Noise(worldX * scale, worldZ * scale) * 8) /20f > 0.78f)
                     {
-                        if (y < ore.MinY || y > ore.MaxY)
-                            continue;
-
-                        // If this ore doesn't spawn here, skip it
-                        if (noiseVal <= 1f - ore.Rarity)
-                            continue;
-
-                        // If stone is still here, place ore vein
-                        for (int i = 0; i < ore.VeinSize; i++)
+                        var tile = Game._blockManager.GetTile(new Vector3(worldX + 0.2f, worldY + 0.2f, worldZ));
+                        if(Game._blockManager.getBlock(tile).Name == "Stone")
                         {
-                            int ox = x + random.Next(-1, 2);
-                            int oy = y + random.Next(-1, 2);
-                            int oz = z + random.Next(-1, 2);
-
-                            if (ox < 0 || ox >= 32 || oz < 0 || oz >= 10)
-                                continue;
-
-                            Vector3 veinPos = new Vector3(chunkX * 32 + ox + 0.2f, oy + 0.2f, oz);
-
-                            // Only replace stone — prevents overlapping ores
-                            if (Game._blockManager.GetTile(veinPos).ID == 4)
-                                Game._blockManager.SetTile(veinPos, ore.BlockID, "");
+                            Game._blockManager.SetTile(tile, "Coal Ore");
                         }
+                             
+                    }
+                    if (Iron - float.Abs(z - Perlin.Noise(worldX * scale + 30, worldZ * scale) * 8) / 20f > 0.79f)
+                    {
+                        var tile = Game._blockManager.GetTile(new Vector3(worldX + 0.2f, worldY + 0.2f, worldZ));
+                        if (Game._blockManager.getBlock(tile).Name == "Stone")
+                        {
+                            Game._blockManager.SetTile(tile, "Iron Ore");
+                        }
+
                     }
                 }
             }
         }
-
-
-
-
-
-
     }
 
 

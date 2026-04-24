@@ -87,7 +87,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Gold Ore", TexturePath = "gold_ore" ,Health = 100,},
                 new Block { Name = "Diamond Ore", TexturePath = "diamond_ore" ,Health = 100,},
                 new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 7f},
-
+                new Block { Name = "Portal", TexturePath = "Animated/nether_portal",Animated = true,TickUpdate = 5,Transparent = true,Solid = false,Health = 5},
 
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
@@ -273,8 +273,8 @@ namespace MinecraftAlpha
                         var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z));
                         if (tile != null)
                         {
-                            Game._blockManager.SetTile(tile, "Sand", "");
-                            tile.Color = Color.OrangeRed;
+                            Game._blockManager.SetTile(tile, "Portal", "");
+                            tile.Color = Color.Purple;
                         }
                     }
                 }
@@ -561,6 +561,7 @@ namespace MinecraftAlpha
             getBlock("Stone").ItemDrop = getBlock("Cobblestone");
             getBlock("Leaves").ItemDrop = getBlock("Air");
             getBlock("Grass").ItemDrop = getBlock("Dirt");
+            getBlock("Portal").ItemDrop = getBlock("Air");
 
             getBlock("Sand").Update = (Pos, data) =>
             {
