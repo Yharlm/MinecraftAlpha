@@ -277,28 +277,7 @@ namespace MinecraftAlpha
                         }
                         var list = FileManager.GetStructures();
                         var str = list.Last();
-                        int x = str.Grid3D.GetLength(2);
-                        int y = str.Grid3D.GetLength(1);
-                        int z = str.Grid3D.GetLength(0);
-                        for (float i = 0; i < x; i++)
-                        {
-                            for (float j = 0; j < y; j++)
-                            {
-                                for (float k = 0; k < z; k++)
-                                {
-                                    Vector3 p = new Vector3(i, j, k);
-                                    var t = game._blockManager.GetTile(p + pos1);
-                                    var b = str.Grid3D[(int)p.Z, (int)p.Y, (int)p.X];
-                                    if (t == null || b == null) continue;
-                                    if (b.ID == 0) continue;
-                                    //game._blockManager.SetTile(t,b);
-                                    t.ID = b.ID;
-                                    t.state = b.state;
-                                }
-                            }
-
-                        }
-
+                        
 
                         return;
                     case "/STR":
@@ -308,32 +287,8 @@ namespace MinecraftAlpha
                         {
                             Vector3 A = Points[0];
                             Vector3 B = Points[1];
-                            var t = game._blockManager.GetTile(A);  
-                            
                             var structure = new Structure();
-                            structure.id = t.ID;
-                             x = Math.Abs((int)(B.X - A.X) + 1);
-                             y = Math.Abs((int)(B.Y - A.Y) + 1);
-                             z = Math.Abs((int)(B.Z - A.Z) + 1);
-                            structure.Grid3D = new TileGrid[z, y, x];
-                            ////For loop for every block bettween,
-                            for (float i = 0; i < x; i++)
-                            {
-                                for (float j = 0; j < y; j++)
-                                {
-                                    for (float k = 0; k < z; k++)
-                                    {
-                                        Vector3 p = new Vector3(i, j, k);
-                                        t = game._blockManager.GetTile(p+A);
-                                        if (t == null) continue;
-                                        structure.Grid3D[(int)p.Z, (int)p.Y, (int)p.X] = new() { ID = t.ID };
-                                        game._blockManager.SetTile(t, "Air");
-                                    }
-                                }
-
-                            }
-
-
+                            structure.SaveStruct(A, B, game);
 
                             FileManager.SaveStructure(structure);
                         }

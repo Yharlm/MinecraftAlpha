@@ -339,11 +339,12 @@ namespace MinecraftAlpha
                 }
                 Tile.MinedHealth = 0; Game._blockManager.SetTile(Tile, "Air");
                 Entity drop; //item drop
+                
                 if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop, 1);
                 else drop = Game._entityManager.SpawnItem(pos, Zindex, block, 1); //Makes an ItemDrop object, doesnt spawn it here
                 if (drop != null)
                 {
-                    if (drop.ID == 0) return;
+                    if (block.ItemDrop != null && block.ItemDrop.ID == 0) return;
                     drop.IFrame = 0.1f; //Invincibility frame so it isnt picked up instantly, prevents issues when throwing items
                     Game._entityManager.Workspace.Add(drop);
                 }

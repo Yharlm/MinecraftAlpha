@@ -1,0 +1,2780 @@
+[
+  {
+    "Name": null,
+    "id": 0,
+    "position": "0, 0, 0",
+    "BluePrint": null,
+    "Grid3D": [
+      [
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 18,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 18,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 18,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 18,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 18,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 19,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ],
+        [
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          },
+          {
+            "pos": "0, 0, 0",
+            "ID": 0,
+            "state": 0,
+            "brightness": 1.0,
+            "LightSource": 0.0,
+            "MinedHealth": 0.0,
+            "MarkedForUpdate": false,
+            "updateLight": false,
+            "Color": {
+              "B": 255,
+              "G": 255,
+              "R": 255,
+              "A": 255
+            },
+            "SkyLight": 0,
+            "Data": ""
+          }
+        ]
+      ]
+    ]
+  }
+]

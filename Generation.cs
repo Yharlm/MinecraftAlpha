@@ -11,96 +11,77 @@ namespace MinecraftAlpha
     public class Structure
     {
 
-        public static List<Structure> LoadStructures()
-        {
-
-            int a = BlockManager.getBlocks("Log").ID;
-            int b = BlockManager.getBlocks("Leaves").ID;
-
-
-
-            var list = new List<Structure>()
-            {
-
-                new Structure()
-                {
-
-                    Name = "Tree",
-                    id = 0,
-                    BluePrint = GetBluePrint(new int[,]
-                    {
-                        {0,b,b,b,0},
-                        {0,b,a,b,0},
-                        {b,b,a,b,b},
-                        {b,b,a,b,b},
-                        {0,0,a,0,0},
-                    }
-                    )
-                }
-            };
-
-            return list;
-        }
+        
 
         public string Name;
         public int id;
-        public Vector3 position = new Vector3(0, 0, 0);
-        public TileGrid[,] BluePrint;
-        public TileGrid[,,] Grid3D;
+        public Vector3 position = new Vector3(0, 0, 0); //Finding structures.
+        
+        public int[,,] Grid;
+        public List<TileGrid> Special;
 
-        static public TileGrid[,] GetBluePrint(int[,] structure)
+        public void SaveStruct(Vector3 a,Vector3 b,Game1 game)
         {
-            var tilegrid = new TileGrid[structure.GetLength(0), structure.GetLength(1)];
-            for (int y = 0; y < structure.GetLength(0); y++)
-            {
-                for (int x = 0; x < structure.GetLength(1); x++)
-                {
-                    tilegrid[y, x] = new TileGrid() { ID = structure[y, x] };
-                }
-            }
-            return tilegrid;
-        }
+            Vector3 A = a;
+            Vector3 B = b;
+            var t = game._blockManager.GetTile(A);
 
-        static public void Build(Game1 game, Structure structure, Vector3 Pos)
-        {
-            int x = structure.Grid3D.GetLength(2);
-            int y = structure.Grid3D.GetLength(1);
-            int z = structure.Grid3D.GetLength(0);
-
-            for (int k = 0; k < z; k++)
+            var structure = this;
+            structure.id = t.ID;
+            int x = Math.Abs((int)(B.X - A.X) + 1);
+            int y = Math.Abs((int)(B.Y - A.Y) + 1);
+            int z = Math.Abs((int)(B.Z - A.Z) + 1);
+            structure.Grid = new int[z, y, x];
+            ////For loop for every block bettween,
+            for (float i = 0; i < x; i++)
             {
-                for (int i = 0; i < y; i++)
+                for (float j = 0; j < y; j++)
                 {
-                    for (int j = 0; j < x; j++)
+                    for (float k = 0; k < z; k++)
                     {
-                        var tile = structure.Grid3D[k, i, j];
-                        if (tile.ID != 0)
-                        {
-                            game._blockManager.SetTile(new Vector3(Pos.X + j, Pos.Y + i, Pos.Z + k), tile.ID, tile.Data);
-                        }
+                        Vector3 p = new Vector3(i, j, k);
+                        t = game._blockManager.GetTile(p + A);
+                        if (t == null) continue;
+                        structure.Grid[(int)p.Z, (int)p.Y, (int)p.X] = t.ID;
+                        game._blockManager.SetTile(t, "Air");
                     }
                 }
-            }
 
+            }
         }
-        public void GenerateStructure(List<Chunk> list, Vector2 position, bool Replace)
+
+        public void Build(Vector3 A,Game1 game)
         {
-            for (int y = 0; y < BluePrint.GetLength(0); y++)
+            var str = this;
+            
+            int x = str.Grid.GetLength(2);
+            int y = str.Grid.GetLength(1);
+            int z = str.Grid.GetLength(0);
+            Vector3 pos1 = A - new Vector3(x/2,0,z/2);
+            for (float i = 0; i < x; i++)
             {
-                for (int x = 0; x < BluePrint.GetLength(1); x++)
+                for (float j = 0; j < y; j++)
                 {
-                    var grid = BlockManager.GetBlockAtPos(position + new Vector2(x, y), list);
-                    if (grid == null) return;
-                    var blueprintGrid = BluePrint[y, x];
+                    for (float k = 0; k < z; k++)
+                    {
+                        Vector3 p = new Vector3(i, j, k);
+                        var t = game._blockManager.GetTile(p + pos1);
+                        int id = str.Grid[(int)p.Z, (int)p.Y, (int)p.X];
+                        if (t == null || id == 0) continue;
+                        var block = game._blockManager.Blocks[id];
+                        game._blockManager.SetTile(t, block.Name);
 
-                    grid.ID = blueprintGrid.ID;
 
-
+                    }
                 }
+
+            }
+            //Creates special tiles
+            foreach (var tile in str.Special)
+            {
+                var t = game._blockManager.GetTile(tile.pos + pos1);
             }
         }
-
-
 
     }
 
@@ -308,14 +289,14 @@ public class Generation
                     float Coal = Noise.Noise(worldX * spread * 1, worldY * spread * 3);
                     float Iron = Noise.Noise(worldX * spread * 4, worldY * spread * 3);
                     float Gold = Noise.Noise(worldX * spread * 2, worldY * spread * 3);
-                    if (Coal - float.Abs(z - Perlin.Noise(worldX * scale, worldZ * scale) * 8) /20f > 0.78f)
+                    if (Coal - float.Abs(z - Perlin.Noise(worldX * scale, worldZ * scale) * 8) / 20f > 0.78f)
                     {
                         var tile = Game._blockManager.GetTile(new Vector3(worldX + 0.2f, worldY + 0.2f, worldZ));
-                        if(Game._blockManager.getBlock(tile).Name == "Stone")
+                        if (Game._blockManager.getBlock(tile).Name == "Stone")
                         {
                             Game._blockManager.SetTile(tile, "Coal Ore");
                         }
-                             
+
                     }
                     if (Iron - float.Abs(z - Perlin.Noise(worldX * scale + 30, worldZ * scale) * 8) / 20f > 0.79f)
                     {
@@ -329,6 +310,10 @@ public class Generation
                 }
             }
         }
+
+        //Cave generation
+
+
     }
 
 
