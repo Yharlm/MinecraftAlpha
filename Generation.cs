@@ -1,9 +1,11 @@
 ﻿using MinecraftAlpha;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace MinecraftAlpha
 {
@@ -115,13 +117,19 @@ namespace MinecraftAlpha
             return m;
         }
 
+        public float GetHeight(TileGrid tile)
+        {
+            return Map[(int)tile.pos.Z % 32, (int)tile.pos.X % 32];
+        }
+
+        
 
     }
 
     public class Chunk
     {
 
-
+        public bool Finished = false;
         public int x;
         public int y;
 
@@ -135,6 +143,7 @@ namespace MinecraftAlpha
         }
         public Chunk(int x, int y)
         {
+            this.Finished = true;
             this.x = x;
             this.y = y;
 
@@ -157,6 +166,7 @@ namespace MinecraftAlpha
                             //brightness = 0,
                             ID = 0,
                             pos = new Vector3(pos.X, pos.Y, pos.Z),
+                            Parent = this
                         };
                     }
                 }
@@ -219,10 +229,12 @@ public class Generation
         //Overworld
         var chunks = Game.Chunks;
         int chunkX = Game._blockManager.GetChunk(Pos).x;
+        int chunkY = Game._blockManager.GetChunk(Pos).y;
 
         PerlinNoise Perlin = new PerlinNoise(seed);
         Random random = new Random(seed);
 
+        
 
         float scale = 0.05f;
         //Terrain
@@ -230,6 +242,14 @@ public class Generation
         {
             for (int i = 0; i < 32; i++)
             {
+                //Perlin for top, 
+                //if under top stone
+                //ore distirbution
+                //use layers to pick what a block will be, perlin for height, stone or ore.
+
+
+
+
                 float worldX = chunkX * 32 + i;
 
                 float worldZ = z;
@@ -261,7 +281,7 @@ public class Generation
                     Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y + j + 0.2f, z), 4, "");
                     //PlaceBlock(placement + new Vector2(0, j), z, 4);
                 }
-                HeightMap.SetHeight(HeightMap.GetMap(Game.HeightMaps, chunkX), Game._blockManager.GetTile(new Vector3(worldX + 0.2f, Y, z)));
+                
 
 
 
@@ -280,15 +300,13 @@ public class Generation
             {
                 for (int j = 0; j < 62; j++)
                 {
-                    float spread = 0.02f;
-
-
+                    float spread = 0.22f;
                     float worldX = chunkX * 32 + i;
                     float worldY = j;
                     float worldZ = z;
-                    float Coal = Noise.Noise(worldX * spread * 1, worldY * spread * 3);
-                    float Iron = Noise.Noise(worldX * spread * 4, worldY * spread * 3);
-                    float Gold = Noise.Noise(worldX * spread * 2, worldY * spread * 3);
+                    float Coal = Noise.Noise(worldX * spread * 1, worldY * spread * 1);
+                    float Iron = Noise.Noise(worldX * spread * 1, worldY * spread * 1);
+                    float Gold = Noise.Noise(worldX * spread * 1, worldY * spread * 1);
                     if (Coal - float.Abs(z - Perlin.Noise(worldX * scale, worldZ * scale) * 8) / 20f > 0.78f)
                     {
                         var tile = Game._blockManager.GetTile(new Vector3(worldX + 0.2f, worldY + 0.2f, worldZ));
@@ -296,7 +314,6 @@ public class Generation
                         {
                             Game._blockManager.SetTile(tile, "Coal Ore");
                         }
-
                     }
                     if (Iron - float.Abs(z - Perlin.Noise(worldX * scale + 30, worldZ * scale) * 8) / 20f > 0.79f)
                     {
@@ -305,83 +322,67 @@ public class Generation
                         {
                             Game._blockManager.SetTile(tile, "Iron Ore");
                         }
-
                     }
                 }
             }
         }
 
         //Cave generation
+        
+        //Sky light check
+        var heightMap = HeightMap.GetMap(Game.HeightMaps, chunkX);
+        SetHeights(heightMap);
 
 
     }
 
-
-
-    public void PlaceBlock(Vector2 pos, int z, int id)
+    public void SetHeights(HeightMap Map)
     {
-        List<Chunk> chunks = Game.Chunks;
-        //TileGrid Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
-        var chunk = Game._blockManager.GetChunk(pos);
-        TileGrid Tile = Game._blockManager.GetTile(new(pos.X, pos.Y, z));
-
-
-
-        //if (Tile == null)
-        //{
-
-        //    var ChunkNot = BlockManager._blockManager(pos);
-        //    chunks.Add(new(ChunkNot[0], ChunkNot[1]));
-        //    Tile = BlockManager.GetBlockAtPos(pos, z, chunks);
-        //}
-        Tile.ID = id;
-        //chunk.HeightMap[(int)(pos.X % 32), (int)(pos.Y % 32)] = (int)pos.Y;
-    }
-
-
-
-    //Terrain algoritms
-
-
-
-
-    public static float[,] GenerateFlat(int Width, int Height, float peak)
-    {
-        float[,] Noise = new float[Height, Width];
-
-        for (int i = 0; i < Height; i++)
+        var c = GetTallest(Map.x);
+        Vector3 Chunk = new Vector3((c.x) * 32, (c.y-1) * 32, 0);
+        for (int i = 0; i < Map.Map.GetLength(0); i++)
         {
-            for (int j = 0; j < Width; j++)
+            for (int j = 0; j < Map.Map.GetLength(1); j++)
             {
-
-                Noise[i, j] = peak;
+                float height = 0;
+                for (int k = 0; k < 32; k++)
+                {
+                    
+                    var tile = Game._blockManager.GetTile(new Vector3(j, k, i) + Chunk + new Vector3(0.5f));
+                    if (tile == null) continue;
+                    if (Game._blockManager.getBlock(tile).Name != "Air" && Game._blockManager.getBlock(tile).Solid)
+                    {
+                        height = k;
+                        tile.Color = Color.Blue;
+                        break;
+                    }
+                }
+                Map.Map[i, j] = (int)height;
             }
         }
-
-
-
-        return Noise;
     }
 
-    public static float[,] GenerateMaskBlend(int Width, int Height, float Opacity)
+    
+
+    public Chunk GetTallest(int x)
     {
-        float[,] Map = new float[Height, Width];
-        float centerX = Width / 2f;
-        float centerY = Height / 2f;
-        for (int i = 0; i < Height; i++)
+
+        Chunk tallest = null;
+        foreach (var chunk in Game.Chunks)
         {
-            for (int j = 0; j < Width; j++)
+            if (chunk.x == x)
             {
-                Map[i, j] = float.Abs(centerX - j) / 16;
-
-
+                if (tallest == null || chunk.y < tallest.y)
+                {
+                    tallest = chunk;
+                }
             }
         }
+        return tallest;
 
-
-
-        return Map;
     }
+
+
 
     public static float[,] GenerateWhiteNoise(int Width, int Height, int seed, int Area)
     {
@@ -448,82 +449,8 @@ public class Generation
         return smoothed;
     }
 
-    public static float[,] GeneratePerlinNoise(float[,] Base, int octaves, float persistance)
-    {
-        int width = Base.GetLength(1);
-        int height = Base.GetLength(0);
+    
 
-        var perlin = new float[height, width];
-
-        float[][,] smoothNoise = new float[octaves][,];
-
-
-
-        for (int i = 0; i < octaves; i++)
-        {
-            smoothNoise[i] = GenerateSmoothNoise(Base, i);
-        }
-        float amplitude = 1.0f;
-        float totalAmplitude = 0.0f;
-
-        for (int i = octaves - 1; i >= 0; i--)
-        {
-            amplitude *= persistance;
-            totalAmplitude += amplitude;
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    perlin[y, x] += smoothNoise[i][y, x] * amplitude;
-                }
-            }
-
-        }
-
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                perlin[y, x] /= totalAmplitude;
-            }
-        }
-
-        return perlin;
-
-    }
-
-    public static void SumMaps(float[,] baseMap, float[,] addedMap, float weight)
-    {
-        for (int i = 0; i < addedMap.GetLength(0); i++)
-        {
-            for (int j = 0; j < addedMap.GetLength(1); j++)
-            {
-                baseMap[i, j] += addedMap[i, j] * weight;
-            }
-        }
-    }
-    public static void SubMaps(float[,] baseMap, float[,] addedMap, float weight)
-    {
-        for (int i = 0; i < baseMap.GetLength(0); i++)
-        {
-            for (int j = 0; j < baseMap.GetLength(1); j++)
-            {
-                baseMap[i, j] -= addedMap[i, j] * weight;
-            }
-        }
-    }
-
-    public static void Mask(float[,] baseMap, float[,] Mask, float weight)
-    {
-        for (int i = 0; i < baseMap.GetLength(0); i++)
-        {
-            for (int j = 0; j < baseMap.GetLength(1); j++)
-            {
-                baseMap[i, j] *= (1 - Mask[i, j] * weight);
-            }
-        }
-    }
 
 }
 

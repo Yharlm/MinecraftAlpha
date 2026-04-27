@@ -57,6 +57,9 @@ public class Game1 : Game
         new Chunk(0,2),
         new Chunk(-1,2),
     };
+    
+    public List<TileGrid> GameProgress = new();
+
     public List<HeightMap> HeightMaps = new();
 
     //Gameplay variables
@@ -1255,7 +1258,7 @@ public class Game1 : Game
                 //var Chunk = Chunks.Last();
 
 
-                generation.GenerateChunk(WorldMousePos);
+                generation.GenerateChunk(WorldMousePos - new Vector2(32,0));
 
             }
 
@@ -1763,13 +1766,14 @@ public class Game1 : Game
                 {
                     for (int j = 0; j < chunk.Tiles.GetLength(2);j++)
                     {
-                        float dis = Vector2.Distance(new Vector2(j, i), Player.Plr.position);
+                        float dis =float.Abs((new Vector2(j, i) + new Vector2(chunk.x-1,chunk.y-1)*32 - Player.Plr.position).Length());
                         if (dis < 30)
                         {
                             if(chunk.Tiles[(int)Player.Plr.Layer, i, j].ID == 0)
                             {
                                 var tile = chunk.Tiles[(int)Player.Plr.Layer + 1, i, j];
                                 DrawBlock(tile, chunk, i, j, 1, 1, true);
+
                             }
                             
                         }

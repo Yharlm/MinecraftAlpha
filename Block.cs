@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -108,7 +108,6 @@ namespace MinecraftAlpha
                 new Block { Name = "Gold", TexturePath = "_item", Item = true,Placable = false,ItemID = 61},
                 new Block { Name = "Diamond", TexturePath = "_item", Item = true,Placable = false,ItemID = 85},
 
-
                 new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.4f,Tag="Pickaxe",MineLevel = 1},
                 new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 0.6f,Tag="Pickaxe",MineLevel = 2},
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
@@ -120,10 +119,6 @@ namespace MinecraftAlpha
                 new Block { Name = "Iron Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 95,Damage = 4f,Tag="Sword",MineLevel = 0},
                 new Block { Name = "Gold Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 14,Damage = 5f,Tag="Sword",MineLevel = 0},
                 new Block { Name = "Diamond Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 103,Damage = 6f,Tag="Sword",MineLevel = 0},
-
-
-
-
 
                 new Block { Name = "Bow", TexturePath = "_item", Item = true,Placable = false,ItemID = 36,Damage = 3f,Tag="Bow",Grip = 270f,ChargeMax = 4},
                 new Block { Name = "Flint and Steel", TexturePath = "_item" ,ItemID= 28,Item = true,Placable = false},
@@ -170,7 +165,7 @@ namespace MinecraftAlpha
                 int Range = 1;
                 while (Hit == null && Range <= 10)
                 {
-                    var t = Game._blockManager.GetTile(Pos.pos+Vector3.One*0.3f + s * Range);
+                    var t = Game._blockManager.GetTile(Pos.pos + Vector3.One * 0.3f + s * Range);
                     if (t != null)
                     {
                         if (t.ID == 0)
@@ -236,7 +231,7 @@ namespace MinecraftAlpha
 
                             if (Game._blockManager.getBlock(tile).Name != "Dirt")
                             {
-                                
+
                                 Valid = false;
                                 return false;
                             }
@@ -562,6 +557,8 @@ namespace MinecraftAlpha
             getBlock("Leaves").ItemDrop = getBlock("Air");
             getBlock("Grass").ItemDrop = getBlock("Dirt");
             getBlock("Portal").ItemDrop = getBlock("Air");
+            getBlock("Coal Ore").ItemDrop = getBlock("Coal");
+            getBlock("Diamond Ore").ItemDrop = getBlock("Diamond");
 
             getBlock("Sand").Update = (Pos, data) =>
             {
@@ -913,19 +910,7 @@ namespace MinecraftAlpha
 
         public Chunk GetChunk(TileGrid Tile)
         {
-            int ChunkX = (int)Math.Ceiling((Tile.pos.X + 0.5) / 32);
-            int ChunkY = (int)Math.Ceiling((Tile.pos.Y + 0.5) / 32);
-            foreach (Chunk C in Game.Chunks)
-            {
-                if (C.x == ChunkX && C.y == ChunkY)
-                {
-                    return C;
-
-
-                }
-
-            }
-            return null; //make exception to make chunk instead.
+            return Tile.Parent;
         }
         public bool GetChunk(Vector2 pos, int non) //World Pos
         {
@@ -1016,6 +1001,28 @@ namespace MinecraftAlpha
         //}
         public void Change(TileGrid Tile)
         {
+            if (true) //When generation robust use this.
+            {
+                return;
+            }
+            var heightMap = HeightMap.GetMap(Game.HeightMaps, GetChunk(Tile).x);
+
+            float Sky = heightMap.GetHeight(Tile);
+
+            if(float.Ceiling(Tile.pos.Y) == float.Ceiling(Sky))
+            {
+                //Change to the tallest
+                if(Game._blockManager.getBlock(Tile).Transparent || Tile.ID == 0)
+                {
+                    
+                }
+            }
+            else if(float.Ceiling(Tile.pos.Y) <= float.Ceiling(Sky))
+            {
+                //New tallest
+            }
+
+
 
             var q = new Event()
 
@@ -1024,7 +1031,17 @@ namespace MinecraftAlpha
 
             };
             Game._actionManager.QueChange(q);
+            EvaluateChange(Tile);
 
+        }
+
+        public void EvaluateChange(TileGrid tile)
+        {
+            if (tile == null) return;
+            if(!Game.GameProgress.Contains(tile)) // assuming it updates because its an object
+            {
+                Game.GameProgress.Add(tile);
+            }
         }
         public void SetTile(TileGrid Tile, int ID, string Data)
         {
@@ -1074,7 +1091,7 @@ namespace MinecraftAlpha
             Tile.state = other.state;
             Tile.ID = other.ID;
             Tile.brightness = other.brightness;
-            Tile.LightSource = other.LightSource;
+            //Tile.LightSource = other.LightSource;
             Tile.MinedHealth = other.MinedHealth;
             Tile.Data = other.Data;
             Tile.MarkedForUpdate = other.MarkedForUpdate;
@@ -1117,17 +1134,18 @@ namespace MinecraftAlpha
         public TileGrid() { }
         public int ID = 0;
         public int state = 0;
-        public float brightness = 1;
-        public float LightSource = 0;
+
+
         public float MinedHealth = 0; // How much health has been mined from this block
         public bool MarkedForUpdate = false;
         public bool updateLight = false;
         public Color Color = Color.White;
-        public int SkyLight = 0;
 
+        public int SkyLight = 0;
+        public float brightness = 1;
 
         public string Data { get; set; } = string.Empty;
-
+        public Chunk Parent;
 
     }
 
