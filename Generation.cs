@@ -233,10 +233,57 @@ public class Generation
 
         PerlinNoise Perlin = new PerlinNoise(seed);
         Random random = new Random(seed);
-
-        
-
         float scale = 0.05f;
+        PerlinNoise Ore = new PerlinNoise(seed + 1); // separate noise for ores
+        for (int z = 0; z < 10; z++)
+        {
+            for (int i = 0; i < 32; i++)
+            {
+                for (int j = 0; j < 32; j++)
+                {
+                    float worldX = chunkX * 32 + j;
+                    float WorldY = chunkY * 32 + i;
+                    float worldZ = z;
+
+                    float noise = Perlin.Noise(worldX * scale, worldZ * scale);
+                    float Mountains = Perlin.Noise(worldX * scale / 4, z * scale);
+                    Mountains -= Perlin.Noise(worldX * scale * 0.2f, z * scale) * 2f;
+
+
+                    float Y = (noise + Mountains) * 35f;
+                    
+                    var Tile = Game._blockManager.GetTile(new Vector3(j + chunkX * 32 + 0.2f, i + 0.2f + chunkY * 32, z));
+                    //if (Tile == null) continue; // shouldnt happen. 
+
+                    if (Y < Tile.pos.Y) // if the noise value is less than the current height, place a block
+                    {
+                        Game._blockManager.SetTile(Tile, "Grass");
+                    }
+                    if (Y + 1 < Tile.pos.Y)
+                    {
+                        Game._blockManager.SetTile(Tile, "Dirt");
+                    }
+                    if (Y + 4 < Tile.pos.Y)
+                    {
+                        Game._blockManager.SetTile(Tile, "Stone");
+                    }
+                    //if(WorldY > Y)
+                    float Distribution = 0.1f;
+                    
+                    float Coal = Ore.Noise(worldX * Distribution * 1, WorldY * Distribution * 1);
+                    float Iron = Ore.Noise(worldX * Distribution * 1 + 1, WorldY * Distribution * 1);
+                    float Gold = Ore.Noise(worldX * Distribution * 1 + 2, WorldY * Distribution * 1);
+                    
+                    if(Coal - float.Abs(z - Perlin.Noise(worldX * scale, worldZ * scale) * 8) / 10f > 0.78f && Y + 4 < Tile.pos.Y)
+                    {
+                        Game._blockManager.SetTile(Tile, "Coal Ore");
+                    }
+                }
+            }
+        }
+
+        return;
+            
         //Terrain
         for (int z = 0; z < 10; z++)
         {
@@ -353,7 +400,7 @@ public class Generation
                     if (Game._blockManager.getBlock(tile).Name != "Air" && Game._blockManager.getBlock(tile).Solid)
                     {
                         height = k;
-                        tile.Color = Color.Blue;
+                        //tile.Color = Color.Blue;
                         break;
                     }
                 }

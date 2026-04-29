@@ -1258,7 +1258,7 @@ public class Game1 : Game
                 //var Chunk = Chunks.Last();
 
 
-                generation.GenerateChunk(WorldMousePos - new Vector2(32,0));
+                generation.GenerateChunk(WorldMousePos - new Vector2(32,32));
 
             }
 

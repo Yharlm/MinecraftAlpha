@@ -41,6 +41,7 @@ namespace MinecraftAlpha
         {
             
             entity.collisionBox = new CollisionBox() { Size = entity.collisionBox.Size };
+            if (entity.velocity.flying && entity.name == "Player") { return; }
             float HalfX = entity.collisionBox.Size.X / 2;
             float HalfY = entity.collisionBox.Size.Y / 2;
             float XFidality = entity.collisionBox.Size.X / MathF.Ceiling(entity.collisionBox.Size.X)/3;
