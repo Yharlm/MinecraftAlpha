@@ -6,6 +6,7 @@ using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 using Color = Microsoft.Xna.Framework.Color;
+using System.Linq;
 
 namespace MinecraftAlpha
 {
@@ -223,24 +224,50 @@ public class Generation
         seed = Seed;
     }
 
+    class OreGen
+    {
+        public Vector3 Pos;
+        public int Size;
+        public int TileID;
 
+    }
     public void GenerateChunk(Vector2 Pos)
     {
         //Overworld
-        var chunks = Game.Chunks;
+        //if (Game._blockManager.GetChunk(Pos,0)) return;
+
+		var chunks = Game.Chunks;
         int chunkX = Game._blockManager.GetChunk(Pos).x;
         int chunkY = Game._blockManager.GetChunk(Pos).y;
 
         PerlinNoise Perlin = new PerlinNoise(seed);
-        Random random = new Random(seed);
+        Random random = new Random(seed + chunkX + chunkY*10);
         float scale = 0.05f;
-        PerlinNoise Ore = new PerlinNoise(seed + 1); // separate noise for ores
+		int[] Height = { 1, 2, 4, 4 };
+		int[] Rarity = { 7, 7, 8, 9 };
+		var ores = new List<OreGen>();
+        string[] blocks = { "Coal", "Iron", "Gold", "Diamond" };
+        for (int o = 0; o < blocks.Length; o++)
+        {
+			int OreVeins = random.Next(0, 12- Rarity[o]);
+
+			for (int i = 0; i < OreVeins; i++)
+			{
+                //if()
+				Vector3 p = new(random.Next(1, 32), random.Next(1, 32), random.Next(1, 10));
+                ores.Add(new() { Pos = p, Size = random.Next(3, 10-Rarity[o]/3+1), TileID = o });
+			}
+		}
+			
+		
+        
         for (int z = 0; z < 10; z++)
         {
             for (int i = 0; i < 32; i++)
             {
                 for (int j = 0; j < 32; j++)
                 {
+                    
                     float worldX = chunkX * 32 + j;
                     float WorldY = chunkY * 32 + i;
                     float worldZ = z;
@@ -250,7 +277,7 @@ public class Generation
                     Mountains -= Perlin.Noise(worldX * scale * 0.2f, z * scale) * 2f;
 
 
-                    float Y = (noise + Mountains) * 35f;
+                    float Y = (noise + Mountains) * 35f - 100f;
                     
                     var Tile = Game._blockManager.GetTile(new Vector3(j + chunkX * 32 + 0.2f, i + 0.2f + chunkY * 32, z));
                     //if (Tile == null) continue; // shouldnt happen. 
@@ -267,17 +294,42 @@ public class Generation
                     {
                         Game._blockManager.SetTile(Tile, "Stone");
                     }
+                    else { continue; }
                     //if(WorldY > Y)
-                    float Distribution = 0.1f;
+
                     
-                    float Coal = Ore.Noise(worldX * Distribution * 1, WorldY * Distribution * 1);
-                    float Iron = Ore.Noise(worldX * Distribution * 1 + 1, WorldY * Distribution * 1);
-                    float Gold = Ore.Noise(worldX * Distribution * 1 + 2, WorldY * Distribution * 1);
-                    
-                    if(Coal - float.Abs(z - Perlin.Noise(worldX * scale, worldZ * scale) * 8) / 10f > 0.78f && Y + 4 < Tile.pos.Y)
+
+                    for (int Id = 0; Id < blocks.Length; Id++)
                     {
-                        Game._blockManager.SetTile(Tile, "Coal Ore");
+
+                        //iron
+                        int c = 5;
+                        float dis = c;
+                        var Current = ores.FindAll(x => x.TileID == Id);
+                        if (Current.Count == 0) continue;
+                        OreGen Ore = Current.First();
+						foreach (var p in Current)
+                        {
+                            Vector3 t = new(j, i, z);
+                            Vector3 o = new(p.Pos.X, p.Pos.Y, p.Pos.Z);
+
+                            if (Vector3.Distance(o, t) < dis)
+                            {
+                                dis = Vector3.Distance(o, t);
+                                Ore = p;
+                            }
+
+                        }
+
+                        if (dis < 11-Rarity[Id])
+                        {
+                            if (random.Next(1, 5) < 2)
+                                Game._blockManager.SetTile(Tile, $"{blocks[Id]} Ore");
+                        }
                     }
+                    //Tile.brightness = dis/ c;
+
+
                 }
             }
         }

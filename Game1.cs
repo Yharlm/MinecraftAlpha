@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -57,7 +57,7 @@ public class Game1 : Game
         new Chunk(0,2),
         new Chunk(-1,2),
     };
-    
+
     public List<TileGrid> GameProgress = new();
 
     public List<HeightMap> HeightMaps = new();
@@ -1183,11 +1183,11 @@ public class Game1 : Game
             // Move between layers
             if (key == Keys.S)
             {
-                Front = true;
+                Front = false;
                 var tile = BlockManager.GetBlockAtPos(Player.Plr.position, (int)Player.Plr.Layer + 1, Chunks);
                 if (tile != null)
                 {
-                    if (tile.ID == 0)
+                    if (tile.ID == 0 || PLR.velocity.flying)
                     {
                         Player.Plr.Layer += 0.05f;
                     }
@@ -1195,11 +1195,11 @@ public class Game1 : Game
             }
             if (key == Keys.W)
             {
-
+                Front = true;
                 var tile = BlockManager.GetBlockAtPos(Player.Plr.position, (int)Player.Plr.Layer - 1, Chunks);
                 if (tile != null)
                 {
-                    if (tile.ID == 0)
+                    if (tile.ID == 0 || PLR.velocity.flying)
                     {
                         Player.Plr.Layer -= 0.05f;
                     }
@@ -1258,7 +1258,7 @@ public class Game1 : Game
                 //var Chunk = Chunks.Last();
 
 
-                generation.GenerateChunk(WorldMousePos - new Vector2(32,32));
+                generation.GenerateChunk(WorldMousePos - new Vector2(32, 32));
 
             }
 
@@ -1407,17 +1407,28 @@ public class Game1 : Game
                 //add a attack part here instead
 
                 float TempLayer = 0;
-
-                for (int i = 0; i < 2; i++)
+                if (!Front)
                 {
-                    var tile = _blockManager.GetTile(new Vector3(WorldMousePos, Player.Plr.Layer + TempLayer));
-                    if (tile != null && tile.ID == 0)
-                    {
-                        TempLayer -= 1;
-                    }
-
-
+                    TempLayer += 1;
                 }
+                else
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        var tile = _blockManager.GetTile(new Vector3(WorldMousePos, Player.Plr.Layer + TempLayer));
+                        if (tile != null && tile.ID == 0)
+                        {
+
+
+                            TempLayer -= 1;
+
+
+                        }
+
+
+                    }
+                }
+
 
                 float Damage = 0.3f;
                 if (PLR.Item != null)
@@ -1712,7 +1723,7 @@ public class Game1 : Game
                     // -----------------------------
                     // DRAW TILES IN THIS LAYER
                     // -----------------------------
-                    
+
                     for (var i = 0; i < chunk.Tiles.GetLength(1); i++)
                     {
                         for (var j = 0; j < chunk.Tiles.GetLength(2); j++)
@@ -1734,15 +1745,15 @@ public class Game1 : Game
                                     continue;
 
                                 }
-                                
-                                DrawBlock(tile, chunk, i, j, 1 - (float.Ceiling(Player.Plr.Layer - z)) / 9f, 1,false);
+
+                                DrawBlock(tile, chunk, i, j, 1 - (float.Ceiling(Player.Plr.Layer - z)) / 9f, 1, false);
                             }
 
 
                         }
-                        
+
                     }
-                    
+
 
                     // -----------------------------
                     // DRAW ENTITIES IN THIS LAYER
@@ -1762,24 +1773,24 @@ public class Game1 : Game
                     }
                 }
                 if (Player.Plr.Layer >= 9) continue;
-                for (int i = 0; i < chunk.Tiles.GetLength(1);i++)
+                for (int i = 0; i < chunk.Tiles.GetLength(1); i++)
                 {
-                    for (int j = 0; j < chunk.Tiles.GetLength(2);j++)
+                    for (int j = 0; j < chunk.Tiles.GetLength(2); j++)
                     {
-                        float dis =float.Abs((new Vector2(j, i) + new Vector2(chunk.x-1,chunk.y-1)*32 - Player.Plr.position).Length());
+                        float dis = float.Abs((new Vector2(j, i) + new Vector2(chunk.x - 1, chunk.y - 1) * 32 - Player.Plr.position).Length());
                         if (dis < 30)
                         {
-                            if(chunk.Tiles[(int)Player.Plr.Layer, i, j].ID == 0)
+                            if (chunk.Tiles[(int)Player.Plr.Layer, i, j].ID == 0)
                             {
                                 var tile = chunk.Tiles[(int)Player.Plr.Layer + 1, i, j];
                                 DrawBlock(tile, chunk, i, j, 1, 1, true);
 
                             }
-                            
+
                         }
-                            
-                        
-                        
+
+
+
                     }
                 }
             }
@@ -1992,7 +2003,7 @@ public class Game1 : Game
     {
         var block = _blockManager.Blocks[Tile.ID];
         var c = Tile.Color;
-        if(Tile.Color == Color.White)
+        if (Tile.Color == Color.White)
         {
             c = block.Color;
         }

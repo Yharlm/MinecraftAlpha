@@ -274,16 +274,17 @@ namespace MinecraftAlpha
             tile.MarkedForUpdate = true;
             EventQueue.Add(new Event() { block = Game._blockManager.GetBlockAtTile(tile), tile = tile, Data = "SetBlock" });
         }
-        public void SpawnEntity(Vector2 Pos, string EntityName)
+        public void SpawnEntity(Vector3 Pos, string EntityName)
         {
             var ent = Game._entityManager.entities.Find(e => e.name.ToUpper() == EntityName.ToUpper());
 
             if (ent == null) { return; }
-            ent = Entity.CloneEntity(ent,Pos);
-            ent.position = Pos;
-            
+            ent = Entity.CloneEntity(ent, Pos);
+            ent.position = new(Pos.X,Pos.Y);
+            ent.Layer = Pos.Z;
 
-            Game._entityManager.Workspace.Add(ent);
+
+			Game._entityManager.Workspace.Add(ent);
         }
         public void BreakBlock(Vector2 Pos, float Z, float Dmg)
         {

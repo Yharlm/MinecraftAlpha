@@ -914,9 +914,9 @@ namespace MinecraftAlpha
         }
         public bool GetChunk(Vector2 pos, int non) //World Pos
         {
-            int ChunkX = (int)pos.X;
-            int ChunkY = (int)pos.Y;
-            foreach (Chunk C in Game.Chunks)
+			int ChunkX = (int)Math.Ceiling((pos.X / 32));
+			int ChunkY = (int)Math.Ceiling((pos.Y / 32));
+			foreach (Chunk C in Game.Chunks)
             {
                 if (C.x == ChunkX && C.y == ChunkY)
                 {
