@@ -13,6 +13,7 @@ namespace MinecraftAlpha
         {
             public int X;
             public int Y;
+            public int Z;
 
             public float G; // cost from start
             public float H; // heuristic to goal
@@ -144,17 +145,22 @@ namespace MinecraftAlpha
         public void Attract(float r, Vector2 position)
         {
             Random random = new Random();
+            float Num = 0;
+
             foreach (var entity in Workspace)
             {
                 if (entity.ID <= -1)
                 {
-
+                    Num++;
 
                     if (entity == game.Player.Plr) continue;
                     if (Vector2.Distance(entity.position, position) < r)
                     {
                         Vector2 direction = position - entity.position;
-                        entity.velocity.velocity += (direction + Vector2.UnitY) * 1 + new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f) * 3; // Adjust the multiplier for speed
+                        //direction.Normalize();
+                        //entity.velocity.velocity += (direction + Vector2.UnitY) * 0.1F + new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f) * Num/2; // Adjust the multiplier for speed
+                        entity.velocity.velocity += direction/20f;
+                        //entity.velocity.Drag = 0.1f;
                         entity.velocity.Gravity = 0;
                     }
                 }

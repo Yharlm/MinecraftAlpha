@@ -57,7 +57,8 @@ namespace MinecraftAlpha
          public float gravity = 0.01f;
 
         public bool ParticleRactangleCHose = false;
-
+        
+        
         public void Update()
         {
 
@@ -130,8 +131,28 @@ namespace MinecraftAlpha
             
 
         }
+        public Particle BlockMineEffect(Vector2 pos, Block block)
+        {
+            Random random = new();
+            int x = random.Next(0, block.Texture.Width);
+            int y = random.Next(0, block.Texture.Height);
+            var part = new Particle() // Creates a particle can be simplified if i have time
+            {
+                Position = pos,
+                TextureName = "BlockMineEffect",
+                Texture = block.Texture,
+                lifeTime = 0.2f,
+                size = 0.4f,
+                Color = block.Color,
+                Rectangle = new Microsoft.Xna.Framework.Rectangle(x, y, 3, 3),
+                Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
+                Acceleration = new Vector2(0, -1f),
+                gravity = 0.1f
 
-       
+            };
+            Particles.Add(part); return part;
+        }
+
     }
 
 

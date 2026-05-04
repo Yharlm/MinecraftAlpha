@@ -11,6 +11,8 @@ namespace MinecraftAlpha
 
     public class Block
     {
+        public Texture2D[] Variants;
+       
         public int ID = 0;
         public float Health = 30;
         public string Tag = "";
@@ -43,7 +45,8 @@ namespace MinecraftAlpha
         //Constants for use types
         public float ChargeMax = 0f; // Time taken to charge the item
         public int TickUpdate = 10;
-        public bool IgnoreUpdate = false; // If true, the block will not update every tick
+        public bool IgnoreUpdate = false; // If true, the block will not update every tick and only on UpdateChain
+        
         public bool Solid = true;
         public float CooldownMax = 0f;//cooldown after using the item
         public float UseTimeMax = 0f; // Time taken to use/interact with the block
@@ -80,7 +83,10 @@ namespace MinecraftAlpha
                 new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
                 new Block { Name = "Stone", TexturePath = "stone" ,Health = 100,},
-
+                new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood Fuel"},
+                new Block { Name = "Log", TexturePath = "oak_log", Health = 60,Tag="Wood Fuel"},
+                new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
+                new Block { Name = "Glass Block", TexturePath = "glass", Health = 4,Transparent = true},
 
                 new Block { Name = "Coal Ore", TexturePath = "coal_ore" ,Health = 100,},
                 new Block { Name = "Iron Ore", TexturePath = "iron_ore" ,Health = 100,},
@@ -91,19 +97,18 @@ namespace MinecraftAlpha
 
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
-                new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood"},
+                
                 new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5,Solid = false},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true,IgnoreUpdate = true},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
-                new Block { Name = "Log", TexturePath = "oak_log", Health = 60,Tag="Wood"},
-                new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
-                new Block { Name = "Glass Block", TexturePath = "glass", Health = 4,Transparent = true},
+                new Block { Name = "Furnace", TexturePath = "furnace_front" ,Health = 100, Interaction = null},
+                
                 new Block { Name = "TNT", TexturePath = "tnt_side", Health = 2,Transparent = false,Tag="Explosive"},
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
 
                 new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
-                new Block { Name = "Coal", TexturePath = "_item", Item = true,Placable = false,ItemID = 81},
+                new Block { Name = "Coal", TexturePath = "_item", Item = true,Placable = false,ItemID = 81,Tag = "Fuel"},
                 new Block { Name = "Iron", TexturePath = "_item", Item = true,Placable = false,ItemID = 31},
                 new Block { Name = "Gold", TexturePath = "_item", Item = true,Placable = false,ItemID = 61},
                 new Block { Name = "Diamond", TexturePath = "_item", Item = true,Placable = false,ItemID = 85},
@@ -134,6 +139,20 @@ namespace MinecraftAlpha
 
 
             return list;
+        }
+        public bool HasTag(string s,string t)
+        {
+            char Key = ' ';
+            var Tags = s.Split(Key);
+            foreach(string a in Tags)
+            {
+                if (a == t) return true;
+            }
+            return false;
+        }
+        public Block getBlock(int ID)
+        {
+            return Blocks[ID];
         }
         public Block getBlock(string Name)
         {
@@ -306,7 +325,7 @@ namespace MinecraftAlpha
             //{
             getBlock("Air").Update = (Pos, data) =>
             {
-                //return;
+                return;
                 var pos = GetPosAtBlock(Pos); //
                 var Sides = LogicsClass.SidesPosPlus(pos, Game);
 
@@ -560,6 +579,9 @@ namespace MinecraftAlpha
             getBlock("Coal Ore").ItemDrop = getBlock("Coal");
             getBlock("Diamond Ore").ItemDrop = getBlock("Diamond");
 
+            getBlock("Furnace").Variants = [Game.Content.Load<Texture2D>("furnace_front_on")];
+
+
             getBlock("Sand").Update = (Pos, data) =>
             {
                 //Pos.ID = 2;
@@ -650,6 +672,13 @@ namespace MinecraftAlpha
                 Inv.Visible = true;
 
 
+            };
+            getBlock("Furnace").Update = (Pos, data) =>
+            {
+                var F = Game._userInterfaceManager.GetWindow("Furnace");
+                var Inv = Game._userInterfaceManager.GetWindow("Inventory");
+                F.Visible = true;
+                Inv.Visible = true;
             };
             //getBlock("Crafting Table").Update = (Pos) =>
             //{
@@ -836,6 +865,29 @@ namespace MinecraftAlpha
 
 
         //}
+        public void UpdateSurounding(TileGrid Tile)
+        {
+            //return;
+            var pos = GetPosAtBlock(Tile);
+            var Sides = LogicsClass.SidesPos(pos, Game);
+            if (getBlock(Tile).Update != null)
+            {
+                getBlock(Tile).Update.Invoke(Tile, Tile.Data);
+            }
+            for (int i = 0; i < Sides.Length; i++)
+            {
+                TileGrid tile = Sides[i];
+                if (tile == null) continue;
+                if (getBlock(tile).Update != null)
+                {
+                    getBlock(tile).Update.Invoke(tile,tile.Data);
+                }
+                //tile.MarkedForUpdate = true;
+                //tile.Color = Color.Red;
+                
+            }
+
+        }
         public Vector2 TilePos(TileGrid Tile, Chunk chunk)
         {
             return new Vector2(Tile.pos.X % 32, Tile.pos.Y % 32);
@@ -1146,6 +1198,7 @@ namespace MinecraftAlpha
         public float brightness = 1;
 
         public string Data { get; set; } = string.Empty;
+        public List<float> Counter = new List<float>(); //For Changing Values 
         public Chunk Parent;
 
     }

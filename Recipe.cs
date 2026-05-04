@@ -1,10 +1,10 @@
-using MinecraftAlpha;
 using System.Collections.Generic;
+using MinecraftAlpha;
 
 public class RecipeManager
 {
     public List<CraftingRecipe> Recipes = new List<CraftingRecipe>();
-    
+    public List<FurnaceRecipe> smelting = new List<FurnaceRecipe>();
     public static int GetStartIndex(ItemSlot[,] grid)
     {
         foreach (var slot in grid)
@@ -27,7 +27,7 @@ public class RecipeManager
         int Diamond = blocksManager.GetBlockByName("Diamond").ID;
         int CraftT = blocksManager.GetBlockByName("Crafting Table").ID;
         var List = new List<CraftingRecipe>()
-        
+
         {
             new CraftingRecipe(new int[,] {
                 { log, 0 },
@@ -65,7 +65,55 @@ public class RecipeManager
 
         return List;
     }
+    public List<FurnaceRecipe> LoadFurnace(BlockManager blocksManager)
+    {
 
+
+
+        var List = new List<FurnaceRecipe>()
+        {
+            new(blocksManager.getBlock("Iron Ore"), blocksManager.getBlock("Iron"), 1),
+            new(blocksManager.getBlock("Iron Ore"), blocksManager.getBlock("Iron"), 1)
+
+        };
+
+
+
+        return List;
+
+    }
+    
+}
+public class FurnaceRecipe
+{
+
+    public float luck = 1;
+    public int Input = 0;
+    public int Output = 0;
+    public FurnaceRecipe(Block I, Block O, float luck)
+    {
+        Input = I.ID;
+        Output = O.ID;
+        this.luck = luck;
+    }
+    public Block Confirm(ItemSlot input, ItemSlot Output,Game1 game)
+    {
+
+        int a = input.Item.ID;
+        foreach(var recipe in game._RecipeManager.smelting)
+        {
+            if(recipe.Input == a)
+            {
+                if(recipe.Output == Output.Item.ID)
+                {
+                    
+                    return game._blockManager.getBlock(this.Output);
+                }
+            }
+        }
+
+        return null;
+    }
 
 }
 
@@ -73,10 +121,10 @@ public class CraftingRecipe
 {
     public ItemSlot item = null;
     public ItemSlot[,] RecipeGrid;
-   
+
     public bool Typebased = false;
 
-    public CraftingRecipe(int[,] Grid, int Result, int count,BlockManager manager)
+    public CraftingRecipe(int[,] Grid, int Result, int count, BlockManager manager)
     {
 
         RecipeGrid = new ItemSlot[Grid.GetLength(0), Grid.GetLength(1)];
@@ -119,7 +167,7 @@ public class CraftingRecipe
                 }
                 else
                 {
-                    
+
                 }
 
             }

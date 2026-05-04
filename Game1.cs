@@ -304,6 +304,7 @@ public class Game1 : Game
 
 
         _RecipeManager.Recipes = _RecipeManager.LoadRecipes(_blockManager);
+        _RecipeManager.smelting = _RecipeManager.LoadFurnace(_blockManager);
         //Making player
         //Player.Respawn();
 
@@ -940,7 +941,7 @@ public class Game1 : Game
 
 
 
-
+        //Update Every block 
         foreach (var L in Loaded)
         {
 
@@ -978,7 +979,7 @@ public class Game1 : Game
 
 
 
-                        if (block.IgnoreUpdate) continue;
+                        if (block.IgnoreUpdate || true) continue;
 
 
 
@@ -1778,7 +1779,7 @@ public class Game1 : Game
                     for (int j = 0; j < chunk.Tiles.GetLength(2); j++)
                     {
                         float dis = float.Abs((new Vector2(j, i) + new Vector2(chunk.x - 1, chunk.y - 1) * 32 - Player.Plr.position).Length());
-                        if (dis < 30)
+                        if (dis < 10)
                         {
                             if (chunk.Tiles[(int)Player.Plr.Layer, i, j].ID == 0)
                             {
@@ -2012,7 +2013,11 @@ public class Game1 : Game
 
         float a = Z * Light;
         var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * c;
-        int healthPercent = (int)Tile.MinedHealth / 10;
+        int healthPercent = (int)(((Tile.MinedHealth)/ block.Health) * 9);
+        if (Tile.MinedHealth > 0)
+        {
+            int k = 3;
+        }
         Rectangle sourceRectangle = new Rectangle(healthPercent * BreakTexture.Height, 0, BreakTexture.Height, BreakTexture.Height);
         if ((int)Tile.MinedHealth <= 0)
         {

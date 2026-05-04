@@ -215,7 +215,7 @@ namespace MinecraftAlpha
                         return;
                     case "/SPAWN":
                         string name = "Zombie"; // default
-                        Vector2 pos = game.Player.Plr.position;
+                        Vector3 pos = new Vector3(game.Player.Plr.position,game.Player.Plr.Layer);
                         int num = 1;
 
                         if (Parts.Length > 1)

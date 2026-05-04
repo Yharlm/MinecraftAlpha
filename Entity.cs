@@ -39,12 +39,12 @@ namespace MinecraftAlpha
         }
         public static void UpdateCollision(Entity entity, Game1 game1)
         {
-            
+            float Fidality = 6;
             entity.collisionBox = new CollisionBox() { Size = entity.collisionBox.Size };
             if (entity.velocity.flying && entity.name == "Player") { return; }
             float HalfX = entity.collisionBox.Size.X / 2;
             float HalfY = entity.collisionBox.Size.Y / 2;
-            float XFidality = entity.collisionBox.Size.X / MathF.Ceiling(entity.collisionBox.Size.X)/3;
+            float XFidality = entity.collisionBox.Size.X / MathF.Ceiling(entity.collisionBox.Size.X)/ Fidality;
             for (float i = -HalfX + XFidality; i <= HalfX - XFidality; i += XFidality) // ground Collsion
             {
                 Vector3 p = new Vector3(entity.position.X + i, entity.position.Y + HalfY,MathF.Floor(entity.Layer));
@@ -84,7 +84,7 @@ namespace MinecraftAlpha
                 }
 
             }
-            float YFidality = entity.collisionBox.Size.Y / MathF.Ceiling(entity.collisionBox.Size.Y)/3;
+            float YFidality = entity.collisionBox.Size.Y / MathF.Ceiling(entity.collisionBox.Size.Y)/Fidality;
             for (float i = -HalfY + YFidality; i <= HalfY - YFidality; i += YFidality) // ground Collsion
             {
                 Vector3 p = new Vector3(entity.position.X + HalfX, entity.position.Y + i, MathF.Floor(entity.Layer));

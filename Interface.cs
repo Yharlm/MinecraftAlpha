@@ -351,6 +351,47 @@ namespace MinecraftAlpha
             { ItemPosition = new Vector2(3f * w, 1 * w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = (slot) => { for (int i = 0; i < 9; i++) {GetWindow("Crafting3x3").ItemSlots[i].TakeItem(1); } } };
             windows.Last().ItemSlots.Add(result);
 
+            windows.Add(new WindowFrame()
+            {
+                //Tag = "cls",
+                Position = new Vector2(Middlex / 2 - w * 9 / 2, 200),
+                Name = "Furnace",
+                Visible = false,
+                Frames = new() { new UIFrame() { position = new Vector2(-43, -50), Window = Frames[0].Window, Size = new Vector2(130, 60) } },
+                Buttons = new() { },
+                ItemSlots = new() { },
+                
+            });
+            ItemSlot FurnaceInput, FurnaceOutput, Fuel;
+            FurnaceInput = new() { ItemPosition = new Vector2(w*10, w*1), Texture = ItemSlots[0].Texture, ID = ID };
+            FurnaceOutput = new() { ItemPosition = new Vector2(w * 10, w*-1), Texture = ItemSlots[0].Texture, ID = ID };
+            Fuel = new()
+            {
+                ItemPosition = new Vector2(w * 14, w),
+                Texture = ItemSlots[0].Texture,
+                ID = ID,
+                Clicked = (Fuel) =>
+                {
+                    var last = LastUsedBlock;
+                    float F = last.Counter[0];
+                    if (Game._blockManager.HasTag(Fuel.Item.Tag, "Fuel"))
+                    {
+                        if(F <= 0)
+                        {
+                            last.Counter[0] = 100;//Fuel, Input, c, Output, c
+                        }
+
+                    }
+
+
+                },
+            };
+            windows.Last().ItemSlots.Add(FurnaceInput);
+            windows.Last().ItemSlots.Add(FurnaceOutput);
+            windows.Last().ItemSlots.Add(Fuel);
+
+
+
 
         }
         public void HoverAction(Vector2 Mouse, ActionManager AM)
