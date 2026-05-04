@@ -196,7 +196,7 @@ namespace MinecraftAlpha
                         else
                         {
                             Hit = t;
-                            //t.ID = 9;
+                            t.Color = Color.Red; ;
                             Points[c] = t;
                             break;
                         }
@@ -252,11 +252,11 @@ namespace MinecraftAlpha
 
                             if (Game._blockManager.getBlock(tile).Name != "Dirt")
                             {
-
+                                tile.Color = Color.Green;
                                 Valid = false;
                                 return false;
                             }
-                            tile.ID = 9;
+                            //tile.ID = 9;
                         }
                     }
                 }
@@ -363,7 +363,7 @@ namespace MinecraftAlpha
             {
                 if (Portal(Pos)) { return; }
 
-
+                return;
 
 
                 var pos = GetPosAtBlock(Pos); //
