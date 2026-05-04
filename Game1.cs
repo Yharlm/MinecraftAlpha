@@ -59,6 +59,7 @@ public class Game1 : Game
     };
 
     public List<TileGrid> GameProgress = new();
+    public List<TileGrid> UpdateStack = new();
 
     public List<HeightMap> HeightMaps = new();
 
@@ -939,96 +940,103 @@ public class Game1 : Game
         }
 
 
-
-
-        //Update Every block 
-        foreach (var L in Loaded)
+        foreach (var tile in UpdateStack)
         {
-
-            for (int z = 0; z < L.Tiles.GetLength(0); z++)
-            {
-                for (int i = 0; i < L.Tiles.GetLength(1); i++)
-                {
-                    for (int j = 0; j < L.Tiles.GetLength(2); j++)
-                    {
-                        //float B = 0;
-                        var tile = L.Tiles[z, i, j];
-
-                        //foreach (var light in Lights)
-                        //{
-
-                        //    float dist = Vector3.Distance(light, tile.pos);
-                        //    if (dist < 15)
-                        //        B = 1-dist / 15;
-                        //}
-                        //tile.brightness = B;
-
-                        var block = _blockManager.GetBlockAtTile(tile);
-
-                        //if (!tile.updateLight)
-                        //{
-
-                        //    if (tile.brightness > 0)
-                        //        tile.brightness -= 0.01f;
-                        //}
-
-
-
-
-                        if (block == null) continue;
-
-
-
-                        if (block.IgnoreUpdate || true) continue;
-
-
-
-
-                        //int TickUP = block.TickUpdate;
-                        if (Tick % block.TickUpdate == 0)
-                        {
-                            if (block.Update == null) continue;
-                            if ((tile.ID == 0 /*&& tile.brightness > 1*/) || tile.MarkedForUpdate) continue;
-                            block.Update.Invoke(tile, tile.Data);
-
-                        }
-                        else
-                        {
-                            //tile.updateLight = false;
-                            tile.MarkedForUpdate = false;
-                        }
-
-
-                    }
-                }
-            }
-            ;
-
-            //for (int z = 0; z < L.Tiles.GetLength(0); z++)
-            //{
-            //    for (int i = 0; i < L.Tiles.GetLength(1); i++)
-            //    {
-            //        for (int j = 0; j < L.Tiles.GetLength(2); j++)
-            //        {
-
-            //            var tile = L.Tiles[z, i, j];
-
-            //            if (tile.ID == 0) continue;
-            //            if (!tile.MarkedForUpdate) continue;
-            //            tile.MarkedForUpdate = false;
-
-            //        }
-            //    }
-            //}
-
-
-
-
-
-
+            var block = _blockManager.GetBlockAtTile(tile);
+            block.Update.Invoke(tile, tile.Data);
         }
 
 
+        if (false)
+        {
+            //Update Every block 
+            foreach (var L in Loaded)
+            {
+
+                for (int z = 0; z < L.Tiles.GetLength(0); z++)
+                {
+                    for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                    {
+                        for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                        {
+                            //float B = 0;
+                            var tile = L.Tiles[z, i, j];
+
+                            //foreach (var light in Lights)
+                            //{
+
+                            //    float dist = Vector3.Distance(light, tile.pos);
+                            //    if (dist < 15)
+                            //        B = 1-dist / 15;
+                            //}
+                            //tile.brightness = B;
+
+                            var block = _blockManager.GetBlockAtTile(tile);
+
+                            //if (!tile.updateLight)
+                            //{
+
+                            //    if (tile.brightness > 0)
+                            //        tile.brightness -= 0.01f;
+                            //}
+
+
+
+
+                            if (block == null) continue;
+
+
+
+                            if (block.IgnoreUpdate) continue;
+
+
+
+
+                            //int TickUP = block.TickUpdate;
+                            if (Tick % block.TickUpdate == 0)
+                            {
+                                if (block.Update == null) continue;
+                                if ((tile.ID == 0 /*&& tile.brightness > 1*/) || tile.MarkedForUpdate) continue;
+                                block.Update.Invoke(tile, tile.Data);
+
+                            }
+                            else
+                            {
+                                //tile.updateLight = false;
+                                tile.MarkedForUpdate = false;
+                            }
+
+
+                        }
+                    }
+                }
+                ;
+
+                //for (int z = 0; z < L.Tiles.GetLength(0); z++)
+                //{
+                //    for (int i = 0; i < L.Tiles.GetLength(1); i++)
+                //    {
+                //        for (int j = 0; j < L.Tiles.GetLength(2); j++)
+                //        {
+
+                //            var tile = L.Tiles[z, i, j];
+
+                //            if (tile.ID == 0) continue;
+                //            if (!tile.MarkedForUpdate) continue;
+                //            tile.MarkedForUpdate = false;
+
+                //        }
+                //    }
+                //}
+
+
+
+
+
+
+            }
+
+        }
         _entityAnimationService.entityAnimations.RemoveAll(x => x.parent.Animations[x.id].Paused == true);
 
         var ItemList = new List<Entity>();
@@ -2013,7 +2021,7 @@ public class Game1 : Game
 
         float a = Z * Light;
         var Layer = Color.FromNonPremultiplied(new Vector4(a, a, a, 1)) * c;
-        int healthPercent = (int)(((Tile.MinedHealth)/ block.Health) * 9);
+        int healthPercent = (int)(((Tile.MinedHealth) / block.Health) * 9);
         if (Tile.MinedHealth > 0)
         {
             int k = 3;

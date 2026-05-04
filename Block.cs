@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
@@ -46,7 +47,8 @@ namespace MinecraftAlpha
         public float ChargeMax = 0f; // Time taken to charge the item
         public int TickUpdate = 10;
         public bool IgnoreUpdate = false; // If true, the block will not update every tick and only on UpdateChain
-        
+        public bool ConstantUpdate = false;
+
         public bool Solid = true;
         public float CooldownMax = 0f;//cooldown after using the item
         public float UseTimeMax = 0f; // Time taken to use/interact with the block
@@ -98,11 +100,11 @@ namespace MinecraftAlpha
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
                 
-                new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5,Solid = false},
+                new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5,Solid = false,ConstantUpdate = true},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true,IgnoreUpdate = true},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
-                new Block { Name = "Furnace", TexturePath = "furnace_front" ,Health = 100, Interaction = null},
+                new Block { Name = "Furnace", TexturePath = "furnace_front" ,Health = 100, Interaction = null,ConstantUpdate = true},
                 
                 new Block { Name = "TNT", TexturePath = "tnt_side", Health = 2,Transparent = false,Tag="Explosive"},
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
@@ -675,11 +677,47 @@ namespace MinecraftAlpha
             };
             getBlock("Furnace").Update = (Pos, data) =>
             {
+
+                int FuelSources = 0;
+                float fuelNext = 0;
+                int Outputs;
+
+                bool Ignited = false;
+                if (Pos.Counter.Count > 0 && Pos.Counter[0] > 0)
+                {
+
+                    Pos.Counter[0] -= 1f;
+                    
+
+                    Ignited = true;
+                }
+                
+                if (Ignited)
+                {
+                    Pos.Color = Color.Red;
+                }
+                else
+                {
+                    Pos.Color = Color.Cyan;
+                }
+
+                string Data = "{}{}{}{}";
+
+                //Thread.Sleep(100);
+                
+            };
+            getBlock("Furnace").Interaction = (Pos, user, Item) =>
+            {
                 var F = Game._userInterfaceManager.GetWindow("Furnace");
                 var Inv = Game._userInterfaceManager.GetWindow("Inventory");
+                //Load Items
+
+
+
                 F.Visible = true;
                 Inv.Visible = true;
             };
+
             //getBlock("Crafting Table").Update = (Pos) =>
             //{
 
@@ -1054,6 +1092,11 @@ namespace MinecraftAlpha
        
         public void Change(TileGrid Tile)
         {
+            if(Tile != null && Tile.ID != 0)
+            {
+                var b = Game._blockManager.getBlock(Tile);
+                if (b.ConstantUpdate) Game.UpdateStack.Add(Tile);
+            }
             if (true) //When generation robust use this.
             {
                 return;

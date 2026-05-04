@@ -116,6 +116,7 @@ namespace MinecraftAlpha
 
                     }
                     block.Interaction.Invoke(null, Game.Player.Plr, block);
+                    Game._blockManager.UpdateSurounding(Tile);
                     return;
                 }
 
@@ -130,6 +131,9 @@ namespace MinecraftAlpha
                 {
                     Game._blockManager.getBlock(Tile).Interaction.Invoke(Tile, Game.Player.Plr, block);
                 }
+
+                Game._userInterfaceManager.LastUsedBlock = Tile;
+
                 return;
             }
             //Places block here
@@ -147,6 +151,9 @@ namespace MinecraftAlpha
 
                     }
                 }
+                
+                Game._blockManager.UpdateSurounding(Tile);
+
             }
 
 
@@ -200,7 +207,7 @@ namespace MinecraftAlpha
                     Game._userInterfaceManager.LastUsedBlock = Tile;
 
             }
-            Game._blockManager.UpdateSurounding(Tile);
+
         }
 
         public void DeleteBlocksSphere(Vector2 Pos, float Z, float radius)
@@ -249,11 +256,10 @@ namespace MinecraftAlpha
         public void SetTile(TileGrid tile, string name, string Data)
         {
 
-            tile.ID = Game._blockManager.Blocks.FindIndex(b => b.Name == name);
-            tile.Data = Data;
+            
             tile.MinedHealth = 0;
             tile.MarkedForUpdate = true;
-            EventQueue.Add(new Event() { block = Game._blockManager.GetBlockAtTile(tile), tile = tile, Data = "SetBlock" });
+            Game._blockManager.SetTile(tile, name, Data);
         }
         public void SpawnEntity(Vector2 Pos, string EntityName, float z)
         {

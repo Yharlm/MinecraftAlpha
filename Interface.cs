@@ -353,7 +353,7 @@ namespace MinecraftAlpha
 
             windows.Add(new WindowFrame()
             {
-                //Tag = "cls",
+                Tag = "cls",
                 Position = new Vector2(Middlex / 2 - w * 9 / 2, 200),
                 Name = "Furnace",
                 Visible = false,
@@ -373,12 +373,16 @@ namespace MinecraftAlpha
                 Clicked = (Fuel) =>
                 {
                     var last = LastUsedBlock;
+                    if (last == null) return;
+                    if (last.Counter.Count == 0) last.Counter.Add(0);
                     float F = last.Counter[0];
-                    if (Game._blockManager.HasTag(Fuel.Item.Tag, "Fuel"))
+                    if (Fuel.Item != null && Game._blockManager.HasTag(Fuel.Item.Tag, "Fuel"))
                     {
                         if(F <= 0)
                         {
-                            last.Counter[0] = 100;//Fuel, Input, c, Output, c
+                            Fuel.TakeItem(1);
+                            last.Counter[0] = 120;//Fuel, Input, c, Output, c
+                            Game._blockManager.UpdateSurounding(last);
                         }
 
                     }
