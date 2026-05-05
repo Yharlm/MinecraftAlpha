@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 
 public class PerlinNoise
@@ -63,6 +64,88 @@ public class PerlinNoise
         float v = h < 4 ? y : x;
         return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
     }
+
+    public class PerlinWorm
+    {
+        private Vector2 _position;
+        private Vector2 _direction;
+        private float _angle;
+        private Random _random;
+        private float _noiseOffset;
+
+        // Settings
+        public float Radius { get; set; } = 2.0f;
+        public int Steps { get; set; } = 500;
+        public float Speed { get; set; } = 1.0f;
+        public List<Vector2> Path { get; private set; }
+
+        public PerlinWorm(Vector2 startPos, int seed)
+        {
+            _position = startPos;
+            _random = new Random(seed);
+            _noiseOffset = (float)_random.NextDouble() * 1000f; // Unique noise space
+            Path = new List<Vector2>();
+
+            // Initial random direction
+            double startAngle = _random.NextDouble() * Math.PI * 2;
+            _direction = new Vector2((float)Math.Cos(startAngle), (float)Math.Sin(startAngle));
+        }
+
+        public void Dig(int[,] map, int mapWidth, int mapHeight)
+        {
+            for (int i = 0; i < Steps; i++)
+            {
+                // 1. Sample 3D noise (using time/step as Z) to get smooth direction changes
+                // Using FastNoiseLite or similar is recommended here. 
+                // For brevity, using basic Perlin simulation logic:
+                float n = GetNoise(_position.X * 0.05f, _position.Y * 0.05f, i * 0.01f + _noiseOffset);
+
+                // 2. Change angle based on noise
+                _angle += (n - 0.5f) * 0.5f;
+                _direction = new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle));
+
+                // 3. Move
+                _position += _direction * Speed;
+
+                // 4. Carve (Mark as air/0, assuming 1 is solid)
+                CarveCircle(map, mapWidth, mapHeight, (int)_position.X, (int)_position.Y, Radius);
+                Path.Add(_position);
+
+                // Boundary check
+                if (_position.X < Radius || _position.X > mapWidth - Radius ||
+                    _position.Y < Radius || _position.Y > mapHeight - Radius)
+                    break;
+            }
+        }
+
+        // Basic 2D distance calculation to carve a tunnel
+        private void CarveCircle(int[,] map, int w, int h, int cx, int cy, float r)
+        {
+            int rad = (int)Math.Ceiling(r);
+            for (int y = cy - rad; y <= cy + rad; y++)
+            {
+                for (int x = cx - rad; x <= cx + rad; x++)
+                {
+                    if (x >= 0 && x < w && y >= 0 && y < h)
+                    {
+                        if (Vector2.Distance(new Vector2(x, y), new Vector2(cx, cy)) <= r)
+                        {
+                            map[x, y] = 0; // Dig!
+                        }
+                    }
+                }
+            }
+        }
+
+        // Placeholder for a proper Perlin Noise function (e.g., FastNoiseLite)
+        private float GetNoise(float x, float y, float z)
+        {
+            // Implementation of Perlin noise or mapping to a library like FastNoiseLite
+            // For now returning pseudo-random for structure
+            return (float)_random.NextDouble();
+        }
+    }
+
 }
 public static class TerrainGenerator
 {

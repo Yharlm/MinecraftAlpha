@@ -291,45 +291,16 @@ namespace MinecraftAlpha
             {
                 if (block.Health > Tile.MinedHealth)
                 {
-                    if (Game.creativeMode) { Tile.MinedHealth += 4f; } // Fix this later when you want Creative to not matter for explosives
+                    if (Game.creativeMode) { Tile.MinedHealth += block.Health / 10; } // Fix this later when you want Creative to not matter for explosives
                     Tile.MinedHealth += Dmg;
                     if (block.Health % 0.2f == 0) return;
-                    //var part = new Particle() // Creates a particle can be simplified if i have time
-                    //{
-                    //    Position = pos,
-                    //    TextureName = "BlockMineEffect",
-                    //    Texture = block.Texture,
-                    //    lifeTime = 0.2f,
-                    //    size = 0.4f,
-                    //    Color = block.Color,
-                    //    Rectangle = new Microsoft.Xna.Framework.Rectangle(x, y, 3, 3),
-                    //    Velocity = new Vector2((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f),
-                    //    Acceleration = new Vector2(0, -1f),
-                    //    gravity = 0.1f
-
-                    //};
+                    
                     var p = Game._particleSystem.BlockMineEffect(pos, block); return;
                     //Game._particleSystem.Particles.Add(part); return;
                 }
                 for (int i = 0; i < 15; i++)
                 {
-                    //x = random.Next(0, block.Texture.Width);
-                    //y = random.Next(0, block.Texture.Height);
-                    //var part = new Particle()
-                    //{
-                    //    Position = new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, Pos.Y),
-                    //    TextureName = "BlockMineEffect",
-                    //    Texture = block.Texture,
-                    //    lifeTime = 0.6f,
-                    //    size = 0.4f,
-                    //    Color = block.Color,
-                    //    Rectangle = new Microsoft.Xna.Framework.Rectangle(x, y, 4, 4),
-                    //    Velocity = new Vector2((float)random.NextDouble() - 0.5f, -(float)random.NextDouble() - 1),
-                    //    Acceleration = new Vector2(0, 0.1f),
-                    //    gravity = 0.1f
-
-                    //};
-                    //Game._particleSystem.Particles.Add(part);
+                   
                     var p = Game._particleSystem.BlockMineEffect(pos, block);
                     p.lifeTime = 0.6f;
                     p.gravity = 0.1f;
@@ -358,7 +329,6 @@ namespace MinecraftAlpha
                     if (Tile != null) break;
                 }
             }
-
         }
         public void Explosion(Vector3 pos, float power, bool GravityBlocks)
         {

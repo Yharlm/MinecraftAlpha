@@ -1,12 +1,10 @@
-﻿using MinecraftAlpha;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Linq;
 using System.Numerics;
+using MinecraftAlpha;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
-using Color = Microsoft.Xna.Framework.Color;
-using System.Linq;
 
 namespace MinecraftAlpha
 {
@@ -14,16 +12,16 @@ namespace MinecraftAlpha
     public class Structure
     {
 
-        
+
 
         public string Name;
         public int id;
         public Vector3 position = new Vector3(0, 0, 0); //Finding structures.
-        
+
         public int[,,] Grid;
         public List<TileGrid> Special;
 
-        public void SaveStruct(Vector3 a,Vector3 b,Game1 game)
+        public void SaveStruct(Vector3 a, Vector3 b, Game1 game)
         {
             Vector3 A = a;
             Vector3 B = b;
@@ -53,14 +51,14 @@ namespace MinecraftAlpha
             }
         }
 
-        public void Build(Vector3 A,Game1 game)
+        public void Build(Vector3 A, Game1 game)
         {
             var str = this;
-            
+
             int x = str.Grid.GetLength(2);
             int y = str.Grid.GetLength(1);
             int z = str.Grid.GetLength(0);
-            Vector3 pos1 = A - new Vector3(x/2,0,z/2);
+            Vector3 pos1 = A - new Vector3(x / 2, 0, z / 2);
             for (float i = 0; i < x; i++)
             {
                 for (float j = 0; j < y; j++)
@@ -123,7 +121,7 @@ namespace MinecraftAlpha
             return Map[(int)tile.pos.Z % 32, (int)tile.pos.X % 32];
         }
 
-        
+
 
     }
 
@@ -231,43 +229,51 @@ public class Generation
         public int TileID;
 
     }
+
+    class Worm
+    {
+        public Vector3 Pos;
+        public Vector3 Dir;
+        public float Radius;
+        public int Length;
+    }
     public void GenerateChunk(Vector2 Pos)
     {
         //Overworld
         //if (Game._blockManager.GetChunk(Pos,0)) return;
 
-		var chunks = Game.Chunks;
+        var chunks = Game.Chunks;
         int chunkX = Game._blockManager.GetChunk(Pos).x;
         int chunkY = Game._blockManager.GetChunk(Pos).y;
 
         PerlinNoise Perlin = new PerlinNoise(seed);
-        Random random = new Random(seed + chunkX + chunkY*10);
+        Random random = new Random(seed + chunkX + chunkY * 10);
         float scale = 0.05f;
-		int[] Height = { 1, 2, 4, 4 };
-		int[] Rarity = { 7, 7, 8, 9 };
-		var ores = new List<OreGen>();
+        int[] Height = { 1, 2, 4, 4 };
+        int[] Rarity = { 7, 7, 8, 9 };
+        var ores = new List<OreGen>();
         string[] blocks = { "Coal", "Iron", "Gold", "Diamond" };
         for (int o = 0; o < blocks.Length; o++)
         {
-			int OreVeins = random.Next(0, 12- Rarity[o]);
+            int OreVeins = random.Next(0, 12 - Rarity[o]);
 
-			for (int i = 0; i < OreVeins; i++)
-			{
+            for (int i = 0; i < OreVeins; i++)
+            {
                 //if()
-				Vector3 p = new(random.Next(1, 32), random.Next(1, 32), random.Next(1, 10));
-                ores.Add(new() { Pos = p, Size = random.Next(3, 10-Rarity[o]/3+1), TileID = o });
-			}
-		}
-			
-		
-        
+                Vector3 p = new(random.Next(1, 32), random.Next(1, 32), random.Next(1, 10));
+                ores.Add(new() { Pos = p, Size = random.Next(3, 10 - Rarity[o] / 3 + 1), TileID = o });
+            }
+        }
+
+
+
         for (int z = 0; z < 10; z++)
         {
             for (int i = 0; i < 32; i++)
             {
                 for (int j = 0; j < 32; j++)
                 {
-                    
+
                     float worldX = chunkX * 32 + j;
                     float WorldY = chunkY * 32 + i;
                     float worldZ = z;
@@ -278,9 +284,15 @@ public class Generation
 
 
                     float Y = (noise + Mountains) * 35f - 100f;
-                    
+
                     var Tile = Game._blockManager.GetTile(new Vector3(j + chunkX * 32 + 0.2f, i + 0.2f + chunkY * 32, z));
                     //if (Tile == null) continue; // shouldnt happen. 
+                    float Cave = Perlin.Noise(worldX * scale * 2, WorldY * scale * 2) * 8;
+                    if (Cave < worldZ- 6)
+                    {
+                        Game._blockManager.SetTile(Tile, "Air");
+                        continue;
+                    }
 
                     if (Y < Tile.pos.Y) // if the noise value is less than the current height, place a block
                     {
@@ -297,7 +309,12 @@ public class Generation
                     else { continue; }
                     //if(WorldY > Y)
 
+                    //Caves noise, terraria like.
+
                     
+
+
+
 
                     for (int Id = 0; Id < blocks.Length; Id++)
                     {
@@ -308,7 +325,7 @@ public class Generation
                         var Current = ores.FindAll(x => x.TileID == Id);
                         if (Current.Count == 0) continue;
                         OreGen Ore = Current.First();
-						foreach (var p in Current)
+                        foreach (var p in Current)
                         {
                             Vector3 t = new(j, i, z);
                             Vector3 o = new(p.Pos.X, p.Pos.Y, p.Pos.Z);
@@ -321,7 +338,7 @@ public class Generation
 
                         }
 
-                        if (dis < 11-Rarity[Id])
+                        if (dis < 11 - Rarity[Id])
                         {
                             if (random.Next(1, 5) < 2)
                                 Game._blockManager.SetTile(Tile, $"{blocks[Id]} Ore");
@@ -334,8 +351,78 @@ public class Generation
             }
         }
 
+        
+
+
+
+
         return;
-            
+        //Caves Perlin worms
+
+
+        List<Worm> worms = new();
+
+        int wormCount = random.Next(2, 4);
+
+        for (int i = 0; i < wormCount; i++)
+        {
+            worms.Add(new Worm
+            {
+                Pos = new Vector3(
+                    random.Next(0, 32),
+                    random.Next(0, 32),
+                    random.Next(2, 8)
+                ),
+                Dir = Vector3.Normalize(new Vector3(
+                    (float)random.NextDouble() * 2 - 1,
+                    (float)random.NextDouble() * 2 - 1,
+                    (float)random.NextDouble() * 2 - 1
+                )),
+                Radius = random.Next(2, 4),
+                Length = random.Next(40, 120)
+            });
+        }
+
+        
+        Vector3 WorldPos = new Vector3(chunkX * 32, chunkY * 32, 0);
+
+        foreach (var worm in worms)
+        {
+            Vector3 pos = worm.Pos;
+            Vector3 dir = worm.Dir;
+
+            for (int step = 0; step < worm.Length; step++)
+            {
+                // Smooth direction change using Perlin noise
+                float nx = Perlin.Noise(pos.X * 0.1f, step * 0.1f);
+                float ny = Perlin.Noise(pos.Y * 0.1f, step * 0.1f);
+                float nz = Perlin.Noise(pos.Z * 0.1f, step * 0.1f);
+
+                Vector3 noiseDir = new Vector3(nx, ny, nz) * 2f - Vector3.One;
+
+                dir = Vector3.Normalize(dir + noiseDir * 0.3f);
+
+                pos += dir;
+
+                // Carve sphere around worm
+                for (int x = -4; x <= 4; x++)
+                    for (int y = -4; y <= 4; y++)
+                        for (int z = -4; z <= 4; z++)
+                        {
+                            Vector3 offset = new Vector3(x, y, z);
+                            if (offset.Length() > worm.Radius) continue;
+
+                            Vector3 worldPos = pos + offset+ WorldPos;
+
+                            var tile = Game._blockManager.GetTile(worldPos);
+                            if (tile == null) continue;
+
+                            Game._blockManager.SetTile(tile, "Air");
+                        }
+            }
+        }
+        return;
+
         //Terrain
         for (int z = 0; z < 10; z++)
         {
@@ -380,7 +467,7 @@ public class Generation
                     Game._blockManager.SetTile(new Vector3(worldX + 0.2f, Y + j + 0.2f, z), 4, "");
                     //PlaceBlock(placement + new Vector2(0, j), z, 4);
                 }
-                
+
 
 
 
@@ -427,7 +514,7 @@ public class Generation
         }
 
         //Cave generation
-        
+
         //Sky light check
         var heightMap = HeightMap.GetMap(Game.HeightMaps, chunkX);
         SetHeights(heightMap);
@@ -438,7 +525,7 @@ public class Generation
     public void SetHeights(HeightMap Map)
     {
         var c = GetTallest(Map.x);
-        Vector3 Chunk = new Vector3((c.x) * 32, (c.y-1) * 32, 0);
+        Vector3 Chunk = new Vector3((c.x) * 32, (c.y - 1) * 32, 0);
         for (int i = 0; i < Map.Map.GetLength(0); i++)
         {
             for (int j = 0; j < Map.Map.GetLength(1); j++)
@@ -446,7 +533,7 @@ public class Generation
                 float height = 0;
                 for (int k = 0; k < 32; k++)
                 {
-                    
+
                     var tile = Game._blockManager.GetTile(new Vector3(j, k, i) + Chunk + new Vector3(0.5f));
                     if (tile == null) continue;
                     if (Game._blockManager.getBlock(tile).Name != "Air" && Game._blockManager.getBlock(tile).Solid)
@@ -461,7 +548,7 @@ public class Generation
         }
     }
 
-    
+
 
     public Chunk GetTallest(int x)
     {
@@ -548,7 +635,7 @@ public class Generation
         return smoothed;
     }
 
-    
+
 
 
 }

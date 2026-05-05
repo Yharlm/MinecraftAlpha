@@ -26,9 +26,15 @@ namespace MinecraftAlpha
 
 
         }
-        
 
-        
+        public void LoadGame()
+        {
+
+        }
+        public void SaveGame()
+        {
+
+        }
         public static void SaveStructure(Structure content)
         {
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Structures.json");

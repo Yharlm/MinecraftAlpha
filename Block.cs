@@ -95,7 +95,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Gold Ore", TexturePath = "gold_ore" ,Health = 100,},
                 new Block { Name = "Diamond Ore", TexturePath = "diamond_ore" ,Health = 100,},
                 new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 7f},
-                new Block { Name = "Portal", TexturePath = "Animated/nether_portal",Animated = true,TickUpdate = 5,Transparent = true,Solid = false,Health = 5,ConstantUpdate = true},
+                new Block { Name = "Portal", TexturePath = "Animated/nether_portal",Health = 30000,Animated = true,TickUpdate = 5,Transparent = true,Solid = false,ConstantUpdate = true},
 
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
@@ -401,13 +401,14 @@ namespace MinecraftAlpha
             };
             getBlock("Portal").Update = (Pos, data) =>
             {
+
                 PerlinNoise NOISE = new(1);
-                int a = 10;
                 float b = Game.TimeSinceStart/20f;
+                float a = 2;
                 float h = (float.Abs(MathF.Sin((Game.TimeSinceStart + (Pos.pos.X + Pos.pos.Y)*40) / 455f)));
-                float p = NOISE.Noise((Pos.pos.X+ b )* 0.05f*a, (Pos.pos.Y + b) * a*0.05f);
-                //Pos.Color = LogicsClass.HSL(p, 1,0.5f)*(p/2f);
-                Pos.Color = new Color(1 * p, 0.4f, 1 * p);
+                float p = NOISE.Noise((Pos.pos.X+ MathF.Sin(MathF.Sin(b+Pos.pos.Y)) )*3f* a*0.05f, (Pos.pos.Y + Pos.pos.X + b) * a*0.05f)/2 ;
+                Pos.Color = LogicsClass.HSL(p+ MathF.Sin(b/30), 1f, 0.5f) * (p+0.6f);
+                //Pos.Color = new Color(1, 1-p, 1);
             };
             getBlock("Water").Update = (Pos, data) =>
             {
@@ -1102,7 +1103,8 @@ namespace MinecraftAlpha
        
         public void Change(TileGrid Tile)
         {
-            if(Tile != null && Tile.ID != 0)
+            EvaluateChange(Tile);
+            if (Tile != null && Tile.ID != 0)
             {
                 var b = Game._blockManager.getBlock(Tile);
                 if (b.ConstantUpdate) Game.UpdateStack.Add(Tile);
