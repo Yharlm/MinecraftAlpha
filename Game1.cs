@@ -946,7 +946,7 @@ public class Game1 : Game
             if (Tick % block.TickUpdate == 0)
             {
                 if (block.Update == null) continue;
-                if ((tile.ID == 0 /*&& tile.brightness > 1*/) || tile.MarkedForUpdate) continue;
+                if ((tile.ID == 0 /*&& tile.brightness > 1*/) /*|| tile.MarkedForUpdate*/) continue;
                 block.Update.Invoke(tile, tile.Data);
 
             }
