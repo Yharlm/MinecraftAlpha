@@ -874,7 +874,23 @@ public class Game1 : Game
 
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
+        {
+            var ProggresWorld = new World()
+            {
+                GameProgress = GameProgress,
+                //Plr = Player,
+                Name = "Demo",
+            };
+
+
+            FileManager.SaveGame(ProggresWorld);
+            //Exit();
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.NumPad5))
+        {
+            FileManager.LoadGame(this, 0);
+        }
+
 
 
 
