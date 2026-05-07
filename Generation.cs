@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Microsoft.Xna.Framework;
 using MinecraftAlpha;
+using Newtonsoft.Json;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 
@@ -24,7 +26,7 @@ namespace MinecraftAlpha
         public void SaveStruct(Vector3 a, Vector3 b, Game1 game)
         {
             Vector3 A = a;
-            Vector3 B = b;
+            Vector3 B = b+Vector3.One;
             var t = game._blockManager.GetTile(A);
 
             var structure = this;
@@ -131,7 +133,7 @@ namespace MinecraftAlpha
         public bool Finished = false;
         public int x;
         public int y;
-
+        [JsonIgnore]
         public TileGrid[,,] Tiles = new TileGrid[10, 32, 32];
 
         public Chunk(int x, int y, TileGrid[,,] Grid)
@@ -140,9 +142,53 @@ namespace MinecraftAlpha
             this.y = y;
             Tiles = Grid;
         }
+        public Chunk(Vector3 Pos)
+        {
+
+            
+            
+            
+            
+            TileGrid Tile = null;
+            
+            int size = 32;
+            int ChunkX = (int)Math.Ceiling((Pos.X / size));
+            int ChunkY = (int)Math.Ceiling((Pos.Y / size));
+            
+            int x = ChunkX;
+            int y = ChunkY;
+
+            //this.Finished = true;
+            
+
+            for (int i = 0; i < Tiles.GetLength(1); i++)
+            {
+                for (int j = 0; j < Tiles.GetLength(2); j++)
+                {
+                    for (int z = 0; z < Tiles.GetLength(0); z++)
+                    {
+                        Vector3 pos = new Vector3(j, i, z);
+
+                        pos.X += (this.x - 1) * 32;
+                        pos.Y += (this.y - 1) * 32;
+
+
+
+
+                        Tiles[z, i, j] = new TileGrid()
+                        {
+                            //brightness = 0,
+                            ID = 0,
+                            pos = new Vector3(pos.X, pos.Y, pos.Z),
+                            Parent = this
+                        };
+                    }
+                }
+            }
+        }
         public Chunk(int x, int y)
         {
-            this.Finished = true;
+            //this.Finished = true;
             this.x = x;
             this.y = y;
 
@@ -214,7 +260,7 @@ public class Generation
         return points;
     }
 
-    int seed;
+    public int seed;
 
 
     public Generation(int Seed)
@@ -247,6 +293,8 @@ public class Generation
         int chunkY = Game._blockManager.GetChunk(Pos).y;
 
         PerlinNoise Perlin = new PerlinNoise(seed);
+        PerlinNoise Distribution = new PerlinNoise(seed+2);
+        PerlinNoise other = new PerlinNoise(seed+4);
         Random random = new Random(seed + chunkX + chunkY * 10);
         float scale = 0.05f;
         int[] Height = { 1, 2, 4, 4 };
@@ -273,38 +321,64 @@ public class Generation
             {
                 for (int j = 0; j < 32; j++)
                 {
-
+                    
                     float worldX = chunkX * 32 + j;
                     float WorldY = chunkY * 32 + i;
                     float worldZ = z;
 
-                    float noise = Perlin.Noise(worldX * scale, worldZ * scale);
-                    float Mountains = Perlin.Noise(worldX * scale / 4, z * scale);
-                    Mountains -= Perlin.Noise(worldX * scale * 0.2f, z * scale) * 2f;
+                    //float noise = float.Max(Perlin.Noise(worldX * scale/30, worldZ * scale/30) , Perlin.Noise(worldX * scale * 1, worldZ * scale * 1))*0;
+                    //float Mountains = Perlin.Noise(worldX * scale / 5, z * scale / 5)*0.0f;
+                    //float Grains1 = Perlin.Noise(worldX * scale * 4, z * scale* 4)*0.02f;
+                    //float Grains2 = Perlin.Noise(worldX * scale *6, z * scale * 6)*0.01f;
+                    //Mountains -= Perlin.Noise(worldX * scale * 0.2f, z * scale) * 2f ;
 
 
-                    float Y = (noise + Mountains) * 35f - 100f;
+                    //float Y = (noise + Mountains + Grains2 + Grains1) * 35f - 100f;
+                    float Flat = 0.4f;
+                    float bumps = Perlin.Noise(worldX * scale/2 , worldZ * scale/2);
+
+                    Flat *= bumps;
+                    float hills = Distribution.Noise(worldX * scale / 1, worldZ * scale / 1);
+                    
+                    
+                    Flat += float.Min(bumps,hills)* bumps;
+                    float Mountains = Distribution.Noise(worldX * scale / 8, worldZ * scale / 8) - other.Noise(worldX * scale / 9, worldZ * scale / 9)/2;
+                    Flat += float.Min(hills, Mountains) * bumps;
+                    float Valley = other.Noise(worldX * scale / 8, worldZ * scale / 8) - Perlin.Noise(worldX * scale / 9, worldZ * scale / 9) / 2;
+                    if(Valley>=0.1)
+                    {
+                        Flat -= (0.5f - Valley)/ 2*(Valley-0.3f);
+                    }
+
+                    float Y = (Flat) *32 - 100;
+
 
                     var Tile = Game._blockManager.GetTile(new Vector3(j + chunkX * 32 + 0.2f, i + 0.2f + chunkY * 32, z));
+                    if(Tile == null || Tile.ID != 0 || Tile.SaveFile) continue; // if tile is not air, skip
                     //if (Tile == null) continue; // shouldnt happen. 
-                    float Cave = Perlin.Noise(worldX * scale * 2, WorldY * scale * 2) * 8;
+                    float Cave = Perlin.Noise(worldX * scale*3, WorldY * scale*3) * 8;
                     if (Cave < worldZ- 6)
                     {
-                        Game._blockManager.SetTile(Tile, "Air");
+                        Game._blockManager.SetTile(Tile, "Air",true);
                         continue;
                     }
 
-                    if (Y < Tile.pos.Y) // if the noise value is less than the current height, place a block
+                    if (Y < Tile.pos.Y ) // if the noise value is less than the current height, place a block
                     {
-                        Game._blockManager.SetTile(Tile, "Grass");
+                        Game._blockManager.SetTile(Tile, "Grass", true);
                     }
                     if (Y + 1 < Tile.pos.Y)
                     {
-                        Game._blockManager.SetTile(Tile, "Dirt");
+                        Game._blockManager.SetTile(Tile, "Dirt", true);
                     }
                     if (Y + 4 < Tile.pos.Y)
                     {
-                        Game._blockManager.SetTile(Tile, "Stone");
+                        
+                        Game._blockManager.SetTile(Tile, "Stone", true);
+                        if (random.Next(0, 10) > (int)other.Noise(worldX * scale / 2, worldZ * scale / 2) *4  && Y + 13 > Tile.pos.Y)
+                        {
+                            Game._blockManager.SetTile(Tile, "Dirt", true);
+                        }
                     }
                     else { continue; }
                     //if(WorldY > Y)
@@ -341,7 +415,7 @@ public class Generation
                         if (dis < 11 - Rarity[Id])
                         {
                             if (random.Next(1, 5) < 2)
-                                Game._blockManager.SetTile(Tile, $"{blocks[Id]} Ore");
+                                Game._blockManager.SetTile(Tile, $"{blocks[Id]} Ore", true);
                         }
                     }
                     //Tile.brightness = dis/ c;

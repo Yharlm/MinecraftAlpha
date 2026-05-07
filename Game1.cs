@@ -16,6 +16,19 @@ namespace MinecraftAlpha;
 
 public class Game1 : Game
 {
+    //Player stuff
+
+    int WorldSeed = 0;
+
+
+
+
+
+
+
+
+
+
 
     //Game Rules
     public bool KeepInventory = false;
@@ -309,8 +322,8 @@ public class Game1 : Game
         //Making player
         //Player.Respawn();
 
-        Player.Plr = Entity.CloneEntity(_entityManager.entities[0], new Vector2(0, 0));
-
+        Player.Plr = Entity.CloneEntity(_entityManager.entities[0], new Vector2(0, -170));
+        Player.Plr.IFrame = 100;
 
 
         _entityManager.Workspace.Add(Player.Plr);
@@ -815,7 +828,7 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
-
+        Player.LoadNear();
         TimeSinceStart += 0.3f;
 
         MouseClick = 0;
@@ -884,13 +897,17 @@ public class Game1 : Game
 
 
             FileManager.SaveGame(ProggresWorld);
-            //Exit();
+            Exit();
         }
         if (Keyboard.GetState().IsKeyDown(Keys.NumPad5))
         {
             FileManager.LoadGame(this, 0);
         }
-
+        if (Keyboard.GetState().IsKeyDown(Keys.G))
+        {
+            var c = _blockManager.GetChunk(WorldMousePos);
+            
+        }
 
 
 

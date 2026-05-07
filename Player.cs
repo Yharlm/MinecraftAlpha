@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +12,7 @@ namespace MinecraftAlpha
 
     public class Player
     {
-        public Vector2 SpawnPoint = new Vector2(0, 10);
+        public Vector2 SpawnPoint = new Vector2(0, -150);
         public Game1 game;
         public WindowFrame Inventory = null;
         public Entity Plr;
@@ -22,7 +21,43 @@ namespace MinecraftAlpha
         public float respawnTimer = 60f;
         public int DisplayID = -1;
 
+        public void LoadNear()
+        {
+            //var chunk = game._blockManager.GetChunk(Plr.position- 32 * Vector2.One);
+            List<Vector2> Sides = new List<Vector2>();
+            for(int x = -1; x<=1;x++)
+                for(int y=-1;y<=1;y++)
+                {
+                    Sides.Add(new(x, y));
+                }
+            foreach(var s in Sides)
+            {
+                Vector2 a = Plr.position - 32 * (new Vector2(1,1)  + s);
+                var c = game._blockManager.GetChunk(a);
+                if (!game._blockManager.GetChunk(a, 1) || !c.Finished)
+                {
+                    game._blockManager.GetChunk(a).Finished = true;
+                    game.generation.GenerateChunk(a);
+                }
 
+            }
+
+
+            //foreach (Vector2 s in Sides)
+            //{
+
+            //    Vector2 P = Plr.position - 32 * (Vector2.One + s);
+            //    var d = game._blockManager.GetChunk(P);
+            //    if (!game._blockManager.GetChunk(Plr.position - 32 * Vector2.One, 1))
+            //    {
+            //        game.generation.GenerateChunk(Plr.position - 32 * Vector2.One);
+            //    }
+
+
+            //}
+
+
+        }
         public ItemSlot FindItem(string name, string tag)
         {
             var itemSlot = Inventory.ItemSlots.Find(s => s.Item != null && s.Item.Name == name);
@@ -63,7 +98,7 @@ namespace MinecraftAlpha
 
             var plr = Entity.CloneEntity(game._entityManager.entities[0], SpawnPoint);
             Plr = plr;
-
+            Plr.IFrame = 10;
             game._entityManager.Workspace.Add(Plr);
             respawnTimer = 60f;
 
@@ -144,7 +179,7 @@ namespace MinecraftAlpha
                 {
                     //
                     Plr.Item.CanFire = true;
-                    game._actionManager.PlaceBlock(game.WorldMousePos,Plr.Layer, Plr.Item);
+                    game._actionManager.PlaceBlock(game.WorldMousePos, Plr.Layer, Plr.Item);
                     //Plr.Item.Charge = 0;
 
                 }
@@ -177,7 +212,7 @@ namespace MinecraftAlpha
         public bool CapsLock = false;
         public int cursor = 0;
         //public List<Action<>> Commands = new List<Action<>>();
-        
+
         public void Run(string Input)
         {
 
@@ -215,7 +250,7 @@ namespace MinecraftAlpha
                         return;
                     case "/SPAWN":
                         string name = "Zombie"; // default
-                        Vector3 pos = new Vector3(game.Player.Plr.position,game.Player.Plr.Layer);
+                        Vector3 pos = new Vector3(game.Player.Plr.position, game.Player.Plr.Layer);
                         int num = 1;
 
                         if (Parts.Length > 1)
@@ -247,10 +282,10 @@ namespace MinecraftAlpha
                     case "/CLEAR":
                         Buffer.Clear();
                         Points.Clear();
-                        
+
                         return;
                     case "/P":
-                        
+
                         Points.Add(new Vector3(game.WorldMousePos, game.Player.Plr.Layer));
                         Chat(new Vector3(game.WorldMousePos, game.Player.Plr.Layer).ToString());
                         return;
@@ -258,32 +293,32 @@ namespace MinecraftAlpha
                         Vector3 pos1 = new(game.WorldMousePos, game.Player.Plr.Layer);
                         int radius = 3;
 
-                        if(Points.Count > 0)
+                        if (Points.Count > 0)
                         {
                             pos1 = Points.Last();
-                            
+
                         }
-                        if(Parts.Length == 2)
+                        if (Parts.Length == 2)
                         {
                             int.TryParse(Parts[1], out radius);
                         }
                         game._actionManager.Explosion(pos1, radius, true);
                         return;
                     case "/BUILD":
-                        pos1 = new(game.Player.Plr.position,game.Player.Plr.Layer);
+                        pos1 = new(game.Player.Plr.position, game.Player.Plr.Layer);
                         if (Points.Count == 1)
                         {
 
                         }
                         var list = FileManager.GetStructures();
                         var str = list.Last();
-                        
+
 
                         return;
                     case "/STR":
 
 
-                        if(Points.Count == 2)
+                        if (Points.Count == 2)
                         {
                             Vector3 A = Points[0];
                             Vector3 B = Points[1];
@@ -295,19 +330,19 @@ namespace MinecraftAlpha
                         FileManager.Run();
                         return;
                     case "/SPEED":
-                        int speed= 30;
+                        int speed = 30;
                         if (Parts.Length == 2)
                         {
                             speed = int.Parse(Parts[1]);
                         }
-                        game.Player.Plr.Speed = speed/10;
+                        game.Player.Plr.Speed = speed / 10;
                         return;
-                    case"RULE":
+                    case "RULE":
                         if (Parts.Length == 2)
                         {
 
                         }
-                            return;
+                        return;
                     default:
                         Chat("*Error invalid command!");
                         return;
@@ -393,11 +428,11 @@ namespace MinecraftAlpha
                 return;
             }
 
-            
-            
+
+
 
             // Autocomplete
-            
+
         }
         public void Complete()
         {
@@ -428,7 +463,7 @@ namespace MinecraftAlpha
         }
     }
 
-    
+
     public class Cammera
     {
 

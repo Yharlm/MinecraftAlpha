@@ -312,19 +312,37 @@ namespace MinecraftAlpha
             windows.Last().ItemSlots.Add(result);
 
 
+            //Main Menu
 
+            //CreateWorld
+            float MenuButtonDistance = 80;
             windows.Add(new WindowFrame()
             {
                 Position = new Vector2(Game.windowWidth / 2, Game.windowHeight / 2),
                 Name = "Menu",
                 Visible = true,
-                Frames = new() { new() { Window = Frames[0].Window, position = new Vector2(0, 0) } },
-                Buttons = new() { new() { Background = null, position = new Vector2(0, 0), Scale = new Vector2(220, 60), Click = (game) => { game.GameStarted = true; } } },
+                Frames = new() {
+                    new() { Window = Frames[0].Window, position = new Vector2(0, 0) },
+                    new() { Window = Frames[0].Window, position = new Vector2(0,MenuButtonDistance) },
+                },
+                Buttons = new() { 
+                    new() { Background = null, position = new Vector2(0, 0), Scale = new Vector2(220, 60), Click = (game) => { game.GameStarted = true; game.generation.seed = new Random().Next(0,10000); } },
+                    new() { Background = null, position = new Vector2(0, MenuButtonDistance), Scale = new Vector2(220, 60), Click = (game) => { game.GameStarted = true; FileManager.LoadGame(game,0); } },},
                 ItemSlots = new() { },
+                TextLabels = new() { new() { Text = "New World", position = new Vector2(0, 0), Color = Color.White, font = Game.font },
+                                     new() { Text = "Load World", position = new Vector2(0,MenuButtonDistance), Color = Color.White, font = Game.font}
+                },
 
             });
 
             windows.Last().Frames[0].button = windows.Last().Buttons[0];
+            windows.Last().Frames[1].button = windows.Last().Buttons[1];
+
+            //LoadWorlds
+            //Settings ?
+
+
+
 
             windows.Add(new WindowFrame()
             {
@@ -749,7 +767,7 @@ namespace MinecraftAlpha
 
         public bool IsInBounds(Vector2 Pos)
         {
-            Vector2 position = this.position + Position;
+            Vector2 position = this.position + Position - Scale/2;
             if (Pos.X >= position.X && Pos.X <= position.X + Scale.X)
                 if (Pos.Y > position.Y && Pos.Y <= position.Y + Scale.Y)
                 {
@@ -760,10 +778,10 @@ namespace MinecraftAlpha
             return false;
         }
 
-        public void Render(SpriteBatch Spritebatch)
+        public void Render(SpriteBatch Spritebatch) //Not used bro
         {
-            int x = (int)Scale.X / 2;
-            int y = (int)Scale.Y / 2;
+            int x = (int)Scale.X;
+            int y = (int)Scale.Y;
             if (Background == null) return;
             var color = Color.White;
             if (Hovered) color = Color.CornflowerBlue;
@@ -776,7 +794,7 @@ namespace MinecraftAlpha
 
     public class textLabel : WindowFrame
     {
-        public Vector2 position = new Vector2(300, 100);
+        public Vector2 position = new Vector2(0, 0);
         public string Text = "TextLabel";
         public SpriteFont font;
         public Color Color;
@@ -809,7 +827,7 @@ namespace MinecraftAlpha
         public bool IsInBounds(Vector2 Pos)
         {
             Vector2 Scale = Size * 4;
-            Vector2 PO = this.Position + position;
+            Vector2 PO = this.Position - position;
             if (Pos.X >= PO.X && Pos.X <= PO.X + Scale.X)
                 if (Pos.Y > PO.Y && Pos.Y <= PO.Y + Scale.Y)
                 {
@@ -862,7 +880,7 @@ namespace MinecraftAlpha
                 new Rectangle(0,Ty-Cy,Cx,Cy),
                 new Rectangle(Tx-Cx,Ty-Cy,Cx,Cy),
             };
-            Vector2 position = this.position + this.Position;
+            Vector2 position = this.position + this.Position - Size*2;
 
 
             //Spritebatch.Draw(Window, Position, Background, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 1f);

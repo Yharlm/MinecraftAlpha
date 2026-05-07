@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
@@ -48,13 +49,27 @@ namespace MinecraftAlpha
             var save = saves[id];
             string content = File.ReadAllText(save);
             World e = JsonConvert.DeserializeObject<World>(content);
-            game.Player = e.Plr;
-            game.GameProgress.Clear();
-            foreach (var item in e.GameProgress)
+            //game.Player = e.Plr;
+            List<TileGrid> temp = [.. e.GameProgress];
+            e.GameProgress.Clear();
+            //Changes
+            foreach (var item in temp)
             {
-                var tile = game._blockManager.GetTile(item.pos);
-                game._blockManager.SetTile(tile, item);
+                var tile = game._blockManager.GetTile(item.pos + Vector3.One*0.5f);
+                if (tile == null) {
+                    if(!game._blockManager.GetChunk(new Vector2(item.pos.X, item.pos.Y) - Vector2.One * 32, 1))//does chunk exist
+                    {
+                        game.generation.GenerateChunk(new Vector2(item.pos.X, item.pos.Y)-Vector2.One*32);
+                    }
+                    //var c = game._blockManager.GetChunk(new Vector2(item.pos.X, item.pos.Y));
+                    tile = game._blockManager.GetTile(item.pos);
+                }
+                
+                tile.ID = item.ID;
+                game._blockManager.Change(tile);
+                
             }
+            //game.GameProgress.Clear();
 
         }
         public static void SaveGame(World World)

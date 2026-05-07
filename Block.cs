@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -985,7 +986,6 @@ namespace MinecraftAlpha
             if (z < 0 || z > 9) return null;
             TileGrid Tile = null;
             if (Chunks.Count == 0) return null;
-
             int size = Chunks[0].Tiles.GetLength(1);
             int ChunkX = (int)Math.Ceiling((pos.X / size));
             int ChunkY = (int)Math.Ceiling((pos.Y / size));
@@ -1148,6 +1148,7 @@ namespace MinecraftAlpha
             if (tile == null) return;
             if(!Game.GameProgress.Contains(tile)) // assuming it updates because its an object
             {
+                tile.SaveFile = true;
                 Game.GameProgress.Add(tile);
             }
         }
@@ -1157,6 +1158,13 @@ namespace MinecraftAlpha
             Tile.Data = Data;
             Change(Tile);
         }
+        public void SetTile(TileGrid Tile, int ID, bool ignore)
+        {
+            Tile.ID = ID;
+            //Tile.Data = Data;
+            //Change(Tile);
+        }
+
         public void SetTile(Vector3 pos, int ID, string Data)
         {
             var e = GetTile(pos);
@@ -1184,15 +1192,24 @@ namespace MinecraftAlpha
 
 
         }
-        public TileGrid SetTile(TileGrid Tile, TileGrid other)
+        public TileGrid SetTile(TileGrid Tile, TileGrid other, bool ignore)
         {
             Tile = other;
             Tile.ID = other.ID;
             Tile.Data = other.Data;
             Tile.state = other.state;
             Tile.pos = other.pos;
-            Change(Tile);
+            
             return Tile;
+        }
+        public TileGrid SetTile(TileGrid Tile, TileGrid other)
+        {
+            
+            var a = SetTile(Tile, other, true);
+            Change(a);
+            return a;
+
+
         }
         public TileGrid SetTile(TileGrid Tile, TileGrid other, int DeepCopy)
         {
@@ -1208,6 +1225,14 @@ namespace MinecraftAlpha
             Change(Tile);
             return Tile;
 
+        }
+        public TileGrid SetTile(TileGrid Tile, string block,bool ignore)
+        {
+
+            Tile.ID = GetBlockByName(block).ID;
+            Tile.Data = "";
+            //Change(Tile);
+            return Tile;
         }
         public TileGrid SetTile(TileGrid Tile, string block)
         {
@@ -1242,7 +1267,7 @@ namespace MinecraftAlpha
         public TileGrid() { }
         public int ID = 0;
         public int state = 0;
-
+        public bool SaveFile = false;
 
         public float MinedHealth = 0; // How much health has been mined from this block
         public bool MarkedForUpdate = false;
@@ -1254,7 +1279,9 @@ namespace MinecraftAlpha
 
         public string Data { get; set; } = string.Empty;
         public List<float> Counter = new List<float>(); //For Changing Values 
-        public Chunk Parent;
+
+
+        [JsonIgnore] public Chunk Parent;
 
     }
 
