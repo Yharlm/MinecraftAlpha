@@ -188,6 +188,10 @@ public class Debuging
         {
             return (X-Offset.X)*dir.Y/dir.X + Offset.Y;
         }
+        public static void RaycastBlock(Vector2 Origin, Vector2 Dir, Game1 game)
+        {
+            //for(Dir.)
+        }
         public static void RaycastPos(Vector2 origin,Vector2 Pos, Game1 game)
         {
             //entity ray

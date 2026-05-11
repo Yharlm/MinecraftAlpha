@@ -47,6 +47,25 @@ namespace MinecraftAlpha
         {
             int Zindex = (int)z;
             var Chunks = Game.Chunks;
+
+            //Check for entity interaction first
+
+            foreach (Entity entity in Game._entityManager.Workspace)
+            {
+                if (entity.Interaction == null) continue;
+                if (LogicsClass.IsInBounds(pos, entity.position, entity.collisionBox.Size))
+                {
+                    if(entity.ID != -1)
+                    {
+                        entity.Interaction.Invoke();
+                        return;
+                    }
+                    
+                        
+
+                }
+            }
+
             TileGrid Tile = Game._blockManager.GetTile(new(pos.X, pos.Y, Zindex));
             if (Zindex < 0 || Zindex > 9) { return; }
             if (block != null)

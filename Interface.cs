@@ -241,10 +241,10 @@ namespace MinecraftAlpha
             windows.Add(new WindowFrame()
             {
 
-                Position = new Vector2(Middlex / 2 - w * 9 / 2, 600),
+                Position = new Vector2(Middlex/2, 600),
                 Name = "Inventory",
                 Visible = false,
-                Frames = new() { new UIFrame() { position = new Vector2(-43, -50), Window = Frames[0].Window, Size = new Vector2(130, 50) } },
+                Frames = new() { new UIFrame() { position = new Vector2(-10, -100), Window = Frames[0].Window, Size = new Vector2(130, 130) } },
                 Buttons = new() { },
                 ItemSlots = new() { },
             });
@@ -256,7 +256,7 @@ namespace MinecraftAlpha
                 {
 
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(w * i, w * j), Texture = ItemSlots[0].Texture, ID = ID };
+                    { ItemPosition = new Vector2(w * i-9*w/2+15, w * j), Texture = ItemSlots[0].Texture, ID = ID };
                     windows.Last().ItemSlots.Add(slot);
                     ID++;
                 }
@@ -266,7 +266,7 @@ namespace MinecraftAlpha
             windows.Add(new WindowFrame()
             {
                 Tag = "cls",
-                Position = new Vector2(Middlex / 2 - w * 9 / 2, 200),
+                Position = new Vector2(Middlex / 2, 200),
                 Name = "Chest",
                 Visible = false,
                 Frames = new() { new UIFrame() { position = new Vector2(-43, -50), Window = Frames[0].Window, Size = new Vector2(130, 60), } },
@@ -290,10 +290,10 @@ namespace MinecraftAlpha
 
             windows.Add(new WindowFrame()
             {
-                Position = new Vector2(Middlex / 2 - w * 9 / 2, 200),
+                //Tag = "cls",
+                Position = new Vector2(Middlex / 2+30, 320),
                 Name = "Crafting2x2",
                 Visible = false,
-                Frames = new() { new UIFrame() { position = new Vector2(-43, -50), Window = Frames[0].Window, Size = new Vector2(130, 60) } },
                 Buttons = new() { },
                 ItemSlots = new() { },
             });
@@ -347,10 +347,9 @@ namespace MinecraftAlpha
             windows.Add(new WindowFrame()
             {
                 Tag = "cls",
-                Position = new Vector2(Middlex / 2 - w * 9 / 2, 200),
+                Position = new Vector2(Middlex / 2, 300),
                 Name = "Crafting3x3",
                 Visible = false,
-                Frames = new() { new UIFrame() { position = new Vector2(-43, -50), Window = Frames[0].Window, Size = new Vector2(130, 60) } },
                 Buttons = new() { },
                 ItemSlots = new() { },
 
@@ -436,7 +435,7 @@ namespace MinecraftAlpha
         public void MouseAction(Vector2 Mouse, ActionManager AM, int Mouse1) // Mouse1 = 0 none, 1 left, 2 right
         {
             In_interface = false;
-
+            
 
             foreach (var win in this.windows)
             {
@@ -485,12 +484,14 @@ namespace MinecraftAlpha
 
                 foreach (var ItemSlot in win.ItemSlots)
                 {
+                    
                     if (ItemSlot.IsInBounds(Mouse))
                     {
                         In_interface = true;
                         //Clicked = true;
                         if (Mouse1 == 1)
                         {
+                            if (Game.Pressed) return;
                             if (!ItemSlot.canPlace)
                             {
                                 if (ItemSlot.Item != null)
@@ -524,6 +525,7 @@ namespace MinecraftAlpha
                         }
                         else if (Mouse1 == 2)
                         {
+                            if (Game.Pressed) return;
                             if (ItemSlot.canPlace)
                             {
                                 if (selectedItem == null)

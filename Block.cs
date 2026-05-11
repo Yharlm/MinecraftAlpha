@@ -86,10 +86,12 @@ namespace MinecraftAlpha
                 new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
                 new Block { Name = "Stone", TexturePath = "stone" ,Health = 100,},
+                
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood Fuel"},
                 new Block { Name = "Log", TexturePath = "oak_log", Health = 60,Tag="Wood Fuel"},
                 new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
                 new Block { Name = "Glass Block", TexturePath = "glass", Health = 4,Transparent = true},
+                new Block { Name = "Netherrack", TexturePath = "netherrack" ,Health = 90,},
 
                 new Block { Name = "Coal Ore", TexturePath = "coal_ore" ,Health = 100,},
                 new Block { Name = "Iron Ore", TexturePath = "iron_ore" ,Health = 100,},
@@ -682,6 +684,7 @@ namespace MinecraftAlpha
 
                 var Craft = Game._userInterfaceManager.GetWindow("Crafting3x3");
                 var Inv = Game._userInterfaceManager.GetWindow("Inventory");
+                Game._userInterfaceManager.GetWindow("Crafting2x2").Visible = false;
                 Craft.Visible = true;
                 Inv.Visible = true;
 

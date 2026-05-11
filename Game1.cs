@@ -824,7 +824,7 @@ public class Game1 : Game
 
     }
 
-    public bool Clicked = false;
+    public bool Pressed = false;
 
     protected override void Update(GameTime gameTime)
     {
@@ -832,33 +832,61 @@ public class Game1 : Game
         TimeSinceStart += 0.3f;
 
         MouseClick = 0;
-        if (Mouse.GetState().LeftButton == ButtonState.Released &&
-            Mouse.GetState().LeftButton == ButtonState.Released && Clicked)
-        {
+        //if (Mouse.GetState().LeftButton == ButtonState.Released &&
+        //    Mouse.GetState().LeftButton == ButtonState.Released && Clicked)
+        //{
 
-            Clicked = false;
-        }
+        //    Clicked = false;
+        //}
+        //if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+        //{
+        //    MouseClick = -1;
+        //}
+        //if (Mouse.GetState().LeftButton == ButtonState.Pressed && !Clicked)
+        //{
+        //    MouseClick = 1;
+        //    Clicked = true;
+        //}
+
+        //if (Mouse.GetState().RightButton == ButtonState.Pressed)
+        //{
+        //    MouseClick = -2;
+        //}
+        //if (Mouse.GetState().RightButton == ButtonState.Pressed && !Clicked)
+        //{
+        //    MouseClick = 2;
+        //    Clicked = true;
+        //}
+
+        
+         if (Mouse.GetState().LeftButton == ButtonState.Released && Mouse.GetState().RightButton == ButtonState.Released)
+         {
+                Pressed = false;
+         }
+        
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
-            MouseClick = -1;
-        }
-        if (Mouse.GetState().LeftButton == ButtonState.Pressed && !Clicked)
-        {
             MouseClick = 1;
-            Clicked = true;
+
         }
 
         if (Mouse.GetState().RightButton == ButtonState.Pressed)
         {
-            MouseClick = -2;
-        }
-        if (Mouse.GetState().RightButton == ButtonState.Pressed && !Clicked)
-        {
+
             MouseClick = 2;
-            Clicked = true;
+
         }
-        MousePosition = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
         _userInterfaceManager.MouseAction(MousePosition, _actionManager, MouseClick);
+
+        MousePosition = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y);
+
+        if (MouseClick != 0)
+        {
+            Pressed = true;
+        }
+        
+
+
 
         if (!GameStarted)
         {
@@ -906,7 +934,7 @@ public class Game1 : Game
         if (Keyboard.GetState().IsKeyDown(Keys.G))
         {
             var c = _blockManager.GetChunk(WorldMousePos);
-            
+
         }
 
 
@@ -1278,6 +1306,32 @@ public class Game1 : Game
 
                 PLR.velocity.velocity += new Vector2(0, +2);
             }
+            if (_inputManager.IsKeyDown_Now(Keys.E))
+            {
+                //_userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
+                //_userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
+
+                _userInterfaceManager.GetWindow("Inventory").Visible = !_userInterfaceManager.GetWindow("Inventory").Visible;
+                _userInterfaceManager.GetWindow("Crafting2x2").Visible = _userInterfaceManager.GetWindow("Inventory").Visible;
+                bool close = false;
+                for (int i = 0; i < _userInterfaceManager.windows.Count; i++)
+                {
+
+                    var u = _userInterfaceManager.windows[i];
+                    if (u.Tag == "cls")
+                    {
+                        u.Visible = false;
+                        close = true;
+                    }
+                }
+                if (close) { return; }
+
+                //_userInterfaceManager.GetWindow("Crafting2x2").Visible = !_userInterfaceManager.GetWindow("Crafting2x2").Visible;
+
+
+
+
+            }
             if (key == Keys.X)
             {
 
@@ -1363,31 +1417,7 @@ public class Game1 : Game
             }
         }
 
-        if (_inputManager.IsKeyDown_Now(Keys.E))
-        {
-            //_userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
-            //_userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
 
-            _userInterfaceManager.GetWindow("Inventory").Visible = !_userInterfaceManager.GetWindow("Inventory").Visible;
-            bool close = false;
-            for (int i = 0; i < _userInterfaceManager.windows.Count; i++)
-            {
-
-                var u = _userInterfaceManager.windows[i];
-                if (u.Tag == "cls")
-                {
-                    u.Visible = false;
-                    close = true;
-                }
-            }
-            if (close) { return; }
-
-            _userInterfaceManager.GetWindow("Crafting2x2").Visible = !_userInterfaceManager.GetWindow("Crafting2x2").Visible;
-
-
-
-
-        }
         if (_inputManager.IsKeyDown_Now(Keys.NumPad2))
         {
             Player.Plr.velocity.flying = !Player.Plr.velocity.flying;
@@ -1778,6 +1808,11 @@ public class Game1 : Game
                         {
                             var renderList = GetVisible(j, i, chunk);
                             var tile = renderList[z];
+                            float dis = float.Abs((new Vector2(j, i) + new Vector2(chunk.x - 1, chunk.y - 1) * 32 - Player.Plr.position).Length());
+                            if (dis > 40)
+                            {
+                                continue;
+                            }
                             if (tile != null)
                             {
                                 var block = _blockManager.GetBlockAtTile(tile);
@@ -1794,7 +1829,7 @@ public class Game1 : Game
 
                                 }
 
-                                DrawBlock(tile, chunk, i, j, 1 - (float.Ceiling(Player.Plr.Layer - z)) / 9f, 1, false);
+                                DrawBlock(tile, chunk, i, j, 1 - (float.Ceiling(Player.Plr.Layer - z)) * (float.Ceiling(Player.Plr.Layer - z)) * 0.8f / 9f, 1, false);
                             }
 
 

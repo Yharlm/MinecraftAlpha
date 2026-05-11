@@ -192,10 +192,10 @@ namespace MinecraftAlpha
                 {
                     slot.Item = null;
                 }
-                if (slot.Item.CooldownMax > 0 && slot.Item.Cooldown < slot.Item.CooldownMax)
-                {
-                    slot.Item.Cooldown += 1f;
-                }
+                //if (slot.Item.CooldownMax > 0 && slot.Item.Cooldown < slot.Item.CooldownMax)
+                //{
+                //    slot.Item.Cooldown += 1f;
+                //}
             }
 
         }
@@ -308,11 +308,11 @@ namespace MinecraftAlpha
                         pos1 = new(game.Player.Plr.position, game.Player.Plr.Layer);
                         if (Points.Count == 1)
                         {
-
+                            var list = FileManager.GetStructures();
+                            var str = list.Last();
+                            str.Build(pos1, game,false);
                         }
-                        var list = FileManager.GetStructures();
-                        var str = list.Last();
-
+                        
 
                         return;
                     case "/STR":
