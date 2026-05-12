@@ -263,6 +263,33 @@ namespace MinecraftAlpha
 
             }
 
+            //float w = ItemSlots[0].Texture.Width * 3;
+            windows.Add(new WindowFrame()
+            {
+
+                Position = new Vector2(Middlex / 2, 600),
+                Name = "Creative",
+                Visible = true,
+                Frames = new() { new UIFrame() { position = new Vector2(-10, -100), Window = Frames[0].Window, Size = new Vector2(130, 130) } },
+                Buttons = new() { },
+                ItemSlots = new() { },
+            });
+            ID = 0;
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+
+                    ItemSlot slot = new()
+                    { ItemPosition = new Vector2(w * i - 9 * w / 2 + 15, w * j), Texture = ItemSlots[0].Texture, ID = ID };
+                    slot.Item = Game._blockManager.getBlock(ID);
+                    windows.Last().ItemSlots.Add(slot);
+                    ID++;
+                }
+
+            }
+
             windows.Add(new WindowFrame()
             {
                 Tag = "cls",
@@ -864,7 +891,7 @@ namespace MinecraftAlpha
                 Size = button.Scale / 4;
                 if (button.Hovered)
                 {
-                    color = Color.PapayaWhip;
+                    color = Color.LightBlue;
                 }
             }
             Vector2 CornerSize = Size;

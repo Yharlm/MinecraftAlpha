@@ -73,6 +73,7 @@ public class Game1 : Game
 
     public List<TileGrid> GameProgress = new();
     public List<TileGrid> UpdateStack = new();
+    //public List<TileGrid> ChainUpdateStack = new();
 
     public List<HeightMap> HeightMaps = new();
 
@@ -829,7 +830,7 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         Player.LoadNear();
-        TimeSinceStart += 0.3f;
+        TimeSinceStart += 1f;
 
         MouseClick = 0;
         //if (Mouse.GetState().LeftButton == ButtonState.Released &&
@@ -858,12 +859,12 @@ public class Game1 : Game
         //    Clicked = true;
         //}
 
-        
-         if (Mouse.GetState().LeftButton == ButtonState.Released && Mouse.GetState().RightButton == ButtonState.Released)
-         {
-                Pressed = false;
-         }
-        
+
+        if (Mouse.GetState().LeftButton == ButtonState.Released && Mouse.GetState().RightButton == ButtonState.Released)
+        {
+            Pressed = false;
+        }
+
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
             MouseClick = 1;
@@ -884,7 +885,7 @@ public class Game1 : Game
         {
             Pressed = true;
         }
-        
+
 
 
 
@@ -1000,17 +1001,28 @@ public class Game1 : Game
 
         }
 
-
-        foreach (var tile in UpdateStack)
+        for(int c =0;c< UpdateStack.Count;c++)
         {
+            var tile = UpdateStack[c];
             var block = _blockManager.GetBlockAtTile(tile);
             if (Tick % block.TickUpdate == 0)
             {
                 if (block.Update == null) continue;
-                if ((tile.ID == 0 /*&& tile.brightness > 1*/) /*|| tile.MarkedForUpdate*/) continue;
+                if ((tile.ID == 0 /*&& tile.brightness > 1*/) || tile.MarkedForUpdate)
+                {
+                    continue;
+                }
+                tile.MarkedForUpdate = true;
+                //_blockManager.UpdateSurounding(tile);
                 block.Update.Invoke(tile, tile.Data);
 
+
             }
+        }
+        
+        foreach(var tile in UpdateStack)
+        {
+            tile.MarkedForUpdate = false;
         }
 
 
@@ -1126,9 +1138,9 @@ public class Game1 : Game
 
 
             entity.Grounded = true;
-            if (entity.velocity.velocity.Y > 12f)
+            if (entity.velocity.velocity.Y > 12f && !entity.velocity.flying)
             {
-                entity.Fall_damage = (int)(entity.velocity.velocity.Y) - 7;
+                entity.Fall_damage = (int)(entity.velocity.velocity.Y) - 10;
             }
 
             if (entity.collisionBox.Bottom && !entity.velocity.flying)
@@ -1829,7 +1841,7 @@ public class Game1 : Game
 
                                 }
 
-                                DrawBlock(tile, chunk, i, j, 1 - (float.Ceiling(Player.Plr.Layer - z)) * (float.Ceiling(Player.Plr.Layer - z)) * 0.8f / 9f, 1, false);
+                                DrawBlock(tile, chunk, i, j, 1 - (float.Ceiling(Player.Plr.Layer - z)) * (float.Ceiling(Player.Plr.Layer - z)) * 0.3f / 9f, 1, false);
                             }
 
 
@@ -2149,7 +2161,7 @@ public class Game1 : Game
         int Side = int.Min(Texture.Width, Texture.Height);
         int frames = int.Max(Texture.Width, Texture.Height);
         int framesCount = frames / Side;
-        int currentFrame = (int)((TimeSinceStart) * 2 % framesCount);
+        int currentFrame = (int)((TimeSinceStart) * 0.3 % framesCount);
         BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
 
@@ -2168,7 +2180,7 @@ public class Game1 : Game
             int Side = int.Min(block.Texture.Width, block.Texture.Height);
             int frames = int.Max(block.Texture.Width, block.Texture.Height);
             int framesCount = frames / Side;
-            int currentFrame = (int)((TimeSinceStart) * 2 % framesCount);
+            int currentFrame = (int)((TimeSinceStart) * 0.3 % framesCount);
             BlockState = new Rectangle(0, currentFrame * Side, Side, Side);
 
 

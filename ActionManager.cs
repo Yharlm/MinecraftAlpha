@@ -26,6 +26,7 @@ namespace MinecraftAlpha
         public List<Event> Actions = new List<Event>();
         public List<TileGrid> UpdateTiles = new List<TileGrid>();
         public List<Event> EventQueue = new List<Event>(); // Stores changes done durring gameplay
+        
 
         public void QueChange(Event ev)
         {
@@ -52,15 +53,19 @@ namespace MinecraftAlpha
 
             foreach (Entity entity in Game._entityManager.Workspace)
             {
+                if (entity.ID == -2)
+                {
+
+                    return;
+                }
                 if (entity.Interaction == null) continue;
                 if (LogicsClass.IsInBounds(pos, entity.position, entity.collisionBox.Size))
                 {
-                    if(entity.ID != -1)
+                    
+                    if(entity.ID >= 0)
                     {
                         entity.Interaction.Invoke();
-                        return;
                     }
-                    
                         
 
                 }
@@ -292,13 +297,14 @@ namespace MinecraftAlpha
 
             Game._entityManager.Workspace.Add(ent);
         }
-
+        public TileGrid LastMined = null;
         public void SpawnEntity(Vector3 Pos, string EntityName)
         {
             SpawnEntity(new Vector2(Pos.X, Pos.Y), EntityName, Pos.Z);
         }
         public void BreakBlock(Vector2 Pos, float Z, float Dmg)
         {
+            
             int Zindex = (int)Z; // Round down to get the correct layer
             var Tile = BlockManager.GetBlockAtPos(Pos, Zindex, Game.Chunks);
             if (Tile == null) { return; }
@@ -306,8 +312,18 @@ namespace MinecraftAlpha
             int x = random.Next(0, block.Texture.Width);
             int y = random.Next(0, block.Texture.Height);
             var pos = (new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height));
+            if(Tile != LastMined)
+            {
+                if(LastMined != null) LastMined.MinedHealth = 0;
+
+                LastMined = Tile;
+            }
+            
+            
+
             if (Tile.ID != 0)
             {
+
                 if (block.Health > Tile.MinedHealth)
                 {
                     if (Game.creativeMode) { Tile.MinedHealth += block.Health / 10; } // Fix this later when you want Creative to not matter for explosives

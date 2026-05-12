@@ -15,6 +15,8 @@ namespace MinecraftAlpha
     
     public class World
     {
+        public Vector3 LastPos;
+        public List<ItemSlot> inventory;
         
         public Player Plr;
         public int Seed;

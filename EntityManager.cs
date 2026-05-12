@@ -181,10 +181,11 @@ namespace MinecraftAlpha
                     if (mob.collisionBox.Bottom)
                     {
                         var block = game._blockManager.GetBlockByName(mob.GetData()[0]);
-                        var tile = BlockManager.GetBlockAtPos(mob.position + new Vector2(0, 0f), (int)mob.Layer, game.Chunks);
+                        var tile = game._blockManager.GetTile( new Vector3(mob.position.X, mob.position.Y+1f,(int)mob.Layer));
                         if (tile != null)
                         {
-                            tile.ID = block.ID;
+                            mob.velocity.Gravity = 2;
+                            game._blockManager.GetTile(new Vector3(mob.position.X, mob.position.Y, (int)mob.Layer)).ID = block.ID;
                             mob.Health = 0;
                         }
 
@@ -297,6 +298,7 @@ namespace MinecraftAlpha
             if (tile.ID == 0) return null;
             var g = Entity.CloneEntity(GetEntityByName("Fallingblock"), new Vector2(float.Ceiling(Pos.X), float.Ceiling(Pos.Y)) - Vector2.One * .5f);
             g.Data = game._blockManager.GetBlockAtTile(tile).Name;
+            g.Layer = Z;
 
             game._entityManager.Workspace.Add(g);
 

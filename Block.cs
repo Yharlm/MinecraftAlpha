@@ -100,11 +100,11 @@ namespace MinecraftAlpha
                 new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 7f},
                 new Block { Name = "Portal", TexturePath = "Animated/nether_portal",Health = 30000,Animated = true,TickUpdate = 5,Transparent = true,Solid = false,ConstantUpdate = true},
 
-                new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 8},
-                new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30},
+                new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 30,ConstantUpdate = true},
+                new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30,Tag = "Gravity"},
                 
                 new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5,Solid = false,ConstantUpdate = true},
-                new Block { Name = "Sand", TexturePath = "sand" ,Health = 30},
+                new Block { Name = "Sand", TexturePath = "sand" ,Health = 30,Tag = "Gravity"},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true,IgnoreUpdate = true},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
                 new Block { Name = "Furnace", TexturePath = "furnace_front" ,Health = 100, Interaction = null,ConstantUpdate = true},
@@ -118,11 +118,11 @@ namespace MinecraftAlpha
                 new Block { Name = "Gold", TexturePath = "_item", Item = true,Placable = false,ItemID = 61},
                 new Block { Name = "Diamond", TexturePath = "_item", Item = true,Placable = false,ItemID = 85},
 
-                new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.4f,Tag="Pickaxe",MineLevel = 1},
+                new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.5f,Tag="Pickaxe",MineLevel = 1},
                 new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 0.6f,Tag="Pickaxe",MineLevel = 2},
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
-                new Block { Name = "Gold Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 114,Damage = 0.75f,Tag="Pickaxe",MineLevel = 3},
-                new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.8f,Tag="Pickaxe",MineLevel = 4},
+                new Block { Name = "Gold Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 114,Damage = 0.8f,Tag="Pickaxe",MineLevel = 3},
+                new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.9f,Tag="Pickaxe",MineLevel = 4},
 
                 new Block { Name = "Wooden Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 212,Damage = 2f,Tag="Sword",MineLevel = 0},
                 new Block { Name = "Stone Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 204,Damage = 3f,Tag="Sword",MineLevel = 0},
@@ -416,11 +416,11 @@ namespace MinecraftAlpha
             getBlock("Water").Update = (Pos, data) =>
             {
                 var pos = GetPosAtBlock(Pos);
-
+                //Game._blockManager.UpdateSurounding(Pos);
 
                 if (data == "") data = "7";
                 int Data = int.Parse(data);
-
+                //Pos.MarkedForUpdate = true;
                 var lower = GetBlockAtPos(new Vector2(pos.X, pos.Y + 1), (int)pos.Z, Game.Chunks);
                 var top = GetBlockAtPos(new Vector2(pos.X, pos.Y - 1), (int)pos.Z, Game.Chunks);
                 var Left = GetBlockAtPos(new Vector2(pos.X - 1, pos.Y), (int)pos.Z, Game.Chunks);
@@ -456,12 +456,13 @@ namespace MinecraftAlpha
                 //    }
 
                 //}
-                Pos.MarkedForUpdate = true;
+
 
                 if (lower.ID == 0)
                 {
                     Game._actionManager.SetTile(lower, "Water", "6");
-                    //lower.MarkedForUpdate = false;
+                    //return;
+                    lower.MarkedForUpdate = true;
                 }
 
 
@@ -474,11 +475,11 @@ namespace MinecraftAlpha
 
                     if (Left.ID == 0)
                     {
-                        Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString());
+                        Game._actionManager.SetTile(Left, "Water", (Data - 1).ToString()); Left.MarkedForUpdate = true;
                     }
                     if (Right.ID == 0)
                     {
-                        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString());
+                        Game._actionManager.SetTile(Right, "Water", (Data - 1).ToString()); Right.MarkedForUpdate = true;
                     }
 
                 }
@@ -490,23 +491,23 @@ namespace MinecraftAlpha
                         Game._actionManager.SetTile(Pos, "Air", "");
                         lower.MarkedForUpdate = true;
                     }
-
+                    
 
                 }
                 if (Data < 6)
                 {
                     if (Right.ID == getBlock("Water").ID && Left.ID == getBlock("Water").ID)
                     {
-                        if (int.Parse(Right.Data) < Data && int.Parse(Left.Data) < Data)
+                        if (int.Parse(Right.Data) <= Data && int.Parse(Left.Data) <= Data)
                         {
                             Game._actionManager.SetTile(Pos, "Air", "");
-
+                            
                         }
                     }
                     else
                     {
                         Game._actionManager.SetTile(Pos, "Air", "");
-
+                        ;
                     }
 
 
@@ -601,6 +602,8 @@ namespace MinecraftAlpha
             getBlock("Sand").Update = (Pos, data) =>
             {
                 //Pos.ID = 2;
+                //Game._blockManager.UpdateSurounding(Pos);
+                
                 var pos = GetPosAtBlock(Pos);
                 //Debuging.DebugPosWOrld(Game._spriteBatch,new Vector2(pos.X,pos.Y), Game);
 
@@ -610,30 +613,17 @@ namespace MinecraftAlpha
 
                 if (lower.ID == 0)
                     Game._entityManager.GravityBlock(new Vector2(pos.X, pos.Y), (int)pos.Z, true);
-
-
-
-
-
-            };
-            getBlock("Gravel").Update = (Pos, data) =>
-            {
-                //Pos.ID = 2;
-                var pos = GetPosAtBlock(Pos);
-                //Debuging.DebugPosWOrld(Game._spriteBatch,new Vector2(pos.X,pos.Y), Game);
-
-                var lower = GetBlockAtPos(new Vector2(pos.X, pos.Y + 1), (int)pos.Z, Game.Chunks);
-                if (lower == null) return;
-                Debuging.DebugPosWOrld(Game._spriteBatch, new Vector2(pos.X, pos.Y + 1), Game);
-
-                if (lower.ID == 0)
-                    Game._entityManager.GravityBlock(new Vector2(pos.X, pos.Y), (int)pos.Z, true);
-
+                //var top = Game._blockManager.GetTile(Pos.pos + new Vector3(0, -1, 0));
+                //if (HasTag(Game._blockManager.getBlock(top).Tag, "Gravity"))
+                //{
+                //    getBlock("Sand").Update.Invoke(top, top.Data);
+                //}
 
 
 
 
             };
+            getBlock("Gravel").Update = getBlock("Sand").Update;
             getBlock("Chest").Interaction = (Pos, user, Item) =>
             {
 
@@ -933,7 +923,9 @@ namespace MinecraftAlpha
                 if (tile == null) continue;
                 if (getBlock(tile).Update != null)
                 {
-                    getBlock(tile).Update.Invoke(tile,tile.Data);
+                    getBlock(tile).Update.Invoke(tile, tile.Data);
+                    //UpdateSurounding(tile);
+                    //Change(tile);
                 }
                 //tile.MarkedForUpdate = true;
                 //tile.Color = Color.Red;

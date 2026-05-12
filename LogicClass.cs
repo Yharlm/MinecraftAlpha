@@ -191,6 +191,12 @@ public class Debuging
         public static void RaycastBlock(Vector2 Origin, Vector2 Dir, Game1 game)
         {
             //for(Dir.)
+            //For loop going until hit a block, displaced by int
+            float Distance = (Dir - Origin).Length();
+            for(int n = 0;n <= Distance;n++)
+            {
+                //var tile = 
+            }
         }
         public static void RaycastPos(Vector2 origin,Vector2 Pos, Game1 game)
         {

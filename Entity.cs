@@ -39,7 +39,7 @@ namespace MinecraftAlpha
         }
         public static void UpdateCollision(Entity entity, Game1 game1)
         {
-            float Fidality = 6;
+            float Fidality = 3;
             entity.collisionBox = new CollisionBox() { Size = entity.collisionBox.Size };
             if (entity.velocity.flying && entity.name == "Player") { return; }
             float HalfX = entity.collisionBox.Size.X / 2;
@@ -560,7 +560,7 @@ namespace MinecraftAlpha
             }
             if (entity.ID < 0)
             {
-                Drag = 160f;
+                Drag = 10f;
                 if (entity.collisionBox.Bottom) { velocity *= 0f; }
             }
 
