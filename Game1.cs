@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
@@ -39,7 +39,7 @@ public class Game1 : Game
     public float TimeSinceStart = 0f;
     public bool creativeMode = true;
     public bool InventoryOpen = false;
-
+    public bool MobSpawning = true;
     //Program Settings
     public int windowWidth;
     public int windowHeight;
@@ -63,6 +63,9 @@ public class Game1 : Game
     public InputManager _inputManager = new(); //Reading and storing User Input.
     public CommandMannger _CommandManager = new(); //Debug and testing features
     public Generation generation = new Generation(0); //Procedural gen and structures.
+    
+    
+    
 
     public List<Chunk> Chunks = new() // Preset 3 chunks
     {
@@ -893,8 +896,8 @@ public class Game1 : Game
         {
             return;
         }
-        _userInterfaceManager.windows[3].Visible = false;
-
+        _userInterfaceManager.GetWindow("Menu").Visible = false;
+        _userInterfaceManager.GetWindow("Hotbar").Visible = true;
         if (Player.Plr.Health <= 0)
         {
 
@@ -928,15 +931,7 @@ public class Game1 : Game
             FileManager.SaveGame(ProggresWorld);
             Exit();
         }
-        if (Keyboard.GetState().IsKeyDown(Keys.NumPad5))
-        {
-            FileManager.LoadGame(this, 0);
-        }
-        if (Keyboard.GetState().IsKeyDown(Keys.G))
-        {
-            var c = _blockManager.GetChunk(WorldMousePos);
-
-        }
+        
 
 
 
@@ -1001,7 +996,7 @@ public class Game1 : Game
 
         }
 
-        for(int c =0;c< UpdateStack.Count;c++)
+        for (int c = 0; c < UpdateStack.Count; c++)
         {
             var tile = UpdateStack[c];
             var block = _blockManager.GetBlockAtTile(tile);
@@ -1019,8 +1014,8 @@ public class Game1 : Game
 
             }
         }
-        
-        foreach(var tile in UpdateStack)
+
+        foreach (var tile in UpdateStack)
         {
             tile.MarkedForUpdate = false;
         }
@@ -1135,6 +1130,13 @@ public class Game1 : Game
 
             }
 
+            if(Player.Plr == entity)
+            {
+                if(TimeSinceStart%(20*(entity.MaxHealth-entity.Health)) == 0 && entity.Health< entity.MaxHealth)
+                entity.Health += 1;
+            }
+            if (entity.Swiming) entity.velocity.flying = true;
+            else if(!creativeMode) entity.velocity.flying = false;
 
 
             entity.Grounded = true;
@@ -1143,7 +1145,7 @@ public class Game1 : Game
                 entity.Fall_damage = (int)(entity.velocity.velocity.Y) - 10;
             }
 
-            if (entity.collisionBox.Bottom && !entity.velocity.flying)
+            if (entity.collisionBox.Bottom && !entity.velocity.flying )
             {
                 entity.TakeDamage(null, entity.Fall_damage, 0);
                 entity.Fall_damage = 0;
@@ -1260,7 +1262,15 @@ public class Game1 : Game
 
         float zoomScale = 0.3f;
         var keyboardState = Keyboard.GetState();
+        if (Keyboard.GetState().IsKeyDown(Keys.NumPad5))
+        {
+            FileManager.LoadGame(this, 0);
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.G))
+        {
+            var c = _blockManager.GetChunk(WorldMousePos);
 
+        }
 
 
         bool Front = true; //this represents for Mining infront or behind
@@ -1322,8 +1332,17 @@ public class Game1 : Game
             {
                 //_userInterfaceManager.windows[0].Visible = !_userInterfaceManager.windows[0].Visible;
                 //_userInterfaceManager.windows[2].Visible = !_userInterfaceManager.windows[2].Visible;
-
-                _userInterfaceManager.GetWindow("Inventory").Visible = !_userInterfaceManager.GetWindow("Inventory").Visible;
+                if(creativeMode)
+                {
+                    _userInterfaceManager.GetWindow("Creative").Visible = !_userInterfaceManager.GetWindow("Creative").Visible;
+                    _userInterfaceManager.GetWindow("Inventory").Visible = false;
+                }
+                else
+                {
+                    _userInterfaceManager.GetWindow("Inventory").Visible = !_userInterfaceManager.GetWindow("Inventory").Visible;
+                    _userInterfaceManager.GetWindow("Creative").Visible = false;
+                }
+                
                 _userInterfaceManager.GetWindow("Crafting2x2").Visible = _userInterfaceManager.GetWindow("Inventory").Visible;
                 bool close = false;
                 for (int i = 0; i < _userInterfaceManager.windows.Count; i++)
@@ -1673,6 +1692,9 @@ public class Game1 : Game
             //Structure.LoadStructures()[0].GenerateStructure(World, WorldMousePos, true);
             Chunks.Clear();
             HeightMaps.Clear();
+            GameProgress.Clear();
+            UpdateStack.Clear();
+            //_entityManager.Workspace.Clear();
             //_entityManager.Workspace.Add(Entity.CloneEntity(_entityManager.entities[1], WorldMousePos));
 
         }
@@ -2104,6 +2126,9 @@ public class Game1 : Game
             c = block.Color;
         }
 
+
+
+
         float Light = Tile.brightness;
 
         float a = Z * Light;
@@ -2130,10 +2155,11 @@ public class Game1 : Game
 
         }
         int State = block.DefaultState;
-        if (Tile.state > 0)
-        {
-            BlockState = new Rectangle(State, 0, block.Texture.Width, block.Texture.Height);
-        }
+        
+        
+        
+            
+        
 
         if (Opaque)
         {
@@ -2142,7 +2168,7 @@ public class Game1 : Game
         Vector2 ChunkPos = (new Vector2(chunk.x, chunk.y) - Vector2.One) * chunk.Tiles.GetLength(1) * BlockSize;
         //Rectangle BlockState = new Rectangle(0, 0, block.Texture.Width, block.Texture.Height);
         //_spriteBatch.Draw(block.Texture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, BlockState, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, layer);
-        DrawBlock(block, State, BlockSize / block.Texture.Width, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, layer, 0, Vector2.Zero, Layer, SpriteEffects.None);
+        DrawBlock(block, State, BlockSize / 16, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, layer, 0, Vector2.Zero, Layer, SpriteEffects.None);
         _spriteBatch.Draw(BreakTexture, new Vector2(j * BlockSize, i * BlockSize) + Player.cam.position + ChunkPos, sourceRectangle, Layer, 0f, Vector2.Zero, BlockSize / block.Texture.Width, SpriteEffects.None, 1);
         if (DebugMode)
         {
@@ -2185,12 +2211,30 @@ public class Game1 : Game
 
 
         }
+        if (block.HasVariants)
+        {
+            int State = state;
+            BlockState = new Rectangle(State, 0, block.Texture.Height, block.Texture.Height);
+           
 
-
+        }
 
         _spriteBatch.Draw(block.Texture, position, BlockState, color, Orientation, Origin, size, spriteEffect, layer);
     }
 
+    public void Variants(TileGrid tile, Block block)
+    {
+        //If tree for specific blocks how to be rendered
+
+        //Torch
+
+        //Furnace
+
+        //Chest
+
+        //
+
+    }
     // UI:
     // - SingleClick get stack
     // - DoubleClick get Pull all from container

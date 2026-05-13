@@ -23,6 +23,7 @@
     <None Remove="Content\Chest.png" />
     <None Remove="Content\File.spritefont" />
     <None Remove="Content\Font.spritefont" />
+    <None Remove="Content\furnace_front_on.png" />
     <None Remove="Content\Minecraft.ttf" />
     <None Remove="Content\obj\DesktopGL\Chest.mgcontent" />
     <None Remove="Content\obj\DesktopGL\net8.0\Content\Entities\Steve.mgcontent" />

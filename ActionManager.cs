@@ -163,6 +163,9 @@ namespace MinecraftAlpha
             //Places block here
             if (block != null)
             {
+                Vector3 Direction = new Vector3(pos.X, pos.Y, z) - new Vector3(Game.Player.Plr.position.X, Game.Player.Plr.position.Y, Game.Player.Plr.Layer);
+
+
                 block.Data = Game._blockManager.GetBlockByName(block.Name).Data;
                 SetTile(Tile, block.Name, block.Data);
                 Tile.MinedHealth = 0;

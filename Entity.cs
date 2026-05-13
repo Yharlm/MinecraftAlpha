@@ -37,14 +37,29 @@ namespace MinecraftAlpha
         {
             return false;
         }
+        public static void Swim(TileGrid tile,Entity mob,Game1 game1)
+        {
+            if (game1._blockManager.getBlock(tile).Tag == "Liquid")
+            {
+                mob.Swiming = true;
+                if (game1._blockManager.getBlock(tile).Name == "Lava")
+                {
+                    mob.TakeDamage(null, 4, 0);
+                }
+            }
+            
+        }
         public static void UpdateCollision(Entity entity, Game1 game1)
         {
+            entity.Swiming = false;
             float Fidality = 3;
             entity.collisionBox = new CollisionBox() { Size = entity.collisionBox.Size };
-            if (entity.velocity.flying && entity.name == "Player") { return; }
+            if (game1.creativeMode&&entity.velocity.flying && entity.name == "Player") { return; }
             float HalfX = entity.collisionBox.Size.X / 2;
             float HalfY = entity.collisionBox.Size.Y / 2;
             float XFidality = entity.collisionBox.Size.X / MathF.Ceiling(entity.collisionBox.Size.X)/ Fidality;
+            Vector2 center = entity.position;
+
             for (float i = -HalfX + XFidality; i <= HalfX - XFidality; i += XFidality) // ground Collsion
             {
                 Vector3 p = new Vector3(entity.position.X + i, entity.position.Y + HalfY,MathF.Floor(entity.Layer));
@@ -58,14 +73,14 @@ namespace MinecraftAlpha
                     {
                         Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X+i, entity.position.Y + HalfY), game1, Color.Red);
                         entity.collisionBox.Bottom = true;
-
+                        
                     }
                     else
                     {
                         Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X+i, entity.position.Y + HalfY), game1, Color.Green);
                     }
                     
-              
+
                 }
                 if (top != null)
                 {
@@ -79,11 +94,12 @@ namespace MinecraftAlpha
                     {
                         Debuging.DebugPosWOrld(game1._spriteBatch, new Vector2(entity.position.X, entity.position.Y - HalfY), game1, Color.Green);
                     }
-
+                    
 
                 }
 
             }
+            Swim(game1._blockManager.GetTile(new(center, entity.Layer)), entity, game1);
             float YFidality = entity.collisionBox.Size.Y / MathF.Ceiling(entity.collisionBox.Size.Y)/Fidality;
             for (float i = -HalfY + YFidality; i <= HalfY - YFidality; i += YFidality) // ground Collsion
             {
@@ -151,6 +167,7 @@ namespace MinecraftAlpha
         public CollisionBox collisionBox;
         public Entity Target = null;
         public bool Grounded = false;
+        public bool Swiming = false;
         public Vector2 position { get; set; } = Vector2.Zero;
         public Velocity velocity = new Velocity();
         public int Fall_damage = 0;
@@ -571,7 +588,12 @@ namespace MinecraftAlpha
             {
                 Gravity = 0;
             }
-
+            if(entity.Swiming)
+            {
+                Gravity = 0f;
+                entity.collisionBox.Bottom = true;
+                //velocity *= new Vector2(0.9f, 2);
+            }
             entity.position += vel / 30;
             velocity += new Vector2(0, Gravity * 2.25f) * entity.Mass;
         }

@@ -34,6 +34,7 @@ namespace MinecraftAlpha
 
         public Color Color = Color.White;
         public Texture2D Texture { get; set; }
+        public bool HasVariants = false;
         public string TexturePath { get; set; }
 
         public bool Item = false;
@@ -61,7 +62,7 @@ namespace MinecraftAlpha
 
         public Action<TileGrid, Entity, Block> Interaction = null;
         public Action<TileGrid, string> Update;
-        public Action<TileGrid> OnCollide;
+        public Action<TileGrid,Entity> OnCollide;
     }
 
     public class BlockManager
@@ -82,49 +83,52 @@ namespace MinecraftAlpha
             {
 
                 new Block { Name = "Air", TexturePath = "air" ,Health = 1000, TickUpdate = 3,Solid = false},
-                new Block { Name = "Dirt", TexturePath = "dirt",Health = 30, Tag="dirt"},
-                new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30 },
-                new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,},
-                new Block { Name = "Stone", TexturePath = "stone" ,Health = 100,},
+                new Block { Name = "Dirt", TexturePath = "dirt",Health = 30, Tag="Dirt"},
+                new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30,Tag="Dirt" },
+                new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,Tag="Stone"},
+                new Block { Name = "Stone", TexturePath = "stone" ,Health = 100,Tag="Stone"},
                 
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood Fuel"},
                 new Block { Name = "Log", TexturePath = "oak_log", Health = 60,Tag="Wood Fuel"},
-                new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true},
-                new Block { Name = "Glass Block", TexturePath = "glass", Health = 4,Transparent = true},
-                new Block { Name = "Netherrack", TexturePath = "netherrack" ,Health = 90,},
+                new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true,Tag="Leaves Fuel"},
+                new Block { Name = "Glass Block", TexturePath = "glass", Health = 4,Transparent = true,Tag="Glass"},
+                new Block { Name = "Netherrack", TexturePath = "netherrack" ,Health = 90,Tag="Stone"},
+                new Block { Name = "EndsStone", TexturePath = "end_stone" ,Health = 90,Tag="Stone"},
+                new Block { Name = "Obsidian", TexturePath = "obsidian" ,Health = 90,Tag="Stone"},
 
-                new Block { Name = "Coal Ore", TexturePath = "coal_ore" ,Health = 100,},
-                new Block { Name = "Iron Ore", TexturePath = "iron_ore" ,Health = 100,},
-                new Block { Name = "Gold Ore", TexturePath = "gold_ore" ,Health = 100,},
-                new Block { Name = "Diamond Ore", TexturePath = "diamond_ore" ,Health = 100,},
-                new Block { Name = "Torch", TexturePath = "gravel",Color = Color.LightGoldenrodYellow,Light_Emission = 7f},
+                new Block { Name = "Coal Ore", TexturePath = "coal_ore" ,Health = 100,Tag="Stone Ore",MineLevel = 1},
+                new Block { Name = "Iron Ore", TexturePath = "iron_ore" ,Health = 100,Tag="Stone Ore",MineLevel = 2},
+                new Block { Name = "Gold Ore", TexturePath = "gold_ore" ,Health = 100,Tag="Stone Ore",MineLevel = 3},
+                new Block { Name = "Diamond Ore", TexturePath = "diamond_ore" ,Health = 100,Tag="Stone Ore",MineLevel = 3},
+                new Block { Name = "Torch", TexturePath = "torch",Color = Color.LightGoldenrodYellow,Light_Emission = 7f},
                 new Block { Name = "Portal", TexturePath = "Animated/nether_portal",Health = 30000,Animated = true,TickUpdate = 5,Transparent = true,Solid = false,ConstantUpdate = true},
 
-                new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 30,ConstantUpdate = true},
-                new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30,Tag = "Gravity"},
+                new Block { Name = "Lava", TexturePath = "Animated/lava" ,Animated = true,Health = 100,Data = "7",TickUpdate = 56,ConstantUpdate = true,Solid = false,Tag = "Liquid"},
+                new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 30,ConstantUpdate = true,Solid = false,Tag = "Liquid"},
+                new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30,Tag = "Gravity Dirt"},
                 
                 new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5,Solid = false,ConstantUpdate = true},
-                new Block { Name = "Sand", TexturePath = "sand" ,Health = 30,Tag = "Gravity"},
-                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true,IgnoreUpdate = true},
-                new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null},
-                new Block { Name = "Furnace", TexturePath = "furnace_front" ,Health = 100, Interaction = null,ConstantUpdate = true},
+                new Block { Name = "Sand", TexturePath = "sand" ,Health = 30,Tag = "Gravity Dirt"},
+                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true,IgnoreUpdate = true, Tag="Wood Fuel"},
+                new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null,Tag="Wood Fuel"},
+                new Block { Name = "Furnace", TexturePath = "furnace_front" ,Health = 100, Interaction = null,ConstantUpdate = true,Tag="Stone",HasVariants = true},
                 
                 new Block { Name = "TNT", TexturePath = "tnt_side", Health = 2,Transparent = false,Tag="Explosive"},
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
 
-                new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199},
+                new Block { Name = "Stick", TexturePath = "_item", Item = true,Placable = false,ItemID = 199,Tag = "Fuel"},
                 new Block { Name = "Coal", TexturePath = "_item", Item = true,Placable = false,ItemID = 81,Tag = "Fuel"},
                 new Block { Name = "Iron", TexturePath = "_item", Item = true,Placable = false,ItemID = 31},
                 new Block { Name = "Gold", TexturePath = "_item", Item = true,Placable = false,ItemID = 61},
                 new Block { Name = "Diamond", TexturePath = "_item", Item = true,Placable = false,ItemID = 85},
 
-                new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.5f,Tag="Pickaxe",MineLevel = 1},
+                new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.5f,Tag="Pickaxe Fuel",MineLevel = 1},
                 new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 0.6f,Tag="Pickaxe",MineLevel = 2},
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
                 new Block { Name = "Gold Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 114,Damage = 0.8f,Tag="Pickaxe",MineLevel = 3},
                 new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.9f,Tag="Pickaxe",MineLevel = 4},
 
-                new Block { Name = "Wooden Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 212,Damage = 2f,Tag="Sword",MineLevel = 0},
+                new Block { Name = "Wooden Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 212,Damage = 2f,Tag="Sword Fuel",MineLevel = 0},
                 new Block { Name = "Stone Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 204,Damage = 3f,Tag="Sword",MineLevel = 0},
                 new Block { Name = "Iron Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 95,Damage = 4f,Tag="Sword",MineLevel = 0},
                 new Block { Name = "Gold Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 14,Damage = 5f,Tag="Sword",MineLevel = 0},
@@ -596,7 +600,7 @@ namespace MinecraftAlpha
             getBlock("Coal Ore").ItemDrop = getBlock("Coal");
             getBlock("Diamond Ore").ItemDrop = getBlock("Diamond");
 
-            getBlock("Furnace").Variants = [Game.Content.Load<Texture2D>("furnace_front_on")];
+            //getBlock("Furnace").Variants = [Game.Content.Load<Texture2D>("furnace_front_on")];
 
 
             getBlock("Sand").Update = (Pos, data) =>
@@ -1104,7 +1108,7 @@ namespace MinecraftAlpha
                 var b = Game._blockManager.getBlock(Tile);
                 if (b.ConstantUpdate) Game.UpdateStack.Add(Tile);
             }
-            if (true) //When generation robust use this.
+            if (false) //When generation robust use this.
             {
                 return;
             }
@@ -1261,7 +1265,12 @@ namespace MinecraftAlpha
         public Vector3 pos;
         public TileGrid() { }
         public int ID = 0;
-        public int state = 0;
+
+        //this is for the placed blocks to have a direction, limited to complex blocks like logs, chest, bed, 
+        //for blocks with changing textures
+        //for multi-tile blocks
+
+        public int state = 0; //For direction : left, right, up, down, front, back 
         public bool SaveFile = false;
 
         public float MinedHealth = 0; // How much health has been mined from this block

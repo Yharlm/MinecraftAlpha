@@ -256,21 +256,50 @@ namespace MinecraftAlpha
                 {
 
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(w * i-9*w/2+15, w * j), Texture = ItemSlots[0].Texture, ID = ID };
+                    { ItemPosition = new Vector2(w * i-9*w/2+15, w * j-w), Texture = ItemSlots[0].Texture, ID = ID };
                     windows.Last().ItemSlots.Add(slot);
                     ID++;
                 }
 
             }
 
-            //float w = ItemSlots[0].Texture.Width * 3;
+            windows.Add(new WindowFrame()
+            {
+
+                Position = new Vector2(Middlex / 2, 300),
+                Name = "Creative",
+                Visible = false,
+                Frames = new() { new UIFrame() { position = new Vector2(-10, w*1), Window = Frames[0].Window, Size = new Vector2(130, 130) } },
+                Buttons = new() { },
+                ItemSlots = new() { },
+
+            });
+            ID = 0;
+
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+
+                    ItemSlot slot = new()
+                    { ItemPosition = new Vector2(w * j - 9 * w / 2 + 15, w * i - 120), Texture = ItemSlots[0].Texture, ID = ID };
+                    //slot.Item = Game._blockManager.getBlock(ID);
+                    //slot.Count = 999;
+                    windows.Last().ItemSlots.Add(slot);
+
+                    ID++;
+                }
+
+            }
+
+
             windows.Add(new WindowFrame()
             {
 
                 Position = new Vector2(Middlex / 2, 600),
-                Name = "Creative",
-                Visible = true,
-                Frames = new() { new UIFrame() { position = new Vector2(-10, -100), Window = Frames[0].Window, Size = new Vector2(130, 130) } },
+                Name = "Hotbar",
+                Visible = false,
+                
                 Buttons = new() { },
                 ItemSlots = new() { },
             });
@@ -278,17 +307,18 @@ namespace MinecraftAlpha
 
             for (int i = 0; i < 9; i++)
             {
-                for (int j = 0; j < 9; j++)
-                {
-
+                
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(w * i - 9 * w / 2 + 15, w * j), Texture = ItemSlots[0].Texture, ID = ID };
-                    slot.Item = Game._blockManager.getBlock(ID);
+                    { ItemPosition = new Vector2(w * i - 9 * w / 2 + 15,2*w), Texture = ItemSlots[0].Texture, ID = ID };
                     windows.Last().ItemSlots.Add(slot);
                     ID++;
-                }
+                
 
             }
+
+
+            //float w = ItemSlots[0].Texture.Width * 3;
+
 
             windows.Add(new WindowFrame()
             {
@@ -296,7 +326,6 @@ namespace MinecraftAlpha
                 Position = new Vector2(Middlex / 2, 200),
                 Name = "Chest",
                 Visible = false,
-                Frames = new() { new UIFrame() { position = new Vector2(-43, -50), Window = Frames[0].Window, Size = new Vector2(130, 60), } },
                 Buttons = new() { },
                 ItemSlots = new() { },
 
@@ -308,7 +337,7 @@ namespace MinecraftAlpha
                 {
 
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(w * i, w * j), Texture = ItemSlots[0].Texture, ID = ID, Clicked = (slot) => { if (LastUsedBlock == null) return; Game._blockManager.getBlock(LastUsedBlock).Update(LastUsedBlock, LastUsedBlock.Data); } };
+                    { ItemPosition = new Vector2(w * i - 9 * w / 2+w/3, w * j+100), Texture = ItemSlots[0].Texture, ID = ID, Clicked = (slot) => { if (LastUsedBlock == null) return; Game._blockManager.getBlock(LastUsedBlock).Update(LastUsedBlock, LastUsedBlock.Data); } };
                     windows.Last().ItemSlots.Add(slot);
                     ID++;
                 }
@@ -367,7 +396,7 @@ namespace MinecraftAlpha
 
             //LoadWorlds
             //Settings ?
-
+            
 
 
 
@@ -398,20 +427,20 @@ namespace MinecraftAlpha
             windows.Add(new WindowFrame()
             {
                 Tag = "cls",
-                Position = new Vector2(Middlex / 2 - w * 9 / 2, 200),
+                Position = new Vector2(Middlex / 2 - w * 9 / 2, 370),
                 Name = "Furnace",
                 Visible = false,
-                Frames = new() { new UIFrame() { position = new Vector2(-43, -50), Window = Frames[0].Window, Size = new Vector2(130, 60) } },
+                //Frames = new() { new UIFrame() { position = new Vector2(-0, -0), Window = Frames[0].Window, Size = new Vector2(130, 60) } },
                 Buttons = new() { },
                 ItemSlots = new() { },
                 
             });
             ItemSlot FurnaceInput, FurnaceOutput, Fuel;
-            FurnaceInput = new() { ItemPosition = new Vector2(w*10, w*1), Texture = ItemSlots[0].Texture, ID = ID };
-            FurnaceOutput = new() { ItemPosition = new Vector2(w * 10, w*-1), Texture = ItemSlots[0].Texture, ID = ID };
+            FurnaceInput = new() { ItemPosition = new Vector2(w*12-330, -w), Texture = ItemSlots[0].Texture, ID = ID };
+            FurnaceOutput = new() { ItemPosition = new Vector2(w * 10 - 330, 0), Texture = ItemSlots[0].Texture, ID = ID };
             Fuel = new()
             {
-                ItemPosition = new Vector2(w * 14, w),
+                ItemPosition = new Vector2(w * 12 - 330, w),
                 Texture = ItemSlots[0].Texture,
                 ID = ID,
                 Clicked = (Fuel) =>
@@ -582,7 +611,7 @@ namespace MinecraftAlpha
     public class WindowFrame
     {
 
-
+        public int ScrollValue = 0;
         public List<Button> Buttons = new List<Button>();
         public List<ItemSlot> ItemSlots = new List<ItemSlot>();
         public List<UIFrame> Frames = new List<UIFrame>();
@@ -597,7 +626,7 @@ namespace MinecraftAlpha
         public void Update(Game1 game)
         {
             //Update Logic Here
-
+            float w = 18 * 3;
             if (Visible)
             {
                 if (Name == "Crafting2x2")
@@ -660,6 +689,38 @@ namespace MinecraftAlpha
                         }
 
                     }
+                }
+                if(Name == "Creative")
+                {
+
+
+                    ScrollValue = Mouse.GetState().ScrollWheelValue/1000;
+
+                    int ID = ScrollValue / 3;
+
+                    for (int i = 0; i < 6; i++)
+                    {
+                        for (int j = 0; j < 9; j++)
+                        {
+                            int index = i * 6 + j;
+
+                            
+                            ItemSlot slot = this.ItemSlots[index];
+                            if (index >= game._blockManager.Blocks.Count)
+                            {
+                                slot.Item = null;
+                                slot.Count = 0;
+                                continue;
+                            }
+                            slot.Item = game._blockManager.getBlock(index);
+                            slot.Count = 1;
+                            
+
+                            //ID++;
+                        }
+
+                    }
+
                 }
             }
 

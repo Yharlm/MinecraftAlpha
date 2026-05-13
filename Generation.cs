@@ -71,7 +71,17 @@ namespace MinecraftAlpha
                         var t = game._blockManager.GetTile(p + pos1);
                         int id = str.Grid[(int)p.Z, (int)p.Y, (int)p.X];
                         if (t == null || id == 0) continue;
+
+
+
                         var block = game._blockManager.Blocks[id];
+
+                        var tileB = game._blockManager.getBlock(t);
+
+                        if (tileB.Health >= block.Health && tileB.ID != 0)
+                        {
+                            continue;
+                        }
                         game._blockManager.SetTile(t, block.Name, ignore);
 
 
@@ -124,7 +134,7 @@ namespace MinecraftAlpha
 
         public float GetHeight(TileGrid tile)
         {
-            return Map[(int)tile.pos.Z % 32, (int)tile.pos.X % 32];
+            return Map[int.Abs((int)tile.pos.Z % 32), int.Abs((int)tile.pos.X % 32)];
         }
 
 
