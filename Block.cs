@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -14,7 +13,7 @@ namespace MinecraftAlpha
     public class Block
     {
         public Texture2D[] Variants;
-       
+
         public int ID = 0;
         public float Health = 30;
         public string Tag = "";
@@ -62,7 +61,7 @@ namespace MinecraftAlpha
 
         public Action<TileGrid, Entity, Block> Interaction = null;
         public Action<TileGrid, string> Update;
-        public Action<TileGrid,Entity> OnCollide;
+        public Action<TileGrid, Entity> OnCollide;
     }
 
     public class BlockManager
@@ -87,7 +86,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Grass", TexturePath = "grass_block_side",Health = 30,Tag="Dirt" },
                 new Block { Name = "Cobblestone", TexturePath = "cobblestone", Health = 100,Tag="Stone"},
                 new Block { Name = "Stone", TexturePath = "stone" ,Health = 100,Tag="Stone"},
-                
+
                 new Block { Name = "Wood", TexturePath = "oak_planks" ,Health = 60,Tag="Wood Fuel"},
                 new Block { Name = "Log", TexturePath = "oak_log", Health = 60,Tag="Wood Fuel"},
                 new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true,Tag="Leaves Fuel"},
@@ -106,13 +105,13 @@ namespace MinecraftAlpha
                 new Block { Name = "Lava", TexturePath = "Animated/lava" ,Animated = true,Health = 100,Data = "5",TickUpdate = 76,ConstantUpdate = true,Solid = false,Tag = "Liquid"},
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 30,ConstantUpdate = true,Solid = false,Tag = "Liquid"},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30,Tag = "Gravity Dirt"},
-                
+
                 new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5,Solid = false,ConstantUpdate = true},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30,Tag = "Gravity Dirt"},
                 new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true,IgnoreUpdate = true, Tag="Wood Fuel"},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null,Tag="Wood Fuel"},
                 new Block { Name = "Furnace", TexturePath = "furnace_front" ,Health = 100, Interaction = null,ConstantUpdate = true,Tag="Stone",HasVariants = true},
-                
+
                 new Block { Name = "TNT", TexturePath = "tnt_side", Health = 2,Transparent = false,Tag="Explosive"},
                 new Block { Name = "Apple", TexturePath = "_item", Item = true,Placable = false,ItemID = 0,UseTimeMax = 3},
 
@@ -149,11 +148,11 @@ namespace MinecraftAlpha
 
             return list;
         }
-        public bool HasTag(string s,string t)
+        public bool HasTag(string s, string t)
         {
             char Key = ' ';
             var Tags = s.Split(Key);
-            foreach(string a in Tags)
+            foreach (string a in Tags)
             {
                 if (a == t) return true;
             }
@@ -191,24 +190,15 @@ namespace MinecraftAlpha
             bool Valid = true;
             for (int c = 0; c < 6; c++)
             {
-                
+
 
                 var s = Sides[c];
                 TileGrid Hit = null;
                 int Range = 1;
                 while (Hit == null && Range <= 10)
                 {
-                    int xneg = 0;
-                    int yneg = 0;
-                    if ((Pos.pos + new Vector3(0.5f, 0.5f, 0) + s * Range).X>0)
-                    {
-                        xneg = 0;
-                    }
-                    if ((Pos.pos + new Vector3(0.5f, 0.5f, 0) + s * Range).Y < 0)
-                    {
-                        yneg = 1;
-                    }
-                    var t = Game._blockManager.GetTile(Pos.pos + new Vector3(0.5f,0.5f,0) + s * Range);
+
+                    var t = Game._blockManager.GetTile(Pos.pos + new Vector3(0.5f, 0.5f, 0) + s * Range);
 
                     if (t != null)
                     {
@@ -221,7 +211,7 @@ namespace MinecraftAlpha
                         else
                         {
                             Hit = t;
-                            t.ID = 9;
+                            //t.ID = 9;
                             Points[c] = t;
                             break;
                         }
@@ -257,7 +247,16 @@ namespace MinecraftAlpha
             }
             bool Horizontal = (left != null && right != null);
 
-
+            int xneg = 0;
+            int yneg = 0;
+            if ((Pos.pos).X < 0)
+            {
+                xneg = -1;
+            }
+            if ((Pos.pos).Y < 0)
+            {
+                yneg = -1;
+            }
             //if (Horizontal)
             {
                 var A = Combiner(left, up, Center);
@@ -270,12 +269,12 @@ namespace MinecraftAlpha
                 {
                     for (int j = 0; j <= Ly; j++)
                     {
-                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z) + new Vector3(1.5f, 1.4f, 0));
-                        tile.ID = 4;
+                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i - xneg, B.pos.Y + j - yneg, A.pos.Z) + new Vector3(0.5f, 0.5f, 0));
+                        //tile.ID = 4;
                         if (j == 0 || j == Ly || i == 0 || i == Lx)
                         {
-                            
-                            
+
+
                             if (Game._blockManager.getBlock(tile).Name != "Obsidian")
                             {
 
@@ -293,7 +292,7 @@ namespace MinecraftAlpha
                 {
                     for (int j = 1; j < Ly; j++)
                     {
-                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z) + new Vector3(0.4f, 2.5f, 0));
+                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i - xneg, B.pos.Y + j - yneg, A.pos.Z) + new Vector3(0.5f, 0.5f, 0));
                         if (tile.ID != 0 && Game._blockManager.getBlock(tile).Name != "Fire")
                         {
 
@@ -312,11 +311,11 @@ namespace MinecraftAlpha
                 {
                     for (int j = 1; j < Ly; j++)
                     {
-                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z));
+                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i - xneg, B.pos.Y + j - yneg, A.pos.Z) + new Vector3(0.5f, 0.5f, 0));
                         if (tile != null)
                         {
                             Game._blockManager.SetTile(tile, "Portal", "");
-                            tile.Color = Color.OrangeRed;
+                            //tile.Color = Color.OrangeRed;
                         }
                     }
                 }
@@ -429,19 +428,19 @@ namespace MinecraftAlpha
             {
 
                 PerlinNoise NOISE = new(1);
-                float b = Game.TimeSinceStart/20f;
+                float b = Game.TimeSinceStart / 20f;
                 float a = 2;
-                float h = (float.Abs(MathF.Sin((Game.TimeSinceStart + (Pos.pos.X + Pos.pos.Y)*40) / 455f)));
-                float p = NOISE.Noise((Pos.pos.X+ MathF.Sin(MathF.Sin(b+Pos.pos.Y)) )*3f* a*0.05f, (Pos.pos.Y + Pos.pos.X + b) * a*0.05f)/2 ;
-                Pos.Color = LogicsClass.HSL(p+ MathF.Sin(b/30), 1f, 0.5f) * (p+0.6f);
+                float h = (float.Abs(MathF.Sin((Game.TimeSinceStart + (Pos.pos.X + Pos.pos.Y) * 40) / 455f)));
+                float p = NOISE.Noise((Pos.pos.X + MathF.Sin(MathF.Sin(b + Pos.pos.Y))) * 3f * a * 0.05f, (Pos.pos.Y + Pos.pos.X + b) * a * 0.05f) / 2;
+                Pos.Color = LogicsClass.HSL(p + MathF.Sin(b / 30), 1f, 0.5f) * (p + 0.6f);
                 //Pos.Color = new Color(1, 1-p, 1);
             };
             getBlock("Portal").OnCollide = (Pos, data) =>
             {
-                if(data.name != "Player") { return; }
+                if (data.name != "Player") { return; }
                 Game.Player.dimension = Game.Player.dimension == 0 ? 1 : 0;
                 Game.Player.Plr.IFrame = 6f;
-                
+
                 Game.Chunks.Clear();
 
             };
@@ -543,7 +542,7 @@ namespace MinecraftAlpha
                         Game._actionManager.SetTile(Pos, "Air", "");
                         lower.MarkedForUpdate = true;
                     }
-                    
+
 
                 }
                 if (Data < 6)
@@ -553,7 +552,7 @@ namespace MinecraftAlpha
                         if (int.Parse(Right.Data) <= Data && int.Parse(Left.Data) <= Data)
                         {
                             Game._actionManager.SetTile(Pos, "Air", "");
-                            
+
                         }
                     }
                     else
@@ -577,10 +576,10 @@ namespace MinecraftAlpha
             {
                 var pos = GetPosAtBlock(Pos);
                 //Game._blockManager.UpdateSurounding(Pos);
-                
+
                 if (data == "") data = "5";
 
-                var sides = LogicsClass.SidesPos(pos,Game);
+                var sides = LogicsClass.SidesPos(pos, Game);
 
                 foreach (var side in sides)
                 {
@@ -596,7 +595,7 @@ namespace MinecraftAlpha
                             Game._actionManager.SetTile(Pos, "Cobblestone", ""); return;
                         }
                     }
-                        
+
 
                 }
 
@@ -785,7 +784,7 @@ namespace MinecraftAlpha
             {
                 //Pos.ID = 2;
                 //Game._blockManager.UpdateSurounding(Pos);
-                
+
                 var pos = GetPosAtBlock(Pos);
                 //Debuging.DebugPosWOrld(Game._spriteBatch,new Vector2(pos.X,pos.Y), Game);
 
@@ -874,11 +873,11 @@ namespace MinecraftAlpha
                 {
 
                     Pos.Counter[0] -= 1f;
-                    
+
 
                     Ignited = true;
                 }
-                
+
                 if (Ignited)
                 {
                     Pos.Color = Color.Red;
@@ -891,7 +890,7 @@ namespace MinecraftAlpha
                 string Data = "{}{}{}{}";
 
                 //Thread.Sleep(100);
-                
+
             };
             getBlock("Furnace").Interaction = (Pos, user, Item) =>
             {
@@ -1111,7 +1110,7 @@ namespace MinecraftAlpha
                 }
                 //tile.MarkedForUpdate = true;
                 //tile.Color = Color.Red;
-                
+
             }
 
         }
@@ -1192,9 +1191,9 @@ namespace MinecraftAlpha
         }
         public bool GetChunk(Vector2 pos, int non) //World Pos
         {
-			int ChunkX = (int)Math.Ceiling((pos.X / 32));
-			int ChunkY = (int)Math.Ceiling((pos.Y / 32));
-			foreach (Chunk C in Game.Chunks)
+            int ChunkX = (int)Math.Ceiling((pos.X / 32));
+            int ChunkY = (int)Math.Ceiling((pos.Y / 32));
+            foreach (Chunk C in Game.Chunks)
             {
                 if (C.x == ChunkX && C.y == ChunkY)
                 {
@@ -1277,7 +1276,7 @@ namespace MinecraftAlpha
         //{
 
         //}
-       
+
         public void Change(TileGrid Tile)
         {
             EvaluateChange(Tile);
@@ -1294,15 +1293,15 @@ namespace MinecraftAlpha
 
             float Sky = heightMap.GetHeight(Tile);
 
-            if(float.Ceiling(Tile.pos.Y) == float.Ceiling(Sky))
+            if (float.Ceiling(Tile.pos.Y) == float.Ceiling(Sky))
             {
                 //Change to the tallest
-                if(Game._blockManager.getBlock(Tile).Transparent || Tile.ID == 0)
+                if (Game._blockManager.getBlock(Tile).Transparent || Tile.ID == 0)
                 {
-                    
+
                 }
             }
-            else if(float.Ceiling(Tile.pos.Y) <= float.Ceiling(Sky))
+            else if (float.Ceiling(Tile.pos.Y) <= float.Ceiling(Sky))
             {
                 //New tallest
             }
@@ -1323,7 +1322,7 @@ namespace MinecraftAlpha
         public void EvaluateChange(TileGrid tile)
         {
             if (tile == null) return;
-            if(!Game.GameProgress.Contains(tile)) // assuming it updates because its an object
+            if (!Game.GameProgress.Contains(tile)) // assuming it updates because its an object
             {
                 tile.SaveFile = true;
                 Game.GameProgress.Add(tile);
@@ -1376,12 +1375,12 @@ namespace MinecraftAlpha
             Tile.Data = other.Data;
             Tile.state = other.state;
             Tile.pos = other.pos;
-            
+
             return Tile;
         }
         public TileGrid SetTile(TileGrid Tile, TileGrid other)
         {
-            
+
             var a = SetTile(Tile, other, true);
             Change(a);
             return a;
@@ -1403,7 +1402,7 @@ namespace MinecraftAlpha
             return Tile;
 
         }
-        public TileGrid SetTile(TileGrid Tile, string block,bool ignore)
+        public TileGrid SetTile(TileGrid Tile, string block, bool ignore)
         {
 
             Tile.ID = GetBlockByName(block).ID;
