@@ -26,7 +26,7 @@ namespace MinecraftAlpha
         public List<Event> Actions = new List<Event>();
         public List<TileGrid> UpdateTiles = new List<TileGrid>();
         public List<Event> EventQueue = new List<Event>(); // Stores changes done durring gameplay
-        
+
 
         public void QueChange(Event ev)
         {
@@ -61,12 +61,12 @@ namespace MinecraftAlpha
                 if (entity.Interaction == null) continue;
                 if (LogicsClass.IsInBounds(pos, entity.position, entity.collisionBox.Size))
                 {
-                    
-                    if(entity.ID >= 0)
+
+                    if (entity.ID >= 0)
                     {
                         entity.Interaction.Invoke();
                     }
-                        
+
 
                 }
             }
@@ -178,7 +178,7 @@ namespace MinecraftAlpha
 
                     }
                 }
-                
+
                 Game._blockManager.UpdateSurounding(Tile);
 
             }
@@ -268,7 +268,7 @@ namespace MinecraftAlpha
                         // If distance squared is <= radius squared, it's inside the sphere
                         if (distance <= radiusSquared)
                         {
-                            BreakBlock(new Vector2(x, y) + Vector2.One / 2, z, 3);
+                            BreakBlock(new Vector2(x, y) + Vector2.One / 2, z, 3,null);
                         }
                     }
                 }
@@ -283,7 +283,7 @@ namespace MinecraftAlpha
         public void SetTile(TileGrid tile, string name, string Data)
         {
 
-            
+
             tile.MinedHealth = 0;
             tile.MarkedForUpdate = true;
             Game._blockManager.SetTile(tile, name, Data);
@@ -305,9 +305,9 @@ namespace MinecraftAlpha
         {
             SpawnEntity(new Vector2(Pos.X, Pos.Y), EntityName, Pos.Z);
         }
-        public void BreakBlock(Vector2 Pos, float Z, float Dmg)
+        public void BreakBlock(Vector2 Pos, float Z, float Dmg, Block tool)
         {
-            
+
             int Zindex = (int)Z; // Round down to get the correct layer
             var Tile = BlockManager.GetBlockAtPos(Pos, Zindex, Game.Chunks);
             if (Tile == null) { return; }
@@ -315,14 +315,14 @@ namespace MinecraftAlpha
             int x = random.Next(0, block.Texture.Width);
             int y = random.Next(0, block.Texture.Height);
             var pos = (new Vector2(float.Floor(Pos.X) + (float)x / block.Texture.Width, float.Floor(Pos.Y) + (float)y / block.Texture.Height));
-            if(Tile != LastMined)
+            if (Tile != LastMined)
             {
-                if(LastMined != null) LastMined.MinedHealth = 0;
+                if (LastMined != null) LastMined.MinedHealth = 0;
 
                 LastMined = Tile;
             }
-            
-            
+
+
 
             if (Tile.ID != 0)
             {
@@ -332,13 +332,13 @@ namespace MinecraftAlpha
                     if (Game.creativeMode) { Tile.MinedHealth += block.Health / 10; } // Fix this later when you want Creative to not matter for explosives
                     Tile.MinedHealth += Dmg;
                     if (block.Health % 0.2f == 0) return;
-                    
+
                     var p = Game._particleSystem.BlockMineEffect(pos, block); return;
                     //Game._particleSystem.Particles.Add(part); return;
                 }
                 for (int i = 0; i < 15; i++)
                 {
-                   
+
                     var p = Game._particleSystem.BlockMineEffect(pos, block);
                     p.lifeTime = 0.6f;
                     p.gravity = 0.1f;
@@ -349,15 +349,20 @@ namespace MinecraftAlpha
                 Tile.MinedHealth = 0; Game._blockManager.SetTile(Tile, "Air");
                 Entity drop; //item drop
 
-                if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop, 1);
-                else drop = Game._entityManager.SpawnItem(pos, Zindex, block, 1); //Makes an ItemDrop object, doesnt spawn it here
-                if (drop != null)
+                if (tool!= null && tool.MineLevel >= block.MineLevel)
                 {
-                    if (block.ItemDrop != null && block.ItemDrop.ID == 0) return;
-                    drop.IFrame = 0.1f; //Invincibility frame so it isnt picked up instantly, prevents issues when throwing items
-                    Game._entityManager.Workspace.Add(drop);
-                    Game._blockManager.UpdateSurounding(Tile);
+                    if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop, 1);
+                    else drop = Game._entityManager.SpawnItem(pos, Zindex, block, 1); //Makes an ItemDrop object, doesnt spawn it here
+                    if (drop != null)
+                    {
+                        if (block.ItemDrop != null && block.ItemDrop.ID == 0) return;
+                        drop.IFrame = 0.1f; //Invincibility frame so it isnt picked up instantly, prevents issues when throwing items
+                        Game._entityManager.Workspace.Add(drop);
+
+                    }
                 }
+
+                Game._blockManager.UpdateSurounding(Tile);
             }
             else
             {
@@ -469,7 +474,7 @@ namespace MinecraftAlpha
                                 }
 
                             }
-                            BreakBlock(new Vector2(x, y) + Vector2.One / 2, z, power * power);
+                            BreakBlock(new Vector2(x, y) + Vector2.One / 2, z, power * power, null);
                         }
                     }
                 }

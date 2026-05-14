@@ -1553,8 +1553,11 @@ public class Game1 : Game
 
 
 
-
-                _actionManager.BreakBlock(WorldMousePos, Player.Plr.Layer + TempLayer, Damage); // When tools get added this will change
+                if(Vector2.Distance(WorldMousePos,Player.Plr.position) < 10)
+                {
+                    _actionManager.BreakBlock(WorldMousePos, Player.Plr.Layer + TempLayer, Damage,Player.Plr.Item); // When tools get added this will change
+                }
+                
                 //if(PLR.Layer + TempLayer < 10)
                 //PLR.Layer += TempLayer;
 
