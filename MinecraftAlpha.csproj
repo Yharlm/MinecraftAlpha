@@ -57,11 +57,10 @@
   <ItemGroup>
     <Folder Include="Content\bin\DesktopGL\Content\Entities\" />
     <Folder Include="Content\obj\DesktopGL\net8.0\Content\Entities\" />
-    <Folder Include="World\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="World\Demo.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="CollectPackageReferences">

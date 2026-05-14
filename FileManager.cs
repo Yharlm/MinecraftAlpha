@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+
 using Newtonsoft.Json;
 
 namespace MinecraftAlpha
@@ -45,13 +47,16 @@ namespace MinecraftAlpha
 
         }
 
-        public static void LoadGame(Game1 game,int id)
+        public static void LoadGame(Game1 game, int id)
         {
             var saves = Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "World"), "*.json");
+            if (saves.Length >= id) { game._userInterfaceManager.GetWindow("Menu").TextLabels[1].Color = Microsoft.Xna.Framework.Color.Red; return; }
+            game.GameStarted = true;
             var save = saves[id];
             string content = File.ReadAllText(save);
             World e = JsonConvert.DeserializeObject<World>(content);
             //game.Player = e.Plr;
+            
             List<TileGrid> temp = [.. e.GameProgress];
             e.GameProgress.Clear();
             //Changes

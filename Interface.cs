@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -241,7 +242,7 @@ namespace MinecraftAlpha
             windows.Add(new WindowFrame()
             {
 
-                Position = new Vector2(Middlex/2, 600),
+                Position = new Vector2(Middlex / 2, 600),
                 Name = "Inventory",
                 Visible = false,
                 Frames = new() { new UIFrame() { position = new Vector2(-10, -100), Window = Frames[0].Window, Size = new Vector2(130, 130) } },
@@ -256,7 +257,7 @@ namespace MinecraftAlpha
                 {
 
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(w * i-9*w/2+15, w * j-w), Texture = ItemSlots[0].Texture, ID = ID };
+                    { ItemPosition = new Vector2(w * i - 9 * w / 2 + 15, w * j - w), Texture = ItemSlots[0].Texture, ID = ID };
                     windows.Last().ItemSlots.Add(slot);
                     ID++;
                 }
@@ -269,7 +270,7 @@ namespace MinecraftAlpha
                 Position = new Vector2(Middlex / 2, 300),
                 Name = "Creative",
                 Visible = false,
-                Frames = new() { new UIFrame() { position = new Vector2(-10, w*1), Window = Frames[0].Window, Size = new Vector2(130, 130) } },
+                Frames = new() { new UIFrame() { position = new Vector2(-10, w * 1), Window = Frames[0].Window, Size = new Vector2(130, 130) } },
                 Buttons = new() { },
                 ItemSlots = new() { },
 
@@ -299,7 +300,7 @@ namespace MinecraftAlpha
                 Position = new Vector2(Middlex / 2, 600),
                 Name = "Hotbar",
                 Visible = false,
-                
+
                 Buttons = new() { },
                 ItemSlots = new() { },
             });
@@ -307,12 +308,12 @@ namespace MinecraftAlpha
 
             for (int i = 0; i < 9; i++)
             {
-                
-                    ItemSlot slot = new()
-                    { ItemPosition = new Vector2(w * i - 9 * w / 2 + 15,2*w), Texture = ItemSlots[0].Texture, ID = ID };
-                    windows.Last().ItemSlots.Add(slot);
-                    ID++;
-                
+
+                ItemSlot slot = new()
+                { ItemPosition = new Vector2(w * i - 9 * w / 2 + 15, 2 * w), Texture = ItemSlots[0].Texture, ID = ID };
+                windows.Last().ItemSlots.Add(slot);
+                ID++;
+
 
             }
 
@@ -337,7 +338,7 @@ namespace MinecraftAlpha
                 {
 
                     ItemSlot slot = new()
-                    { ItemPosition = new Vector2(w * i - 9 * w / 2+w/3, w * j+100), Texture = ItemSlots[0].Texture, ID = ID, Clicked = (slot) => { if (LastUsedBlock == null) return; Game._blockManager.getBlock(LastUsedBlock).Update(LastUsedBlock, LastUsedBlock.Data); } };
+                    { ItemPosition = new Vector2(w * i - 9 * w / 2 + w / 3, w * j + 100), Texture = ItemSlots[0].Texture, ID = ID, Clicked = (slot) => { if (LastUsedBlock == null) return; Game._blockManager.getBlock(LastUsedBlock).Update(LastUsedBlock, LastUsedBlock.Data); } };
                     windows.Last().ItemSlots.Add(slot);
                     ID++;
                 }
@@ -347,7 +348,7 @@ namespace MinecraftAlpha
             windows.Add(new WindowFrame()
             {
                 //Tag = "cls",
-                Position = new Vector2(Middlex / 2+30, 320),
+                Position = new Vector2(Middlex / 2 + 30, 320),
                 Name = "Crafting2x2",
                 Visible = false,
                 Buttons = new() { },
@@ -381,22 +382,48 @@ namespace MinecraftAlpha
                     new() { Window = Frames[0].Window, position = new Vector2(0, 0) },
                     new() { Window = Frames[0].Window, position = new Vector2(0,MenuButtonDistance) },
                 },
-                Buttons = new() { 
+                Buttons = new() {
                     new() { Background = null, position = new Vector2(0, 0), Scale = new Vector2(220, 60), Click = (game) => { game.GameStarted = true; game.generation.seed = new Random().Next(0,10000); } },
-                    new() { Background = null, position = new Vector2(0, MenuButtonDistance), Scale = new Vector2(220, 60), Click = (game) => { game.GameStarted = true; FileManager.LoadGame(game,0); } },},
+                    new() { Background = null, position = new Vector2(0, MenuButtonDistance), Scale = new Vector2(220, 60), Click = (game) => { FileManager.LoadGame(game,0); } },},
                 ItemSlots = new() { },
                 TextLabels = new() { new() { Text = "New World", position = new Vector2(0, 0), Color = Color.White, font = Game.font },
-                                     new() { Text = "Load World", position = new Vector2(0,MenuButtonDistance), Color = Color.White, font = Game.font}
+                                     new() { Text = "Demo World", position = new Vector2(0,MenuButtonDistance), Color = Color.White, font = Game.font}
                 },
 
             });
 
+
+
+
+
             windows.Last().Frames[0].button = windows.Last().Buttons[0];
             windows.Last().Frames[1].button = windows.Last().Buttons[1];
+            windows.Add(new WindowFrame()
+            {
+                Position = new Vector2(Game.windowWidth*3 / 4, Game.windowHeight / 2),
+                Name = "WorldSelect",
+                Visible = true,
+                
+                
+                ItemSlots = new() { },
+                
+
+            });
+            var temp = windows.Last();
+            var Worlds = Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "World"), "*.json");
+
+            for(int W = 0; W < Worlds.Length; W++)
+            {
+
+                string name = Path.GetFileNameWithoutExtension(Worlds[W]);
+                temp.Buttons.Add(new Button() { Background = null, position = new Vector2(100, MenuButtonDistance * (W+1)), Scale = new Vector2(220, 60), Click = (game) => { temp.Visible = false; game.GameStarted = true; FileManager.LoadGame(game,W); } });
+                temp.TextLabels.Add(new textLabel() { Text = name, position = new Vector2(100, MenuButtonDistance * (W +1)), Color = Color.White, font = Game.font });
+                temp.Frames.Add(new UIFrame() { Window = Frames[0].Window, position = new Vector2(100, MenuButtonDistance * (W +1)) , button = temp.Buttons.Last() });
+            }
 
             //LoadWorlds
             //Settings ?
-            
+
 
 
 
@@ -421,7 +448,7 @@ namespace MinecraftAlpha
 
             }
             result = new()
-            { ItemPosition = new Vector2(3f * w, 1 * w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = (slot) => { for (int i = 0; i < 9; i++) {GetWindow("Crafting3x3").ItemSlots[i].TakeItem(1); } } };
+            { ItemPosition = new Vector2(3f * w, 1 * w), Texture = ItemSlots[0].Texture, canPlace = false, Clicked = (slot) => { for (int i = 0; i < 9; i++) { GetWindow("Crafting3x3").ItemSlots[i].TakeItem(1); } } };
             windows.Last().ItemSlots.Add(result);
 
             windows.Add(new WindowFrame()
@@ -433,10 +460,10 @@ namespace MinecraftAlpha
                 //Frames = new() { new UIFrame() { position = new Vector2(-0, -0), Window = Frames[0].Window, Size = new Vector2(130, 60) } },
                 Buttons = new() { },
                 ItemSlots = new() { },
-                
+
             });
             ItemSlot FurnaceInput, FurnaceOutput, Fuel;
-            FurnaceInput = new() { ItemPosition = new Vector2(w*12-330, -w), Texture = ItemSlots[0].Texture, ID = ID };
+            FurnaceInput = new() { ItemPosition = new Vector2(w * 12 - 330, -w), Texture = ItemSlots[0].Texture, ID = ID };
             FurnaceOutput = new() { ItemPosition = new Vector2(w * 10 - 330, 0), Texture = ItemSlots[0].Texture, ID = ID };
             Fuel = new()
             {
@@ -451,7 +478,7 @@ namespace MinecraftAlpha
                     float F = last.Counter[0];
                     if (Fuel.Item != null && Game._blockManager.HasTag(Fuel.Item.Tag, "Fuel"))
                     {
-                        if(F <= 0)
+                        if (F <= 0)
                         {
                             Fuel.TakeItem(1);
                             last.Counter[0] = 120;//Fuel, Input, c, Output, c
@@ -491,7 +518,7 @@ namespace MinecraftAlpha
         public void MouseAction(Vector2 Mouse, ActionManager AM, int Mouse1) // Mouse1 = 0 none, 1 left, 2 right
         {
             In_interface = false;
-            
+
 
             foreach (var win in this.windows)
             {
@@ -540,7 +567,7 @@ namespace MinecraftAlpha
 
                 foreach (var ItemSlot in win.ItemSlots)
                 {
-                    
+
                     if (ItemSlot.IsInBounds(Mouse))
                     {
                         In_interface = true;
@@ -690,11 +717,32 @@ namespace MinecraftAlpha
 
                     }
                 }
-                if(Name == "Creative")
+                if (Name == "Furnace")
+                {
+                    var Input = ItemSlots[0];
+                    var Output = ItemSlots[1];
+                    var Fuel = ItemSlots[2];
+                }
+                if (Name == "WorldSelect")
+                {
+                    int ScrollValue = Mouse.GetState().ScrollWheelValue / 1000;
+                    var temp = this;
+                    var Worlds = Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "World"), "*.json");
+
+                    for (int W = 0; W < Worlds.Length; W++)
+                    {
+
+                        string name = Path.GetFileNameWithoutExtension(Worlds[W]);
+                        temp.Buttons[W] = new Button() { Background = null, position = new Vector2(100, 120 * (W + 1)), Scale = new Vector2(220, 60), Click = (game) => { temp.Visible = false; game.GameStarted = true; FileManager.LoadGame(game, W); } };
+                        temp.TextLabels[W] = (new textLabel() { Text = name, position = new Vector2(100, 120 * (W + 1)), Color = Color.White, font = game.font });
+                        temp.Frames[W] = (new UIFrame() { Window = Frames[0].Window, position = new Vector2(100, 120 * (W + 1)), button = temp.Buttons.Last() });
+                    }
+                }
+                if (Name == "Creative")
                 {
 
 
-                    ScrollValue = Mouse.GetState().ScrollWheelValue/1000;
+                    ScrollValue = Mouse.GetState().ScrollWheelValue / 1000;
 
                     int ID = ScrollValue / 3;
 
@@ -702,19 +750,18 @@ namespace MinecraftAlpha
                     {
                         for (int j = 0; j < 9; j++)
                         {
-                            int index = i * 6 + j;
+                            int index = i * 9 + j;
 
-                            
+
                             ItemSlot slot = this.ItemSlots[index];
                             if (index >= game._blockManager.Blocks.Count)
                             {
                                 slot.Item = null;
-                                slot.Count = 0;
                                 continue;
                             }
                             slot.Item = game._blockManager.getBlock(index);
                             slot.Count = 1;
-                            
+
 
                             //ID++;
                         }
@@ -857,7 +904,7 @@ namespace MinecraftAlpha
 
         public bool IsInBounds(Vector2 Pos)
         {
-            Vector2 position = this.position + Position - Scale/2;
+            Vector2 position = this.position + Position - Scale / 2;
             if (Pos.X >= position.X && Pos.X <= position.X + Scale.X)
                 if (Pos.Y > position.Y && Pos.Y <= position.Y + Scale.Y)
                 {
@@ -970,7 +1017,7 @@ namespace MinecraftAlpha
                 new Rectangle(0,Ty-Cy,Cx,Cy),
                 new Rectangle(Tx-Cx,Ty-Cy,Cx,Cy),
             };
-            Vector2 position = this.position + this.Position - Size*2;
+            Vector2 position = this.position + this.Position - Size * 2;
 
 
             //Spritebatch.Draw(Window, Position, Background, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 1f);

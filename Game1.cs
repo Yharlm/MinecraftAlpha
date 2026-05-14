@@ -924,7 +924,7 @@ public class Game1 : Game
             {
                 GameProgress = GameProgress,
                 //Plr = Player,
-                Name = "Demo",
+                Name = "World",
             };
 
 
@@ -1247,7 +1247,7 @@ public class Game1 : Game
 
     public void Input(GameTime time)
     {
-
+        _inputManager.ScrowWheel = Mouse.GetState().ScrollWheelValue;
         _CommandManager.Read();
         if (_CommandManager.active) { return; }
 
@@ -1264,7 +1264,7 @@ public class Game1 : Game
         var keyboardState = Keyboard.GetState();
         if (Keyboard.GetState().IsKeyDown(Keys.NumPad5))
         {
-            FileManager.LoadGame(this, 0);
+            FileManager.LoadGame(this, 1);
         }
         if (Keyboard.GetState().IsKeyDown(Keys.G))
         {
