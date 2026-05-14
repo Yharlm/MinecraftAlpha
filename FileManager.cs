@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -9,24 +8,23 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-
 using Newtonsoft.Json;
 
 namespace MinecraftAlpha
 {
-    
+
     public class World
     {
         public Vector3 LastPos;
         public List<ItemSlot> inventory;
-        
+
         public Player Plr;
         public int Seed;
         public string Name;
         public string Description;
         public List<TileGrid> GameProgress;
 
-        
+
     }
 
 
@@ -50,31 +48,29 @@ namespace MinecraftAlpha
         public static void LoadGame(Game1 game, int id)
         {
             var saves = Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "World"), "*.json");
-            if (saves.Length >= id) { game._userInterfaceManager.GetWindow("Menu").TextLabels[1].Color = Microsoft.Xna.Framework.Color.Red; return; }
-            game.GameStarted = true;
             var save = saves[id];
             string content = File.ReadAllText(save);
             World e = JsonConvert.DeserializeObject<World>(content);
             //game.Player = e.Plr;
-            
             List<TileGrid> temp = [.. e.GameProgress];
             e.GameProgress.Clear();
             //Changes
             foreach (var item in temp)
             {
-                var tile = game._blockManager.GetTile(item.pos + Vector3.One*0.5f);
-                if (tile == null) {
-                    if(!game._blockManager.GetChunk(new Vector2(item.pos.X, item.pos.Y) - Vector2.One * 32, 1))//does chunk exist
+                var tile = game._blockManager.GetTile(item.pos + Vector3.One * 0.5f);
+                if (tile == null)
+                {
+                    if (!game._blockManager.GetChunk(new Vector2(item.pos.X, item.pos.Y) - Vector2.One * 32, 1))//does chunk exist
                     {
-                        game.generation.GenerateChunk(new Vector2(item.pos.X, item.pos.Y)-Vector2.One*32);
+                        game.generation.GenerateChunk(new Vector2(item.pos.X, item.pos.Y) - Vector2.One * 32);
                     }
                     //var c = game._blockManager.GetChunk(new Vector2(item.pos.X, item.pos.Y));
                     tile = game._blockManager.GetTile(item.pos);
                 }
-                
+
                 tile.ID = item.ID;
                 game._blockManager.Change(tile);
-                
+
             }
             //game.GameProgress.Clear();
 
@@ -112,6 +108,6 @@ namespace MinecraftAlpha
             return e;
         }
 
-        
+
     }
 }

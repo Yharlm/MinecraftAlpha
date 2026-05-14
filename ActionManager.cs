@@ -348,16 +348,9 @@ namespace MinecraftAlpha
                 }
                 Tile.MinedHealth = 0; Game._blockManager.SetTile(Tile, "Air");
                 Entity drop; //item drop
-                int Level = 0;
 
-                if(tool != null)
+                if (tool!= null && tool.MineLevel >= block.MineLevel)
                 {
-                    Level = tool.MineLevel;
-                }
-                if (Level >= block.MineLevel)
-                {
-                    
-
                     if (block.ItemDrop != null) drop = Game._entityManager.SpawnItem(pos, Zindex, block.ItemDrop, 1);
                     else drop = Game._entityManager.SpawnItem(pos, Zindex, block, 1); //Makes an ItemDrop object, doesnt spawn it here
                     if (drop != null)

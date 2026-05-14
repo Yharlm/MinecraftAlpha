@@ -270,20 +270,9 @@ namespace MinecraftAlpha
 
             }
 
-            if (A.ID == -3 && B.ID != -3) //Arrow
+            if (A.ID == -3 && B.ID != -3 && A.Target != B) //Arrow
             {
-                if(A.Target != B)
-                {
-                    if(A.name == "Arrow")
-                    {
-                        A.Health = 0;
-                        if(B.name == "Player" && B.IFrame <= 0)
-                        {
-                            game1.Player.PickupItem(game1._blockManager.getBlock("Arrow"),1,game1.Player.Inventory);
-                            return;
-                        }
-                    }
-                }
+
                 //if (A.IFrame >= 0f) return;
                 B.TakeDamage(A.Target, (int)(float.Abs(A.velocity.velocity.X) + float.Abs(A.velocity.velocity.Y)) / 3, 2);
                 A.Health = 0;

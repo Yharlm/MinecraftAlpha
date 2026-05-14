@@ -322,7 +322,7 @@ public class Generation
                     {
                         var tile = Game._blockManager.GetTile(new Vector3(x, y, z));
                         if (tile == null) continue;
-                        Game._blockManager.SetTile(tile, id, "");
+                        Game._blockManager.SetTile(tile, id, true);
                     }
                 }
             }
@@ -503,7 +503,7 @@ public class Generation
                     float Cave = Perlin.Noise(worldX * scale * 2, WorldY * scale * 2) * 8;
                     if (Cave < worldZ - 6)
                     {
-                        Game._blockManager.SetTile(Tile, "Air");
+                        Game._blockManager.SetTile(Tile, "Air",true);
                         continue;
                     }
                     if (Y + 1 < Tile.pos.Y)

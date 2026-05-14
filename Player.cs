@@ -230,6 +230,9 @@ namespace MinecraftAlpha
                 switch (Parts[0])
                 {
                     case "/DEMO":
+                        game.GameProgress.Clear();
+                        game.UpdateStack.Clear();
+                        game.Chunks.Clear();
                         FileManager.LoadGame(game, 0);
                         return;
                     case "/GIVE":
@@ -534,7 +537,6 @@ namespace MinecraftAlpha
         public List<Keys> KeyHistory = new List<Keys>();
         public float TimeSinceLastKeyPress = 0f;
         public MouseState LastMouseState;
-        public float ScrowWheel = 0;
 
         // to stop key repeat
         public bool IsKeyUp_Now(Keys key)

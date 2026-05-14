@@ -1247,7 +1247,7 @@ public class Game1 : Game
 
     public void Input(GameTime time)
     {
-        _inputManager.ScrowWheel = Mouse.GetState().ScrollWheelValue;
+
         _CommandManager.Read();
         if (_CommandManager.active) { return; }
 
