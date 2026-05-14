@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -109,7 +109,7 @@ namespace MinecraftAlpha
 
                 new Block { Name = "Fire", TexturePath = "Animated/fire_1" ,Health = 10,Animated = true,Transparent = true,TickUpdate = 5,Solid = false,ConstantUpdate = true},
                 new Block { Name = "Sand", TexturePath = "sand" ,Health = 30,Tag = "Gravity Dirt"},
-                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true,IgnoreUpdate = true, Tag="Wood Fuel"},
+                new Block { Name = "Chest", TexturePath = "ChestTesting" ,Interaction = null,Transparent = true,IgnoreUpdate = true,ConstantUpdate = true, Tag="Wood Fuel"},
                 new Block { Name = "Crafting Table", TexturePath = "crafting_table_front" ,Health = 60, Interaction = null,Tag="Wood Fuel"},
                 new Block { Name = "Furnace", TexturePath = "furnace_front" ,Health = 100, Interaction = null,ConstantUpdate = true,Tag="Stone",HasVariants = true},
 
@@ -125,7 +125,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Wooden Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 210,Damage = 0.5f,Tag="Pickaxe Fuel",MineLevel = 1},
                 new Block { Name = "Stone Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 202,Damage = 0.6f,Tag="Pickaxe",MineLevel = 2},
                 new Block { Name = "Iron Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 63,Damage = 0.7f,Tag="Pickaxe",MineLevel = 3},
-                new Block { Name = "Gold Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 114,Damage = 0.8f,Tag="Pickaxe",MineLevel = 3},
+                new Block { Name = "Gold Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 109,Damage = 0.8f,Tag="Pickaxe",MineLevel = 3},
                 new Block { Name = "Diamond Pickaxe", TexturePath = "_item", Item = true,Placable = false,ItemID = 101,Damage = 0.9f,Tag="Pickaxe",MineLevel = 4},
 
                 new Block { Name = "Wooden Sword", TexturePath = "_item", Item = true,Placable = false,ItemID = 212,Damage = 2f,Tag="Sword Fuel",MineLevel = 0},
@@ -718,7 +718,7 @@ namespace MinecraftAlpha
                     var tnt = Game._entityManager.GravityBlock(Pos, true);
                     tnt.Health = 100;
                     tnt.name = "Tnt";
-                    
+
 
 
 
@@ -862,8 +862,9 @@ namespace MinecraftAlpha
             getBlock("Furnace").Update = (Pos, data) =>
             {
                 //Pos.Counter = new(7);
+                var Fuel = Game._userInterfaceManager.GetWindow("Furnace").ItemSlots[2];
                 int FuelSources = 0;
-                float fuelNext = 0;
+
                 int Outputs;
 
                 bool Ignited = false;
@@ -871,23 +872,35 @@ namespace MinecraftAlpha
                 {
 
                     Pos.Counter[0] -= 1f;
-                    Pos.Counter[1] -= 0.01f;
+
 
 
                     Ignited = true;
                 }
+                else
+                {
+
+                    if (Fuel.Count > 0 && Game._blockManager.HasTag(Fuel.Item.Tag, "Fuel"))
+                    {
+                        Fuel.Count -= 1;
+                        Pos.Counter[0] = 120;
+                    }
+
+                }
 
                 if (Ignited)
                 {
+                    Pos.Counter[1] += 0.1f;
                     Pos.Color = Color.Red;
                 }
                 else
                 {
+                    Pos.Counter[1] = 0f;
                     Pos.Color = Color.Cyan;
                 }
 
 
-                //Power, Fuel,Delay, FuelC,Current, CurrentC, Done, DoneC
+                //Power, Fuel,Delay, Remaining
                 //Thread.Sleep(100);
 
             };

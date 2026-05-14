@@ -583,7 +583,7 @@ namespace MinecraftAlpha
             }
             if (entity.ID < 0)
             {
-                Drag = 10f;
+                Drag = 122f;
                 if (entity.collisionBox.Bottom) { velocity *= 0f; }
             }
 

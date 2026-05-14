@@ -437,10 +437,10 @@ namespace MinecraftAlpha
             });
             ItemSlot FurnaceInput, FurnaceOutput, Fuel;
             FurnaceInput = new() { ItemPosition = new Vector2(w*12-330, -w), Texture = ItemSlots[0].Texture, ID = ID };
-            FurnaceOutput = new() { ItemPosition = new Vector2(w * 10 - 330, 0), Texture = ItemSlots[0].Texture, ID = ID };
+            FurnaceOutput = new() { ItemPosition = new Vector2(w * 12 - 330, w), Texture = ItemSlots[0].Texture, ID = ID };
             Fuel = new()
             {
-                ItemPosition = new Vector2(w * 12 - 330, w),
+                ItemPosition = new Vector2(w * 10 - 330, 0),
                 Texture = ItemSlots[0].Texture,
                 ID = ID,
                 Clicked = (Fuel) =>
@@ -668,8 +668,9 @@ namespace MinecraftAlpha
 
                     if(game._blockManager.getBlock(last).Name == "Furnace")
                     {
+                        
                         float smelting = 0;
-                        float delay = 1000;
+                        float delay = 0;
                         
                         if (last.Counter.Length > 0)
                         {
@@ -678,14 +679,15 @@ namespace MinecraftAlpha
                         }
                         if (smelting <= 0) return;
                         var input = ItemSlots[0];
-                        var fuel = ItemSlots[1];
-                        var output = ItemSlots[2];
+                        var fuel = ItemSlots[2];
+                        var output = ItemSlots[1];
                         if(input.Item != null)
                         {
                             var Result = input.Item.Smelt;
-                            if (delay < 50)
+                            if (delay > 1)
                             {
-                                last.Counter[1] = 50;
+                                last.Counter[1] = 0;
+                                fuel.Clicked.Invoke(fuel);
                                 output.Item = (Result);
                                 output.Count += 1;
                                 input.Count -= 1;

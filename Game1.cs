@@ -108,8 +108,8 @@ public class Game1 : Game
         // In Game1 constructor, after 'graphics = new GraphicsDeviceManager(this);'
         _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; // Your desired width
         _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; // Your desired height
-        _graphics.ApplyChanges(); // Crucial step to apply settings
-
+        //_graphics.ApplyChanges(); // Crucial step to apply settings
+        _graphics.GraphicsProfile = GraphicsProfile.Reach;
 
 
 
@@ -1003,7 +1003,7 @@ public class Game1 : Game
             if (Tick % block.TickUpdate == 0)
             {
                 if (block.Update == null) continue;
-                if ((tile.ID == 0 /*&& tile.brightness > 1*/) || tile.MarkedForUpdate)
+                if ((tile.ID == 0 /*&& tile.brightness > 1*/)|| block.IgnoreUpdate || tile.MarkedForUpdate )
                 {
                     continue;
                 }
@@ -1111,7 +1111,7 @@ public class Game1 : Game
             }
 
         }
-        
+        _entityAnimationService.entityAnimations.RemoveAll(x => x.parent.Animations[x.id].Paused == true);
 
         var ItemList = new List<Entity>();
         for(int i = 0;i < _entityManager.Workspace.Count;i++)
