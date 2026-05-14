@@ -180,7 +180,24 @@ namespace MinecraftAlpha
                 {
                     if (mob.collisionBox.Bottom)
                     {
+
                         var block = game._blockManager.GetBlockByName(mob.GetData()[0]);
+
+                        if(block.Name == "TNT")
+                        {
+                            mob.Health -= 1;
+                            if (mob.Health <= 5 && mob.Health > 0)
+                                {
+                                    Vector3 exp = new(mob.position.X, mob.position.Y, mob.Layer);
+                                    game._actionManager.Explosion(exp, 6, true);
+                                    mob.Health = 0;
+                                    
+                                }
+                            
+                            return;
+                        }
+
+
                         var tile = game._blockManager.GetTile( new Vector3(mob.position.X, mob.position.Y+1f,(int)mob.Layer));
                         if (tile != null)
                         {
@@ -198,17 +215,7 @@ namespace MinecraftAlpha
             {
                 Pos = mob.Target.position;
             }
-            if (mob.name == "Tnt")
-            {
-                if (mob.Health <= 5 && mob.Health > 0)
-                {
-                    Vector3 exp = new(mob.position.X, mob.position.Y, mob.Layer);
-                    game._actionManager.Explosion(exp, 6, true);
-                    mob.Health = 0;
-                    return;
-                }
-                mob.Health -= 1;
-            }
+            
                 
                 
                 ;

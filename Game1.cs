@@ -1111,11 +1111,12 @@ public class Game1 : Game
             }
 
         }
-        _entityAnimationService.entityAnimations.RemoveAll(x => x.parent.Animations[x.id].Paused == true);
+        
 
         var ItemList = new List<Entity>();
-        foreach (var entity in _entityManager.Workspace)
+        for(int i = 0;i < _entityManager.Workspace.Count;i++)
         {
+            var entity = _entityManager.Workspace[i];
             if (entity.Health <= 0)
             {
                 _entityManager.Die(entity, ItemList);

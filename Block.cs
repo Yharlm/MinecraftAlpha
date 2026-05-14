@@ -717,6 +717,7 @@ namespace MinecraftAlpha
                     var pos = GetPosAtBlock(Pos);
                     var tnt = Game._entityManager.GravityBlock(Pos, true);
                     tnt.Health = 100;
+                    tnt.name = "Tnt";
                     
 
 
