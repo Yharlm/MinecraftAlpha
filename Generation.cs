@@ -333,7 +333,7 @@ public class Generation
     {
         //Overworld
         //if (Game._blockManager.GetChunk(Pos,0)) return;
-        int Dimension = 0;
+        int Dimension = Game.Player.dimension;
         var chunks = Game.Chunks;
         int chunkX = Game._blockManager.GetChunk(Pos).x;
         int chunkY = Game._blockManager.GetChunk(Pos).y;

@@ -59,6 +59,12 @@ namespace MinecraftAlpha
             float HalfY = entity.collisionBox.Size.Y / 2;
             float XFidality = entity.collisionBox.Size.X / MathF.Ceiling(entity.collisionBox.Size.X)/ Fidality;
             Vector2 center = entity.position;
+            var block = game1._blockManager.getBlock( game1._blockManager.GetTile(new Vector3(center, entity.Layer)));
+            if (block != null && block.OnCollide != null)
+            {
+                block.OnCollide.Invoke(game1._blockManager.GetTile(new Vector3(center, entity.Layer)),entity);
+            }
+
 
             for (float i = -HalfX + XFidality; i <= HalfX - XFidality; i += XFidality) // ground Collsion
             {

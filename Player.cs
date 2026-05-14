@@ -20,6 +20,7 @@ namespace MinecraftAlpha
         public bool Jumping = false;
         public float respawnTimer = 60f;
         public int DisplayID = -1;
+        public int dimension = 0;
 
         public void LoadNear()
         {
@@ -98,6 +99,7 @@ namespace MinecraftAlpha
 
             var plr = Entity.CloneEntity(game._entityManager.entities[0], SpawnPoint);
             Plr = plr;
+            game.Player.dimension = 0;
             Plr.IFrame = 10;
             game._entityManager.Workspace.Add(Plr);
             respawnTimer = 60f;

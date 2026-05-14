@@ -198,26 +198,51 @@ namespace MinecraftAlpha
             {
                 Pos = mob.Target.position;
             }
-
+            if (mob.name == "Pig") return;
             if (mob == game.Player.Plr) return;
             foreach (var entity in Workspace)
             {
                 if (entity != mob)
                 {
+                    
                     if (Vector2.Distance(mob.position, entity.position) < 10f)
                     {
-                        //mob.Target = entity;
+                        mob.Target = entity;
                     }
                 }
             }
 
             if (mob.Target != null)
             {
-                mob.WalkTo(Vector2.Normalize(Pos - mob.position), true);
+                mob.WalkTo(Vector2.Normalize(Pos - mob.position + Vector2.One*0.5f), true);
+
                 var Targ = mob.Target;
+
+
+                if (Vector2.Distance(mob.position, Targ.position) < 10f)
+                {
+                    if (float.Abs(mob.Layer - Targ.Layer) > 1)
+                    {
+                        var front = game._blockManager.getBlock(game._blockManager.GetTile(new(mob.position, mob.Layer + 1)));
+                        var back = game._blockManager.getBlock(game._blockManager.GetTile(new(mob.position, mob.Layer - 1)));
+
+                        if (back!= null&&mob.Layer > Targ.Layer && !back.Solid)
+                            mob.Layer -= 0.01f;
+                        else if(front != null && mob.Layer < Targ.Layer && !front.Solid)
+                            mob.Layer += 0.01f;
+
+
+                    }
+
+                }
+                
+
                 if (Vector2.Distance(mob.position, Targ.position) < 1.5f)
                 {
+
+                    
                     mob.Punch(Targ, game);
+
                 }
             }
 

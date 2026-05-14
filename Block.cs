@@ -92,9 +92,9 @@ namespace MinecraftAlpha
                 new Block { Name = "Log", TexturePath = "oak_log", Health = 60,Tag="Wood Fuel"},
                 new Block { Name = "Leaves", TexturePath = "oak_leaves", Health = 13,Color = Color.SeaGreen,Transparent = true,Tag="Leaves Fuel"},
                 new Block { Name = "Glass Block", TexturePath = "glass", Health = 4,Transparent = true,Tag="Glass"},
-                new Block { Name = "Netherrack", TexturePath = "netherrack" ,Health = 90,Tag="Stone"},
+                new Block { Name = "Netherrack", TexturePath = "netherrack" ,Health = 90,Tag="Stone Fuel"},
                 new Block { Name = "EndsStone", TexturePath = "end_stone" ,Health = 90,Tag="Stone"},
-                new Block { Name = "Obsidian", TexturePath = "obsidian" ,Health = 90,Tag="Stone"},
+                new Block { Name = "Obsidian", TexturePath = "obsidian" ,Health = 290,Tag="Stone",MineLevel = 4},
 
                 new Block { Name = "Coal Ore", TexturePath = "coal_ore" ,Health = 100,Tag="Stone Ore",MineLevel = 1},
                 new Block { Name = "Iron Ore", TexturePath = "iron_ore" ,Health = 100,Tag="Stone Ore",MineLevel = 2},
@@ -103,7 +103,7 @@ namespace MinecraftAlpha
                 new Block { Name = "Torch", TexturePath = "torch",Color = Color.LightGoldenrodYellow,Light_Emission = 7f},
                 new Block { Name = "Portal", TexturePath = "Animated/nether_portal",Health = 30000,Animated = true,TickUpdate = 5,Transparent = true,Solid = false,ConstantUpdate = true},
 
-                new Block { Name = "Lava", TexturePath = "Animated/lava" ,Animated = true,Health = 100,Data = "7",TickUpdate = 56,ConstantUpdate = true,Solid = false,Tag = "Liquid"},
+                new Block { Name = "Lava", TexturePath = "Animated/lava" ,Animated = true,Health = 100,Data = "5",TickUpdate = 76,ConstantUpdate = true,Solid = false,Tag = "Liquid"},
                 new Block { Name = "Water", TexturePath = "Animated/WaterIdle" ,Animated = true,Health = 100,Data = "7",TickUpdate = 30,ConstantUpdate = true,Solid = false,Tag = "Liquid"},
                 new Block { Name = "Gravel", TexturePath = "gravel" ,Health = 30,Tag = "Gravity Dirt"},
                 
@@ -181,29 +181,47 @@ namespace MinecraftAlpha
 
         public bool Portal(TileGrid Pos)
         {
+
+
+
             //Find Margins By sending Lines in all directions,
-            var pos = GetPosAtBlock(Pos); //
+            var pos = Pos.pos; //
             var Sides = LogicsClass.Sides;
             var Points = new TileGrid[6];
             bool Valid = true;
             for (int c = 0; c < 6; c++)
             {
+                
+
                 var s = Sides[c];
                 TileGrid Hit = null;
                 int Range = 1;
                 while (Hit == null && Range <= 10)
                 {
-                    var t = Game._blockManager.GetTile(Pos.pos + Vector3.One * 0.3f + s * Range);
+                    int xneg = 0;
+                    int yneg = 0;
+                    if ((Pos.pos + new Vector3(0.5f, 0.5f, 0) + s * Range).X>0)
+                    {
+                        xneg = 0;
+                    }
+                    if ((Pos.pos + new Vector3(0.5f, 0.5f, 0) + s * Range).Y < 0)
+                    {
+                        yneg = 1;
+                    }
+                    var t = Game._blockManager.GetTile(Pos.pos + new Vector3(0.5f,0.5f,0) + s * Range);
+
                     if (t != null)
                     {
-                        if (t.ID == 0)
+
+
+                        if (t.ID == 0 && t.ID != getBlock("Fire").ID)
                         {
                             Range++;
                         }
                         else
                         {
                             Hit = t;
-                            //t.ID = 9;
+                            t.ID = 9;
                             Points[c] = t;
                             break;
                         }
@@ -216,7 +234,6 @@ namespace MinecraftAlpha
                 }
 
             }
-
 
 
             //Reults are used to make edges, Up, down, left, right, front ,back
@@ -232,8 +249,8 @@ namespace MinecraftAlpha
             var Center = Pos;
 
 
-            if ((up == null || down == null) &&
-            ((left == null || right == null) || (front == null || back == null)))
+            if ((up == null || down == null) ||
+            ((left == null || right == null)/* || (front == null || back == null))*/))
             {
                 Valid = false;
                 return false;
@@ -241,7 +258,7 @@ namespace MinecraftAlpha
             bool Horizontal = (left != null && right != null);
 
 
-            if (Horizontal)
+            //if (Horizontal)
             {
                 var A = Combiner(left, up, Center);
                 var B = Combiner(right, down, Center);
@@ -253,17 +270,19 @@ namespace MinecraftAlpha
                 {
                     for (int j = 0; j <= Ly; j++)
                     {
+                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z) + new Vector3(1.5f, 1.4f, 0));
+                        tile.ID = 4;
                         if (j == 0 || j == Ly || i == 0 || i == Lx)
                         {
-                            var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z));
-
-                            if (Game._blockManager.getBlock(tile).Name != "Dirt")
+                            
+                            
+                            if (Game._blockManager.getBlock(tile).Name != "Obsidian")
                             {
 
                                 Valid = false;
-                                return false;
+                                //return false;
                             }
-                            tile.ID = 9;
+                            //tile.ID = 9;
                         }
                     }
                 }
@@ -274,7 +293,7 @@ namespace MinecraftAlpha
                 {
                     for (int j = 1; j < Ly; j++)
                     {
-                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z));
+                        var tile = Game._blockManager.GetTile(new Vector3(A.pos.X + i, B.pos.Y + j, A.pos.Z) + new Vector3(0.4f, 2.5f, 0));
                         if (tile.ID != 0 && Game._blockManager.getBlock(tile).Name != "Fire")
                         {
 
@@ -381,7 +400,7 @@ namespace MinecraftAlpha
                     TileGrid tile = Sides[i];
                     if (tile == null) continue;
 
-                    if (GetBlockAtTile(tile).Tag == "Wood" || GetBlockAtTile(tile).Tag == "Planks")
+                    if (GetBlockAtTile(tile).Tag == "Wood" || GetBlockAtTile(tile).Tag == "Planks" || GetBlockAtTile(tile).Tag == "Fuel")
                     {
                         if (tile.ID != 0)
                         {
@@ -417,6 +436,16 @@ namespace MinecraftAlpha
                 Pos.Color = LogicsClass.HSL(p+ MathF.Sin(b/30), 1f, 0.5f) * (p+0.6f);
                 //Pos.Color = new Color(1, 1-p, 1);
             };
+            getBlock("Portal").OnCollide = (Pos, data) =>
+            {
+                if(data.name != "Player") { return; }
+                Game.Player.dimension = Game.Player.dimension == 0 ? 1 : 0;
+                Game.Player.Plr.IFrame = 6f;
+                
+                Game.Chunks.Clear();
+
+            };
+
             getBlock("Water").Update = (Pos, data) =>
             {
                 var pos = GetPosAtBlock(Pos);
@@ -431,7 +460,26 @@ namespace MinecraftAlpha
                 var Right = GetBlockAtPos(new Vector2(pos.X + 1, pos.Y), (int)pos.Z, Game.Chunks);
                 if (lower == null || top == null || Right == null || Left == null) return;
 
+                var sides = LogicsClass.SidesPos(pos, Game);
 
+                foreach (var side in sides)
+                {
+                    if (side == null) continue;
+                    if (getBlock(side).Name == "Lava")
+                    {
+                        if (data == "7")
+                        {
+                            Game._actionManager.SetTile(Pos, "Stone", "");
+                            return;
+                        }
+                        else
+                        {
+                            Game._actionManager.SetTile(Pos, "Cobblestone", ""); return;
+                        }
+                    }
+
+
+                }
 
 
 
@@ -524,6 +572,136 @@ namespace MinecraftAlpha
 
 
             };
+
+            getBlock("Lava").Update = (Pos, data) =>
+            {
+                var pos = GetPosAtBlock(Pos);
+                //Game._blockManager.UpdateSurounding(Pos);
+                
+                if (data == "") data = "5";
+
+                var sides = LogicsClass.SidesPos(pos,Game);
+
+                foreach (var side in sides)
+                {
+                    if (side == null) continue;
+                    if (getBlock(side).Name == "Water")
+                    {
+                        if (data == "5")
+                        {
+                            Game._actionManager.SetTile(Pos, "Obsidian", ""); return;
+                        }
+                        else
+                        {
+                            Game._actionManager.SetTile(Pos, "Cobblestone", ""); return;
+                        }
+                    }
+                        
+
+                }
+
+                int Data = int.Parse(data);
+                //Pos.MarkedForUpdate = true;
+                var lower = GetBlockAtPos(new Vector2(pos.X, pos.Y + 1), (int)pos.Z, Game.Chunks);
+                var top = GetBlockAtPos(new Vector2(pos.X, pos.Y - 1), (int)pos.Z, Game.Chunks);
+                var Left = GetBlockAtPos(new Vector2(pos.X - 1, pos.Y), (int)pos.Z, Game.Chunks);
+                var Right = GetBlockAtPos(new Vector2(pos.X + 1, pos.Y), (int)pos.Z, Game.Chunks);
+                if (lower == null || top == null || Right == null || Left == null) return;
+
+
+
+
+
+                //if (Data == 7)
+                //{
+                //    if (lower.ID == 0)
+                //    {
+                //        Game._actionManager.SetTile(lower, "Water", "6");
+                //        //lower.MarkedForUpdate = false;
+
+                //    }
+                //}
+                //if (Data < 7)
+                //{
+                //    if (top.ID != getBlock("Water").ID && !top.MarkedForUpdate)
+                //    {
+                //        Game._actionManager.SetTile(Pos, "Air", "");
+
+                //    }
+                //    else if (lower.ID == 0)
+                //    {
+
+                //        Game._actionManager.SetTile(lower, "Water", "6");
+
+
+                //    }
+
+                //}
+
+
+                if (lower.ID == 0)
+                {
+                    Game._actionManager.SetTile(lower, "Lava", "6");
+                    //return;
+                    lower.MarkedForUpdate = true;
+                }
+
+
+
+
+
+
+                if (lower.ID != 0 && lower.ID != getBlock("Lava").ID && Data > 1)
+                {
+
+                    if (Left.ID == 0)
+                    {
+                        Game._actionManager.SetTile(Left, "Lava", (Data - 1).ToString()); Left.MarkedForUpdate = true;
+                    }
+                    if (Right.ID == 0)
+                    {
+                        Game._actionManager.SetTile(Right, "Lava", (Data - 1).ToString()); Right.MarkedForUpdate = true;
+                    }
+
+                }
+
+                if (Data == 6)
+                {
+                    if (top.ID != getBlock("Lava").ID)
+                    {
+                        Game._actionManager.SetTile(Pos, "Air", "");
+                        lower.MarkedForUpdate = true;
+                    }
+
+
+                }
+                if (Data < 5)
+                {
+                    if (Right.ID == getBlock("Lava").ID && Left.ID == getBlock("Lava").ID)
+                    {
+                        if (int.Parse(Right.Data) <= Data && int.Parse(Left.Data) <= Data)
+                        {
+                            Game._actionManager.SetTile(Pos, "Air", "");
+
+                        }
+                    }
+                    else
+                    {
+                        Game._actionManager.SetTile(Pos, "Air", "");
+                        ;
+                    }
+
+
+                }
+
+
+
+
+
+
+
+            };
+
 
             getBlock("TNT").Interaction = (Pos, ent, item) =>
             {
