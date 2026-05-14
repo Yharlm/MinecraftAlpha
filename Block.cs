@@ -44,6 +44,7 @@ namespace MinecraftAlpha
         public bool consumable = true;
         public Block ammo = null;
         public string ammoTag = "";
+        public Block Smelt = null;
         //Constants for use types
         public float ChargeMax = 0f; // Time taken to charge the item
         public int TickUpdate = 10;
@@ -350,6 +351,13 @@ namespace MinecraftAlpha
         {
             //getBlock("Flint and Steel").Interaction = (Pos, ent, item) =>
             //{
+            getBlock("Iron Ore").Smelt = getBlock("Iron");
+            getBlock("Gold Ore").Smelt = getBlock("Gold");
+
+
+
+
+
             getBlock("Air").Update = (Pos, data) =>
             {
                 return;
@@ -709,18 +717,7 @@ namespace MinecraftAlpha
                     var pos = GetPosAtBlock(Pos);
                     var tnt = Game._entityManager.GravityBlock(Pos, true);
                     tnt.Health = 100;
-                    tnt.Update = (This) =>
-                    {
-
-                        if (This.Health <= 5 && This.Health > 0)
-                        {
-                            Vector3 exp = new(This.position.X, This.position.Y, This.Layer);
-                            Game._actionManager.Explosion(exp, 6, true);
-                            tnt.Health = 0;
-                            return;
-                        }
-                        This.Health -= 1;
-                    };
+                    
 
 
 
@@ -863,16 +860,17 @@ namespace MinecraftAlpha
             };
             getBlock("Furnace").Update = (Pos, data) =>
             {
-
+                //Pos.Counter = new(7);
                 int FuelSources = 0;
                 float fuelNext = 0;
                 int Outputs;
 
                 bool Ignited = false;
-                if (Pos.Counter.Count > 0 && Pos.Counter[0] > 0)
+                if (Pos.Counter.Length > 7 && Pos.Counter[0] > 0)
                 {
 
                     Pos.Counter[0] -= 1f;
+                    Pos.Counter[1] -= 0.01f;
 
 
                     Ignited = true;
@@ -887,8 +885,8 @@ namespace MinecraftAlpha
                     Pos.Color = Color.Cyan;
                 }
 
-                string Data = "{}{}{}{}";
 
+                //Power, Fuel,Delay, FuelC,Current, CurrentC, Done, DoneC
                 //Thread.Sleep(100);
 
             };
@@ -1459,7 +1457,7 @@ namespace MinecraftAlpha
         public float brightness = 1;
 
         public string Data { get; set; } = string.Empty;
-        public List<float> Counter = new List<float>(); //For Changing Values 
+        public float[] Counter = new float[10]; //For Changing Values 
 
 
         [JsonIgnore] public Chunk Parent;

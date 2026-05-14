@@ -447,7 +447,7 @@ namespace MinecraftAlpha
                 {
                     var last = LastUsedBlock;
                     if (last == null) return;
-                    if (last.Counter.Count == 0) last.Counter.Add(0);
+                    //if (last.Counter.Length == 0) last.Counter[0] = 100;
                     float F = last.Counter[0];
                     if (Fuel.Item != null && Game._blockManager.HasTag(Fuel.Item.Tag, "Fuel"))
                     {
@@ -662,6 +662,52 @@ namespace MinecraftAlpha
 
                     }
                 }
+                if (Name == "Furnace")
+                {
+                    var last = game._userInterfaceManager.LastUsedBlock;
+
+                    if(game._blockManager.getBlock(last).Name == "Furnace")
+                    {
+                        float smelting = 0;
+                        float delay = 1000;
+                        
+                        if (last.Counter.Length > 0)
+                        {
+                            smelting = last.Counter[0];
+                            delay = last.Counter[1];
+                        }
+                        if (smelting <= 0) return;
+                        var input = ItemSlots[0];
+                        var fuel = ItemSlots[1];
+                        var output = ItemSlots[2];
+                        if(input.Item != null)
+                        {
+                            var Result = input.Item.Smelt;
+                            if (delay < 50)
+                            {
+                                last.Counter[1] = 50;
+                                output.Item = (Result);
+                                output.Count += 1;
+                                input.Count -= 1;
+                                if(input.Count <=0)
+                                {
+                                    input.Item = null;
+                                }
+                                
+
+                            }
+                        }
+                        
+
+
+                        
+
+                    }
+
+
+                }
+
+
                 if (Name == "Crafting3x3")
                 {
 
@@ -702,7 +748,7 @@ namespace MinecraftAlpha
                     {
                         for (int j = 0; j < 9; j++)
                         {
-                            int index = i * 6 + j;
+                            int index = i * 9 + j + ID;
 
                             
                             ItemSlot slot = this.ItemSlots[index];

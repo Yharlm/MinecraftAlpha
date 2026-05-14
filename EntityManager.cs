@@ -198,7 +198,20 @@ namespace MinecraftAlpha
             {
                 Pos = mob.Target.position;
             }
-            if (mob.name == "Pig") return;
+            if (mob.name == "Tnt")
+            {
+                if (mob.Health <= 5 && mob.Health > 0)
+                {
+                    Vector3 exp = new(mob.position.X, mob.position.Y, mob.Layer);
+                    game._actionManager.Explosion(exp, 6, true);
+                    mob.Health = 0;
+                    return;
+                }
+                mob.Health -= 1;
+            }
+                
+                
+                ;
             if (mob == game.Player.Plr) return;
             foreach (var entity in Workspace)
             {
